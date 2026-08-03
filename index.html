@@ -40,7 +40,6 @@
         
         .energy-box { background-color: #2a2a2a; border: 2px solid #444; padding: 3px 6px; border-radius: 4px; font-size: 10px; display: flex; align-items: center; gap: 4px; }
         .energy-bars { color: #4ade80; font-family: monospace; letter-spacing: -1px; font-weight: bold; }
-
         .menu-btn { background-color: #2196F3; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; }
 
         .map-viewport { width: 100%; height: 320px; background: linear-gradient(135deg, #2e7d32, #1b5e20); border: 4px solid #333; border-radius: 8px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 15px; }
@@ -87,13 +86,14 @@
 <body>
 
     <div id="game-container">
-        <!-- Login -->
+        <!-- Login con control de usuarios registrados -->
         <div id="login-screen" class="screen-overlay">
             <div class="box-container">
                 <h2>Pokémon Trails</h2>
                 <input type="text" id="username-input" placeholder="Usuario">
                 <input type="password" id="password-input" placeholder="Contraseña">
-                <button onclick="handleLogin()">ENTRAR</button>
+                <button onclick="handleLogin()">ENTRAR / REGISTRARSE</button>
+                <p id="login-msg" style="font-size: 10px; color: #aaa; margin-top: 10px;">Si eres nuevo, se creará tu cuenta automáticamente.</p>
             </div>
         </div>
 
@@ -217,12 +217,35 @@
         let currentEnemy = null;
         let zonaExplorada = false;
 
-        // --- SISTEMA DE ENERGÍA ---
+        // --- SISTEMA DE ENERGÍA CON TIMESTAMPS (Persistente tras F5) ---
         let energiaActual = 20;
         const energiaMax = 20;
-        let segundosParaRecarga = 900; // 15 minutos en segundos
+        let ultimoTimestamp = Date.now();
+        const intervaloRecargaMs = 15 * 60 * 1000; // 15 minutos en milisegundos
+
+        function calcularEnergiaOffline() {
+            if (energiaActual < energiaMax) {
+                const ahora = Date.now();
+                const transcurrido = ahora - ultimoTimestamp;
+                
+                if (transcurrido >= intervaloRecargaMs) {
+                    const ciclos = Math.floor(transcurrido / intervaloRecargaMs);
+                    const energiaGanada = ciclos * 3;
+                    
+                    energiaActual = Math.min(energiaMax, energiaActual + energiaGanada);
+                    
+                    // Ajustar el timestamp descontando los ciclos enteros consumidos
+                    ultimoTimestamp = ahora - (transcurrido % intervaloRecargaMs);
+                    guardarDatos();
+                }
+            } else {
+                ultimoTimestamp = Date.now();
+            }
+        }
 
         function actualizarHUDEnergia() {
+            calcularEnergiaOffline();
+            
             let bloquesLlenos = energiaActual;
             let bloquesVacios = energiaMax - energiaActual;
             let barraVisual = "█".repeat(bloquesLlenos) + "░".repeat(bloquesVacios);
@@ -232,25 +255,20 @@
 
             if (energiaActual >= energiaMax) {
                 document.getElementById("energy-timer").innerText = "(ENERGÍA LLENA)";
+                ultimoTimestamp = Date.now();
             } else {
-                let mins = Math.floor(segundosParaRecarga / 60).toString().padStart(2, '0');
-                let secs = (segundosParaRecarga % 60).toString().padStart(2, '0');
+                const transcurrido = Date.now() - ultimoTimestamp;
+                const restanteMs = Math.max(0, intervaloRecargaMs - (transcurrido % intervaloRecargaMs));
+                const segundosRestantes = Math.ceil(restanteMs / 1000);
+
+                let mins = Math.floor(segundosRestantes / 60).toString().padStart(2, '0');
+                let secs = (segundosRestantes % 60).toString().padStart(2, '0');
                 document.getElementById("energy-timer").innerText = `+3 en ${mins}:${secs}`;
             }
         }
 
-        // Bucle de tiempo principal (1 segundo)
+        // Bucle de tiempo (1 segundo)
         setInterval(() => {
-            if (energiaActual < energiaMax) {
-                segundosParaRecarga--;
-                if (segundosParaRecarga <= 0) {
-                    energiaActual = Math.min(energiaMax, energiaActual + 3);
-                    segundosParaRecarga = 900; // Reiniciar a 15 min
-                    guardarDatos();
-                }
-            } else {
-                segundosParaRecarga = 900;
-            }
             actualizarHUDEnergia();
         }, 1000);
 
@@ -300,29 +318,81 @@
 
         window.onload = function() {
             try {
-                const savedUser = localStorage.getItem("pt_user");
-                if (savedUser) {
+                const currentUser = localStorage.getItem("pt_current_user");
+                if (currentUser) {
                     document.getElementById("login-screen").style.display = "none";
-                    document.getElementById("btn-username-display").innerText = savedUser.toUpperCase();
-                    if (localStorage.getItem("pt_team")) teamPokemon = JSON.parse(localStorage.getItem("pt_team"));
-                    if (localStorage.getItem("pt_pc")) pcStorage = JSON.parse(localStorage.getItem("pt_pc"));
-                    if (localStorage.getItem("pt_energia")) energiaActual = parseInt(localStorage.getItem("pt_energia"));
-
-                    if (teamPokemon.length > 0) actualizarHUD();
-                    else document.getElementById("starter-screen").style.display = "flex";
-                    actualizarHUDEnergia();
+                    document.getElementById("btn-username-display").innerText = currentUser.toUpperCase();
+                    
+                    // Cargar datos específicos del usuario actual
+                    cargarDatosUsuario(currentUser);
                 }
             } catch (e) {}
         };
 
+        // --- SISTEMA DE LOGIN Y REGISTRO SEGURO ---
         function handleLogin() {
-            const user = document.getElementById("username-input").value;
-            if (user.trim() !== "") {
-                localStorage.setItem("pt_user", user);
+            const user = document.getElementById("username-input").value.trim();
+            const pass = document.getElementById("password-input").value.trim();
+            const msg = document.getElementById("login-msg");
+            
+            if (user === "" || pass === "") {
+                msg.style.color = "#ef4444";
+                msg.innerText = "Por favor, introduce usuario y contraseña.";
+                return;
+            }
+
+            let usersDb = JSON.parse(localStorage.getItem("pt_users_db") || "{}");
+
+            if (usersDb[user]) {
+                // El usuario ya existe, comprobar contraseña
+                if (usersDb[user] === pass) {
+                    localStorage.setItem("pt_current_user", user);
+                    document.getElementById("login-screen").style.display = "none";
+                    document.getElementById("btn-username-display").innerText = user.toUpperCase();
+                    cargarDatosUsuario(user);
+                } else {
+                    msg.style.color = "#ef4444";
+                    msg.innerText = "Contraseña incorrecta para este usuario registrado.";
+                }
+            } else {
+                // Usuario nuevo: registrar automáticamente
+                usersDb[user] = pass;
+                localStorage.setItem("pt_users_db", JSON.stringify(usersDb));
+                localStorage.setItem("pt_current_user", user);
+                
                 document.getElementById("login-screen").style.display = "none";
                 document.getElementById("btn-username-display").innerText = user.toUpperCase();
+                
+                // Mostrar pantalla de iniciales para cuenta nueva
                 document.getElementById("starter-screen").style.display = "flex";
             }
+        }
+
+        function cargarDatosUsuario(user) {
+            const prefix = `pt_${user}_`;
+            teamPokemon = JSON.parse(localStorage.getItem(prefix + "team") || "[]");
+            pcStorage = JSON.parse(localStorage.getItem(prefix + "pc") || "[]");
+            energiaActual = parseInt(localStorage.getItem(prefix + "energia") ?? "20");
+            ultimoTimestamp = parseInt(localStorage.getItem(prefix + "timestamp") ?? Date.now());
+
+            if (teamPokemon.length > 0) {
+                actualizarHUD();
+            } else {
+                document.getElementById("starter-screen").style.display = "flex";
+            }
+            actualizarHUDEnergia();
+        }
+
+        function guardarDatos() {
+            try {
+                const user = localStorage.getItem("pt_current_user");
+                if (!user) return;
+                const prefix = `pt_${user}_`;
+                localStorage.setItem(prefix + "team", JSON.stringify(teamPokemon));
+                localStorage.setItem(prefix + "pc", JSON.stringify(pcStorage));
+                localStorage.setItem(prefix + "energia", energiaActual);
+                localStorage.setItem(prefix + "timestamp", ultimoTimestamp);
+            } catch(e) {}
         }
 
         function chooseStarter(name, statsBase, t1, t2) {
@@ -341,14 +411,6 @@
             guardarDatos();
             document.getElementById("starter-screen").style.display = "none";
             actualizarHUD();
-        }
-
-        function guardarDatos() {
-            try {
-                localStorage.setItem("pt_team", JSON.stringify(teamPokemon));
-                localStorage.setItem("pt_pc", JSON.stringify(pcStorage));
-                localStorage.setItem("pt_energia", energiaActual);
-            } catch(e) {}
         }
 
         function actualizarHUD() {
@@ -387,10 +449,15 @@
             if (teamPokemon.length === 0) return alert("¡Elige un inicial!");
             if (zonaExplorada) return;
 
-            // Control de Energía (Gasta 1)
+            // Control de Energía con Timestamp
+            calcularEnergiaOffline();
             if (energiaActual < 1) {
                 alert("¡No tienes suficiente energía para explorar! Espera a que se recargue.");
                 return;
+            }
+            
+            if (energiaActual === energiaMax) {
+                ultimoTimestamp = Date.now(); // Empezar a contar el tiempo de recarga si estaba al máximo
             }
             energiaActual--;
             guardarDatos();
