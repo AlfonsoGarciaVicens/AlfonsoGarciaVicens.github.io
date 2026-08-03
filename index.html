@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Trails Clone</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace; }
+        body { background-color: #121212; color: #ffffff; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+
+        #game-container { width: 100%; max-width: 450px; height: 100vh; max-height: 850px; background-color: #1a1a1a; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 15px; border: 2px solid #333; box-shadow: 0 0 20px rgba(0,0,0,0.8); }
+
+        .screen-overlay, .modal-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
+        .modal-screen { z-index: 80; display: none; }
+        
+        .box-container, .modal-window { background-color: #2a2a2a; padding: 25px; border-radius: 8px; border: 2px solid #444; width: 100%; max-width: 340px; text-align: center; }
+        .modal-window { background: linear-gradient(135deg, #38bdf8, #0369a1); border: 4px solid #bae6fd; box-shadow: 0 8px 16px rgba(0,0,0,0.6); padding: 15px; gap: 10px; display: flex; flex-direction: column; }
+        
+        .box-container h2 { margin-bottom: 15px; color: #4CAF50; font-size: 18px; }
+        .box-container input { width: 100%; padding: 10px; margin-bottom: 15px; background-color: #1a1a1a; border: 1px solid #555; color: #fff; border-radius: 4px; }
+        .box-container button, .starter-btn, .modal-close-btn { width: 100%; padding: 10px; background-color: #4CAF50; border: none; color: white; font-weight: bold; border-radius: 4px; cursor: pointer; margin-top: 5px; }
+        .starter-btn, .modal-close-btn { background-color: #2563eb; }
+        .starter-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+
+        .modal-title { text-align: center; font-size: 14px; font-weight: bold; color: #fff; border-bottom: 2px solid #bae6fd; padding-bottom: 5px; margin-bottom: 5px; letter-spacing: 1px; }
+
+        .menu-grid-container { display: flex; flex-direction: column; gap: 12px; align-items: center; padding: 10px 0; }
+        .menu-row { display: flex; gap: 15px; justify-content: center; }
+        .menu-icon-btn { background-color: #1e293b; border: 3px solid #64748b; border-radius: 8px; width: 65px; height: 65px; font-size: 28px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+
+        .team-slot { background-color: #64748b; border: 2px solid #334155; border-radius: 6px; padding: 6px 10px; display: flex; align-items: center; justify-content: space-between; color: #fff; font-size: 11px; }
+        .team-slot.active-lead { background: linear-gradient(90deg, #0ea5e9, #0284c7); border: 2px solid #e0f2fe; }
+        .slot-info { display: flex; flex-direction: column; flex-grow: 1; margin-left: 10px; }
+        .slot-hp-bar { background-color: #1e293b; height: 6px; width: 100%; border-radius: 3px; margin-top: 3px; overflow: hidden; border: 1px solid #0f172a; }
+        .slot-hp-fill, .hp-bar-fill { background-color: #22c55e; height: 100%; transition: width 0.3s ease; }
+
+        .top-bar { display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
+        .discord-btn { background-color: #5865F2; color: white; padding: 4px 8px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 10px; }
+        .right-hud { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+        
+        .energy-box { background-color: #2a2a2a; border: 2px solid #444; padding: 3px 6px; border-radius: 4px; font-size: 10px; display: flex; align-items: center; gap: 4px; }
+        .energy-bars { color: #4ade80; font-family: monospace; letter-spacing: -1px; font-weight: bold; }
+
+        .menu-btn { background-color: #2196F3; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+
+        .map-viewport { width: 100%; height: 320px; background: linear-gradient(135deg, #2e7d32, #1b5e20); border: 4px solid #333; border-radius: 8px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 15px; }
+        .map-background { position: absolute; width: 100%; height: 100%; background-image: radial-gradient(#388e3c 15%, transparent 16%), radial-gradient(#1b5e20 15%, transparent 16%); background-size: 30px 30px; background-position: 0 0, 15px 15px; opacity: 0.4; z-index: 1; }
+        .map-content { position: relative; z-index: 2; text-align: center; width: 100%; }
+        .zone-title { background-color: rgba(0, 0, 0, 0.7); padding: 8px 15px; border-radius: 4px; font-size: 14px; border: 1px solid #555; margin-bottom: 5px; display: inline-block; }
+        .sprite-container { display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 30px; margin-top: 5px; }
+        .exploration-log { position: relative; z-index: 2; background-color: rgba(0, 0, 0, 0.85); border: 1px solid #555; border-radius: 6px; padding: 10px; width: 100%; min-height: 70px; font-size: 11px; color: #d4d4d4; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+        #combat-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #1a1a1a; z-index: 90; display: none; flex-direction: column; justify-content: space-between; padding: 15px; }
+        .combat-viewport { width: 100%; height: 210px; background: linear-gradient(to bottom, #3b82f6, #1e3a8a); border: 3px solid #444; border-radius: 6px; position: relative; padding: 10px; display: flex; flex-direction: column; justify-content: space-between; }
+        
+        .combat-enemy-info, .combat-player-info { background-color: rgba(200, 200, 200, 0.9); color: #000; padding: 4px 8px; border-radius: 4px; font-size: 11px; width: 65%; border: 1px solid #333; }
+        .combat-enemy-info { align-self: flex-start; }
+        .combat-player-info { align-self: flex-end; }
+        .hp-bar-bg { background-color: #555; height: 6px; width: 100%; border-radius: 3px; margin-top: 2px; overflow: hidden; }
+        .combat-sprites { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 20px; font-size: 30px; }
+
+        .combat-dialogue { background-color: #222; border: 2px solid #c0c0c0; border-radius: 6px; padding: 8px; font-size: 10px; color: #fff; min-height: 50px; text-align: center; overflow-y: auto; }
+
+        .combat-controls-container { display: flex; flex-direction: column; gap: 8px; position: relative; }
+        .top-attacks-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .mid-hidden-row { display: flex; justify-content: center; align-items: center; height: 0; z-index: 5; }
+        .bottom-actions-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 15px; }
+
+        .btn-attack-type { color: white; border: 2px solid rgba(0,0,0,0.5); padding: 10px; font-weight: bold; border-radius: 4px; cursor: pointer; text-shadow: 1px 1px 1px #000; font-size: 11px; text-transform: uppercase; }
+        .btn-hidden-power { width: 55px; height: 55px; border-radius: 50%; border: 3px solid #fff; cursor: pointer; font-weight: bold; font-size: 8px; color: white; text-shadow: 1px 1px 1px #000; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 8px rgba(0,0,0,0.6); position: relative; top: -10px; text-transform: uppercase; text-align: center; }
+        
+        .btn-capture { background-color: #eab308; color: black; border: none; padding: 10px; font-weight: bold; border-radius: 4px; cursor: pointer; }
+        .btn-flee { background-color: #ef4444; color: white; border: none; padding: 10px; font-weight: bold; border-radius: 4px; cursor: pointer; }
+
+        .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn-action { padding: 15px; border: none; border-radius: 6px; font-weight: bold; font-size: 13px; cursor: pointer; text-align: center; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .btn-explore { background-color: #424242; }
+        .btn-explore:disabled { background-color: #262626; color: #666; cursor: not-allowed; box-shadow: none; }
+        .btn-advance { background-color: #2e7d32; }
+
+        .bottom-nav { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .btn-nav { background-color: #2a2a2a; border: 2px solid #444; color: white; padding: 10px 0; text-align: center; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .footer-info { display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: #888; }
+        .chat-btn { background-color: #333; border: 1px solid #555; color: white; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <!-- Login -->
+        <div id="login-screen" class="screen-overlay">
+            <div class="box-container">
+                <h2>Pokémon Trails</h2>
+                <input type="text" id="username-input" placeholder="Usuario">
+                <input type="password" id="password-input" placeholder="Contraseña">
+                <button onclick="handleLogin()">ENTRAR</button>
+            </div>
+        </div>
+
+        <!-- Selección de Inicial -->
+        <div id="starter-screen" class="screen-overlay" style="display: none;">
+            <div class="box-container">
+                <h2>Prof. Oak: ¡Elige tu compañero!</h2>
+                <div class="starter-grid">
+                    <button class="starter-btn" onclick="chooseStarter('Bulbasaur', {hp:45, attack:49, defense:49, special_attack:65, special_defense:65}, 'planta', 'veneno')">🌿 Bulbasaur</button>
+                    <button class="starter-btn" onclick="chooseStarter('Charmander', {hp:39, attack:52, defense:43, special_attack:60, special_defense:50}, 'fuego', 'normal')">🔥 Charmander</button>
+                    <button class="starter-btn" onclick="chooseStarter('Squirtle', {hp:44, attack:48, defense:65, special_attack:50, special_defense:64}, 'agua', 'normal')">💧 Squirtle</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menú, Equipo y PC -->
+        <div id="menu-screen" class="modal-screen">
+            <div class="modal-window">
+                <div class="modal-title">- MENÚ PRINCIPAL -</div>
+                <div class="menu-grid-container">
+                    <div class="menu-row">
+                        <button class="menu-icon-btn" onclick="alert('Dispositivo / Pokedex')">📱</button>
+                        <button class="menu-icon-btn" onclick="alert('Cofre / Objetos')">📦</button>
+                        <button class="menu-icon-btn" onclick="abrirPC()">💻</button>
+                    </div>
+                    <div class="menu-row">
+                        <button class="menu-icon-btn" onclick="alert('Máquina / Tienda')">🎰</button>
+                        <button class="menu-icon-btn" onclick="alert('Búsqueda / Info')">🔍</button>
+                    </div>
+                </div>
+                <button class="modal-close-btn" onclick="cerrarMenu()">CERRAR</button>
+            </div>
+        </div>
+
+        <div id="team-screen" class="modal-screen">
+            <div class="modal-window">
+                <div class="modal-title">- EQUIPO POKÉMON -</div>
+                <div id="team-slots-container" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                <button class="modal-close-btn" onclick="cerrarEquipo()">CERRAR</button>
+            </div>
+        </div>
+
+        <div id="pc-screen" class="modal-screen">
+            <div class="modal-window">
+                <div class="modal-title">- TUS POKÉMON (PC) -</div>
+                <div id="pc-slots-container" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto;"></div>
+                <button class="modal-close-btn" onclick="cerrarPC()">CERRAR</button>
+            </div>
+        </div>
+
+        <!-- Combate -->
+        <div id="combat-screen">
+            <div class="combat-viewport">
+                <div class="combat-enemy-info">
+                    <div id="enemy-name-lvl">ENEMIGO Lv.7</div>
+                    <div class="hp-bar-bg"><div id="enemy-hp-fill" class="hp-bar-fill" style="width: 100%;"></div></div>
+                </div>
+                <div class="combat-sprites">
+                    <span id="player-battle-sprite">🦖</span>
+                    <span id="enemy-battle-sprite">🦊</span>
+                </div>
+                <div class="combat-player-info">
+                    <div id="player-battle-name">JUGADOR Lv.5</div>
+                    <div class="hp-bar-bg"><div id="player-hp-fill" class="hp-bar-fill" style="width: 100%;"></div></div>
+                    <div style="font-size: 9px; text-align: right;" id="player-battle-hp-text">--/-- PS</div>
+                </div>
+            </div>
+            
+            <div class="combat-dialogue" id="combat-dialogue-text">¡Comienza el enfrentamiento!</div>
+
+            <div class="combat-controls-container" id="combat-buttons-container"></div>
+        </div>
+
+        <!-- HUD Principal -->
+        <div class="top-bar">
+            <a href="#" class="discord-btn">DISCORD</a>
+            <div class="right-hud">
+                <div class="energy-box">
+                    ⚡ <span id="energy-bars" class="energy-bars">████████████████████</span> 
+                    <span id="energy-text" style="font-weight: bold;">20/20</span>
+                </div>
+                <div id="energy-timer" style="font-size: 9px; color: #aaa; text-align: right;">(ENERGÍA LLENA)</div>
+                <button class="menu-btn" onclick="abrirMenu()">MENÚ</button>
+            </div>
+        </div>
+
+        <div class="map-viewport">
+            <div class="map-background"></div>
+            <div class="map-content">
+                <div class="zone-title" id="current-zone-name">Pueblo Inicial (Zona 1)</div>
+                <div class="sprite-container">
+                    <span>🧢👤</span><span id="hud-pokemon-icon">🐾</span>
+                </div>
+                <p style="font-size: 11px; margin-top: 3px; color: #ccc;" id="hud-pokemon-info">Sin Pokémon</p>
+            </div>
+            <div class="exploration-log" id="explore-log">¡Bienvenido a Pokémon Trails! Explora o avanza.</div>
+        </div>
+
+        <div class="action-buttons">
+            <button id="btn-explore-main" class="btn-action btn-explore" onclick="exploreZone()">EXPLORAR ZONA</button>
+            <button class="btn-action btn-advance" onclick="advanceZone()">AVANZAR</button>
+        </div>
+
+        <div class="bottom-nav">
+            <button class="btn-nav" onclick="alert('Bolsa no implementada aún')">BOLSA</button>
+            <button class="btn-nav" onclick="abrirEquipo()">EQUIPO</button>
+            <button id="btn-username-display" class="btn-nav" style="color: #6ee7b7; font-weight: bold;">JUGADOR</button>
+        </div>
+
+        <div class="footer-info">
+            <button class="chat-btn" onclick="alert('Chat global')">CHAT (5)</button>
+            <span>Pokémon TRAILS v. 1.3.3</span>
+        </div>
+    </div>
+
+    <script>
+        const zones = ["Pueblo Inicial (Zona 1)", "Ruta 1 - Senda Tranquila", "Bosque Verde - Espesura", "Ruta 2 - Camino de Piedra", "Ciudad Vetusta (Zona 5)"];
+        let currentZoneIndex = 0;
+        let teamPokemon = []; 
+        let pcStorage = [];   
+        let currentEnemy = null;
+        let zonaExplorada = false;
+
+        // --- SISTEMA DE ENERGÍA ---
+        let energiaActual = 20;
+        const energiaMax = 20;
+        let segundosParaRecarga = 900; // 15 minutos en segundos
+
+        function actualizarHUDEnergia() {
+            let bloquesLlenos = energiaActual;
+            let bloquesVacios = energiaMax - energiaActual;
+            let barraVisual = "█".repeat(bloquesLlenos) + "░".repeat(bloquesVacios);
+            
+            document.getElementById("energy-bars").innerText = barraVisual;
+            document.getElementById("energy-text").innerText = `${energiaActual}/${energiaMax}`;
+
+            if (energiaActual >= energiaMax) {
+                document.getElementById("energy-timer").innerText = "(ENERGÍA LLENA)";
+            } else {
+                let mins = Math.floor(segundosParaRecarga / 60).toString().padStart(2, '0');
+                let secs = (segundosParaRecarga % 60).toString().padStart(2, '0');
+                document.getElementById("energy-timer").innerText = `+3 en ${mins}:${secs}`;
+            }
+        }
+
+        // Bucle de tiempo principal (1 segundo)
+        setInterval(() => {
+            if (energiaActual < energiaMax) {
+                segundosParaRecarga--;
+                if (segundosParaRecarga <= 0) {
+                    energiaActual = Math.min(energiaMax, energiaActual + 3);
+                    segundosParaRecarga = 900; // Reiniciar a 15 min
+                    guardarDatos();
+                }
+            } else {
+                segundosParaRecarga = 900;
+            }
+            actualizarHUDEnergia();
+        }, 1000);
+
+        // --- MATRIZ COMPLETA DE LOS 18 TIPOS ---
+        const ALL_TYPES = ["normal", "fuego", "agua", "planta", "electrico", "hielo", "lucha", "veneno", "tierra", "volador", "psiquico", "bicho", "roca", "fantasma", "dragon", "siniestro", "acero", "hada"];
+        const TYPE_COLORS = { "normal": "#A8A77A", "fuego": "#EE8130", "agua": "#6390F0", "planta": "#7AC74C", "electrico": "#F7D02C", "hielo": "#96D9D6", "lucha": "#C22E28", "veneno": "#A33EA1", "tierra": "#E2BF65", "volador": "#A98FF3", "psiquico": "#F95587", "bicho": "#A6B91A", "roca": "#B6A136", "fantasma": "#735797", "dragon": "#6F35FC", "siniestro": "#705898", "acero": "#B7B7CE", "hada": "#D685AD" };
+        
+        const TYPE_CHART = {
+            "normal": { fuerte: [], debil: ["roca", "acero"], inmune: ["fantasma"] },
+            "fuego": { fuerte: ["planta", "hielo", "bicho", "acero"], debil: ["fuego", "agua", "roca", "dragon"], inmune: [] },
+            "agua": { fuerte: ["fuego", "tierra", "roca"], debil: ["agua", "planta", "dragon"], inmune: [] },
+            "planta": { fuerte: ["agua", "tierra", "roca"], debil: ["fuego", "planta", "veneno", "volador", "bicho", "dragon", "acero"], inmune: [] },
+            "electrico": { fuerte: ["agua", "volador"], debil: ["electrico", "planta", "dragon"], inmune: ["tierra"] },
+            "hielo": { fuerte: ["planta", "tierra", "volador", "dragon"], debil: ["fuego", "agua", "hielo", "acero"], inmune: [] },
+            "lucha": { fuerte: ["normal", "hielo", "roca", "siniestro", "acero"], debil: ["veneno", "volador", "psiquico", "bicho", "hada"], inmune: ["fantasma"] },
+            "veneno": { fuerte: ["planta", "hada"], debil: ["veneno", "tierra", "roca", "fantasma"], inmune: ["acero"] },
+            "tierra": { fuerte: ["fuego", "electrico", "veneno", "roca", "acero"], debil: ["planta", "bicho"], inmune: ["volador"] },
+            "volador": { fuerte: ["planta", "lucha", "bicho"], debil: ["electrico", "roca", "acero"], inmune: [] },
+            "psiquico": { fuerte: ["lucha", "veneno"], debil: ["psiquico", "acero"], inmune: ["siniestro"] },
+            "bicho": { fuerte: ["planta", "psiquico", "siniestro"], debil: ["fuego", "lucha", "veneno", "volador", "fantasma", "acero", "hada"], inmune: [] },
+            "roca": { fuerte: ["fuego", "hielo", "volador", "bicho"], debil: ["lucha", "tierra", "acero"], inmune: [] },
+            "fantasma": { fuerte: ["psiquico", "fantasma"], debil: ["siniestro"], inmune: ["normal"] },
+            "dragon": { fuerte: ["dragon"], debil: ["acero"], inmune: ["hada"] },
+            "siniestro": { fuerte: ["psiquico", "fantasma"], debil: ["lucha", "siniestro", "hada"], inmune: [] },
+            "acero": { fuerte: ["hielo", "roca", "hada"], debil: ["fuego", "agua", "electrico", "acero"], inmune: [] },
+            "hada": { fuerte: ["lucha", "dragon", "siniestro"], debil: ["fuego", "veneno", "acero"], inmune: [] }
+        };
+
+        function getEffectiveness(attackType, defenderTypes) {
+            let multi = 1;
+            defenderTypes.forEach(defType => {
+                if (!defType || !TYPE_CHART[attackType]) return;
+                if (TYPE_CHART[attackType].fuerte.includes(defType)) multi *= 2;
+                else if (TYPE_CHART[attackType].debil.includes(defType)) multi *= 0.5;
+                else if (TYPE_CHART[attackType].inmune.includes(defType)) multi *= 0;
+            });
+            return multi;
+        }
+
+        function getTipoOcultoAleatorio(tipo1, tipo2) {
+            const disponibles = ALL_TYPES.filter(t => t !== tipo1 && t !== tipo2);
+            return disponibles[Math.floor(Math.random() * disponibles.length)];
+        }
+
+        function calcularHPFinal(baseHp, nivel, iv = 15) { return Math.floor(((2 * baseHp + iv) * nivel) / 100) + nivel + 10; }
+        function calcularStatFinal(baseStat, nivel, iv = 15) { return Math.floor(((2 * baseStat + iv) * nivel) / 100) + 5; }
+
+        window.onload = function() {
+            try {
+                const savedUser = localStorage.getItem("pt_user");
+                if (savedUser) {
+                    document.getElementById("login-screen").style.display = "none";
+                    document.getElementById("btn-username-display").innerText = savedUser.toUpperCase();
+                    if (localStorage.getItem("pt_team")) teamPokemon = JSON.parse(localStorage.getItem("pt_team"));
+                    if (localStorage.getItem("pt_pc")) pcStorage = JSON.parse(localStorage.getItem("pt_pc"));
+                    if (localStorage.getItem("pt_energia")) energiaActual = parseInt(localStorage.getItem("pt_energia"));
+
+                    if (teamPokemon.length > 0) actualizarHUD();
+                    else document.getElementById("starter-screen").style.display = "flex";
+                    actualizarHUDEnergia();
+                }
+            } catch (e) {}
+        };
+
+        function handleLogin() {
+            const user = document.getElementById("username-input").value;
+            if (user.trim() !== "") {
+                localStorage.setItem("pt_user", user);
+                document.getElementById("login-screen").style.display = "none";
+                document.getElementById("btn-username-display").innerText = user.toUpperCase();
+                document.getElementById("starter-screen").style.display = "flex";
+            }
+        }
+
+        function chooseStarter(name, statsBase, t1, t2) {
+            const nivel = 5, iv = 15;
+            const hpMax = calcularHPFinal(statsBase.hp, nivel, iv);
+            
+            const starter = {
+                nombre: name, nivel: nivel, hpMax: hpMax, hpActual: hpMax,
+                ataque: calcularStatFinal(Math.floor((statsBase.attack + statsBase.special_attack) / 2), nivel, iv),
+                defensa: calcularStatFinal(Math.floor((statsBase.defense + statsBase.special_defense) / 2), nivel, iv),
+                tipo1: t1, tipo2: t2, tipoOculto: getTipoOcultoAleatorio(t1, t2),
+                icono: name === 'Bulbasaur' ? '🌿' : (name === 'Charmander' ? '🔥' : '💧')
+            };
+
+            teamPokemon = [starter];
+            guardarDatos();
+            document.getElementById("starter-screen").style.display = "none";
+            actualizarHUD();
+        }
+
+        function guardarDatos() {
+            try {
+                localStorage.setItem("pt_team", JSON.stringify(teamPokemon));
+                localStorage.setItem("pt_pc", JSON.stringify(pcStorage));
+                localStorage.setItem("pt_energia", energiaActual);
+            } catch(e) {}
+        }
+
+        function actualizarHUD() {
+            if (teamPokemon.length > 0) {
+                let lider = teamPokemon[0];
+                document.getElementById("hud-pokemon-info").innerText = `${lider.nombre} - Lv.${lider.nivel} (PS: ${lider.hpActual}/${lider.hpMax})`;
+                document.getElementById("hud-pokemon-icon").innerText = lider.icono;
+            }
+        }
+
+        function advanceZone() {
+            currentZoneIndex = (currentZoneIndex + 1) % zones.length;
+            document.getElementById("current-zone-name").innerText = zones[currentZoneIndex];
+            
+            let curados = 0;
+            teamPokemon.forEach(p => {
+                let healAmount = Math.max(1, Math.floor(p.hpMax * 0.05));
+                if (p.hpActual < p.hpMax) {
+                    p.hpActual = Math.min(p.hpMax, p.hpActual + healAmount);
+                    curados++;
+                }
+            });
+            
+            let logMsg = `Has avanzado a ${zones[currentZoneIndex]}.`;
+            if (curados > 0) logMsg += `<br><span style="color:#4CAF50;">¡El equipo recuperó un 5% de PS por el paseo!</span>`;
+            
+            document.getElementById("explore-log").innerHTML = logMsg;
+            guardarDatos();
+            actualizarHUD();
+            
+            zonaExplorada = false;
+            document.getElementById("btn-explore-main").disabled = false;
+        }
+
+        function exploreZone() {
+            if (teamPokemon.length === 0) return alert("¡Elige un inicial!");
+            if (zonaExplorada) return;
+
+            // Control de Energía (Gasta 1)
+            if (energiaActual < 1) {
+                alert("¡No tienes suficiente energía para explorar! Espera a que se recargue.");
+                return;
+            }
+            energiaActual--;
+            guardarDatos();
+            actualizarHUDEnergia();
+
+            const r = Math.random();
+            if (r < 0.3) {
+                document.getElementById("explore-log").innerHTML = `📦 ¡Has encontrado objetos!`;
+            } else if (r < 0.5) {
+                let lider = teamPokemon[0];
+                lider.hpActual = Math.min(lider.hpMax, lider.hpActual + Math.floor(lider.hpMax * 0.5));
+                guardarDatos();
+                actualizarHUD();
+                document.getElementById("explore-log").innerHTML = `🏥 ¡Encontraste una poción! Recuperas 50% de PS.`;
+            } else {
+                iniciarCombate(r < 0.8 ? 'wild' : 'trainer');
+            }
+            zonaExplorada = true;
+            document.getElementById("btn-explore-main").disabled = true;
+        }
+
+        function iniciarCombate(tipo) {
+            let lider = teamPokemon[0];
+            const nivel = 5 + currentZoneIndex;
+            
+            currentEnemy = {
+                tipoCombate: tipo,
+                nombre: tipo === 'wild' ? "Sneasel" : "Rival",
+                nivel: nivel,
+                hpMax: calcularHPFinal(45, nivel), hpActual: calcularHPFinal(45, nivel),
+                ataque: calcularStatFinal(50, nivel), defensa: calcularStatFinal(45, nivel),
+                tipo1: 'siniestro', tipo2: 'hielo', tipoOculto: getTipoOcultoAleatorio('siniestro', 'hielo'),
+                icono: '🦊'
+            };
+
+            document.getElementById("combat-screen").style.display = "flex";
+            document.getElementById("enemy-name-lvl").innerText = `${currentEnemy.nombre.toUpperCase()} Lv.${nivel}`;
+            document.getElementById("player-battle-name").innerText = `${lider.nombre.toUpperCase()} Lv.${lider.nivel}`;
+            
+            actualizarBarrasHP();
+            document.getElementById("combat-dialogue-text").innerHTML = `¡Un ${currentEnemy.nombre} apareció!`;
+
+            let c1 = TYPE_COLORS[lider.tipo1] || "#777";
+            let c2 = TYPE_COLORS[lider.tipo2] || TYPE_COLORS["normal"];
+            let cOculto = TYPE_COLORS[lider.tipoOculto] || "#fff";
+
+            let botones = `
+                <div class="top-attacks-row">
+                    <button class="btn-attack-type" style="background-color: ${c1};" onclick="ejecutarTurnoCombate('atacar', '${lider.tipo1}')">${lider.tipo1}</button>
+                    <button class="btn-attack-type" style="background-color: ${c2};" onclick="ejecutarTurnoCombate('atacar', '${lider.tipo2}')">${lider.tipo2}</button>
+                </div>
+                <div class="mid-hidden-row">
+                    <button class="btn-hidden-power" style="background-color: ${cOculto};" onclick="ejecutarTurnoCombate('atacar', '${lider.tipoOculto}')" title="Poder Oculto">${lider.tipoOculto}</button>
+                </div>
+                <div class="bottom-actions-row">
+                    ${tipo === 'wild' ? `<button class="btn-capture" onclick="ejecutarTurnoCombate('capturar')">CAPTURAR</button>` : ``}
+                    <button class="btn-flee" style="${tipo === 'trainer' ? 'grid-column: span 2;' : ''}" onclick="cerrarCombate('¡Huiste del combate!')">HUIR</button>
+                </div>
+            `;
+            document.getElementById("combat-buttons-container").innerHTML = botones;
+        }
+
+        function actualizarBarrasHP() {
+            let lider = teamPokemon[0];
+            document.getElementById("player-hp-fill").style.width = (lider.hpActual / lider.hpMax * 100) + "%";
+            document.getElementById("enemy-hp-fill").style.width = (currentEnemy.hpActual / currentEnemy.hpMax * 100) + "%";
+            document.getElementById("player-battle-hp-text").innerText = `${lider.hpActual}/${lider.hpMax} PS`;
+        }
+
+        function calcularDaño(atacante, defensor, tipoAtaque) {
+            let tiposDef = [defensor.tipo1, defensor.tipo2];
+            let multiplicador = getEffectiveness(tipoAtaque, tiposDef);
+            let dañoBase = Math.max(1, atacante.ataque - defensor.defensa + Math.floor(Math.random() * 5));
+            return { daño: Math.floor(dañoBase * multiplicador), multi: multiplicador };
+        }
+
+        function getMensajeEfectividad(multi) {
+            if (multi >= 4) return " <span style='color:#22c55e;'>¡Es cuádruplemente eficaz!</span>";
+            if (multi > 1) return " <span style='color:#4CAF50;'>¡Es muy eficaz!</span>";
+            if (multi <= 0.25) return " <span style='color:#ef4444;'>¡Es extremadamente poco eficaz...</span>";
+            if (multi < 1 && multi > 0) return " <span style='color:#ef4444;'>No es muy eficaz...</span>";
+            if (multi === 0) return " <span style='color:#a8a29e;'>No afecta al enemigo.</span>";
+            return "";
+        }
+
+        function ejecutarTurnoCombate(accion, tipoAtaqueSeleccionado) {
+            let lider = teamPokemon[0];
+            const dialogue = document.getElementById("combat-dialogue-text");
+
+            if (accion === 'capturar') {
+                if (Math.random() < 0.6) {
+                    let nuevo = { ...currentEnemy, nombre: currentEnemy.nombre.replace(" Salvaje", "") };
+                    if (teamPokemon.length < 4) teamPokemon.push(nuevo); else pcStorage.push(nuevo);
+                    guardarDatos();
+                    return cerrarCombate(`¡Atrapaste a ${nuevo.nombre}! ${teamPokemon.length < 4 ? 'Añadido al equipo.' : 'Enviado al PC.'}`);
+                } else {
+                    dialogue.innerHTML = `¡El Pokémon escapó de la Poké Ball!`;
+                    setTimeout(() => turnoEnemigoAtaca(), 1500);
+                    return;
+                }
+            }
+
+            if (accion === 'atacar') {
+                const initJ = Math.floor(Math.random() * 99) + 1;
+                const initE = Math.floor(Math.random() * 99) + 1;
+                
+                let resJ = calcularDaño(lider, currentEnemy, tipoAtaqueSeleccionado);
+                let tiposEnemigoDisponibles = [currentEnemy.tipo1, currentEnemy.tipo2, currentEnemy.tipoOculto].filter(Boolean);
+                let tipoEnemigo = tiposEnemigoDisponibles[Math.floor(Math.random() * tiposEnemigoDisponibles.length)];
+                let resE = calcularDaño(currentEnemy, lider, tipoEnemigo);
+
+                let log = `Iniciativa: ${lider.nombre}(${initJ}) vs ${currentEnemy.nombre}(${initE})<br>`;
+
+                if (initJ >= initE) {
+                    currentEnemy.hpActual = Math.max(0, currentEnemy.hpActual - resJ.daño);
+                    log += `⚔️ Usaste ${tipoAtaqueSeleccionado.toUpperCase()}: ${resJ.daño} daño.${getMensajeEfectividad(resJ.multi)}<br>`;
+                    if (currentEnemy.hpActual <= 0) {
+                        actualizarBarrasHP();
+                        dialogue.innerHTML = log + `🏆 ¡Enemigo derrotado!`;
+                        return setTimeout(() => cerrarCombate(`¡Victoria!`), 2000);
+                    }
+                    lider.hpActual = Math.max(0, lider.hpActual - resE.daño);
+                    log += `⚠️ Rival usó ${tipoEnemigo.toUpperCase()}: ${resE.daño} daño.${getMensajeEfectividad(resE.multi)}`;
+                } else {
+                    lider.hpActual = Math.max(0, lider.hpActual - resE.daño);
+                    log += `⚠️ Rival usó ${tipoEnemigo.toUpperCase()}: ${resE.daño} daño.${getMensajeEfectividad(resE.multi)}<br>`;
+                    if (lider.hpActual <= 0) {
+                        actualizarBarrasHP();
+                        lider.hpActual = 1;
+                        dialogue.innerHTML = log + `💀 ¡Tu Pokémon se debilitó!`;
+                        return setTimeout(() => cerrarCombate(`¡Tuviste que huir!`), 2000);
+                    }
+                    currentEnemy.hpActual = Math.max(0, currentEnemy.hpActual - resJ.daño);
+                    log += `⚔️ Usaste ${tipoAtaqueSeleccionado.toUpperCase()}: ${resJ.daño} daño.${getMensajeEfectividad(resJ.multi)}`;
+                }
+                
+                actualizarBarrasHP();
+                actualizarHUD();
+                dialogue.innerHTML = log;
+            }
+        }
+
+        function turnoEnemigoAtaca() {
+            let lider = teamPokemon[0];
+            let tiposEnemigoDisponibles = [currentEnemy.tipo1, currentEnemy.tipo2, currentEnemy.tipoOculto].filter(Boolean);
+            let tipoEnemigo = tiposEnemigoDisponibles[Math.floor(Math.random() * tiposEnemigoDisponibles.length)];
+            let resE = calcularDaño(currentEnemy, lider, tipoEnemigo);
+            lider.hpActual = Math.max(0, lider.hpActual - resE.daño);
+            actualizarBarrasHP();
+            actualizarHUD();
+            document.getElementById("combat-dialogue-text").innerHTML += `<br>⚠️ Rival atacó e hizo ${resE.daño} de daño.`;
+        }
+
+        function cerrarCombate(msg) { document.getElementById("combat-screen").style.display = "none"; document.getElementById("explore-log").innerHTML = msg; guardarDatos(); actualizarHUD(); }
+        
+        function abrirMenu() { document.getElementById("menu-screen").style.display = "flex"; }
+        function cerrarMenu() { document.getElementById("menu-screen").style.display = "none"; }
+        function abrirPC() {
+            cerrarMenu();
+            const c = document.getElementById("pc-slots-container"); c.innerHTML = "";
+            if (pcStorage.length === 0) c.innerHTML = `<div style="text-align:center; color:#fff; font-size:11px;">El PC está vacío.</div>`;
+            else pcStorage.forEach(p => { c.innerHTML += `<div class="team-slot"><span style="font-size:22px;">${p.icono}</span><div class="slot-info"><div><b>${p.nombre.toUpperCase()}</b> Lv.${p.nivel}</div><div style="font-size:10px;">HP: ${p.hpActual}/${p.hpMax}</div></div></div>`; });
+            document.getElementById("pc-screen").style.display = "flex";
+        }
+        function cerrarPC() { document.getElementById("pc-screen").style.display = "none"; }
+
+        function abrirEquipo() {
+            const c = document.getElementById("team-slots-container"); c.innerHTML = "";
+            for (let i = 0; i < 4; i++) {
+                let p = teamPokemon[i];
+                if (p) c.innerHTML += `<div class="team-slot ${i===0?'active-lead':''}"><span style="font-size:22px;">${p.icono}</span><div class="slot-info"><div><b>${p.nombre.toUpperCase()}</b> Lv.${p.nivel}</div><div class="slot-hp-bar"><div class="slot-hp-fill" style="width:${(p.hpActual/p.hpMax)*100}%;"></div></div></div></div>`;
+                else c.innerHTML += `<div class="team-slot" style="opacity:0.5;"><span style="font-size:18px;">⚪</span><div class="slot-info">--- VACÍO ---</div></div>`;
+            }
+            document.getElementById("team-screen").style.display = "flex";
+        }
+        function cerrarEquipo() { document.getElementById("team-screen").style.display = "none"; }
+    </script>
+</body>
+</html>
