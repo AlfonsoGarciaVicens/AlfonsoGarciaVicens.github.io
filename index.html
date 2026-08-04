@@ -223,7 +223,7 @@
 <body>
 
     <div id="game-container">
-        <!-- Login con soporte para tecla Enter -->
+        <!-- Login con soporte para Enter -->
         <div id="login-screen" class="screen-overlay">
             <div class="box-container" style="height: auto;">
                 <h2>Pokémon Trails</h2>
@@ -455,23 +455,23 @@
         let pestanaActivaBolsa = 'potions';
         let objetoSeleccionadoBolsa = null;
 
-        // --- FUNCIONES SEGURAS DE LOCALSTORAGE (Previene bloqueos en GitHub Pages) ---
-        function safeGetItem(key, defaultValue) {
+        // --- MANEJO SEGURO DE LOCALSTORAGE ---
+        function safeGet(key, fallback) {
             try {
-                const item = localStorage.getItem(key);
-                return item !== null ? item : defaultValue;
+                const val = localStorage.getItem(key);
+                return val !== null ? val : fallback;
             } catch (e) {
-                return defaultValue;
+                return fallback;
             }
         }
 
-        function safeSetItem(key, value) {
+        function safeSet(key, val) {
             try {
-                localStorage.setItem(key, value);
+                localStorage.setItem(key, val);
             } catch (e) {}
         }
 
-        function safeRemoveItem(key) {
+        function safeRemove(key) {
             try {
                 localStorage.removeItem(key);
             } catch (e) {}
@@ -540,7 +540,7 @@
         const intervaloRecargaMs = 15 * 60 * 1000;
 
         function esUsuarioFonso() {
-            const currentUser = safeGetItem("pt_current_user", "");
+            const currentUser = safeGet("pt_current_user", "");
             return currentUser && currentUser.toLowerCase() === "fonso";
         }
 
@@ -653,14 +653,14 @@
             }
 
             try {
-                const currentUser = safeGetItem("pt_current_user", null);
+                const currentUser = safeGet("pt_current_user", null);
                 if (currentUser) {
                     document.getElementById("login-screen").style.display = "none";
                     document.getElementById("btn-username-display").innerText = currentUser.toUpperCase();
                     cargarDatosUsuario(currentUser);
                 }
             } catch (e) {
-                safeRemoveItem("pt_current_user");
+                safeRemove("pt_current_user");
                 document.getElementById("login-screen").style.display = "flex";
             }
         };
@@ -678,12 +678,12 @@
 
             let usersDb = {};
             try {
-                usersDb = JSON.parse(safeGetItem("pt_users_db", "{}"));
+                usersDb = JSON.parse(safeGet("pt_users_db", "{}"));
             } catch(e) { usersDb = {}; }
 
             if (usersDb[user]) {
                 if (usersDb[user] === pass) {
-                    safeSetItem("pt_current_user", user);
+                    safeSet("pt_current_user", user);
                     document.getElementById("login-screen").style.display = "none";
                     document.getElementById("btn-username-display").innerText = user.toUpperCase();
                     cargarDatosUsuario(user);
@@ -693,8 +693,8 @@
                 }
             } else {
                 usersDb[user] = pass;
-                safeSetItem("pt_users_db", JSON.stringify(usersDb));
-                safeSetItem("pt_current_user", user);
+                safeSet("pt_users_db", JSON.stringify(usersDb));
+                safeSet("pt_current_user", user);
                 document.getElementById("login-screen").style.display = "none";
                 document.getElementById("btn-username-display").innerText = user.toUpperCase();
                 document.getElementById("starter-screen").style.display = "flex";
@@ -703,7 +703,7 @@
 
         function handleLogout() {
             guardarDatos();
-            safeRemoveItem("pt_current_user");
+            safeRemove("pt_current_user");
             
             cerrarCombate("");
             document.getElementById("menu-screen").style.display = "none";
@@ -724,17 +724,17 @@
         function cargarDatosUsuario(user) {
             const prefix = `pt_${user}_`;
             
-            try { teamPokemon = JSON.parse(safeGetItem(prefix + "team", "[]")); } catch(e) { teamPokemon = []; }
-            try { pcStorage = JSON.parse(safeGetItem(prefix + "pc", "[]")); } catch(e) { pcStorage = []; }
+            try { teamPokemon = JSON.parse(safeGet(prefix + "team", "[]")); } catch(e) { teamPokemon = []; }
+            try { pcStorage = JSON.parse(safeGet(prefix + "pc", "[]")); } catch(e) { pcStorage = []; }
             
-            energiaActual = parseInt(safeGetItem(prefix + "energia", "20"));
-            ultimoTimestamp = parseInt(safeGetItem(prefix + "timestamp", Date.now()));
-            playerMedals = parseInt(safeGetItem(prefix + "medals", "0"));
-            playerMoney = parseInt(safeGetItem(prefix + "money", "2000"));
-            lastDailyClaim = parseInt(safeGetItem(prefix + "last_daily", "0"));
+            energiaActual = parseInt(safeGet(prefix + "energia", "20"));
+            ultimoTimestamp = parseInt(safeGet(prefix + "timestamp", Date.now()));
+            playerMedals = parseInt(safeGet(prefix + "medals", "0"));
+            playerMoney = parseInt(safeGet(prefix + "money", "2000"));
+            lastDailyClaim = parseInt(safeGet(prefix + "last_daily", "0"));
 
             try {
-                let savedInv = safeGetItem(prefix + "inventory", null);
+                let savedInv = safeGet(prefix + "inventory", null);
                 if (savedInv) {
                     playerInventory = JSON.parse(savedInv);
                 }
@@ -752,17 +752,17 @@
 
         function guardarDatos() {
             try {
-                const user = safeGetItem("pt_current_user", null);
+                const user = safeGet("pt_current_user", null);
                 if (!user) return;
                 const prefix = `pt_${user}_`;
-                safeSetItem(prefix + "team", JSON.stringify(teamPokemon));
-                safeSetItem(prefix + "pc", JSON.stringify(pcStorage));
-                safeSetItem(prefix + "energia", esUsuarioFonso() ? 20 : energiaActual);
-                safeSetItem(prefix + "timestamp", ultimoTimestamp);
-                safeSetItem(prefix + "medals", playerMedals);
-                safeSetItem(prefix + "money", playerMoney);
-                safeSetItem(prefix + "last_daily", lastDailyClaim);
-                safeSetItem(prefix + "inventory", JSON.stringify(playerInventory));
+                safeSet(prefix + "team", JSON.stringify(teamPokemon));
+                safeSet(prefix + "pc", JSON.stringify(pcStorage));
+                safeSet(prefix + "energia", esUsuarioFonso() ? 20 : energiaActual);
+                safeSet(prefix + "timestamp", ultimoTimestamp);
+                safeSet(prefix + "medals", playerMedals);
+                safeSet(prefix + "money", playerMoney);
+                safeSet(prefix + "last_daily", lastDailyClaim);
+                safeSet(prefix + "inventory", JSON.stringify(playerInventory));
             } catch(e) {}
         }
 
@@ -1158,7 +1158,7 @@
                     { id: 'briefcase', name: 'Maletín', cat: 'others', weight: 4, desc: 'Contiene suministros valiosos variados.' },
                     { id: 'max_protein', name: 'Proteína Máxima', cat: 'proteins', weight: 3, desc: 'Aumenta drásticamente el ataque de un Pokémon.' },
                     { id: 'ancient_map', name: 'Mapa Antiguo', cat: 'others', weight: 2, desc: 'Mapa detallado de zonas recónditas.' },
-                    { id: 'shiny_egg', name: 'Huevo Brillante', cat: 'eggs', weight: 1, desc: 'Un huevo Pokémon singular con destellos brillantes.' }
+                    { id: 'shiny_egg', name: 'Huevo Brillante', cat: 'eggs', weight: 1, desc: 'Huevo Pokémon singular con destellos brillantes.' }
                 ];
 
                 let totalWeight = itemPool.reduce((sum, i) => sum + i.weight, 0);
@@ -1484,7 +1484,7 @@
             for (let i = 0; i < 4; i++) {
                 let p = teamPokemon[i];
                 if (p) c.innerHTML += `<div class="team-slot ${i===0?'active-lead':''}"><span style="font-size:22px;">${p.icono}</span><div class="slot-info"><div><b>${p.nombre.toUpperCase()}</b> Lv.${p.nivel}</div><div class="slot-hp-bar"><div class="slot-hp-fill" style="width:${(p.hpActual/p.hpMax)*100}%;"></div></div></div></div>`;
-                else c.innerHTML += `<div class="team-slot" style="opacity:0.5;"><span style="font-size:18px;">⚪</span><div class="slot-info---VACÍO ---</div></div>`;
+                else c.innerHTML += `<div class="team-slot" style="opacity:0.5;"><span style="font-size:18px;">⚪</span><div class="slot-info">--- VACÍO ---</div></div>`;
             }
             document.getElementById("team-screen").style.display = "flex";
         }
