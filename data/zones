@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "name": "Pueblo Inicial (Zona 1)",
+    "sprite": "🏡",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 2,
+    "name": "Ruta 1 - Senda Tranquila",
+    "sprite": "🌿",
+    "types": ["grass", "bug"],
+    "special_encounters": []
+  },
+  {
+    "id": 3,
+    "name": "Bosque Verde - Espesura",
+    "sprite": "🌲",
+    "types": ["bug", "poison"],
+    "special_encounters": []
+  },
+  {
+    "id": 4,
+    "name": "Ruta 2 - Camino de Piedra",
+    "sprite": "⛰️",
+    "types": ["rock", "ground"],
+    "special_encounters": []
+  },
+  {
+    "id": 5,
+    "name": "Ciudad Vetusta (Zona 5)",
+    "sprite": "🏙️",
+    "types": ["water", "psychic"],
+    "special_encounters": []
+  }
+]
