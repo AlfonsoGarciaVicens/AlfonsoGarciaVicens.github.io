@@ -218,7 +218,7 @@
         let pcStorage = [];   
         let currentEnemy = null;
         let zonaExplorada = false;
-        let playerMedals = 0; // Medallas obtenidas por el usuario
+        let playerMedals = 0;
 
         // --- MAPPER DE TIPOS (Inglés JSON -> Español Sistema) ---
         const typeMap = {
@@ -236,7 +236,7 @@
             if (medals === 2) return 440;
             if (medals === 3) return 480;
             if (medals === 4) return 520;
-            return 9999; // 5 o más medallas (sin límite)
+            return 9999;
         }
 
         // --- SISTEMA DE ENERGÍA ---
@@ -464,7 +464,6 @@
             document.getElementById("btn-explore-main").disabled = false;
         }
 
-        // --- ENCUENTROS FILTRADOS POR ZONA, MEDALLAS (BST) Y SIN LEGENDARIOS ---
         function explorarGenerarPokemonSalvaje(nivel) {
             let zonaObj = zonesConfig[currentZoneIndex];
             let maxBstPermitido = getMaxBstByMedals(playerMedals);
@@ -473,7 +472,6 @@
                 if (p.is_legendary || p.is_mythical) return false;
                 if (!p.types) return false;
 
-                // Calcular BST sumando las stats base
                 let stats = p.stats || {};
                 let bst = (stats.hp || 0) + (stats.attack || 0) + (stats.defense || 0) + 
                           (stats.special_attack || 0) + (stats.special_defense || 0) + (stats.speed || 0);
@@ -484,7 +482,6 @@
                 return coincideTipo && cumpleBst;
             });
 
-            // Fallback por si la zona con pocas medallas no encuentra suficientes variantes de ese tipo
             if (permitidos.length === 0) {
                 permitidos = POKEDEX_GLOBAL.filter(p => {
                     if (p.is_legendary || p.is_mythical) return false;
@@ -662,30 +659,60 @@
                 let log = `Iniciativa: ${lider.nombre}(${initJ}) vs ${currentEnemy.nombre}(${initE})<br>`;
 
                 if (initJ >= initE) {
+                    // 1. El jugador ataca primero
                     currentEnemy.hpActual = Math.max(0, currentEnemy.hpActual - resJ.daño);
                     log += `⚔️ Usaste ${tipoAtaqueSeleccionado.toUpperCase()}: ${resJ.daño} daño.${getMensajeEfectividad(resJ.multi)}<br>`;
+                    
+                    actualizarBarrasHP();
+
+                    // Comprobar si el enemigo murió tras el ataque del jugador
                     if (currentEnemy.hpActual <= 0) {
-                        actualizarBarrasHP();
                         dialogue.innerHTML = log + `🏆 ¡Enemigo derrotado!`;
                         return setTimeout(() => cerrarCombate(`¡Victoria!`), 2000);
                     }
+
+                    // 2. El enemigo contraataca
                     lider.hpActual = Math.max(0, lider.hpActual - resE.daño);
                     log += `⚠️ Rival usó ${tipoEnemigo.toUpperCase()}: ${resE.daño} daño.${getMensajeEfectividad(resE.multi)}`;
+                    
+                    actualizarBarrasHP();
+                    actualizarHUD();
+
+                    // Comprobar si el jugador murió tras el contraataque
+                    if (lider.hpActual <= 0) {
+                        lider.hpActual = 1;
+                        dialogue.innerHTML = log + `<br>💀 ¡Tu Pokémon se debilitó!`;
+                        return setTimeout(() => cerrarCombate(`¡Tu Pokémon quedó exhausto!`), 2000);
+                    }
+
                 } else {
+                    // 1. El enemigo ataca primero
                     lider.hpActual = Math.max(0, lider.hpActual - resE.daño);
                     log += `⚠️ Rival usó ${tipoEnemigo.toUpperCase()}: ${resE.daño} daño.${getMensajeEfectividad(resE.multi)}<br>`;
+                    
+                    actualizarBarrasHP();
+                    actualizarHUD();
+
+                    // Comprobar si el jugador murió tras el ataque del enemigo
                     if (lider.hpActual <= 0) {
-                        actualizarBarrasHP();
                         lider.hpActual = 1;
                         dialogue.innerHTML = log + `💀 ¡Tu Pokémon se debilitó!`;
-                        return setTimeout(() => cerrarCombate(`¡Tuviste que huir!`), 2000);
+                        return setTimeout(() => cerrarCombate(`¡Tu Pokémon quedó exhausto!`), 2000);
                     }
+
+                    // 2. El jugador contraataca
                     currentEnemy.hpActual = Math.max(0, currentEnemy.hpActual - resJ.daño);
                     log += `⚔️ Usaste ${tipoAtaqueSeleccionado.toUpperCase()}: ${resJ.daño} daño.${getMensajeEfectividad(resJ.multi)}`;
+                    
+                    actualizarBarrasHP();
+
+                    // Comprobar si el enemigo murió tras el contraataque del jugador
+                    if (currentEnemy.hpActual <= 0) {
+                        dialogue.innerHTML = log + `<br>🏆 ¡Enemigo derrotado!`;
+                        return setTimeout(() => cerrarCombate(`¡Victoria!`), 2000);
+                    }
                 }
                 
-                actualizarBarrasHP();
-                actualizarHUD();
                 dialogue.innerHTML = log;
             }
         }
@@ -699,6 +726,11 @@
             actualizarBarrasHP();
             actualizarHUD();
             document.getElementById("combat-dialogue-text").innerHTML += `<br>⚠️ Rival atacó e hizo ${resE.daño} de daño.`;
+            
+            if (lider.hpActual <= 0) {
+                lider.hpActual = 1;
+                setTimeout(() => cerrarCombate(`¡Tu Pokémon quedó exhausto!`), 2000);
+            }
         }
 
         function cerrarCombate(msg) { document.getElementById("combat-screen").style.display = "none"; document.getElementById("explore-log").innerHTML = msg; guardarDatos(); actualizarHUD(); }
