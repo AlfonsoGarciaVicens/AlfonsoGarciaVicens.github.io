@@ -10,26 +10,29 @@
 
         #game-container { width: 100%; max-width: 450px; height: 100vh; max-height: 850px; background-color: #1a1a1a; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 15px; border: 2px solid #333; box-shadow: 0 0 20px rgba(0,0,0,0.8); }
 
-        .screen-overlay, .modal-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
-        .modal-screen { z-index: 80; display: none; }
+        /* Overlays de pantalla completa (Login / Selección Inicial / Combate) */
+        .screen-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
         
-        .box-container, .modal-window { background-color: #2a2a2a; padding: 25px; border-radius: 8px; border: 2px solid #444; width: 100%; max-width: 340px; text-align: center; }
-        .modal-window { background: linear-gradient(135deg, #38bdf8, #0369a1); border: 4px solid #bae6fd; box-shadow: 0 8px 16px rgba(0,0,0,0.6); padding: 15px; gap: 10px; display: flex; flex-direction: column; }
+        /* Modales in-game (Menú, Equipo, PC, Bolsa): Superpuestos en la ventana del juego sin tapar los botones inferiores */
+        .modal-screen { position: absolute; top: 45px; left: 15px; right: 15px; bottom: 125px; background-color: rgba(18, 18, 18, 0.92); z-index: 80; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 15px; border-radius: 8px; border: 2px solid #444; }
         
-        /* Estilo específico ventana Bolsa */
-        .bag-window { background: linear-gradient(135deg, #d97706, #b45309); border: 4px solid #fde68a; width: 360px; max-width: 95%; height: 480px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative; border-radius: 10px; }
-        .bag-tabs { display: flex; justify-content: space-around; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 6px; gap: 2px; }
-        .bag-tab-btn { background: #78350f; border: 2px solid #92400e; border-radius: 4px; padding: 6px; cursor: pointer; font-size: 16px; color: #fff; flex: 1; text-align: center; }
+        .box-container, .modal-window { background-color: #2a2a2a; padding: 20px; border-radius: 8px; border: 2px solid #444; width: 100%; max-width: 320px; text-align: center; }
+        .modal-window { background: linear-gradient(135deg, #38bdf8, #0369a1); border: 4px solid #bae6fd; box-shadow: 0 8px 16px rgba(0,0,0,0.6); padding: 12px; gap: 8px; display: flex; flex-direction: column; height: 100%; }
+        
+        /* Estilo específico ventana Bolsa adaptada al marco */
+        .bag-window { background: linear-gradient(135deg, #d97706, #b45309); border: 4px solid #fde68a; width: 100%; height: 100%; padding: 10px; display: flex; flex-direction: column; justify-content: space-between; position: relative; border-radius: 8px; }
+        .bag-tabs { display: flex; justify-content: space-around; background: rgba(0,0,0,0.3); padding: 4px; border-radius: 6px; gap: 2px; }
+        .bag-tab-btn { background: #78350f; border: 2px solid #92400e; border-radius: 4px; padding: 4px; cursor: pointer; font-size: 14px; color: #fff; flex: 1; text-align: center; }
         .bag-tab-btn.active { background: #f59e0b; border-color: #fef3c7; }
         
-        .bag-content-grid { background: #ffffff; border: 3px solid #78350f; border-radius: 6px; height: 180px; padding: 8px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; }
+        .bag-content-grid { background: #ffffff; border: 3px solid #78350f; border-radius: 6px; flex-grow: 1; padding: 8px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; margin: 5px 0; }
         .bag-item-row { background: #fef3c7; border: 1px solid #d97706; color: #111; padding: 6px 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 11px; font-weight: bold; }
         .bag-item-row:hover { background: #fde68a; }
         .bag-item-row.selected { background: #f59e0b; color: white; border-color: #b45309; }
 
-        .bag-desc-box { background: #4b5563; border: 3px solid #1f2937; border-radius: 6px; padding: 10px; color: #f3f4f6; font-size: 11px; text-align: left; height: 90px; display: flex; flex-direction: column; justify-content: space-between; }
-        .bag-use-btn { background: #10b981; border: none; color: white; padding: 6px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 11px; align-self: flex-end; }
-        .bag-close-btn { background: #ef4444; border: 2px solid #991b1b; color: white; padding: 8px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 12px; width: 100%; text-align: center; }
+        .bag-desc-box { background: #4b5563; border: 3px solid #1f2937; border-radius: 6px; padding: 8px; color: #f3f4f6; font-size: 11px; text-align: left; height: 75px; display: flex; flex-direction: column; justify-content: space-between; }
+        .bag-use-btn { background: #10b981; border: none; color: white; padding: 4px 10px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 10px; align-self: flex-end; }
+        .bag-close-btn { background: #ef4444; border: 2px solid #991b1b; color: white; padding: 6px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 11px; width: 100%; text-align: center; }
 
         .box-container h2 { margin-bottom: 15px; color: #4CAF50; font-size: 18px; }
         .box-container input { width: 100%; padding: 10px; margin-bottom: 15px; background-color: #1a1a1a; border: 1px solid #555; color: #fff; border-radius: 4px; }
@@ -37,13 +40,13 @@
         .starter-btn, .modal-close-btn { background-color: #2563eb; }
         .starter-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
 
-        .modal-title { text-align: center; font-size: 14px; font-weight: bold; color: #fff; border-bottom: 2px solid #bae6fd; padding-bottom: 5px; margin-bottom: 5px; letter-spacing: 1px; }
+        .modal-title { text-align: center; font-size: 13px; font-weight: bold; color: #fff; border-bottom: 2px solid #bae6fd; padding-bottom: 3px; margin-bottom: 3px; letter-spacing: 1px; }
 
-        .menu-grid-container { display: flex; flex-direction: column; gap: 12px; align-items: center; padding: 10px 0; }
+        .menu-grid-container { display: flex; flex-direction: column; gap: 10px; align-items: center; padding: 5px 0; }
         .menu-row { display: flex; gap: 15px; justify-content: center; }
-        .menu-icon-btn { background-color: #1e293b; border: 3px solid #64748b; border-radius: 8px; width: 65px; height: 65px; font-size: 28px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        .menu-icon-btn { background-color: #1e293b; border: 3px solid #64748b; border-radius: 8px; width: 55px; height: 55px; font-size: 24px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
 
-        .team-slot { background-color: #64748b; border: 2px solid #334155; border-radius: 6px; padding: 6px 10px; display: flex; align-items: center; justify-content: space-between; color: #fff; font-size: 11px; }
+        .team-slot { background-color: #64748b; border: 2px solid #334155; border-radius: 6px; padding: 5px 8px; display: flex; align-items: center; justify-content: space-between; color: #fff; font-size: 11px; }
         .team-slot.active-lead { background: linear-gradient(90deg, #0ea5e9, #0284c7); border: 2px solid #e0f2fe; }
         .slot-info { display: flex; flex-direction: column; flex-grow: 1; margin-left: 10px; }
         .slot-hp-bar { background-color: #1e293b; height: 6px; width: 100%; border-radius: 3px; margin-top: 3px; overflow: hidden; border: 1px solid #0f172a; }
@@ -182,7 +185,7 @@
         <div id="team-screen" class="modal-screen">
             <div class="modal-window">
                 <div class="modal-title">- EQUIPO POKÉMON -</div>
-                <div id="team-slots-container" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                <div id="team-slots-container" style="display: flex; flex-direction: column; gap: 6px; overflow-y: auto; flex-grow: 1;"></div>
                 <button class="modal-close-btn" onclick="cerrarEquipo()">CERRAR</button>
             </div>
         </div>
@@ -190,7 +193,7 @@
         <div id="pc-screen" class="modal-screen">
             <div class="modal-window">
                 <div class="modal-title">- TUS POKÉMON (PC) -</div>
-                <div id="pc-slots-container" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto;"></div>
+                <div id="pc-slots-container" style="display: flex; flex-direction: column; gap: 6px; overflow-y: auto; flex-grow: 1;"></div>
                 <button class="modal-close-btn" onclick="cerrarPC()">CERRAR</button>
             </div>
         </div>
@@ -209,7 +212,7 @@
                 </div>
                 
                 <div class="bag-content-grid" id="bag-items-container">
-                    <!-- Los items de la categoría activa se cargarán aquí -->
+                    <!-- Items dinámicos -->
                 </div>
 
                 <div class="bag-desc-box">
@@ -222,7 +225,7 @@
         </div>
 
         <!-- Combate -->
-        <div id="combat-screen">
+        <div id="combat-screen" class="screen-overlay" style="display: none; background-color: #1a1a1a; z-index: 90; padding: 15px; justify-content: space-between; flex-direction: column;">
             <div class="combat-viewport">
                 <!-- Burbuja de iniciativa del enemigo -->
                 <div id="enemy-initiative-bubble" class="initiative-bubble" style="top: 45px; left: 50px;">--</div>
@@ -290,7 +293,7 @@
 
         <div class="footer-info">
             <button class="chat-btn" onclick="alert('Chat global')">CHAT (5)</button>
-            <span>Pokémon TRAILS v. 2.1.0</span>
+            <span>Pokémon TRAILS v. 2.1.1</span>
         </div>
     </div>
 
@@ -306,7 +309,6 @@
         let playerMedals = 0;
         let combatEnCurso = false;
 
-        // Estructura de la bolsa del jugador
         let playerInventory = {
             potions: [
                 { id: 'potion', name: 'Poción', count: 3, desc: 'Cura un 20% de PS a un Pokémon.' },
@@ -338,7 +340,6 @@
 
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-        // --- MAPPER DE TIPOS ---
         const typeMap = {
             "normal": "normal", "fire": "fuego", "water": "agua", "grass": "planta",
             "electric": "electrico", "ice": "hielo", "fighting": "lucha", "poison": "veneno",
@@ -356,7 +357,6 @@
             return 9999;
         }
 
-        // --- SISTEMA DE ENERGÍA (Excepción para "fonso") ---
         let energiaActual = 20;
         const energiaMax = 20;
         let ultimoTimestamp = Date.now();
@@ -411,7 +411,6 @@
         }
         setInterval(actualizarHUDEnergia, 1000);
 
-        // --- MATRIZ DE TIPOS ---
         const ALL_TYPES = ["normal", "fuego", "agua", "planta", "electrico", "hielo", "lucha", "veneno", "tierra", "volador", "psiquico", "bicho", "roca", "fantasma", "dragon", "siniestro", "acero", "hada"];
         const TYPE_COLORS = { "normal": "#A8A77A", "fuego": "#EE8130", "agua": "#6390F0", "planta": "#7AC74C", "electrico": "#F7D02C", "hielo": "#96D9D6", "lucha": "#C22E28", "veneno": "#A33EA1", "tierra": "#E2BF65", "volador": "#A98FF3", "psiquico": "#F95587", "bicho": "#A6B91A", "roca": "#B6A136", "fantasma": "#735797", "dragon": "#6F35FC", "siniestro": "#705898", "acero": "#B7B7CE", "hada": "#D685AD" };
         
@@ -697,7 +696,6 @@
 
             const r = Math.random();
             if (r < 0.3) {
-                // Añadir objeto aleatorio a la bolsa al explorar
                 agregarObjetoAleatorioInventario();
                 document.getElementById("explore-log").innerHTML = `📦 ¡Has encontrado un objeto y se ha guardado en tu Bolsa!`;
             } else if (r < 0.5) {
@@ -710,7 +708,7 @@
                 iniciarCombate(r < 0.8 ? 'wild' : 'trainer');
             }
             zonaExplorada = true;
-            document.getElementById("btn-explore-main").disabled = false; // Desbloqueado tras explorar
+            document.getElementById("btn-explore-main").disabled = false;
         }
 
         function agregarObjetoAleatorioInventario() {
@@ -744,7 +742,6 @@
             pestanaActivaBolsa = categoria;
             objetoSeleccionadoBolsa = null;
 
-            // Actualizar botones de pestañas visuales
             let botones = document.querySelectorAll(".bag-tab-btn");
             botones.forEach(btn => btn.classList.remove('active'));
             event && event.currentTarget && event.currentTarget.classList.add('active');
@@ -764,7 +761,7 @@
                 return;
             }
 
-            lista.forEach((item, index) => {
+            lista.forEach((item) => {
                 let div = document.createElement("div");
                 div.className = "bag-item-row";
                 div.innerHTML = `<span>${item.name}</span><span>x${item.count}</span>`;
@@ -782,7 +779,6 @@
             document.getElementById("bag-item-desc").innerText = item.desc;
 
             let btnUsar = document.getElementById("bag-use-action-btn");
-            // Mostrar botón usar solo si pertenece a categorías utilizables
             if (['potions', 'proteins', 'energy', 'mts'].includes(pestanaActivaBolsa)) {
                 btnUsar.style.display = "block";
             } else {
@@ -822,7 +818,6 @@
                 alert(`¡Proteína aplicada! El ataque de ${lider.nombre} ha aumentado.`);
             }
 
-            // Reducir cantidad o eliminar si llega a 0
             objetoSeleccionadoBolsa.count--;
             if (objetoSeleccionadoBolsa.count <= 0) {
                 let lista = playerInventory[pestanaActivaBolsa];
@@ -1048,6 +1043,7 @@
         
         function abrirMenu() { document.getElementById("menu-screen").style.display = "flex"; }
         function cerrarMenu() { document.getElementById("menu-screen").style.display = "none"; }
+        
         function abrirPC() {
             cerrarMenu();
             const c = document.getElementById("pc-slots-container"); c.innerHTML = "";
