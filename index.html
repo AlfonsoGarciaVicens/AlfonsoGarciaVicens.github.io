@@ -49,6 +49,42 @@
         .sprite-container { display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 30px; margin-top: 5px; }
         .exploration-log { position: relative; z-index: 2; background-color: rgba(0, 0, 0, 0.85); border: 1px solid #555; border-radius: 6px; padding: 10px; width: 100%; min-height: 70px; font-size: 11px; color: #d4d4d4; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
+        /* --- NUEVAS ANIMACIONES DE COMBATE --- */
+        @keyframes idleBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .idle-anim { animation: idleBounce 1.5s ease-in-out infinite; display: inline-block; }
+
+        @keyframes strikeForwardPlayer {
+            0% { transform: translate(0, 0); }
+            30% { transform: translate(-10px, 5px); }
+            50% { transform: translate(25px, -15px); }
+            100% { transform: translate(0, 0); }
+        }
+        @keyframes strikeForwardEnemy {
+            0% { transform: translate(0, 0); }
+            30% { transform: translate(10px, -5px); }
+            50% { transform: translate(-25px, 15px); }
+            100% { transform: translate(0, 0); }
+        }
+        .strike-player { animation: strikeForwardPlayer 0.35s ease; }
+        .strike-enemy { animation: strikeForwardEnemy 0.35s ease; }
+
+        .initiative-bubble {
+            position: absolute;
+            background: #ffffff;
+            color: #000000;
+            border: 2px solid #333;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: bold;
+            z-index: 95;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+            display: none;
+        }
+
         #combat-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #1a1a1a; z-index: 90; display: none; flex-direction: column; justify-content: space-between; padding: 15px; }
         .combat-viewport { width: 100%; height: 210px; background: linear-gradient(to bottom, #3b82f6, #1e3a8a); border: 3px solid #444; border-radius: 6px; position: relative; padding: 10px; display: flex; flex-direction: column; justify-content: space-between; }
         
@@ -147,14 +183,22 @@
         <!-- Combate -->
         <div id="combat-screen">
             <div class="combat-viewport">
+                <!-- Burbuja de iniciativa del enemigo -->
+                <div id="enemy-initiative-bubble" class="initiative-bubble" style="top: 45px; left: 50px;">--</div>
+                
                 <div class="combat-enemy-info">
                     <div id="enemy-name-lvl">ENEMIGO Lv.7</div>
                     <div class="hp-bar-bg"><div id="enemy-hp-fill" class="hp-bar-fill" style="width: 100%;"></div></div>
                 </div>
+                
                 <div class="combat-sprites">
-                    <span id="player-battle-sprite">🦖</span>
-                    <span id="enemy-battle-sprite">🦊</span>
+                    <span id="player-battle-sprite" class="idle-anim">🦖</span>
+                    <span id="enemy-battle-sprite" class="idle-anim">🦊</span>
                 </div>
+                
+                <!-- Burbuja de iniciativa del jugador -->
+                <div id="player-initiative-bubble" class="initiative-bubble" style="bottom: 50px; right: 50px;">--</div>
+
                 <div class="combat-player-info">
                     <div id="player-battle-name">JUGADOR Lv.5</div>
                     <div class="hp-bar-bg"><div id="player-hp-fill" class="hp-bar-fill" style="width: 100%;"></div></div>
@@ -219,6 +263,9 @@
         let currentEnemy = null;
         let zonaExplorada = false;
         let playerMedals = 0;
+        let combatEnCurso = false; // Bloqueo para evitar spam durante animaciones
+
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
         // --- MAPPER DE TIPOS (Inglés JSON -> Español Sistema) ---
         const typeMap = {
@@ -230,7 +277,6 @@
         };
         function mapType(t) { if (!t) return null; return typeMap[t.toLowerCase()] || t.toLowerCase(); }
 
-        // --- SISTEMA DE LÍMITE DE BST SEGÚN MEDALLAS ---
         function getMaxBstByMedals(medals) {
             if (medals <= 1) return 400;
             if (medals === 2) return 440;
@@ -327,7 +373,6 @@
             return Math.floor(Math.random() * (liderNivel - minNivel + 1)) + minNivel;
         }
 
-        // --- CARGA DE JSONs ---
         window.onload = async function() {
             try {
                 const resPoke = await fetch('data/pokemon.json');
@@ -556,6 +601,11 @@
             
             currentEnemy = explorarGenerarPokemon(nivel);
             currentEnemy.tipoCombate = tipo;
+            combatEnCurso = false;
+
+            // Ocultar burbujas de iniciativa al iniciar
+            document.getElementById("player-initiative-bubble").style.display = "none";
+            document.getElementById("enemy-initiative-bubble").style.display = "none";
 
             if (tipo === 'wild') {
                 document.getElementById("combat-dialogue-text").innerHTML = `¡Un ${currentEnemy.nombre} salvaje apareció!`;
@@ -626,7 +676,9 @@
             return "";
         }
 
-        function ejecutarTurnoCombate(accion, tipoAtaqueSeleccionado) {
+        // --- SISTEMA DE COMBATE ANIMADO Y SECUENCIAL ---
+        async function ejecutarTurnoCombate(accion, tipoAtaqueSeleccionado) {
+            if (combatEnCurso) return; // Evitar clics múltiples
             let lider = teamPokemon[0];
             const dialogue = document.getElementById("combat-dialogue-text");
 
@@ -638,15 +690,37 @@
                     return cerrarCombate(`¡Atrapaste a ${nuevo.nombre}! ${teamPokemon.length < 4 ? 'Añadido al equipo.' : 'Enviado al PC.'}`);
                 } else {
                     dialogue.innerHTML = `¡El Pokémon escapó de la Poké Ball!`;
-                    setTimeout(() => turnoEnemigoAtaca(), 1500);
+                    combatEnCurso = true;
+                    await sleep(1500);
+                    combatEnCurso = false;
                     return;
                 }
             }
 
             if (accion === 'atacar') {
-                const initJ = Math.floor(Math.random() * 99) + 1;
-                const initE = Math.floor(Math.random() * 99) + 1;
-                
+                combatEnCurso = true;
+
+                // 2.1 Animación de Iniciativa (ruleta de números rápidos)
+                const pBubble = document.getElementById("player-initiative-bubble");
+                const eBubble = document.getElementById("enemy-initiative-bubble");
+                pBubble.style.display = "block";
+                eBubble.style.display = "block";
+
+                let initJ = Math.floor(Math.random() * 99) + 1;
+                let initE = Math.floor(Math.random() * 99) + 1;
+
+                let startTick = Date.now();
+                while (Date.now() - startTick < 700) {
+                    pBubble.innerText = Math.floor(Math.random() * 99) + 1;
+                    eBubble.innerText = Math.floor(Math.random() * 99) + 1;
+                    await sleep(60);
+                }
+                pBubble.innerText = initJ;
+                eBubble.innerText = initE;
+                await sleep(500); // Pausa breve para leer la iniciativa
+
+                let playerFirst = initJ >= initE;
+
                 let resJ = calcularDaño(lider, currentEnemy, tipoAtaqueSeleccionado);
                 let tiposEnemigoDisponibles = [currentEnemy.tipo1, currentEnemy.tipo2, currentEnemy.tipoOculto].filter(Boolean).map(mapType);
                 let tipoEnemigo = tiposEnemigoDisponibles[Math.floor(Math.random() * tiposEnemigoDisponibles.length)];
@@ -654,82 +728,92 @@
 
                 let log = `Iniciativa: ${lider.nombre}(${initJ}) vs ${currentEnemy.nombre}(${initE})<br>`;
 
-                if (initJ >= initE) {
-                    // 1. El jugador ataca primero
-                    currentEnemy.hpActual = Math.max(0, currentEnemy.hpActual - resJ.daño);
-                    log += `⚔️ Usaste ${tipoAtaqueSeleccionado.toUpperCase()}: ${resJ.daño} daño.${getMensajeEfectividad(resJ.multi)}<br>`;
-                    
-                    actualizarBarrasHP();
+                // Función auxiliar interna para animar el golpe de un atacante
+                async function animarYAtacar(esJugador, dañoInfo, tipoAtq) {
+                    let spriteId = esJugador ? "player-battle-sprite" : "enemy-battle-sprite";
+                    let strikeCls = esJugador ? "strike-player" : "strike-enemy";
+                    let spriteElem = document.getElementById(spriteId);
 
-                    // Comprobar si el enemigo murió tras el ataque del jugador
-                    if (currentEnemy.hpActual <= 0) {
-                        dialogue.innerHTML = log + `🏆 ¡Enemigo derrotado!`;
-                        return setTimeout(() => cerrarCombate(`¡Victoria!`), 2000);
+                    // 2.2 Animación de ir para atrás y adelante para golpear
+                    spriteElem.classList.add(strikeCls);
+                    await sleep(180); // Mitad de la animación al impactar
+
+                    if (esJugador) {
+                        currentEnemy.hpActual = Math.max(0, currentEnemy.hpActual - dañoInfo.daño);
+                        log += `⚔️ Usaste ${tipoAtq.toUpperCase()}: ${dañoInfo.daño} daño.${getMensajeEfectividad(dañoInfo.multi)}<br>`;
+                    } else {
+                        lider.hpActual = Math.max(0, lider.hpActual - dañoInfo.daño);
+                        log += `⚠️ Rival usó ${tipoAtq.toUpperCase()}: ${dañoInfo.daño} daño.${getMensajeEfectividad(dañoInfo.multi)}<br>`;
                     }
 
-                    // 2. El enemigo contraataca
-                    lider.hpActual = Math.max(0, lider.hpActual - resE.daño);
-                    log += `⚠️ Rival usó ${tipoEnemigo.toUpperCase()}: ${resE.daño} daño.${getMensajeEfectividad(resE.multi)}`;
-                    
                     actualizarBarrasHP();
                     actualizarHUD();
+                    dialogue.innerHTML = log;
 
-                    // Comprobar si el jugador murió tras el contraataque
+                    await sleep(200); // Fin de la animación de golpe
+                    spriteElem.classList.remove(strikeCls);
+                    await sleep(300); // Pausa de transición
+                }
+
+                if (playerFirst) {
+                    // 2.2 Ataca el jugador primero
+                    await animarYAtacar(true, resJ, tipoAtaqueSeleccionado);
+                    if (currentEnemy.hpActual <= 0) {
+                        pBubble.style.display = "none";
+                        eBubble.style.display = "none";
+                        dialogue.innerHTML = log + `🏆 ¡Enemigo derrotado!`;
+                        combatEnCurso = false;
+                        return setTimeout(() => cerrarCombate(`¡Victoria!`), 1500);
+                    }
+
+                    // 2.3 Ataca el rival a continuación
+                    await animarYAtacar(false, resE, tipoEnemigo);
                     if (lider.hpActual <= 0) {
                         lider.hpActual = 1;
-                        dialogue.innerHTML = log + `<br>💀 ¡Tu Pokémon se debilitó!`;
-                        return setTimeout(() => cerrarCombate(`¡Tu Pokémon quedó exhausto!`), 2000);
+                        pBubble.style.display = "none";
+                        eBubble.style.display = "none";
+                        dialogue.innerHTML = log + `💀 ¡Tu Pokémon se debilitó!`;
+                        combatEnCurso = false;
+                        return setTimeout(() => cerrarCombate(`¡Tu Pokémon quedó exhausto!`), 1500);
                     }
 
                 } else {
-                    // 1. El enemigo ataca primero
-                    lider.hpActual = Math.max(0, lider.hpActual - resE.daño);
-                    log += `⚠️ Rival usó ${tipoEnemigo.toUpperCase()}: ${resE.daño} daño.${getMensajeEfectividad(resE.multi)}<br>`;
-                    
-                    actualizarBarrasHP();
-                    actualizarHUD();
-
-                    // Comprobar si el jugador murió tras el ataque del enemigo
+                    // 2.2 Ataca el rival primero
+                    await animarYAtacar(false, resE, tipoEnemigo);
                     if (lider.hpActual <= 0) {
                         lider.hpActual = 1;
+                        pBubble.style.display = "none";
+                        eBubble.style.display = "none";
                         dialogue.innerHTML = log + `💀 ¡Tu Pokémon se debilitó!`;
-                        return setTimeout(() => cerrarCombate(`¡Tu Pokémon quedó exhausto!`), 2000);
+                        combatEnCurso = false;
+                        return setTimeout(() => cerrarCombate(`¡Tu Pokémon quedó exhausto!`), 1500);
                     }
 
-                    // 2. El jugador contraataca
-                    currentEnemy.hpActual = Math.max(0, currentEnemy.hpActual - resJ.daño);
-                    log += `⚔️ Usaste ${tipoAtaqueSeleccionado.toUpperCase()}: ${resJ.daño} daño.${getMensajeEfectividad(resJ.multi)}`;
-                    
-                    actualizarBarrasHP();
-
-                    // Comprobar si el enemigo murió tras el contraataque del jugador
+                    // 2.3 Ataca el jugador a continuación
+                    await animarYAtacar(true, resJ, tipoAtaqueSeleccionado);
                     if (currentEnemy.hpActual <= 0) {
-                        dialogue.innerHTML = log + `<br>🏆 ¡Enemigo derrotado!`;
-                        return setTimeout(() => cerrarCombate(`¡Victoria!`), 2000);
+                        pBubble.style.display = "none";
+                        eBubble.style.display = "none";
+                        dialogue.innerHTML = log + `🏆 ¡Enemigo derrotado!`;
+                        combatEnCurso = false;
+                        return setTimeout(() => cerrarCombate(`¡Victoria!`), 1500);
                     }
                 }
-                
-                dialogue.innerHTML = log;
+
+                // Ocultar burbujas de iniciativa al finalizar el turno
+                pBubble.style.display = "none";
+                eBubble.style.display = "none";
+                combatEnCurso = false; // 2.4 Habilitar de nuevo la interacción del usuario
             }
         }
 
-        function turnoEnemigoAtaca() {
-            let lider = teamPokemon[0];
-            let tiposEnemigoDisponibles = [currentEnemy.tipo1, currentEnemy.tipo2, currentEnemy.tipoOculto].filter(Boolean).map(mapType);
-            let tipoEnemigo = tiposEnemigoDisponibles[Math.floor(Math.random() * tiposEnemigoDisponibles.length)];
-            let resE = calcularDaño(currentEnemy, lider, tipoEnemigo);
-            lider.hpActual = Math.max(0, lider.hpActual - resE.daño);
-            actualizarBarrasHP();
-            actualizarHUD();
-            document.getElementById("combat-dialogue-text").innerHTML += `<br>⚠️ Rival atacó e hizo ${resE.daño} de daño.`;
-            
-            if (lider.hpActual <= 0) {
-                lider.hpActual = 1;
-                setTimeout(() => cerrarCombate(`¡Tu Pokémon quedó exhausto!`), 2000);
-            }
+        function cerrarCombate(msg) { 
+            document.getElementById("combat-screen").style.display = "none"; 
+            document.getElementById("explore-log").innerHTML = msg; 
+            combatEnCurso = false;
+            guardarDatos(); 
+            actualizarHUD(); 
         }
-
-        function cerrarCombate(msg) { document.getElementById("combat-screen").style.display = "none"; document.getElementById("explore-log").innerHTML = msg; guardarDatos(); actualizarHUD(); }
         
         function abrirMenu() { document.getElementById("menu-screen").style.display = "flex"; }
         function cerrarMenu() { document.getElementById("menu-screen").style.display = "none"; }
