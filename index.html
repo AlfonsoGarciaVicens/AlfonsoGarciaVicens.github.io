@@ -62,7 +62,7 @@
         .bag-use-btn { background: #10b981; border: none; color: white; padding: 3px 8px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 10px; align-self: flex-end; }
         .bag-close-btn { background: #ef4444; border: 2px solid #991b1b; color: white; padding: 5px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 11px; width: 100%; text-align: center; }
 
-        /* Estilo Ventana Gacha / Tienda (Basado en la imagen de referencia) */
+        /* Estilo Ventana Gacha / Tienda */
         .gacha-window { 
             background: linear-gradient(135deg, #9d174d, #831843); 
             border: 4px solid #fbcfe8; 
@@ -78,13 +78,13 @@
         }
         .gacha-header-row { display: flex; justify-content: space-between; align-items: center; }
         .gacha-money-badge { background: rgba(0,0,0,0.5); border: 1px solid #f472b6; padding: 3px 8px; border-radius: 4px; font-size: 11px; color: #fdf2f8; font-weight: bold; }
-        .gacha-main-title { font-size: 14px; font-weight: bold; color: #fff; letter-spacing: 1px; text-align: center; flex-grow: 1; text-transform: uppercase; }
+        .gacha-main-title { font-size: 13px; font-weight: bold; color: #fff; letter-spacing: 1px; text-align: center; flex-grow: 1; text-transform: uppercase; }
         
         .gacha-carousel-container { display: flex; align-items: center; justify-content: space-between; flex-grow: 1; margin: 8px 0; gap: 5px; }
         .gacha-arrow-btn { background: #475569; border: 2px solid #94a3b8; color: white; font-size: 16px; padding: 10px 6px; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .gacha-arrow-btn:hover { background: #64748b; }
 
-        .gacha-display-box { background: rgba(0, 0, 0, 0.3); border: 2px dashed #f472b6; border-radius: 8px; flex-grow: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; text-align: center; gap: 8px; }
+        .gacha-display-box { background: rgba(0, 0, 0, 0.3); border: 2px dashed #fbcfe8; border-radius: 8px; flex-grow: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; text-align: center; gap: 8px; }
         .gacha-item-preview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 24px; background: rgba(255,255,255,0.1); padding: 8px; border-radius: 6px; width: 100%; justify-items: center; align-items: center; }
         .gacha-desc { font-size: 10px; color: #fbcfe8; min-height: 25px; }
 
@@ -439,7 +439,7 @@
             ],
             wallet: [
                 { id: 'stardust', name: 'Polvoestelar', count: 1, desc: 'Objeto valioso que se puede vender por dinero.' },
-                { id: 'nugget', name: 'Pasita / Pepita', count: 1, desc: 'Pepita de oro puro muy valiosa.' }
+                { id: 'nugget', name: 'Pepita', count: 1, desc: 'Pepita de oro puro muy valiosa.' }
             ],
             mts: [
                 { id: 'mt_hidden', name: 'MT Poder Oculto', count: 1, desc: 'Permite cambiar aleatoriamente el tipo del Poder Oculto de tu Pokémon líder.' }
@@ -469,7 +469,7 @@
                 id: 'items',
                 title: 'CAJA DE OBJETOS',
                 icons: ['📦', '🧪', '💊'],
-                desc: 'Consigue 1 objeto aleatorio útil (Pociones, Proteínas o Bebidas) para tu inventario.',
+                desc: 'Consigue 1 objeto aleatorio basado en la tabla de rarezas oficial.',
                 cost: 400,
                 type: 'item'
             },
@@ -477,7 +477,7 @@
                 id: 'pokemon_fire',
                 title: 'GACHA POKÉMON (FUEGO)',
                 icons: ['🔥', '🐾', '🌟'],
-                desc: 'Obtén un Pokémon aleatorio (común, poco común, raro o muy raro) con rotación de tipos.',
+                desc: 'Obtén una 1ª evolución Pokémon de tipo Fuego aleatoria.',
                 cost: 800,
                 type: 'pokemon',
                 targetType: 'fire'
@@ -959,13 +959,14 @@
                     alert("¡Tu Pokémon ya tiene los PS al máximo!");
                     return;
                 }
-                let curacion = Math.floor(lider.hpMax * (objetoSeleccionadoBolsa.id === 'super_potion' ? 0.5 : 0.2));
+                let curacion = Math.floor(lider.hpMax * (objetoSeleccionadoBolsa.id === 'hyper_potion' ? 0.75 : (objetoSeleccionadoBolsa.id === 'super_potion' ? 0.5 : 0.2)));
                 lider.hpActual = Math.min(lider.hpMax, lider.hpActual + curacion);
                 alert(`¡Usaste ${objetoSeleccionadoBolsa.name}! Recuperó ${curacion} PS.`);
                 
             } else if (pestanaActivaBolsa === 'energy') {
-                energiaActual = Math.min(energiaMax, energiaActual + 5);
-                alert(`¡Usaste ${objetoSeleccionadoBolsa.name}! Has recuperado 5 de energía.`);
+                let gain = objetoSeleccionadoBolsa.id === 'energy_juice' ? 10 : 5;
+                energiaActual = Math.min(energiaMax, energiaActual + gain);
+                alert(`¡Usaste ${objetoSeleccionadoBolsa.name}! Has recuperado ${gain} de energía.`);
                 actualizarHUDEnergia();
 
             } else if (pestanaActivaBolsa === 'mts') {
@@ -973,8 +974,9 @@
                 alert(`¡MT utilizada! El Poder Oculto de ${lider.nombre} ha cambiado a tipo: ${lider.tipoOculto.toUpperCase()}`);
 
             } else if (pestanaActivaBolsa === 'proteins') {
-                lider.ataque += 3;
-                alert(`¡Proteína aplicada! El ataque de ${lider.nombre} ha aumentado.`);
+                let boost = objetoSeleccionadoBolsa.id === 'max_protein' ? 8 : (objetoSeleccionadoBolsa.id === 'protein' ? 3 : 1);
+                lider.ataque += boost;
+                alert(`¡${objetoSeleccionadoBolsa.name} aplicada! El ataque de ${lider.nombre} ha aumentado en ${boost}.`);
             }
 
             objetoSeleccionadoBolsa.count--;
@@ -992,6 +994,43 @@
         }
 
         // --- SISTEMA DE GACHA ---
+        const gachaMachines = [
+            {
+                id: 'daily',
+                title: 'BONUS DIARIO',
+                icons: ['🎁', '✨', '💰'],
+                desc: 'Reclamable 1 vez al día. Obtén entre 500 y 5.000 Poké-dólares gratis.',
+                cost: 0,
+                type: 'daily'
+            },
+            {
+                id: 'items',
+                title: 'CAJA DE OBJETOS',
+                icons: ['📦', '🧪', '💊'],
+                desc: 'Consigue 1 objeto aleatorio basado en la tabla de rarezas oficial.',
+                cost: 400,
+                type: 'item'
+            },
+            {
+                id: 'pokemon_fire',
+                title: 'GACHA POKÉMON (FUEGO)',
+                icons: ['🔥', '🐾', '🌟'],
+                desc: 'Obtén una 1ª evolución Pokémon de tipo Fuego aleatoria.',
+                cost: 800,
+                type: 'pokemon',
+                targetType: 'fire'
+            },
+            {
+                id: 'hidden_power',
+                title: 'DISCO PODER OCULTO',
+                icons: ['💿', '✨', '⚡'],
+                desc: 'Consigue 1 CD de MT de Poder Oculto para personalizar los tipos de tus Pokémon.',
+                cost: 600,
+                type: 'mt'
+            }
+        ];
+        let currentGachaIndex = 0;
+
         function abrirGacha() {
             cerrarMenu();
             currentGachaIndex = 0;
@@ -1054,7 +1093,6 @@
                 return;
             }
 
-            // Gachas de pago
             if (playerMoney < maquina.cost) {
                 alert("¡No tienes suficiente dinero (₱) para realizar esta tirada!");
                 return;
@@ -1063,19 +1101,50 @@
             playerMoney -= maquina.cost;
 
             if (maquina.type === 'item') {
-                const posiblesItems = [
-                    { cat: 'potions', id: 'potion', name: 'Poción', desc: 'Cura un 20% de PS a un Pokémon.' },
-                    { cat: 'potions', id: 'super_potion', name: 'Superpoción', desc: 'Cura un 50% de PS a un Pokémon.' },
-                    { cat: 'energy', id: 'energy_drink', name: 'Bebida Energética', desc: 'Restaura 5 puntos de energía al instante.' },
-                    { cat: 'proteins', id: 'protein', name: 'Proteína', desc: 'Aumenta permanentemente el ataque de un Pokémon.' }
+                // Tabla completa con las rarezas (pesos) indicadas
+                const itemPool = [
+                    { id: 'potion', name: 'Poción', cat: 'potions', weight: 100, desc: 'Cura un 20% de PS a un Pokémon.' },
+                    { id: 'energy_cookie', name: 'Galleta Energía', cat: 'energy', weight: 80, desc: 'Restaura una pequeña cantidad de energía.' },
+                    { id: 'super_potion', name: 'Superpoción', cat: 'potions', weight: 75, desc: 'Cura un 50% de PS a un Pokémon.' },
+                    { id: 'friendship_berry', name: 'Baya Amistad', cat: 'others', weight: 70, desc: 'Baya especial para fortalecer vínculos.' },
+                    { id: 'mini_protein', name: 'Proteína Mini', cat: 'proteins', weight: 60, desc: 'Aumenta levemente el ataque de un Pokémon.' },
+                    { id: 'honey', name: 'Miel', cat: 'others', weight: 50, desc: 'Dulce miel que atrae Pokémon salvajes.' },
+                    { id: 'binoculars', name: 'Prismáticos', cat: 'others', weight: 40, desc: 'Ayuda a divisar mejores rutas.' },
+                    { id: 'pearl', name: 'Perla', cat: 'wallet', weight: 40, desc: 'Objeto valioso que se puede vender por dinero.' },
+                    { id: 'egg', name: 'Huevo', cat: 'eggs', weight: 40, desc: 'Un huevo Pokémon estándar.' },
+                    { id: 'egg_incense', name: 'Incienso Huevo', cat: 'others', weight: 20, desc: 'Incienso aromático para la incubación.' },
+                    { id: 'energy_juice', name: 'Zumo Energía', cat: 'energy', weight: 20, desc: 'Restaura 10 puntos de energía.' },
+                    { id: 'rare_egg', name: 'Huevo Raro', cat: 'eggs', weight: 20, desc: 'Un huevo Pokémon especial y curioso.' },
+                    { id: 'hyper_potion', name: 'Hiperpoción', cat: 'potions', weight: 15, desc: 'Cura una gran cantidad de PS a un Pokémon.' },
+                    { id: 'rare_candy', name: 'Caramelo Raro', cat: 'others', weight: 15, desc: 'Caramelo misterioso que estimula el crecimiento.' },
+                    { id: 'nugget', name: 'Pepita', cat: 'wallet', weight: 10, desc: 'Pepita de oro puro muy valiosa.' },
+                    { id: 'protein', name: 'Proteína', cat: 'proteins', weight: 10, desc: 'Aumenta permanentemente el ataque de un Pokémon.' },
+                    { id: 'mystic_egg', name: 'Huevo Místico', cat: 'eggs', weight: 5, desc: 'Un huevo Pokémon imbuido en energía mística.' },
+                    { id: 'briefcase', name: 'Maletín', cat: 'others', weight: 4, desc: 'Contiene suministros valiosos variados.' },
+                    { id: 'max_protein', name: 'Proteína Máxima', cat: 'proteins', weight: 3, desc: 'Aumenta drásticamente el ataque de un Pokémon.' },
+                    { id: 'ancient_map', name: 'Mapa Antiguo', cat: 'others', weight: 2, desc: 'Mapa detallado de zonas recónditas.' },
+                    { id: 'shiny_egg', name: 'Huevo Brillante', cat: 'eggs', weight: 1, desc: 'Un huevo Pokémon singular con destellos brillantes.' }
                 ];
-                let itemElegido = posiblesItems[Math.floor(Math.random() * posiblesItems.length)];
-                let listaCat = playerInventory[itemElegido.cat];
+
+                let totalWeight = itemPool.reduce((sum, i) => sum + i.weight, 0);
+                let randomVal = Math.random() * totalWeight;
+                let acumulado = 0;
+                let itemElegido = itemPool[0];
+
+                for (let it of itemPool) {
+                    acumulado += it.weight;
+                    if (randomVal <= acumulado) {
+                        itemElegido = it;
+                        break;
+                    }
+                }
+
+                let listaCat = playerInventory[itemElegido.cat] || (playerInventory['others'] = []);
                 let existente = listaCat.find(i => i.id === itemElegido.id);
                 if (existente) existente.count++;
                 else listaCat.push({ id: itemElegido.id, name: itemElegido.name, count: 1, desc: itemElegido.desc });
 
-                alert(`📦 ¡Obtuviste un objeto en el gacha: ${itemElegido.name} x1!`);
+                alert(`📦 ¡Obtuviste en el gacha: ${itemElegido.name} x1!`);
 
             } else if (maquina.type === 'mt') {
                 let listaMts = playerInventory['mts'];
@@ -1088,20 +1157,23 @@
             } else if (maquina.type === 'pokemon') {
                 if (POKEDEX_GLOBAL.length === 0) {
                     alert("La Pokédex aún no está cargada.");
-                    playerMoney += maquina.cost; // Reembolsar
+                    playerMoney += maquina.cost;
                     return;
                 }
 
-                // Filtrar por rarezas según BST estimado o tipo
                 let tipoFiltro = maquina.targetType;
                 let pool = POKEDEX_GLOBAL.filter(p => {
                     if (p.is_legendary || p.is_mythical) return false;
                     if (!p.types) return false;
+                    if (p.evolves_from || p.evolution_from) return false;
                     return p.types.some(t => t.toLowerCase() === tipoFiltro);
                 });
-                if (pool.length === 0) pool = POKEDEX_GLOBAL;
 
-                let pokeData = pool[Math.floor(Math.random() * pool.length)];
+                if (pool.length === 0) {
+                    pool = POKEDEX_GLOBAL.filter(p => !p.is_legendary && !p.is_mythical && !p.evolves_from && !p.evolution_from);
+                }
+
+                let pokeData = pool[Math.floor(Math.random() * pool.length)] || POKEDEX_GLOBAL[0];
                 let nivel = 5;
                 let iv = 15;
                 let hpMax = calcularHPFinal(pokeData.stats.hp, nivel, iv);
@@ -1125,10 +1197,10 @@
 
                 if (teamPokemon.length < 4) {
                     teamPokemon.push(nuevoPoke);
-                    alert(`✨ ¡Has obtenido a ${nuevoPoke.nombre} (Lv.${nivel}) y se ha unido a tu equipo!`);
+                    alert(`✨ ¡Has obtenido una 1ª evolución, ${nuevoPoke.nombre} (Lv.${nivel}), y se ha unido a tu equipo!`);
                 } else {
                     pcStorage.push(nuevoPoke);
-                    alert(`✨ ¡Has obtenido a ${nuevoPoke.nombre} (Lv.${nivel})! Tu equipo está lleno, se envió al PC.`);
+                    alert(`✨ ¡Has obtenido una 1ª evolución, ${nuevoPoke.nombre} (Lv.${nivel})! Tu equipo está lleno, se envió al PC.`);
                 }
                 actualizarHUD();
             }
