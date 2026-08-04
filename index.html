@@ -210,6 +210,7 @@
     </div>
 
     <script>
+        let POKEDEX_GLOBAL = [];
         const zones = ["Pueblo Inicial (Zona 1)", "Ruta 1 - Senda Tranquila", "Bosque Verde - Espesura", "Ruta 2 - Camino de Piedra", "Ciudad Vetusta (Zona 5)"];
         let currentZoneIndex = 0;
         let teamPokemon = []; 
@@ -217,11 +218,11 @@
         let currentEnemy = null;
         let zonaExplorada = false;
 
-        // --- SISTEMA DE ENERGÍA CON TIMESTAMPS (Persistente tras F5) ---
+        // --- SISTEMA DE ENERGÍA CON TIMESTAMPS ---
         let energiaActual = 20;
         const energiaMax = 20;
         let ultimoTimestamp = Date.now();
-        const intervaloRecargaMs = 15 * 60 * 1000; // 15 minutos en milisegundos
+        const intervaloRecargaMs = 15 * 60 * 1000; // 15 minutos
 
         function calcularEnergiaOffline() {
             if (energiaActual < energiaMax) {
@@ -233,8 +234,6 @@
                     const energiaGanada = ciclos * 3;
                     
                     energiaActual = Math.min(energiaMax, energiaActual + energiaGanada);
-                    
-                    // Ajustar el timestamp descontando los ciclos enteros consumidos
                     ultimoTimestamp = ahora - (transcurrido % intervaloRecargaMs);
                     guardarDatos();
                 }
@@ -267,10 +266,7 @@
             }
         }
 
-        // Bucle de tiempo (1 segundo)
-        setInterval(() => {
-            actualizarHUDEnergia();
-        }, 1000);
+        setInterval(() => { actualizarHUDEnergia(); }, 1000);
 
         // --- MATRIZ COMPLETA DE LOS 18 TIPOS ---
         const ALL_TYPES = ["normal", "fuego", "agua", "planta", "electrico", "hielo", "lucha", "veneno", "tierra", "volador", "psiquico", "bicho", "roca", "fantasma", "dragon", "siniestro", "acero", "hada"];
@@ -313,23 +309,29 @@
             return disponibles[Math.floor(Math.random() * disponibles.length)];
         }
 
+        // Fórmulas oficiales
         function calcularHPFinal(baseHp, nivel, iv = 15) { return Math.floor(((2 * baseHp + iv) * nivel) / 100) + nivel + 10; }
         function calcularStatFinal(baseStat, nivel, iv = 15) { return Math.floor(((2 * baseStat + iv) * nivel) / 100) + 5; }
 
-        window.onload = function() {
+        // Carga del JSON Global al iniciar
+        window.onload = async function() {
+            try {
+                const response = await fetch('data/pokemon.json');
+                POKEDEX_GLOBAL = await response.json();
+            } catch (error) {
+                console.error("No se pudo cargar data/pokemon.json:", error);
+            }
+
             try {
                 const currentUser = localStorage.getItem("pt_current_user");
                 if (currentUser) {
                     document.getElementById("login-screen").style.display = "none";
                     document.getElementById("btn-username-display").innerText = currentUser.toUpperCase();
-                    
-                    // Cargar datos específicos del usuario actual
                     cargarDatosUsuario(currentUser);
                 }
             } catch (e) {}
         };
 
-        // --- SISTEMA DE LOGIN Y REGISTRO SEGURO ---
         function handleLogin() {
             const user = document.getElementById("username-input").value.trim();
             const pass = document.getElementById("password-input").value.trim();
@@ -344,7 +346,6 @@
             let usersDb = JSON.parse(localStorage.getItem("pt_users_db") || "{}");
 
             if (usersDb[user]) {
-                // El usuario ya existe, comprobar contraseña
                 if (usersDb[user] === pass) {
                     localStorage.setItem("pt_current_user", user);
                     document.getElementById("login-screen").style.display = "none";
@@ -352,18 +353,14 @@
                     cargarDatosUsuario(user);
                 } else {
                     msg.style.color = "#ef4444";
-                    msg.innerText = "Contraseña incorrecta para este usuario registrado.";
+                    msg.innerText = "Contraseña incorrecta.";
                 }
             } else {
-                // Usuario nuevo: registrar automáticamente
                 usersDb[user] = pass;
                 localStorage.setItem("pt_users_db", JSON.stringify(usersDb));
                 localStorage.setItem("pt_current_user", user);
-                
                 document.getElementById("login-screen").style.display = "none";
                 document.getElementById("btn-username-display").innerText = user.toUpperCase();
-                
-                // Mostrar pantalla de iniciales para cuenta nueva
                 document.getElementById("starter-screen").style.display = "flex";
             }
         }
@@ -445,11 +442,48 @@
             document.getElementById("btn-explore-main").disabled = false;
         }
 
+        function explorarGenerarPokemonSalvaje(nivel) {
+            if (POKEDEX_GLOBAL.length > 0) {
+                const randomEntry = POKEDEX_GLOBAL[Math.floor(Math.random() * POKEDEX_GLOBAL.length)];
+                const iv = 15;
+                const hpMax = calcularHPFinal(randomEntry.stats.hp, nivel, iv);
+                const atkComb = Math.floor((randomEntry.stats.attack + randomEntry.stats.special_attack) / 2);
+                const defComb = Math.floor((randomEntry.stats.defense + randomEntry.stats.special_defense) / 2);
+
+                const t1 = randomEntry.types[0] || "normal";
+                const t2 = randomEntry.types[1] || null;
+
+                return {
+                    tipoCombate: 'wild',
+                    nombre: randomEntry.name.charAt(0).toUpperCase() + randomEntry.name.slice(1),
+                    nivel: nivel,
+                    hpMax: hpMax,
+                    hpActual: hpMax,
+                    ataque: calcularStatFinal(atkComb, nivel, iv),
+                    defensa: calcularStatFinal(defComb, nivel, iv),
+                    tipo1: t1,
+                    tipo2: t2,
+                    tipoOculto: getTipoOcultoAleatorio(t1, t2),
+                    icono: '🐾'
+                };
+            } else {
+                // Fallback de respaldo si el JSON aún no cargó
+                return {
+                    tipoCombate: 'wild',
+                    nombre: "Sneasel Salvaje",
+                    nivel: nivel,
+                    hpMax: calcularHPFinal(45, nivel), hpActual: calcularHPFinal(45, nivel),
+                    ataque: calcularStatFinal(50, nivel), defensa: calcularStatFinal(45, nivel),
+                    tipo1: 'siniestro', tipo2: 'hielo', tipoOculto: getTipoOcultoAleatorio('siniestro', 'hielo'),
+                    icono: '🦊'
+                };
+            }
+        }
+
         function exploreZone() {
             if (teamPokemon.length === 0) return alert("¡Elige un inicial!");
             if (zonaExplorada) return;
 
-            // Control de Energía con Timestamp
             calcularEnergiaOffline();
             if (energiaActual < 1) {
                 alert("¡No tienes suficiente energía para explorar! Espera a que se recargue.");
@@ -457,7 +491,7 @@
             }
             
             if (energiaActual === energiaMax) {
-                ultimoTimestamp = Date.now(); // Empezar a contar el tiempo de recarga si estaba al máximo
+                ultimoTimestamp = Date.now();
             }
             energiaActual--;
             guardarDatos();
@@ -472,8 +506,10 @@
                 guardarDatos();
                 actualizarHUD();
                 document.getElementById("explore-log").innerHTML = `🏥 ¡Encontraste una poción! Recuperas 50% de PS.`;
+            } else if (r < 0.8) {
+                iniciarCombate('wild');
             } else {
-                iniciarCombate(r < 0.8 ? 'wild' : 'trainer');
+                iniciarCombate('trainer');
             }
             zonaExplorada = true;
             document.getElementById("btn-explore-main").disabled = true;
@@ -483,15 +519,19 @@
             let lider = teamPokemon[0];
             const nivel = 5 + currentZoneIndex;
             
-            currentEnemy = {
-                tipoCombate: tipo,
-                nombre: tipo === 'wild' ? "Sneasel" : "Rival",
-                nivel: nivel,
-                hpMax: calcularHPFinal(45, nivel), hpActual: calcularHPFinal(45, nivel),
-                ataque: calcularStatFinal(50, nivel), defensa: calcularStatFinal(45, nivel),
-                tipo1: 'siniestro', tipo2: 'hielo', tipoOculto: getTipoOcultoAleatorio('siniestro', 'hielo'),
-                icono: '🦊'
-            };
+            if (tipo === 'wild') {
+                currentEnemy = explorarGenerarPokemonSalvaje(nivel);
+            } else {
+                currentEnemy = {
+                    tipoCombate: 'trainer',
+                    nombre: "Entrenador Luis",
+                    nivel: nivel,
+                    hpMax: calcularHPFinal(50, nivel), hpActual: calcularHPFinal(50, nivel),
+                    ataque: calcularStatFinal(55, nivel), defensa: calcularStatFinal(50, nivel),
+                    tipo1: 'lucha', tipo2: 'normal', tipoOculto: getTipoOcultoAleatorio('lucha', 'normal'),
+                    icono: '👤'
+                };
+            }
 
             document.getElementById("combat-screen").style.display = "flex";
             document.getElementById("enemy-name-lvl").innerText = `${currentEnemy.nombre.toUpperCase()} Lv.${nivel}`;
@@ -507,7 +547,7 @@
             let botones = `
                 <div class="top-attacks-row">
                     <button class="btn-attack-type" style="background-color: ${c1};" onclick="ejecutarTurnoCombate('atacar', '${lider.tipo1}')">${lider.tipo1}</button>
-                    <button class="btn-attack-type" style="background-color: ${c2};" onclick="ejecutarTurnoCombate('atacar', '${lider.tipo2}')">${lider.tipo2}</button>
+                    <button class="btn-attack-type" style="background-color: ${c2};" onclick="ejecutarTurnoCombate('atacar', '${lider.tipo2}')">${lider.tipo2 || 'normal'}</button>
                 </div>
                 <div class="mid-hidden-row">
                     <button class="btn-hidden-power" style="background-color: ${cOculto};" onclick="ejecutarTurnoCombate('atacar', '${lider.tipoOculto}')" title="Poder Oculto">${lider.tipoOculto}</button>
@@ -549,7 +589,7 @@
 
             if (accion === 'capturar') {
                 if (Math.random() < 0.6) {
-                    let nuevo = { ...currentEnemy, nombre: currentEnemy.nombre.replace(" Salvaje", "") };
+                    let nuevo = { ...currentEnemy };
                     if (teamPokemon.length < 4) teamPokemon.push(nuevo); else pcStorage.push(nuevo);
                     guardarDatos();
                     return cerrarCombate(`¡Atrapaste a ${nuevo.nombre}! ${teamPokemon.length < 4 ? 'Añadido al equipo.' : 'Enviado al PC.'}`);
