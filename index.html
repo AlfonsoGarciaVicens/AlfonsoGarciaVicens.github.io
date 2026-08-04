@@ -464,7 +464,7 @@
             document.getElementById("btn-explore-main").disabled = false;
         }
 
-        function explorarGenerarPokemonSalvaje(nivel) {
+        function explorarGenerarPokemon(nivel) {
             let zonaObj = zonesConfig[currentZoneIndex];
             let maxBstPermitido = getMaxBstByMedals(playerMedals);
             
@@ -506,7 +506,6 @@
             const t2 = randomEntry.types[1] || null;
 
             return {
-                tipoCombate: 'wild',
                 nombre: randomEntry.name.charAt(0).toUpperCase() + randomEntry.name.slice(1),
                 nivel: nivel,
                 hpMax: hpMax,
@@ -555,18 +554,16 @@
             let lider = teamPokemon[0];
             const nivel = calcularNivelEnemigo();
             
+            currentEnemy = explorarGenerarPokemon(nivel);
+            currentEnemy.tipoCombate = tipo;
+
             if (tipo === 'wild') {
-                currentEnemy = explorarGenerarPokemonSalvaje(nivel);
+                document.getElementById("combat-dialogue-text").innerHTML = `¡Un ${currentEnemy.nombre} salvaje apareció!`;
             } else {
-                currentEnemy = {
-                    tipoCombate: 'trainer',
-                    nombre: "Entrenador de Zona",
-                    nivel: nivel,
-                    hpMax: calcularHPFinal(45, nivel), hpActual: calcularHPFinal(45, nivel),
-                    ataque: calcularStatFinal(48, nivel), defensa: calcularStatFinal(45, nivel),
-                    tipo1: zonesConfig[currentZoneIndex].types[0], tipo2: 'normal', tipoOculto: getTipoOcultoAleatorio('normal', 'normal'),
-                    icono: '👤'
-                };
+                const trainerNames = ["Cazador Pedro", "Campista María", "Joven Lucas", "Luchador Mario", "Entrenador Juan", "Montañero Jorge"];
+                const randomTrainer = trainerNames[Math.floor(Math.random() * trainerNames.length)];
+                currentEnemy.trainerName = randomTrainer;
+                document.getElementById("combat-dialogue-text").innerHTML = `¡${randomTrainer} te desafía y envía a ${currentEnemy.nombre}!`;
             }
 
             document.getElementById("combat-screen").style.display = "flex";
@@ -574,7 +571,6 @@
             document.getElementById("player-battle-name").innerText = `${lider.nombre.toUpperCase()} Lv.${lider.nivel}`;
             
             actualizarBarrasHP();
-            document.getElementById("combat-dialogue-text").innerHTML = `¡Un ${currentEnemy.nombre} apareció!`;
 
             let t1Map = mapType(lider.tipo1);
             let t2Map = mapType(lider.tipo2);
