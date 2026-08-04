@@ -2,25 +2,25 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pokémon Trails Clone</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace; }
-        body { background-color: #121212; color: #ffffff; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        body { background-color: #121212; color: #ffffff; display: flex; justify-content: center; align-items: center; height: 100dvh; overflow: hidden; }
 
-        /* Contenedor Principal: Se usa flex-start con gap fijo para que el recuadro verde nunca se mueva de su sitio */
+        /* Contenedor Principal Adaptativo para Móviles (Usa dvh para evitar saltos con las barras del navegador) */
         #game-container { 
             width: 100%; 
             max-width: 450px; 
-            height: 100vh; 
+            height: 100dvh; 
             max-height: 850px; 
             background-color: #1a1a1a; 
             position: relative; 
             display: flex; 
             flex-direction: column; 
-            justify-content: flex-start; 
-            gap: 12px; 
-            padding: 15px; 
+            justify-content: space-between; 
+            gap: 8px; 
+            padding: 12px; 
             border: 2px solid #333; 
             box-shadow: 0 0 20px rgba(0,0,0,0.8); 
         }
@@ -28,7 +28,7 @@
         /* Overlays de pantalla completa (Login / Selección Inicial) */
         .screen-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
         
-        /* Menús in-game y Combate: Contenidos estrictamente al 100% dentro de la ventanita verde (.map-viewport) */
+        /* Menús in-game y Combate: Contenidos estrictamente al 100% dentro de la ventanita verde */
         .modal-screen { 
             position: absolute; 
             top: 0; 
@@ -60,7 +60,7 @@
         .bag-item-row:hover { background: #fde68a; }
         .bag-item-row.selected { background: #f59e0b; color: white; border-color: #b45309; }
 
-        .bag-desc-box { background: #4b5563; border: 3px solid #1f2937; border-radius: 6px; padding: 6px; color: #f3f4f6; font-size: 10px; text-align: left; height: 65px; display: flex; flex-direction: column; justify-content: space-between; }
+        .bag-desc-box { background: #4b5563; border: 3px solid #1f2937; border-radius: 6px; padding: 6px; color: #f3f4f6; font-size: 10px; text-align: left; height: 60px; display: flex; flex-direction: column; justify-content: space-between; }
         .bag-use-btn { background: #10b981; border: none; color: white; padding: 3px 8px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 10px; align-self: flex-end; }
         .bag-close-btn { background: #ef4444; border: 2px solid #991b1b; color: white; padding: 5px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 11px; width: 100%; text-align: center; }
 
@@ -74,7 +74,7 @@
 
         .menu-grid-container { display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: center; flex-grow: 1; }
         .menu-row { display: flex; gap: 12px; justify-content: center; }
-        .menu-icon-btn { background-color: #1e293b; border: 3px solid #64748b; border-radius: 8px; width: 50px; height: 50px; font-size: 22px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        .menu-icon-btn { background-color: #1e293b; border: 3px solid #64748b; border-radius: 8px; width: 45px; height: 45px; font-size: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
 
         .team-slot { background-color: #64748b; border: 2px solid #334155; border-radius: 6px; padding: 4px 6px; display: flex; align-items: center; justify-content: space-between; color: #fff; font-size: 10px; }
         .team-slot.active-lead { background: linear-gradient(90deg, #0ea5e9, #0284c7); border: 2px solid #e0f2fe; }
@@ -90,14 +90,15 @@
         .energy-bars { color: #4ade80; font-family: monospace; letter-spacing: -1px; font-weight: bold; }
         .menu-btn { background-color: #2196F3; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; }
 
-        .map-viewport { width: 100%; height: 300px; background: linear-gradient(135deg, #2e7d32, #1b5e20); border: 4px solid #333; border-radius: 8px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 15px; box-sizing: border-box; }
+        /* Ventana verde con altura flexible (flex-grow) para evitar desbordamientos en pantallas móviles cortas */
+        .map-viewport { width: 100%; flex-grow: 1; background: linear-gradient(135deg, #2e7d32, #1b5e20); border: 4px solid #333; border-radius: 8px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 12px; box-sizing: border-box; }
         .map-background { position: absolute; width: 100%; height: 100%; background-image: radial-gradient(#388e3c 15%, transparent 16%), radial-gradient(#1b5e20 15%, transparent 16%); background-size: 30px 30px; background-position: 0 0, 15px 15px; opacity: 0.4; z-index: 1; }
         .map-content { position: relative; z-index: 2; text-align: center; width: 100%; }
-        .zone-title { background-color: rgba(0, 0, 0, 0.7); padding: 8px 15px; border-radius: 4px; font-size: 14px; border: 1px solid #555; margin-bottom: 5px; display: inline-block; }
-        .sprite-container { display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 30px; margin-top: 5px; }
-        .exploration-log { position: relative; z-index: 2; background-color: rgba(0, 0, 0, 0.85); border: 1px solid #555; border-radius: 6px; padding: 10px; width: 100%; min-height: 70px; font-size: 11px; color: #d4d4d4; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .zone-title { background-color: rgba(0, 0, 0, 0.7); padding: 6px 12px; border-radius: 4px; font-size: 13px; border: 1px solid #555; margin-bottom: 4px; display: inline-block; }
+        .sprite-container { display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 26px; margin-top: 4px; }
+        .exploration-log { position: relative; z-index: 2; background-color: rgba(0, 0, 0, 0.85); border: 1px solid #555; border-radius: 6px; padding: 8px; width: 100%; min-height: 60px; font-size: 11px; color: #d4d4d4; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-        /* Estilo específico para la ventana de combate integrada */
+        /* Ventana de combate adaptada al contenedor verde */
         .combat-modal-window { 
             background: linear-gradient(135deg, #1e3a8a, #1d4ed8); 
             border: 4px solid #bae6fd; 
@@ -129,9 +130,9 @@
         .combat-enemy-info { align-self: flex-start; }
         .combat-player-info { align-self: flex-end; }
         .hp-bar-bg { background-color: #555; height: 5px; width: 100%; border-radius: 2px; margin-top: 2px; overflow: hidden; }
-        .combat-sprites { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 15px; font-size: 26px; }
+        .combat-sprites { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 15px; font-size: 24px; }
 
-        .combat-dialogue { background-color: #222; border: 1px solid #c0c0c0; border-radius: 4px; padding: 6px; font-size: 10px; color: #fff; min-height: 35px; max-height: 45px; text-align: center; overflow-y: auto; }
+        .combat-dialogue { background-color: #222; border: 1px solid #c0c0c0; border-radius: 4px; padding: 6px; font-size: 10px; color: #fff; min-height: 32px; max-height: 40px; text-align: center; overflow-y: auto; }
 
         .combat-controls-container { display: flex; flex-direction: column; gap: 6px; position: relative; }
         .top-attacks-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
@@ -181,15 +182,15 @@
         }
 
         .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn-action { padding: 15px; border: none; border-radius: 6px; font-weight: bold; font-size: 13px; cursor: pointer; text-align: center; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .btn-action { padding: 12px; border: none; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer; text-align: center; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
         .btn-explore { background-color: #424242; }
         .btn-explore:disabled { background-color: #262626; color: #666; cursor: not-allowed; box-shadow: none; }
         .btn-advance { background-color: #2e7d32; }
 
         .bottom-nav { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-        .btn-nav { background-color: #2a2a2a; border: 2px solid #444; color: white; padding: 10px 0; text-align: center; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .btn-nav { background-color: #2a2a2a; border: 2px solid #444; color: white; padding: 8px 0; text-align: center; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; }
         .footer-info { display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: #888; }
-        .chat-btn { background-color: #333; border: 1px solid #555; color: white; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+        .chat-btn { background-color: #333; border: 1px solid #555; color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -303,7 +304,7 @@
                 </div>
             </div>
 
-            <!-- Vista de Combate (Dentro de la ventanita verde, exactamente igual que los menús) -->
+            <!-- Vista de Combate (Dentro de la ventanita verde, perfectamente proporcionada) -->
             <div id="combat-viewport-screen" class="modal-screen">
                 <div class="combat-modal-window">
                     <div id="enemy-initiative-bubble" class="initiative-bubble" style="top: 15px; left: 20px;">--</div>
@@ -327,7 +328,7 @@
                         </div>
                     </div>
 
-                    <div id="player-initiative-bubble" class="initiative-bubble" style="bottom: 50px; right: 20px;">--</div>
+                    <div id="player-initiative-bubble" class="initiative-bubble" style="bottom: 45px; left: 50%; transform: translateX(-50%);">--</div>
 
                     <div class="combat-dialogue" id="combat-dialogue-text">¡Comienza el enfrentamiento!</div>
                 </div>
@@ -354,7 +355,7 @@
 
         <div class="footer-info">
             <button class="chat-btn" onclick="alert('Chat global')">CHAT (5)</button>
-            <span>Pokémon TRAILS v. 2.2.7</span>
+            <span>Pokémon TRAILS v. 2.2.8</span>
         </div>
     </div>
 
