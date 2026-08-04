@@ -13,7 +13,7 @@
         /* Overlays de pantalla completa (Login / Selección Inicial) */
         .screen-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
         
-        /* Menús in-game: Estrictamente dentro de la ventanita verde (.map-viewport) */
+        /* Menús in-game y Combate: Comparten la misma estructura dentro de la ventanita verde (.map-viewport) */
         .modal-screen { 
             position: absolute; 
             top: 0; 
@@ -82,33 +82,18 @@
         .sprite-container { display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 30px; margin-top: 5px; }
         .exploration-log { position: relative; z-index: 2; background-color: rgba(0, 0, 0, 0.85); border: 1px solid #555; border-radius: 6px; padding: 10px; width: 100%; min-height: 70px; font-size: 11px; color: #d4d4d4; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-        /* --- PANTALLA DE COMBATE VIEWPORT (Estrictamente contenida dentro de la ventanita verde sin desbordar) --- */
-        #combat-viewport-screen { 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to bottom, #3b82f6, #1e3a8a); 
-            z-index: 90; 
-            display: none; 
+        /* Estilo específico para la ventana de combate integrada como modal */
+        .combat-modal-window { 
+            background: linear-gradient(135deg, #1e3a8a, #1d4ed8); 
+            border: 4px solid #bae6fd; 
+            box-shadow: 0 8px 16px rgba(0,0,0,0.6); 
+            padding: 10px; 
+            border-radius: 8px; 
+            width: 100%; 
+            height: 100%; 
+            display: flex; 
             flex-direction: column; 
             justify-content: space-between; 
-            padding: 8px; 
-            border-radius: 6px; 
-            border: 2px solid #bae6fd;
-            box-sizing: border-box;
-            overflow: hidden;
-        }
-
-        .combat-viewport-inner {
-            height: 115px;
-            background: rgba(0, 0, 0, 0.25);
-            border-radius: 4px;
-            padding: 5px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
             position: relative;
         }
 
@@ -116,20 +101,20 @@
         .combat-enemy-info { align-self: flex-start; }
         .combat-player-info { align-self: flex-end; }
         .hp-bar-bg { background-color: #555; height: 4px; width: 100%; border-radius: 2px; margin-top: 1px; overflow: hidden; }
-        .combat-sprites { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 15px; font-size: 22px; }
+        .combat-sprites { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 15px; font-size: 24px; }
 
-        .combat-dialogue { background-color: #222; border: 1px solid #c0c0c0; border-radius: 4px; padding: 4px; font-size: 9px; color: #fff; min-height: 28px; max-height: 35px; text-align: center; overflow-y: auto; }
+        .combat-dialogue { background-color: #222; border: 1px solid #c0c0c0; border-radius: 4px; padding: 4px; font-size: 9px; color: #fff; min-height: 30px; max-height: 40px; text-align: center; overflow-y: auto; }
 
-        .combat-controls-container { display: flex; flex-direction: column; gap: 3px; position: relative; }
-        .top-attacks-row { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+        .combat-controls-container { display: flex; flex-direction: column; gap: 6px; position: relative; }
+        .top-attacks-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
         .mid-hidden-row { display: flex; justify-content: center; align-items: center; height: 0; z-index: 5; }
-        .bottom-actions-row { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 4px; }
+        .bottom-actions-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 6px; }
 
-        .btn-attack-type { color: white; border: 1px solid rgba(0,0,0,0.5); padding: 5px; font-weight: bold; border-radius: 3px; cursor: pointer; text-shadow: 1px 1px 1px #000; font-size: 9px; text-transform: uppercase; }
-        .btn-hidden-power { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #fff; cursor: pointer; font-weight: bold; font-size: 6px; color: white; text-shadow: 1px 1px 1px #000; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.6); position: relative; top: -4px; text-transform: uppercase; text-align: center; }
+        .btn-attack-type { color: white; border: 1px solid rgba(0,0,0,0.5); padding: 7px; font-weight: bold; border-radius: 4px; cursor: pointer; text-shadow: 1px 1px 1px #000; font-size: 10px; text-transform: uppercase; }
+        .btn-hidden-power { width: 38px; height: 38px; border-radius: 50%; border: 2px solid #fff; cursor: pointer; font-weight: bold; font-size: 6px; color: white; text-shadow: 1px 1px 1px #000; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.6); position: relative; top: -5px; text-transform: uppercase; text-align: center; }
         
-        .btn-capture { background-color: #eab308; color: black; border: none; padding: 5px; font-weight: bold; border-radius: 3px; cursor: pointer; font-size: 9px; }
-        .btn-flee { background-color: #ef4444; color: white; border: none; padding: 5px; font-weight: bold; border-radius: 3px; cursor: pointer; font-size: 9px; }
+        .btn-capture { background-color: #eab308; color: black; border: none; padding: 7px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 10px; }
+        .btn-flee { background-color: #ef4444; color: white; border: none; padding: 7px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 10px; }
 
         /* --- ANIMACIONES DE COMBATE --- */
         @keyframes idleBounce {
@@ -290,9 +275,9 @@
                 </div>
             </div>
 
-            <!-- Vista de Combate (Dentro de la ventanita verde, exactamente igual que los menús) -->
-            <div id="combat-viewport-screen">
-                <div class="combat-viewport-inner">
+            <!-- Vista de Combate (Utiliza exactamente la misma clase modal-screen que los menús) -->
+            <div id="combat-viewport-screen" class="modal-screen">
+                <div class="combat-modal-window">
                     <div id="enemy-initiative-bubble" class="initiative-bubble" style="top: 15px; left: 20px;">--</div>
                     
                     <div class="combat-enemy-info">
@@ -305,7 +290,7 @@
                         <span id="enemy-battle-sprite" class="idle-anim">🦊</span>
                     </div>
                     
-                    <div id="player-initiative-bubble" class="initiative-bubble" style="bottom: 25px; right: 20px;">--</div>
+                    <div id="player-initiative-bubble" class="initiative-bubble" style="bottom: 35px; right: 20px;">--</div>
 
                     <div class="combat-player-info">
                         <div id="enemy-name-lvl-dummy" style="display:none;"></div>
@@ -313,9 +298,9 @@
                         <div class="hp-bar-bg"><div id="player-hp-fill" class="hp-bar-fill" style="width: 100%;"></div></div>
                         <div style="font-size: 8px; text-align: right;" id="player-battle-hp-text">--/-- PS</div>
                     </div>
-                </div>
 
-                <div class="combat-dialogue" id="combat-dialogue-text">¡Comienza el enfrentamiento!</div>
+                    <div class="combat-dialogue" id="combat-dialogue-text">¡Comienza el enfrentamiento!</div>
+                </div>
             </div>
         </div>
 
@@ -339,7 +324,7 @@
 
         <div class="footer-info">
             <button class="chat-btn" onclick="alert('Chat global')">CHAT (5)</button>
-            <span>Pokémon TRAILS v. 2.2.4</span>
+            <span>Pokémon TRAILS v. 2.2.5</span>
         </div>
     </div>
 
