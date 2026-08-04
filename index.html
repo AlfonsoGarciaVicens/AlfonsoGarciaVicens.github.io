@@ -13,20 +13,20 @@
         /* Overlays de pantalla completa (Login / Selección Inicial) */
         .screen-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
         
-        /* Menús in-game y Combate: Comparten la misma estructura dentro de la ventanita verde (.map-viewport) */
+        /* Menús in-game y Combate: Contenidos estrictamente dentro del área interna de la ventanita verde (.map-viewport) */
         .modal-screen { 
             position: absolute; 
-            top: 0; 
-            left: 0; 
-            right: 0;
-            bottom: 0;
+            top: 15px; 
+            left: 15px; 
+            right: 15px;
+            bottom: 15px;
             background-color: rgba(18, 18, 18, 0.95); 
             z-index: 80; 
             display: none; 
             flex-direction: column; 
             justify-content: center; 
             align-items: center; 
-            padding: 10px; 
+            padding: 8px; 
             border-radius: 6px; 
             box-sizing: border-box;
         }
@@ -87,7 +87,7 @@
             background: linear-gradient(135deg, #1e3a8a, #1d4ed8); 
             border: 4px solid #bae6fd; 
             box-shadow: 0 8px 16px rgba(0,0,0,0.6); 
-            padding: 10px; 
+            padding: 8px; 
             border-radius: 8px; 
             width: 100%; 
             height: 100%; 
@@ -95,15 +95,28 @@
             flex-direction: column; 
             justify-content: space-between; 
             position: relative;
+            box-sizing: border-box;
         }
 
-        .combat-enemy-info, .combat-player-info { background-color: rgba(200, 200, 200, 0.9); color: #000; padding: 2px 5px; border-radius: 3px; font-size: 9px; width: 60%; border: 1px solid #333; }
+        .combat-viewport-inner {
+            flex-grow: 1;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 4px;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 6px;
+        }
+
+        .combat-enemy-info, .combat-player-info { background-color: rgba(200, 200, 200, 0.9); color: #000; padding: 3px 6px; border-radius: 3px; font-size: 9px; width: 60%; border: 1px solid #333; }
         .combat-enemy-info { align-self: flex-start; }
         .combat-player-info { align-self: flex-end; }
         .hp-bar-bg { background-color: #555; height: 4px; width: 100%; border-radius: 2px; margin-top: 1px; overflow: hidden; }
-        .combat-sprites { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 15px; font-size: 24px; }
+        .combat-sprites { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 15px; font-size: 26px; }
 
-        .combat-dialogue { background-color: #222; border: 1px solid #c0c0c0; border-radius: 4px; padding: 4px; font-size: 9px; color: #fff; min-height: 30px; max-height: 40px; text-align: center; overflow-y: auto; }
+        .combat-dialogue { background-color: #222; border: 1px solid #c0c0c0; border-radius: 4px; padding: 5px; font-size: 9px; color: #fff; min-height: 32px; max-height: 42px; text-align: center; overflow-y: auto; }
 
         .combat-controls-container { display: flex; flex-direction: column; gap: 6px; position: relative; }
         .top-attacks-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
@@ -280,24 +293,26 @@
                 <div class="combat-modal-window">
                     <div id="enemy-initiative-bubble" class="initiative-bubble" style="top: 15px; left: 20px;">--</div>
                     
-                    <div class="combat-enemy-info">
-                        <div id="enemy-name-lvl">ENEMIGO Lv.7</div>
-                        <div class="hp-bar-bg"><div id="enemy-hp-fill" class="hp-bar-fill" style="width: 100%;"></div></div>
-                    </div>
-                    
-                    <div class="combat-sprites">
-                        <span id="player-battle-sprite" class="idle-anim">🦖</span>
-                        <span id="enemy-battle-sprite" class="idle-anim">🦊</span>
-                    </div>
-                    
-                    <div id="player-initiative-bubble" class="initiative-bubble" style="bottom: 35px; right: 20px;">--</div>
+                    <div class="combat-viewport-inner">
+                        <div class="combat-enemy-info">
+                            <div id="enemy-name-lvl">ENEMIGO Lv.7</div>
+                            <div class="hp-bar-bg"><div id="enemy-hp-fill" class="hp-bar-fill" style="width: 100%;"></div></div>
+                        </div>
+                        
+                        <div class="combat-sprites">
+                            <span id="player-battle-sprite" class="idle-anim">🦖</span>
+                            <span id="enemy-battle-sprite" class="idle-anim">🦊</span>
+                        </div>
 
-                    <div class="combat-player-info">
-                        <div id="enemy-name-lvl-dummy" style="display:none;"></div>
-                        <div id="player-battle-name">JUGADOR Lv.5</div>
-                        <div class="hp-bar-bg"><div id="player-hp-fill" class="hp-bar-fill" style="width: 100%;"></div></div>
-                        <div style="font-size: 8px; text-align: right;" id="player-battle-hp-text">--/-- PS</div>
+                        <div class="combat-player-info">
+                            <div id="enemy-name-lvl-dummy" style="display:none;"></div>
+                            <div id="player-battle-name">JUGADOR Lv.5</div>
+                            <div class="hp-bar-bg"><div id="player-hp-fill" class="hp-bar-fill" style="width: 100%;"></div></div>
+                            <div style="font-size: 8px; text-align: right;" id="player-battle-hp-text">--/-- PS</div>
+                        </div>
                     </div>
+
+                    <div id="player-initiative-bubble" class="initiative-bubble" style="bottom: 50px; right: 20px;">--</div>
 
                     <div class="combat-dialogue" id="combat-dialogue-text">¡Comienza el enfrentamiento!</div>
                 </div>
@@ -324,7 +339,7 @@
 
         <div class="footer-info">
             <button class="chat-btn" onclick="alert('Chat global')">CHAT (5)</button>
-            <span>Pokémon TRAILS v. 2.2.5</span>
+            <span>Pokémon TRAILS v. 2.2.6</span>
         </div>
     </div>
 
