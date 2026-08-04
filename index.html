@@ -223,12 +223,12 @@
 <body>
 
     <div id="game-container">
-        <!-- Login -->
+        <!-- Login con soporte para tecla Enter -->
         <div id="login-screen" class="screen-overlay">
             <div class="box-container" style="height: auto;">
                 <h2>Pokémon Trails</h2>
-                <input type="text" id="username-input" placeholder="Usuario">
-                <input type="password" id="password-input" placeholder="Contraseña">
+                <input type="text" id="username-input" placeholder="Usuario" onkeydown="if(event.key==='Enter') handleLogin()">
+                <input type="password" id="password-input" placeholder="Contraseña" onkeydown="if(event.key==='Enter') handleLogin()">
                 <button onclick="handleLogin()">ENTRAR / REGISTRARSE</button>
                 <p id="login-msg" style="font-size: 10px; color: #aaa; margin-top: 10px;">Si eres nuevo, se creará tu cuenta automáticamente.</p>
             </div>
@@ -455,6 +455,28 @@
         let pestanaActivaBolsa = 'potions';
         let objetoSeleccionadoBolsa = null;
 
+        // --- FUNCIONES SEGURAS DE LOCALSTORAGE (Previene bloqueos en GitHub Pages) ---
+        function safeGetItem(key, defaultValue) {
+            try {
+                const item = localStorage.getItem(key);
+                return item !== null ? item : defaultValue;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+
+        function safeSetItem(key, value) {
+            try {
+                localStorage.setItem(key, value);
+            } catch (e) {}
+        }
+
+        function safeRemoveItem(key) {
+            try {
+                localStorage.removeItem(key);
+            } catch (e) {}
+        }
+
         // --- CONFIGURACIÓN DE GACHAS ---
         const gachaMachines = [
             {
@@ -518,7 +540,7 @@
         const intervaloRecargaMs = 15 * 60 * 1000;
 
         function esUsuarioFonso() {
-            const currentUser = localStorage.getItem("pt_current_user");
+            const currentUser = safeGetItem("pt_current_user", "");
             return currentUser && currentUser.toLowerCase() === "fonso";
         }
 
@@ -631,15 +653,14 @@
             }
 
             try {
-                const currentUser = localStorage.getItem("pt_current_user");
+                const currentUser = safeGetItem("pt_current_user", null);
                 if (currentUser) {
                     document.getElementById("login-screen").style.display = "none";
                     document.getElementById("btn-username-display").innerText = currentUser.toUpperCase();
                     cargarDatosUsuario(currentUser);
                 }
             } catch (e) {
-                console.error("Error al cargar sesión guardada:", e);
-                localStorage.removeItem("pt_current_user");
+                safeRemoveItem("pt_current_user");
                 document.getElementById("login-screen").style.display = "flex";
             }
         };
@@ -657,12 +678,12 @@
 
             let usersDb = {};
             try {
-                usersDb = JSON.parse(localStorage.getItem("pt_users_db") || "{}");
+                usersDb = JSON.parse(safeGetItem("pt_users_db", "{}"));
             } catch(e) { usersDb = {}; }
 
             if (usersDb[user]) {
                 if (usersDb[user] === pass) {
-                    localStorage.setItem("pt_current_user", user);
+                    safeSetItem("pt_current_user", user);
                     document.getElementById("login-screen").style.display = "none";
                     document.getElementById("btn-username-display").innerText = user.toUpperCase();
                     cargarDatosUsuario(user);
@@ -672,8 +693,8 @@
                 }
             } else {
                 usersDb[user] = pass;
-                localStorage.setItem("pt_users_db", JSON.stringify(usersDb));
-                localStorage.setItem("pt_current_user", user);
+                safeSetItem("pt_users_db", JSON.stringify(usersDb));
+                safeSetItem("pt_current_user", user);
                 document.getElementById("login-screen").style.display = "none";
                 document.getElementById("btn-username-display").innerText = user.toUpperCase();
                 document.getElementById("starter-screen").style.display = "flex";
@@ -682,7 +703,7 @@
 
         function handleLogout() {
             guardarDatos();
-            localStorage.removeItem("pt_current_user");
+            safeRemoveItem("pt_current_user");
             
             cerrarCombate("");
             document.getElementById("menu-screen").style.display = "none";
@@ -703,17 +724,17 @@
         function cargarDatosUsuario(user) {
             const prefix = `pt_${user}_`;
             
-            try { teamPokemon = JSON.parse(localStorage.getItem(prefix + "team") || "[]"); } catch(e) { teamPokemon = []; }
-            try { pcStorage = JSON.parse(localStorage.getItem(prefix + "pc") || "[]"); } catch(e) { pcStorage = []; }
+            try { teamPokemon = JSON.parse(safeGetItem(prefix + "team", "[]")); } catch(e) { teamPokemon = []; }
+            try { pcStorage = JSON.parse(safeGetItem(prefix + "pc", "[]")); } catch(e) { pcStorage = []; }
             
-            energiaActual = parseInt(localStorage.getItem(prefix + "energia") ?? "20");
-            ultimoTimestamp = parseInt(localStorage.getItem(prefix + "timestamp") ?? Date.now());
-            playerMedals = parseInt(localStorage.getItem(prefix + "medals") ?? "0");
-            playerMoney = parseInt(localStorage.getItem(prefix + "money") ?? "2000");
-            lastDailyClaim = parseInt(localStorage.getItem(prefix + "last_daily") ?? "0");
+            energiaActual = parseInt(safeGetItem(prefix + "energia", "20"));
+            ultimoTimestamp = parseInt(safeGetItem(prefix + "timestamp", Date.now()));
+            playerMedals = parseInt(safeGetItem(prefix + "medals", "0"));
+            playerMoney = parseInt(safeGetItem(prefix + "money", "2000"));
+            lastDailyClaim = parseInt(safeGetItem(prefix + "last_daily", "0"));
 
             try {
-                let savedInv = localStorage.getItem(prefix + "inventory");
+                let savedInv = safeGetItem(prefix + "inventory", null);
                 if (savedInv) {
                     playerInventory = JSON.parse(savedInv);
                 }
@@ -731,17 +752,17 @@
 
         function guardarDatos() {
             try {
-                const user = localStorage.getItem("pt_current_user");
+                const user = safeGetItem("pt_current_user", null);
                 if (!user) return;
                 const prefix = `pt_${user}_`;
-                localStorage.setItem(prefix + "team", JSON.stringify(teamPokemon));
-                localStorage.setItem(prefix + "pc", JSON.stringify(pcStorage));
-                localStorage.setItem(prefix + "energia", esUsuarioFonso() ? 20 : energiaActual);
-                localStorage.setItem(prefix + "timestamp", ultimoTimestamp);
-                localStorage.setItem(prefix + "medals", playerMedals);
-                localStorage.setItem(prefix + "money", playerMoney);
-                localStorage.setItem(prefix + "last_daily", lastDailyClaim);
-                localStorage.setItem(prefix + "inventory", JSON.stringify(playerInventory));
+                safeSetItem(prefix + "team", JSON.stringify(teamPokemon));
+                safeSetItem(prefix + "pc", JSON.stringify(pcStorage));
+                safeSetItem(prefix + "energia", esUsuarioFonso() ? 20 : energiaActual);
+                safeSetItem(prefix + "timestamp", ultimoTimestamp);
+                safeSetItem(prefix + "medals", playerMedals);
+                safeSetItem(prefix + "money", playerMoney);
+                safeSetItem(prefix + "last_daily", lastDailyClaim);
+                safeSetItem(prefix + "inventory", JSON.stringify(playerInventory));
             } catch(e) {}
         }
 
@@ -1463,7 +1484,7 @@
             for (let i = 0; i < 4; i++) {
                 let p = teamPokemon[i];
                 if (p) c.innerHTML += `<div class="team-slot ${i===0?'active-lead':''}"><span style="font-size:22px;">${p.icono}</span><div class="slot-info"><div><b>${p.nombre.toUpperCase()}</b> Lv.${p.nivel}</div><div class="slot-hp-bar"><div class="slot-hp-fill" style="width:${(p.hpActual/p.hpMax)*100}%;"></div></div></div></div>`;
-                else c.innerHTML += `<div class="team-slot" style="opacity:0.5;"><span style="font-size:18px;">⚪</span><div class="slot-info">--- VACÍO ---</div></div>`;
+                else c.innerHTML += `<div class="team-slot" style="opacity:0.5;"><span style="font-size:18px;">⚪</span><div class="slot-info---VACÍO ---</div></div>`;
             }
             document.getElementById("team-screen").style.display = "flex";
         }
