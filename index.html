@@ -218,6 +218,7 @@
         let pcStorage = [];   
         let currentEnemy = null;
         let zonaExplorada = false;
+        let playerMedals = 0; // Medallas obtenidas por el usuario
 
         // --- MAPPER DE TIPOS (Inglés JSON -> Español Sistema) ---
         const typeMap = {
@@ -228,6 +229,15 @@
             "steel": "acero", "fairy": "hada"
         };
         function mapType(t) { if (!t) return null; return typeMap[t.toLowerCase()] || t.toLowerCase(); }
+
+        // --- SISTEMA DE LÍMITE DE BST SEGÚN MEDALLAS ---
+        function getMaxBstByMedals(medals) {
+            if (medals <= 1) return 400;
+            if (medals === 2) return 440;
+            if (medals === 3) return 480;
+            if (medals === 4) return 520;
+            return 9999; // 5 o más medallas (sin límite)
+        }
 
         // --- SISTEMA DE ENERGÍA ---
         let energiaActual = 20;
@@ -327,7 +337,6 @@
                 zonesConfig = await resZones.json();
             } catch (error) {
                 console.error("Error al cargar los archivos JSON:", error);
-                // Zonas de respaldo por defecto si falla el fetch local
                 zonesConfig = [
                     { name: "Pueblo Inicial (Zona 1)", sprite: "🏡", types: ["normal", "flying"] },
                     { name: "Ruta 1 - Senda Tranquila", sprite: "🌿", types: ["grass", "bug"] }
@@ -382,6 +391,7 @@
             pcStorage = JSON.parse(localStorage.getItem(prefix + "pc") || "[]");
             energiaActual = parseInt(localStorage.getItem(prefix + "energia") ?? "20");
             ultimoTimestamp = parseInt(localStorage.getItem(prefix + "timestamp") ?? Date.now());
+            playerMedals = parseInt(localStorage.getItem(prefix + "medals") ?? "0");
 
             if (teamPokemon.length > 0) actualizarHUD();
             else document.getElementById("starter-screen").style.display = "flex";
@@ -397,6 +407,7 @@
                 localStorage.setItem(prefix + "pc", JSON.stringify(pcStorage));
                 localStorage.setItem(prefix + "energia", energiaActual);
                 localStorage.setItem(prefix + "timestamp", ultimoTimestamp);
+                localStorage.setItem(prefix + "medals", playerMedals);
             } catch(e) {}
         }
 
@@ -453,14 +464,36 @@
             document.getElementById("btn-explore-main").disabled = false;
         }
 
+        // --- ENCUENTROS FILTRADOS POR ZONA, MEDALLAS (BST) Y SIN LEGENDARIOS ---
         function explorarGenerarPokemonSalvaje(nivel) {
             let zonaObj = zonesConfig[currentZoneIndex];
+            let maxBstPermitido = getMaxBstByMedals(playerMedals);
             
             let permitidos = POKEDEX_GLOBAL.filter(p => {
                 if (p.is_legendary || p.is_mythical) return false;
                 if (!p.types) return false;
-                return p.types.some(t => zonaObj.types.includes(t.toLowerCase()));
+
+                // Calcular BST sumando las stats base
+                let stats = p.stats || {};
+                let bst = (stats.hp || 0) + (stats.attack || 0) + (stats.defense || 0) + 
+                          (stats.special_attack || 0) + (stats.special_defense || 0) + (stats.speed || 0);
+
+                let coincideTipo = p.types.some(t => zonaObj.types.includes(t.toLowerCase()));
+                let cumpleBst = bst <= maxBstPermitido;
+
+                return coincideTipo && cumpleBst;
             });
+
+            // Fallback por si la zona con pocas medallas no encuentra suficientes variantes de ese tipo
+            if (permitidos.length === 0) {
+                permitidos = POKEDEX_GLOBAL.filter(p => {
+                    if (p.is_legendary || p.is_mythical) return false;
+                    let stats = p.stats || {};
+                    let bst = (stats.hp || 0) + (stats.attack || 0) + (stats.defense || 0) + 
+                              (stats.special_attack || 0) + (stats.special_defense || 0) + (stats.speed || 0);
+                    return bst <= maxBstPermitido;
+                });
+            }
 
             if (permitidos.length === 0) {
                 permitidos = POKEDEX_GLOBAL.filter(p => !p.is_legendary && !p.is_mythical);
@@ -577,7 +610,6 @@
             document.getElementById("player-battle-hp-text").innerText = `${lider.hpActual}/${lider.hpMax} PS`;
         }
 
-        // --- CORRECCIÓN DE DAÑO MÍNIMO (Mínimo 1 de daño si no es inmune) ---
         function calcularDaño(atacante, defensor, tipoAtaque) {
             let tiposDef = [mapType(defensor.tipo1), mapType(defensor.tipo2)];
             let multiplicador = getEffectiveness(tipoAtaque, tiposDef);
