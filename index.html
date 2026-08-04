@@ -62,6 +62,36 @@
         .bag-use-btn { background: #10b981; border: none; color: white; padding: 3px 8px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 10px; align-self: flex-end; }
         .bag-close-btn { background: #ef4444; border: 2px solid #991b1b; color: white; padding: 5px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 11px; width: 100%; text-align: center; }
 
+        /* Estilo Ventana Gacha / Tienda (Basado en la imagen de referencia) */
+        .gacha-window { 
+            background: linear-gradient(135deg, #9d174d, #831843); 
+            border: 4px solid #fbcfe8; 
+            width: 100%; 
+            height: 100%; 
+            padding: 10px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            position: relative; 
+            border-radius: 6px; 
+            box-sizing: border-box; 
+        }
+        .gacha-header-row { display: flex; justify-content: space-between; align-items: center; }
+        .gacha-money-badge { background: rgba(0,0,0,0.5); border: 1px solid #f472b6; padding: 3px 8px; border-radius: 4px; font-size: 11px; color: #fdf2f8; font-weight: bold; }
+        .gacha-main-title { font-size: 14px; font-weight: bold; color: #fff; letter-spacing: 1px; text-align: center; flex-grow: 1; text-transform: uppercase; }
+        
+        .gacha-carousel-container { display: flex; align-items: center; justify-content: space-between; flex-grow: 1; margin: 8px 0; gap: 5px; }
+        .gacha-arrow-btn { background: #475569; border: 2px solid #94a3b8; color: white; font-size: 16px; padding: 10px 6px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .gacha-arrow-btn:hover { background: #64748b; }
+
+        .gacha-display-box { background: rgba(0, 0, 0, 0.3); border: 2px dashed #f472b6; border-radius: 8px; flex-grow: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; text-align: center; gap: 8px; }
+        .gacha-item-preview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 24px; background: rgba(255,255,255,0.1); padding: 8px; border-radius: 6px; width: 100%; justify-items: center; align-items: center; }
+        .gacha-desc { font-size: 10px; color: #fbcfe8; min-height: 25px; }
+
+        .gacha-pull-btn { background: #0284c7; border: 3px solid #bae6fd; color: white; padding: 10px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 13px; width: 100%; text-shadow: 1px 1px 1px #000; box-shadow: 0 4px 6px rgba(0,0,0,0.4); }
+        .gacha-pull-btn:hover { background: #0ea5e9; }
+        .gacha-close-btn { background: #ef4444; border: 2px solid #991b1b; color: white; padding: 6px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 11px; width: 100%; text-align: center; }
+
         .box-container h2 { margin-bottom: 10px; color: #4CAF50; font-size: 16px; }
         .box-container input { width: 100%; padding: 8px; margin-bottom: 10px; background-color: #1a1a1a; border: 1px solid #555; color: #fff; border-radius: 4px; }
         .box-container button, .starter-btn, .modal-close-btn { width: 100%; padding: 8px; background-color: #4CAF50; border: none; color: white; font-weight: bold; border-radius: 4px; cursor: pointer; margin-top: 4px; font-size: 11px; }
@@ -254,7 +284,7 @@
                             <button class="menu-icon-btn" onclick="abrirPC()">💻</button>
                         </div>
                         <div class="menu-row">
-                            <button class="menu-icon-btn" onclick="alert('Máquina / Tienda')">🎰</button>
+                            <button class="menu-icon-btn" onclick="abrirGacha()">🎰</button>
                             <button class="menu-icon-btn" onclick="alert('Búsqueda / Info')">🔍</button>
                         </div>
                     </div>
@@ -298,6 +328,31 @@
                     </div>
 
                     <button class="bag-close-btn" onclick="cerrarBolsa()">CERRAR</button>
+                </div>
+            </div>
+
+            <!-- Ventana Gacha (Máquina / Tienda) -->
+            <div id="gacha-screen" class="modal-screen">
+                <div class="gacha-window">
+                    <div class="gacha-header-row">
+                        <div class="gacha-money-badge" id="gacha-money-display">2.000 ₱</div>
+                        <div class="gacha-main-title" id="gacha-title">BONUS DIARIO</div>
+                        <div style="width: 50px;"></div>
+                    </div>
+
+                    <div class="gacha-carousel-container">
+                        <button class="gacha-arrow-btn" onclick="cambiarGacha(-1)">&#10094;</button>
+                        <div class="gacha-display-box">
+                            <div class="gacha-item-preview-grid" id="gacha-preview-icons">
+                                <span>🎁</span><span>✨</span><span>💰</span>
+                            </div>
+                            <div class="gacha-desc" id="gacha-desc">Reclamable 1 vez al día. Obtén entre 500 y 5.000 Poké-dólares gratis.</div>
+                        </div>
+                        <button class="gacha-arrow-btn" onclick="cambiarGacha(1)">&#10095;</button>
+                    </div>
+
+                    <button class="gacha-pull-btn" id="gacha-pull-btn" onclick="realizarTiradaGacha()">RECLAMAR GRATIS</button>
+                    <button class="gacha-close-btn" onclick="cerrarGacha()">CERRAR</button>
                 </div>
             </div>
 
@@ -368,6 +423,8 @@
         let zonaExplorada = false;
         let playerMedals = 0;
         let combatEnCurso = false;
+        let playerMoney = 2000;
+        let lastDailyClaim = 0;
 
         let playerInventory = {
             potions: [
@@ -397,6 +454,44 @@
 
         let pestanaActivaBolsa = 'potions';
         let objetoSeleccionadoBolsa = null;
+
+        // --- CONFIGURACIÓN DE GACHAS ---
+        const gachaMachines = [
+            {
+                id: 'daily',
+                title: 'BONUS DIARIO',
+                icons: ['🎁', '✨', '💰'],
+                desc: 'Reclamable 1 vez al día. Obtén entre 500 y 5.000 Poké-dólares gratis.',
+                cost: 0,
+                type: 'daily'
+            },
+            {
+                id: 'items',
+                title: 'CAJA DE OBJETOS',
+                icons: ['📦', '🧪', '💊'],
+                desc: 'Consigue 1 objeto aleatorio útil (Pociones, Proteínas o Bebidas) para tu inventario.',
+                cost: 400,
+                type: 'item'
+            },
+            {
+                id: 'pokemon_fire',
+                title: 'GACHA POKÉMON (FUEGO)',
+                icons: ['🔥', '🐾', '🌟'],
+                desc: 'Obtén un Pokémon aleatorio (común, poco común, raro o muy raro) con rotación de tipos.',
+                cost: 800,
+                type: 'pokemon',
+                targetType: 'fire'
+            },
+            {
+                id: 'hidden_power',
+                title: 'DISCO PODER OCULTO',
+                icons: ['💿', '✨', '⚡'],
+                desc: 'Consigue 1 CD de MT de Poder Oculto para personalizar los tipos de tus Pokémon.',
+                cost: 600,
+                type: 'mt'
+            }
+        ];
+        let currentGachaIndex = 0;
 
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -586,6 +681,7 @@
             document.getElementById("team-screen").style.display = "none";
             document.getElementById("pc-screen").style.display = "none";
             document.getElementById("bag-screen").style.display = "none";
+            document.getElementById("gacha-screen").style.display = "none";
             document.getElementById("starter-screen").style.display = "none";
             
             document.getElementById("username-input").value = "";
@@ -603,6 +699,8 @@
             energiaActual = parseInt(localStorage.getItem(prefix + "energia") ?? "20");
             ultimoTimestamp = parseInt(localStorage.getItem(prefix + "timestamp") ?? Date.now());
             playerMedals = parseInt(localStorage.getItem(prefix + "medals") ?? "0");
+            playerMoney = parseInt(localStorage.getItem(prefix + "money") ?? "2000");
+            lastDailyClaim = parseInt(localStorage.getItem(prefix + "last_daily") ?? "0");
 
             let savedInv = localStorage.getItem(prefix + "inventory");
             if (savedInv) {
@@ -626,6 +724,8 @@
                 localStorage.setItem(prefix + "energia", esUsuarioFonso() ? 20 : energiaActual);
                 localStorage.setItem(prefix + "timestamp", ultimoTimestamp);
                 localStorage.setItem(prefix + "medals", playerMedals);
+                localStorage.setItem(prefix + "money", playerMoney);
+                localStorage.setItem(prefix + "last_daily", lastDailyClaim);
                 localStorage.setItem(prefix + "inventory", JSON.stringify(playerInventory));
             } catch(e) {}
         }
@@ -889,6 +989,152 @@
             guardarDatos();
             renderizarItemsBolsa();
             actualizarHUD();
+        }
+
+        // --- SISTEMA DE GACHA ---
+        function abrirGacha() {
+            cerrarMenu();
+            currentGachaIndex = 0;
+            actualizarUIGacha();
+            document.getElementById("gacha-screen").style.display = "flex";
+        }
+
+        function cerrarGacha() {
+            document.getElementById("gacha-screen").style.display = "none";
+        }
+
+        function cambiarGacha(direccion) {
+            currentGachaIndex = (currentGachaIndex + direccion + gachaMachines.length) % gachaMachines.length;
+            actualizarUIGacha();
+        }
+
+        function actualizarUIGacha() {
+            let maquina = gachaMachines[currentGachaIndex];
+            document.getElementById("gacha-title").innerText = maquina.title;
+            document.getElementById("gacha-money-display").innerText = `${playerMoney.toLocaleString()} ₱`;
+            document.getElementById("gacha-desc").innerText = maquina.desc;
+
+            let iconsHtml = "";
+            maquina.icons.forEach(ic => { iconsHtml += `<span>${ic}</span>`; });
+            document.getElementById("gacha-preview-icons").innerHTML = iconsHtml;
+
+            let pullBtn = document.getElementById("gacha-pull-btn");
+            if (maquina.type === 'daily') {
+                let ahora = Date.now();
+                let unDiaMs = 24 * 60 * 60 * 1000;
+                if (ahora - lastDailyClaim < unDiaMs) {
+                    pullBtn.innerText = "YA RECLAMADO HOY";
+                    pullBtn.style.backgroundColor = "#64748b";
+                } else {
+                    pullBtn.innerText = "RECLAMAR GRATIS";
+                    pullBtn.style.backgroundColor = "#10b981";
+                }
+            } else {
+                pullBtn.innerText = `TIRAR (${maquina.cost} ₱)`;
+                pullBtn.style.backgroundColor = "#0284c7";
+            }
+        }
+
+        function realizarTiradaGacha() {
+            let maquina = gachaMachines[currentGachaIndex];
+
+            if (maquina.type === 'daily') {
+                let ahora = Date.now();
+                let unDiaMs = 24 * 60 * 60 * 1000;
+                if (ahora - lastDailyClaim < unDiaMs) {
+                    alert("¡Ya has reclamado tu bonus diario hoy! Vuelve mañana.");
+                    return;
+                }
+                let premioDinero = Math.floor(Math.random() * (5000 - 500 + 1)) + 500;
+                playerMoney += premioDinero;
+                lastDailyClaim = ahora;
+                guardarDatos();
+                actualizarUIGacha();
+                alert(`🎁 ¡Bonus diario reclamado! Has ganado ${premioDinero} ₱.`);
+                return;
+            }
+
+            // Gachas de pago
+            if (playerMoney < maquina.cost) {
+                alert("¡No tienes suficiente dinero (₱) para realizar esta tirada!");
+                return;
+            }
+
+            playerMoney -= maquina.cost;
+
+            if (maquina.type === 'item') {
+                const posiblesItems = [
+                    { cat: 'potions', id: 'potion', name: 'Poción', desc: 'Cura un 20% de PS a un Pokémon.' },
+                    { cat: 'potions', id: 'super_potion', name: 'Superpoción', desc: 'Cura un 50% de PS a un Pokémon.' },
+                    { cat: 'energy', id: 'energy_drink', name: 'Bebida Energética', desc: 'Restaura 5 puntos de energía al instante.' },
+                    { cat: 'proteins', id: 'protein', name: 'Proteína', desc: 'Aumenta permanentemente el ataque de un Pokémon.' }
+                ];
+                let itemElegido = posiblesItems[Math.floor(Math.random() * posiblesItems.length)];
+                let listaCat = playerInventory[itemElegido.cat];
+                let existente = listaCat.find(i => i.id === itemElegido.id);
+                if (existente) existente.count++;
+                else listaCat.push({ id: itemElegido.id, name: itemElegido.name, count: 1, desc: itemElegido.desc });
+
+                alert(`📦 ¡Obtuviste un objeto en el gacha: ${itemElegido.name} x1!`);
+
+            } else if (maquina.type === 'mt') {
+                let listaMts = playerInventory['mts'];
+                let existente = listaMts.find(i => i.id === 'mt_hidden');
+                if (existente) existente.count++;
+                else listaMts.push({ id: 'mt_hidden', name: 'MT Poder Oculto', count: 1, desc: 'Permite cambiar aleatoriamente el tipo del Poder Oculto de tu Pokémon líder.' });
+
+                alert(`💿 ¡Has conseguido una MT de Poder Oculto!`);
+
+            } else if (maquina.type === 'pokemon') {
+                if (POKEDEX_GLOBAL.length === 0) {
+                    alert("La Pokédex aún no está cargada.");
+                    playerMoney += maquina.cost; // Reembolsar
+                    return;
+                }
+
+                // Filtrar por rarezas según BST estimado o tipo
+                let tipoFiltro = maquina.targetType;
+                let pool = POKEDEX_GLOBAL.filter(p => {
+                    if (p.is_legendary || p.is_mythical) return false;
+                    if (!p.types) return false;
+                    return p.types.some(t => t.toLowerCase() === tipoFiltro);
+                });
+                if (pool.length === 0) pool = POKEDEX_GLOBAL;
+
+                let pokeData = pool[Math.floor(Math.random() * pool.length)];
+                let nivel = 5;
+                let iv = 15;
+                let hpMax = calcularHPFinal(pokeData.stats.hp, nivel, iv);
+                let atkComb = Math.floor((pokeData.stats.attack + pokeData.stats.special_attack) / 2);
+                let defComb = Math.floor((pokeData.stats.defense + pokeData.stats.special_defense) / 2);
+                let t1 = pokeData.types[0] || "normal";
+                let t2 = pokeData.types[1] || null;
+
+                let nuevoPoke = {
+                    nombre: pokeData.name.charAt(0).toUpperCase() + pokeData.name.slice(1),
+                    nivel: nivel,
+                    hpMax: hpMax,
+                    hpActual: hpMax,
+                    ataque: calcularStatFinal(atkComb, nivel, iv),
+                    defensa: calcularStatFinal(defComb, nivel, iv),
+                    tipo1: t1,
+                    tipo2: t2,
+                    tipoOculto: getTipoOcultoAleatorio(t1, t2),
+                    icono: '🔥'
+                };
+
+                if (teamPokemon.length < 4) {
+                    teamPokemon.push(nuevoPoke);
+                    alert(`✨ ¡Has obtenido a ${nuevoPoke.nombre} (Lv.${nivel}) y se ha unido a tu equipo!`);
+                } else {
+                    pcStorage.push(nuevoPoke);
+                    alert(`✨ ¡Has obtenido a ${nuevoPoke.nombre} (Lv.${nivel})! Tu equipo está lleno, se envió al PC.`);
+                }
+                actualizarHUD();
+            }
+
+            guardarDatos();
+            actualizarUIGacha();
         }
 
         function iniciarCombate(tipo) {
