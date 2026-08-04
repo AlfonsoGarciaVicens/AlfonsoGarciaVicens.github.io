@@ -637,7 +637,11 @@
                     document.getElementById("btn-username-display").innerText = currentUser.toUpperCase();
                     cargarDatosUsuario(currentUser);
                 }
-            } catch (e) {}
+            } catch (e) {
+                console.error("Error al cargar sesión guardada:", e);
+                localStorage.removeItem("pt_current_user");
+                document.getElementById("login-screen").style.display = "flex";
+            }
         };
 
         function handleLogin() {
@@ -651,7 +655,11 @@
                 return;
             }
 
-            let usersDb = JSON.parse(localStorage.getItem("pt_users_db") || "{}");
+            let usersDb = {};
+            try {
+                usersDb = JSON.parse(localStorage.getItem("pt_users_db") || "{}");
+            } catch(e) { usersDb = {}; }
+
             if (usersDb[user]) {
                 if (usersDb[user] === pass) {
                     localStorage.setItem("pt_current_user", user);
@@ -694,23 +702,30 @@
 
         function cargarDatosUsuario(user) {
             const prefix = `pt_${user}_`;
-            teamPokemon = JSON.parse(localStorage.getItem(prefix + "team") || "[]");
-            pcStorage = JSON.parse(localStorage.getItem(prefix + "pc") || "[]");
+            
+            try { teamPokemon = JSON.parse(localStorage.getItem(prefix + "team") || "[]"); } catch(e) { teamPokemon = []; }
+            try { pcStorage = JSON.parse(localStorage.getItem(prefix + "pc") || "[]"); } catch(e) { pcStorage = []; }
+            
             energiaActual = parseInt(localStorage.getItem(prefix + "energia") ?? "20");
             ultimoTimestamp = parseInt(localStorage.getItem(prefix + "timestamp") ?? Date.now());
             playerMedals = parseInt(localStorage.getItem(prefix + "medals") ?? "0");
             playerMoney = parseInt(localStorage.getItem(prefix + "money") ?? "2000");
             lastDailyClaim = parseInt(localStorage.getItem(prefix + "last_daily") ?? "0");
 
-            let savedInv = localStorage.getItem(prefix + "inventory");
-            if (savedInv) {
-                playerInventory = JSON.parse(savedInv);
-            }
+            try {
+                let savedInv = localStorage.getItem(prefix + "inventory");
+                if (savedInv) {
+                    playerInventory = JSON.parse(savedInv);
+                }
+            } catch(e) {}
 
             if (esUsuarioFonso()) energiaActual = energiaMax;
 
-            if (teamPokemon.length > 0) actualizarHUD();
-            else document.getElementById("starter-screen").style.display = "flex";
+            if (teamPokemon.length > 0) {
+                actualizarHUD();
+            } else {
+                document.getElementById("starter-screen").style.display = "flex";
+            }
             actualizarHUDEnergia();
         }
 
@@ -1101,7 +1116,6 @@
             playerMoney -= maquina.cost;
 
             if (maquina.type === 'item') {
-                // Tabla completa con las rarezas (pesos) indicadas
                 const itemPool = [
                     { id: 'potion', name: 'Poción', cat: 'potions', weight: 100, desc: 'Cura un 20% de PS a un Pokémon.' },
                     { id: 'energy_cookie', name: 'Galleta Energía', cat: 'energy', weight: 80, desc: 'Restaura una pequeña cantidad de energía.' },
