@@ -13,13 +13,15 @@
         /* Overlays de pantalla completa (Login / Selección Inicial) */
         .screen-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
         
-        /* Menús in-game y Combate Viewport: Estrictamente dentro de la ventanita verde (.map-viewport) */
+        /* Menús in-game y Combate Viewport: Contenidos estrictamente dentro de la ventanita verde (.map-viewport) */
         .modal-screen, #combat-viewport-screen { 
             position: absolute; 
             top: 0; 
             left: 0; 
-            width: 100%; 
-            height: 100%; 
+            right: 0;
+            bottom: 0;
+            width: auto;
+            height: auto;
             background-color: rgba(18, 18, 18, 0.95); 
             z-index: 80; 
             display: none; 
@@ -81,13 +83,15 @@
         .sprite-container { display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 30px; margin-top: 5px; }
         .exploration-log { position: relative; z-index: 2; background-color: rgba(0, 0, 0, 0.85); border: 1px solid #555; border-radius: 6px; padding: 10px; width: 100%; min-height: 70px; font-size: 11px; color: #d4d4d4; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-        /* --- PANTALLA DE COMBATE VIEWPORT (Estrictamente contenida en la ventanita verde) --- */
+        /* --- PANTALLA DE COMBATE VIEWPORT (Estrictamente contenida dentro de la ventanita verde) --- */
         #combat-viewport-screen { 
             position: absolute; 
             top: 0; 
             left: 0; 
-            width: 100%; 
-            height: 100%; 
+            right: 0;
+            bottom: 0;
+            width: auto;
+            height: auto;
             background: linear-gradient(to bottom, #3b82f6, #1e3a8a); 
             z-index: 90; 
             display: none; 
@@ -323,7 +327,7 @@
 
         <div class="footer-info">
             <button class="chat-btn" onclick="alert('Chat global')">CHAT (5)</button>
-            <span>Pokémon TRAILS v. 2.2.1</span>
+            <span>Pokémon TRAILS v. 2.2.2</span>
         </div>
     </div>
 
