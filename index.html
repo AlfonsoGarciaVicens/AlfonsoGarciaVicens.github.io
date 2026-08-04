@@ -211,15 +211,7 @@
 
     <script>
         let POKEDEX_GLOBAL = [];
-
-        // --- CONFIGURACIÓN DE ZONAS (Sprite y Tipos permitidos) ---
-        const zonesConfig = [
-            { name: "Pueblo Inicial (Zona 1)", sprite: "🏡", types: ["normal", "flying"] },
-            { name: "Ruta 1 - Senda Tranquila", sprite: "🌿", types: ["grass", "bug"] },
-            { name: "Bosque Verde - Espesura", sprite: "🌲", types: ["bug", "poison"] },
-            { name: "Ruta 2 - Camino de Piedra", sprite: "⛰️", types: ["rock", "ground"] },
-            { name: "Ciudad Vetusta (Zona 5)", sprite: "🏙️", types: ["water", "psychic"] }
-        ];
+        let zonesConfig = [];
 
         let currentZoneIndex = 0;
         let teamPokemon = []; 
@@ -319,19 +311,27 @@
         function calcularHPFinal(baseHp, nivel, iv = 15) { return Math.floor(((2 * baseHp + iv) * nivel) / 100) + nivel + 10; }
         function calcularStatFinal(baseStat, nivel, iv = 15) { return Math.floor(((2 * baseStat + iv) * nivel) / 100) + 5; }
 
-        // --- CÁLCULO DE NIVEL ESCALADO ---
         function calcularNivelEnemigo() {
             let liderNivel = teamPokemon[0] ? teamPokemon[0].nivel : 5;
-            let minNivel = Math.max(1, liderNivel - 3); // Entre 3 niveles por debajo y tu nivel actual
+            let minNivel = Math.max(1, liderNivel - 3);
             return Math.floor(Math.random() * (liderNivel - minNivel + 1)) + minNivel;
         }
 
+        // --- CARGA DE JSONs ---
         window.onload = async function() {
             try {
-                const response = await fetch('data/pokemon.json');
-                POKEDEX_GLOBAL = await response.json();
+                const resPoke = await fetch('data/pokemon.json');
+                POKEDEX_GLOBAL = await resPoke.json();
+
+                const resZones = await fetch('data/zones.json');
+                zonesConfig = await resZones.json();
             } catch (error) {
-                console.error("No se pudo cargar data/pokemon.json:", error);
+                console.error("Error al cargar los archivos JSON:", error);
+                // Zonas de respaldo por defecto si falla el fetch local
+                zonesConfig = [
+                    { name: "Pueblo Inicial (Zona 1)", sprite: "🏡", types: ["normal", "flying"] },
+                    { name: "Ruta 1 - Senda Tranquila", sprite: "🌿", types: ["grass", "bug"] }
+                ];
             }
 
             try {
@@ -453,18 +453,15 @@
             document.getElementById("btn-explore-main").disabled = false;
         }
 
-        // --- ENCUENTROS SALVAJES FILTRADOS POR ZONA Y SIN LEGENDARIOS ---
         function explorarGenerarPokemonSalvaje(nivel) {
             let zonaObj = zonesConfig[currentZoneIndex];
             
-            // Filtrar: Excluir legendarios/míticos y asegurar que coincida con los tipos de la zona
             let permitidos = POKEDEX_GLOBAL.filter(p => {
                 if (p.is_legendary || p.is_mythical) return false;
                 if (!p.types) return false;
                 return p.types.some(t => zonaObj.types.includes(t.toLowerCase()));
             });
 
-            // Fallback general si la lista filtrada queda vacía
             if (permitidos.length === 0) {
                 permitidos = POKEDEX_GLOBAL.filter(p => !p.is_legendary && !p.is_mythical);
             }
@@ -526,7 +523,7 @@
 
         function iniciarCombate(tipo) {
             let lider = teamPokemon[0];
-            const nivel = calcularNivelEnemigo(); // Nivel escalado al jugador
+            const nivel = calcularNivelEnemigo();
             
             if (tipo === 'wild') {
                 currentEnemy = explorarGenerarPokemonSalvaje(nivel);
@@ -580,11 +577,19 @@
             document.getElementById("player-battle-hp-text").innerText = `${lider.hpActual}/${lider.hpMax} PS`;
         }
 
+        // --- CORRECCIÓN DE DAÑO MÍNIMO (Mínimo 1 de daño si no es inmune) ---
         function calcularDaño(atacante, defensor, tipoAtaque) {
             let tiposDef = [mapType(defensor.tipo1), mapType(defensor.tipo2)];
             let multiplicador = getEffectiveness(tipoAtaque, tiposDef);
+            
+            if (multiplicador === 0) {
+                return { daño: 0, multi: multiplicador };
+            }
+
             let dañoBase = Math.max(1, atacante.ataque - defensor.defensa + Math.floor(Math.random() * 5));
-            return { daño: Math.floor(dañoBase * multiplicador), multi: multiplicador };
+            let dañoFinal = Math.max(1, Math.floor(dañoBase * multiplicador));
+            
+            return { daño: dañoFinal, multi: multiplicador };
         }
 
         function getMensajeEfectividad(multi) {
