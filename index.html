@@ -10,46 +10,46 @@
 
         #game-container { width: 100%; max-width: 450px; height: 100vh; max-height: 850px; background-color: #1a1a1a; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 15px; border: 2px solid #333; box-shadow: 0 0 20px rgba(0,0,0,0.8); }
 
-        /* Overlays de pantalla completa (Login / Selección Inicial / Combate) */
+        /* Overlays de pantalla completa (Login / Selección Inicial) */
         .screen-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
         
-        /* Modales in-game (Menú, Equipo, PC, Bolsa): Superpuestos en la ventana del juego sin tapar los botones inferiores */
-        .modal-screen { position: absolute; top: 45px; left: 15px; right: 15px; bottom: 125px; background-color: rgba(18, 18, 18, 0.92); z-index: 80; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 15px; border-radius: 8px; border: 2px solid #444; }
+        /* Ventana de menús in-game (Bolsa, Equipo, PC, Menú Principal) */
+        .modal-screen { position: absolute; top: 45px; left: 15px; right: 15px; bottom: 135px; background-color: rgba(18, 18, 18, 0.95); z-index: 80; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 10px; border-radius: 8px; border: 2px solid #555; }
         
-        .box-container, .modal-window { background-color: #2a2a2a; padding: 20px; border-radius: 8px; border: 2px solid #444; width: 100%; max-width: 320px; text-align: center; }
-        .modal-window { background: linear-gradient(135deg, #38bdf8, #0369a1); border: 4px solid #bae6fd; box-shadow: 0 8px 16px rgba(0,0,0,0.6); padding: 12px; gap: 8px; display: flex; flex-direction: column; height: 100%; }
+        .box-container, .modal-window { background-color: #2a2a2a; padding: 15px; border-radius: 8px; border: 2px solid #444; width: 100%; height: 100%; text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
+        .modal-window { background: linear-gradient(135deg, #38bdf8, #0369a1); border: 4px solid #bae6fd; box-shadow: 0 8px 16px rgba(0,0,0,0.6); }
         
-        /* Estilo específico ventana Bolsa adaptada al marco */
-        .bag-window { background: linear-gradient(135deg, #d97706, #b45309); border: 4px solid #fde68a; width: 100%; height: 100%; padding: 10px; display: flex; flex-direction: column; justify-content: space-between; position: relative; border-radius: 8px; }
-        .bag-tabs { display: flex; justify-content: space-around; background: rgba(0,0,0,0.3); padding: 4px; border-radius: 6px; gap: 2px; }
-        .bag-tab-btn { background: #78350f; border: 2px solid #92400e; border-radius: 4px; padding: 4px; cursor: pointer; font-size: 14px; color: #fff; flex: 1; text-align: center; }
+        /* Estilo específico ventana Bolsa */
+        .bag-window { background: linear-gradient(135deg, #d97706, #b45309); border: 4px solid #fde68a; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; position: relative; border-radius: 8px; }
+        .bag-tabs { display: flex; justify-content: space-around; background: rgba(0,0,0,0.3); padding: 3px; border-radius: 6px; gap: 2px; }
+        .bag-tab-btn { background: #78350f; border: 2px solid #92400e; border-radius: 4px; padding: 4px; cursor: pointer; font-size: 13px; color: #fff; flex: 1; text-align: center; }
         .bag-tab-btn.active { background: #f59e0b; border-color: #fef3c7; }
         
-        .bag-content-grid { background: #ffffff; border: 3px solid #78350f; border-radius: 6px; flex-grow: 1; padding: 8px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; margin: 5px 0; }
-        .bag-item-row { background: #fef3c7; border: 1px solid #d97706; color: #111; padding: 6px 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 11px; font-weight: bold; }
+        .bag-content-grid { background: #ffffff; border: 3px solid #78350f; border-radius: 6px; flex-grow: 1; padding: 6px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; margin: 4px 0; }
+        .bag-item-row { background: #fef3c7; border: 1px solid #d97706; color: #111; padding: 5px 8px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 11px; font-weight: bold; }
         .bag-item-row:hover { background: #fde68a; }
         .bag-item-row.selected { background: #f59e0b; color: white; border-color: #b45309; }
 
-        .bag-desc-box { background: #4b5563; border: 3px solid #1f2937; border-radius: 6px; padding: 8px; color: #f3f4f6; font-size: 11px; text-align: left; height: 75px; display: flex; flex-direction: column; justify-content: space-between; }
-        .bag-use-btn { background: #10b981; border: none; color: white; padding: 4px 10px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 10px; align-self: flex-end; }
-        .bag-close-btn { background: #ef4444; border: 2px solid #991b1b; color: white; padding: 6px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 11px; width: 100%; text-align: center; }
+        .bag-desc-box { background: #4b5563; border: 3px solid #1f2937; border-radius: 6px; padding: 6px; color: #f3f4f6; font-size: 10px; text-align: left; height: 65px; display: flex; flex-direction: column; justify-content: space-between; }
+        .bag-use-btn { background: #10b981; border: none; color: white; padding: 3px 8px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 10px; align-self: flex-end; }
+        .bag-close-btn { background: #ef4444; border: 2px solid #991b1b; color: white; padding: 5px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 11px; width: 100%; text-align: center; }
 
-        .box-container h2 { margin-bottom: 15px; color: #4CAF50; font-size: 18px; }
-        .box-container input { width: 100%; padding: 10px; margin-bottom: 15px; background-color: #1a1a1a; border: 1px solid #555; color: #fff; border-radius: 4px; }
-        .box-container button, .starter-btn, .modal-close-btn { width: 100%; padding: 10px; background-color: #4CAF50; border: none; color: white; font-weight: bold; border-radius: 4px; cursor: pointer; margin-top: 5px; }
+        .box-container h2 { margin-bottom: 10px; color: #4CAF50; font-size: 16px; }
+        .box-container input { width: 100%; padding: 8px; margin-bottom: 10px; background-color: #1a1a1a; border: 1px solid #555; color: #fff; border-radius: 4px; }
+        .box-container button, .starter-btn, .modal-close-btn { width: 100%; padding: 8px; background-color: #4CAF50; border: none; color: white; font-weight: bold; border-radius: 4px; cursor: pointer; margin-top: 4px; font-size: 11px; }
         .starter-btn, .modal-close-btn { background-color: #2563eb; }
-        .starter-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .starter-grid { display: flex; flex-direction: column; gap: 8px; margin-top: 5px; }
 
-        .modal-title { text-align: center; font-size: 13px; font-weight: bold; color: #fff; border-bottom: 2px solid #bae6fd; padding-bottom: 3px; margin-bottom: 3px; letter-spacing: 1px; }
+        .modal-title { text-align: center; font-size: 12px; font-weight: bold; color: #fff; border-bottom: 2px solid #bae6fd; padding-bottom: 2px; margin-bottom: 2px; letter-spacing: 1px; }
 
-        .menu-grid-container { display: flex; flex-direction: column; gap: 10px; align-items: center; padding: 5px 0; }
-        .menu-row { display: flex; gap: 15px; justify-content: center; }
-        .menu-icon-btn { background-color: #1e293b; border: 3px solid #64748b; border-radius: 8px; width: 55px; height: 55px; font-size: 24px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        .menu-grid-container { display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: center; flex-grow: 1; }
+        .menu-row { display: flex; gap: 12px; justify-content: center; }
+        .menu-icon-btn { background-color: #1e293b; border: 3px solid #64748b; border-radius: 8px; width: 50px; height: 50px; font-size: 22px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
 
-        .team-slot { background-color: #64748b; border: 2px solid #334155; border-radius: 6px; padding: 5px 8px; display: flex; align-items: center; justify-content: space-between; color: #fff; font-size: 11px; }
+        .team-slot { background-color: #64748b; border: 2px solid #334155; border-radius: 6px; padding: 4px 6px; display: flex; align-items: center; justify-content: space-between; color: #fff; font-size: 10px; }
         .team-slot.active-lead { background: linear-gradient(90deg, #0ea5e9, #0284c7); border: 2px solid #e0f2fe; }
-        .slot-info { display: flex; flex-direction: column; flex-grow: 1; margin-left: 10px; }
-        .slot-hp-bar { background-color: #1e293b; height: 6px; width: 100%; border-radius: 3px; margin-top: 3px; overflow: hidden; border: 1px solid #0f172a; }
+        .slot-info { display: flex; flex-direction: column; flex-grow: 1; margin-left: 8px; }
+        .slot-hp-bar { background-color: #1e293b; height: 5px; width: 100%; border-radius: 3px; margin-top: 2px; overflow: hidden; border: 1px solid #0f172a; }
         .slot-hp-fill, .hp-bar-fill { background-color: #22c55e; height: 100%; transition: width 0.3s ease; }
 
         .top-bar { display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
@@ -67,23 +67,61 @@
         .sprite-container { display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 30px; margin-top: 5px; }
         .exploration-log { position: relative; z-index: 2; background-color: rgba(0, 0, 0, 0.85); border: 1px solid #555; border-radius: 6px; padding: 10px; width: 100%; min-height: 70px; font-size: 11px; color: #d4d4d4; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
+        /* --- PANTALLA DE COMBATE SUPERPUESTA (Cubre mapa, botones de exploración y barra de navegación inferior) --- */
+        #combat-screen { 
+            position: absolute; 
+            top: 45px; 
+            left: 15px; 
+            right: 15px; 
+            bottom: 35px; 
+            background-color: #1a1a1a; 
+            z-index: 90; 
+            display: none; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            padding: 10px; 
+            border-radius: 8px; 
+            border: 2px solid #555; 
+        }
+
+        .combat-viewport { width: 100%; height: 180px; background: linear-gradient(to bottom, #3b82f6, #1e3a8a); border: 2px solid #444; border-radius: 6px; position: relative; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; }
+        
+        .combat-enemy-info, .combat-player-info { background-color: rgba(200, 200, 200, 0.9); color: #000; padding: 3px 6px; border-radius: 4px; font-size: 10px; width: 65%; border: 1px solid #333; }
+        .combat-enemy-info { align-self: flex-start; }
+        .combat-player-info { align-self: flex-end; }
+        .hp-bar-bg { background-color: #555; height: 5px; width: 100%; border-radius: 3px; margin-top: 2px; overflow: hidden; }
+        .combat-sprites { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 15px; font-size: 28px; }
+
+        .combat-dialogue { background-color: #222; border: 2px solid #c0c0c0; border-radius: 6px; padding: 6px; font-size: 10px; color: #fff; min-height: 45px; text-align: center; overflow-y: auto; }
+
+        .combat-controls-container { display: flex; flex-direction: column; gap: 6px; position: relative; }
+        .top-attacks-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        .mid-hidden-row { display: flex; justify-content: center; align-items: center; height: 0; z-index: 5; }
+        .bottom-actions-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px; }
+
+        .btn-attack-type { color: white; border: 2px solid rgba(0,0,0,0.5); padding: 8px; font-weight: bold; border-radius: 4px; cursor: pointer; text-shadow: 1px 1px 1px #000; font-size: 10px; text-transform: uppercase; }
+        .btn-hidden-power { width: 45px; height: 45px; border-radius: 50%; border: 3px solid #fff; cursor: pointer; font-weight: bold; font-size: 7px; color: white; text-shadow: 1px 1px 1px #000; display: flex; justify-content: center; align-items: center; box-shadow: 0 3px 6px rgba(0,0,0,0.6); position: relative; top: -6px; text-transform: uppercase; text-align: center; }
+        
+        .btn-capture { background-color: #eab308; color: black; border: none; padding: 8px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 10px; }
+        .btn-flee { background-color: #ef4444; color: white; border: none; padding: 8px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 10px; }
+
         /* --- ANIMACIONES DE COMBATE --- */
         @keyframes idleBounce {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
+            50% { transform: translateY(-4px); }
         }
         .idle-anim { animation: idleBounce 1.5s ease-in-out infinite; display: inline-block; }
 
         @keyframes strikeForwardPlayer {
             0% { transform: translate(0, 0); }
-            30% { transform: translate(-10px, 5px); }
-            50% { transform: translate(25px, -15px); }
+            30% { transform: translate(-8px, 4px); }
+            50% { transform: translate(20px, -12px); }
             100% { transform: translate(0, 0); }
         }
         @keyframes strikeForwardEnemy {
             0% { transform: translate(0, 0); }
-            30% { transform: translate(10px, -5px); }
-            50% { transform: translate(-25px, 15px); }
+            30% { transform: translate(8px, -4px); }
+            50% { transform: translate(-20px, 12px); }
             100% { transform: translate(0, 0); }
         }
         .strike-player { animation: strikeForwardPlayer 0.35s ease; }
@@ -95,35 +133,13 @@
             color: #000000;
             border: 2px solid #333;
             border-radius: 4px;
-            padding: 2px 8px;
-            font-size: 11px;
+            padding: 2px 6px;
+            font-size: 10px;
             font-weight: bold;
             z-index: 95;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+            box-shadow: 0 3px 5px rgba(0,0,0,0.4);
             display: none;
         }
-
-        #combat-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #1a1a1a; z-index: 90; display: none; flex-direction: column; justify-content: space-between; padding: 15px; }
-        .combat-viewport { width: 100%; height: 210px; background: linear-gradient(to bottom, #3b82f6, #1e3a8a); border: 3px solid #444; border-radius: 6px; position: relative; padding: 10px; display: flex; flex-direction: column; justify-content: space-between; }
-        
-        .combat-enemy-info, .combat-player-info { background-color: rgba(200, 200, 200, 0.9); color: #000; padding: 4px 8px; border-radius: 4px; font-size: 11px; width: 65%; border: 1px solid #333; }
-        .combat-enemy-info { align-self: flex-start; }
-        .combat-player-info { align-self: flex-end; }
-        .hp-bar-bg { background-color: #555; height: 6px; width: 100%; border-radius: 3px; margin-top: 2px; overflow: hidden; }
-        .combat-sprites { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 20px; font-size: 30px; }
-
-        .combat-dialogue { background-color: #222; border: 2px solid #c0c0c0; border-radius: 6px; padding: 8px; font-size: 10px; color: #fff; min-height: 50px; text-align: center; overflow-y: auto; }
-
-        .combat-controls-container { display: flex; flex-direction: column; gap: 8px; position: relative; }
-        .top-attacks-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .mid-hidden-row { display: flex; justify-content: center; align-items: center; height: 0; z-index: 5; }
-        .bottom-actions-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 15px; }
-
-        .btn-attack-type { color: white; border: 2px solid rgba(0,0,0,0.5); padding: 10px; font-weight: bold; border-radius: 4px; cursor: pointer; text-shadow: 1px 1px 1px #000; font-size: 11px; text-transform: uppercase; }
-        .btn-hidden-power { width: 55px; height: 55px; border-radius: 50%; border: 3px solid #fff; cursor: pointer; font-weight: bold; font-size: 8px; color: white; text-shadow: 1px 1px 1px #000; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 8px rgba(0,0,0,0.6); position: relative; top: -10px; text-transform: uppercase; text-align: center; }
-        
-        .btn-capture { background-color: #eab308; color: black; border: none; padding: 10px; font-weight: bold; border-radius: 4px; cursor: pointer; }
-        .btn-flee { background-color: #ef4444; color: white; border: none; padding: 10px; font-weight: bold; border-radius: 4px; cursor: pointer; }
 
         .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .btn-action { padding: 15px; border: none; border-radius: 6px; font-weight: bold; font-size: 13px; cursor: pointer; text-align: center; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
@@ -142,7 +158,7 @@
     <div id="game-container">
         <!-- Login -->
         <div id="login-screen" class="screen-overlay">
-            <div class="box-container">
+            <div class="box-container" style="height: auto;">
                 <h2>Pokémon Trails</h2>
                 <input type="text" id="username-input" placeholder="Usuario">
                 <input type="password" id="password-input" placeholder="Contraseña">
@@ -153,7 +169,7 @@
 
         <!-- Selección de Inicial -->
         <div id="starter-screen" class="screen-overlay" style="display: none;">
-            <div class="box-container">
+            <div class="box-container" style="height: auto;">
                 <h2>Prof. Oak: ¡Elige tu compañero!</h2>
                 <div class="starter-grid">
                     <button class="starter-btn" onclick="chooseStarter('Bulbasaur', {hp:45, attack:49, defense:49, special_attack:65, special_defense:65}, 'grass', 'poison')">🌿 Bulbasaur</button>
@@ -163,7 +179,7 @@
             </div>
         </div>
 
-        <!-- Menú, Equipo y PC -->
+        <!-- Menús In-game (Menú, Equipo, PC, Bolsa) -->
         <div id="menu-screen" class="modal-screen">
             <div class="modal-window">
                 <div class="modal-title">- MENÚ PRINCIPAL -</div>
@@ -185,7 +201,7 @@
         <div id="team-screen" class="modal-screen">
             <div class="modal-window">
                 <div class="modal-title">- EQUIPO POKÉMON -</div>
-                <div id="team-slots-container" style="display: flex; flex-direction: column; gap: 6px; overflow-y: auto; flex-grow: 1;"></div>
+                <div id="team-slots-container" style="display: flex; flex-direction: column; gap: 5px; overflow-y: auto; flex-grow: 1;"></div>
                 <button class="modal-close-btn" onclick="cerrarEquipo()">CERRAR</button>
             </div>
         </div>
@@ -193,12 +209,11 @@
         <div id="pc-screen" class="modal-screen">
             <div class="modal-window">
                 <div class="modal-title">- TUS POKÉMON (PC) -</div>
-                <div id="pc-slots-container" style="display: flex; flex-direction: column; gap: 6px; overflow-y: auto; flex-grow: 1;"></div>
+                <div id="pc-slots-container" style="display: flex; flex-direction: column; gap: 5px; overflow-y: auto; flex-grow: 1;"></div>
                 <button class="modal-close-btn" onclick="cerrarPC()">CERRAR</button>
             </div>
         </div>
 
-        <!-- Pantalla de Bolsa -->
         <div id="bag-screen" class="modal-screen">
             <div class="bag-window">
                 <div class="bag-tabs">
@@ -211,9 +226,7 @@
                     <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('others')" title="Otros">📦</button>
                 </div>
                 
-                <div class="bag-content-grid" id="bag-items-container">
-                    <!-- Items dinámicos -->
-                </div>
+                <div class="bag-content-grid" id="bag-items-container"></div>
 
                 <div class="bag-desc-box">
                     <span id="bag-item-desc">Selecciona un objeto para ver su descripción.</span>
@@ -224,11 +237,10 @@
             </div>
         </div>
 
-        <!-- Combate -->
-        <div id="combat-screen" class="screen-overlay" style="display: none; background-color: #1a1a1a; z-index: 90; padding: 15px; justify-content: space-between; flex-direction: column;">
+        <!-- Combate (Superpuesto cubriendo mapa, exploración y la barra inferior de navegación) -->
+        <div id="combat-screen">
             <div class="combat-viewport">
-                <!-- Burbuja de iniciativa del enemigo -->
-                <div id="enemy-initiative-bubble" class="initiative-bubble" style="top: 45px; left: 50px;">--</div>
+                <div id="enemy-initiative-bubble" class="initiative-bubble" style="top: 35px; left: 40px;">--</div>
                 
                 <div class="combat-enemy-info">
                     <div id="enemy-name-lvl">ENEMIGO Lv.7</div>
@@ -240,8 +252,7 @@
                     <span id="enemy-battle-sprite" class="idle-anim">🦊</span>
                 </div>
                 
-                <!-- Burbuja de iniciativa del jugador -->
-                <div id="player-initiative-bubble" class="initiative-bubble" style="bottom: 50px; right: 50px;">--</div>
+                <div id="player-initiative-bubble" class="initiative-bubble" style="bottom: 40px; right: 40px;">--</div>
 
                 <div class="combat-player-info">
                     <div id="player-battle-name">JUGADOR Lv.5</div>
@@ -293,7 +304,7 @@
 
         <div class="footer-info">
             <button class="chat-btn" onclick="alert('Chat global')">CHAT (5)</button>
-            <span>Pokémon TRAILS v. 2.1.1</span>
+            <span>Pokémon TRAILS v. 2.1.5</span>
         </div>
     </div>
 
@@ -728,7 +739,6 @@
             guardarDatos();
         }
 
-        // --- SISTEMA DE LA BOLSA ---
         function abrirBolsa() {
             document.getElementById("bag-screen").style.display = "flex";
             cambiarPestanaBolsa('potions');
