@@ -49,7 +49,7 @@
         .sprite-container { display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 30px; margin-top: 5px; }
         .exploration-log { position: relative; z-index: 2; background-color: rgba(0, 0, 0, 0.85); border: 1px solid #555; border-radius: 6px; padding: 10px; width: 100%; min-height: 70px; font-size: 11px; color: #d4d4d4; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-        /* --- NUEVAS ANIMACIONES DE COMBATE --- */
+        /* --- ANIMACIONES DE COMBATE --- */
         @keyframes idleBounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-5px); }
@@ -263,11 +263,11 @@
         let currentEnemy = null;
         let zonaExplorada = false;
         let playerMedals = 0;
-        let combatEnCurso = false; // Bloqueo para evitar spam durante animaciones
+        let combatEnCurso = false;
 
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-        // --- MAPPER DE TIPOS (Inglés JSON -> Español Sistema) ---
+        // --- MAPPER DE TIPOS ---
         const typeMap = {
             "normal": "normal", "fire": "fuego", "water": "agua", "grass": "planta",
             "electric": "electrico", "ice": "hielo", "fighting": "lucha", "poison": "veneno",
@@ -285,13 +285,22 @@
             return 9999;
         }
 
-        // --- SISTEMA DE ENERGÍA ---
+        // --- SISTEMA DE ENERGÍA (Excepción para "fonso") ---
         let energiaActual = 20;
         const energiaMax = 20;
         let ultimoTimestamp = Date.now();
         const intervaloRecargaMs = 15 * 60 * 1000;
 
+        function esUsuarioFonso() {
+            const currentUser = localStorage.getItem("pt_current_user");
+            return currentUser && currentUser.toLowerCase() === "fonso";
+        }
+
         function calcularEnergiaOffline() {
+            if (esUsuarioFonso()) {
+                energiaActual = energiaMax;
+                return;
+            }
             if (energiaActual < energiaMax) {
                 const ahora = Date.now();
                 const transcurrido = ahora - ultimoTimestamp;
@@ -307,6 +316,14 @@
         }
 
         function actualizarHUDEnergia() {
+            if (esUsuarioFonso()) {
+                energiaActual = energiaMax;
+                document.getElementById("energy-bars").innerText = "████████████████████";
+                document.getElementById("energy-text").innerText = "20/20 (TEST)";
+                document.getElementById("energy-timer").innerText = "(ENERGÍA INFINITA)";
+                return;
+            }
+
             calcularEnergiaOffline();
             let barraVisual = "█".repeat(energiaActual) + "░".repeat(energiaMax - energiaActual);
             document.getElementById("energy-bars").innerText = barraVisual;
@@ -438,6 +455,8 @@
             ultimoTimestamp = parseInt(localStorage.getItem(prefix + "timestamp") ?? Date.now());
             playerMedals = parseInt(localStorage.getItem(prefix + "medals") ?? "0");
 
+            if (esUsuarioFonso()) energiaActual = energiaMax;
+
             if (teamPokemon.length > 0) actualizarHUD();
             else document.getElementById("starter-screen").style.display = "flex";
             actualizarHUDEnergia();
@@ -450,7 +469,7 @@
                 const prefix = `pt_${user}_`;
                 localStorage.setItem(prefix + "team", JSON.stringify(teamPokemon));
                 localStorage.setItem(prefix + "pc", JSON.stringify(pcStorage));
-                localStorage.setItem(prefix + "energia", energiaActual);
+                localStorage.setItem(prefix + "energia", esUsuarioFonso() ? 20 : energiaActual);
                 localStorage.setItem(prefix + "timestamp", ultimoTimestamp);
                 localStorage.setItem(prefix + "medals", playerMedals);
             } catch(e) {}
@@ -568,16 +587,17 @@
             if (teamPokemon.length === 0) return alert("¡Elige un inicial!");
             if (zonaExplorada) return;
 
-            calcularEnergiaOffline();
-            if (energiaActual < 1) {
-                alert("¡No tienes suficiente energía para explorar! Espera a que se recargue.");
-                return;
+            if (!esUsuarioFonso()) {
+                calcularEnergiaOffline();
+                if (energiaActual < 1) {
+                    alert("¡No tienes suficiente energía para explorar! Espera a que se recargue.");
+                    return;
+                }
+                if (energiaActual === energiaMax) ultimoTimestamp = Date.now();
+                energiaActual--;
+                guardarDatos();
+                actualizarHUDEnergia();
             }
-            
-            if (energiaActual === energiaMax) ultimoTimestamp = Date.now();
-            energiaActual--;
-            guardarDatos();
-            actualizarHUDEnergia();
 
             const r = Math.random();
             if (r < 0.3) {
@@ -603,7 +623,6 @@
             currentEnemy.tipoCombate = tipo;
             combatEnCurso = false;
 
-            // Ocultar burbujas de iniciativa al iniciar
             document.getElementById("player-initiative-bubble").style.display = "none";
             document.getElementById("enemy-initiative-bubble").style.display = "none";
 
@@ -676,9 +695,8 @@
             return "";
         }
 
-        // --- SISTEMA DE COMBATE ANIMADO Y SECUENCIAL ---
         async function ejecutarTurnoCombate(accion, tipoAtaqueSeleccionado) {
-            if (combatEnCurso) return; // Evitar clics múltiples
+            if (combatEnCurso) return;
             let lider = teamPokemon[0];
             const dialogue = document.getElementById("combat-dialogue-text");
 
@@ -700,7 +718,6 @@
             if (accion === 'atacar') {
                 combatEnCurso = true;
 
-                // 2.1 Animación de Iniciativa (ruleta de números rápidos)
                 const pBubble = document.getElementById("player-initiative-bubble");
                 const eBubble = document.getElementById("enemy-initiative-bubble");
                 pBubble.style.display = "block";
@@ -717,7 +734,7 @@
                 }
                 pBubble.innerText = initJ;
                 eBubble.innerText = initE;
-                await sleep(500); // Pausa breve para leer la iniciativa
+                await sleep(500);
 
                 let playerFirst = initJ >= initE;
 
@@ -728,15 +745,13 @@
 
                 let log = `Iniciativa: ${lider.nombre}(${initJ}) vs ${currentEnemy.nombre}(${initE})<br>`;
 
-                // Función auxiliar interna para animar el golpe de un atacante
                 async function animarYAtacar(esJugador, dañoInfo, tipoAtq) {
                     let spriteId = esJugador ? "player-battle-sprite" : "enemy-battle-sprite";
                     let strikeCls = esJugador ? "strike-player" : "strike-enemy";
                     let spriteElem = document.getElementById(spriteId);
 
-                    // 2.2 Animación de ir para atrás y adelante para golpear
                     spriteElem.classList.add(strikeCls);
-                    await sleep(180); // Mitad de la animación al impactar
+                    await sleep(180);
 
                     if (esJugador) {
                         currentEnemy.hpActual = Math.max(0, currentEnemy.hpActual - dañoInfo.daño);
@@ -750,13 +765,12 @@
                     actualizarHUD();
                     dialogue.innerHTML = log;
 
-                    await sleep(200); // Fin de la animación de golpe
+                    await sleep(200);
                     spriteElem.classList.remove(strikeCls);
-                    await sleep(300); // Pausa de transición
+                    await sleep(300);
                 }
 
                 if (playerFirst) {
-                    // 2.2 Ataca el jugador primero
                     await animarYAtacar(true, resJ, tipoAtaqueSeleccionado);
                     if (currentEnemy.hpActual <= 0) {
                         pBubble.style.display = "none";
@@ -766,7 +780,6 @@
                         return setTimeout(() => cerrarCombate(`¡Victoria!`), 1500);
                     }
 
-                    // 2.3 Ataca el rival a continuación
                     await animarYAtacar(false, resE, tipoEnemigo);
                     if (lider.hpActual <= 0) {
                         lider.hpActual = 1;
@@ -776,9 +789,7 @@
                         combatEnCurso = false;
                         return setTimeout(() => cerrarCombate(`¡Tu Pokémon quedó exhausto!`), 1500);
                     }
-
                 } else {
-                    // 2.2 Ataca el rival primero
                     await animarYAtacar(false, resE, tipoEnemigo);
                     if (lider.hpActual <= 0) {
                         lider.hpActual = 1;
@@ -789,7 +800,6 @@
                         return setTimeout(() => cerrarCombate(`¡Tu Pokémon quedó exhausto!`), 1500);
                     }
 
-                    // 2.3 Ataca el jugador a continuación
                     await animarYAtacar(true, resJ, tipoAtaqueSeleccionado);
                     if (currentEnemy.hpActual <= 0) {
                         pBubble.style.display = "none";
@@ -800,10 +810,9 @@
                     }
                 }
 
-                // Ocultar burbujas de iniciativa al finalizar el turno
                 pBubble.style.display = "none";
                 eBubble.style.display = "none";
-                combatEnCurso = false; // 2.4 Habilitar de nuevo la interacción del usuario
+                combatEnCurso = false;
             }
         }
 
