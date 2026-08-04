@@ -13,14 +13,14 @@
         /* Overlays de pantalla completa (Login / Selección Inicial) */
         .screen-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
         
-        /* Ventana de menús in-game (Bolsa, Equipo, PC, Menú Principal) */
-        .modal-screen { position: absolute; top: 45px; left: 15px; right: 15px; bottom: 135px; background-color: rgba(18, 18, 18, 0.95); z-index: 80; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 10px; border-radius: 8px; border: 2px solid #555; }
+        /* Menús in-game (Menú, Equipo, PC, Bolsa): Estrictamente dentro de la ventanita verde (.map-viewport) */
+        .modal-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 80; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 10px; border-radius: 6px; }
         
         .box-container, .modal-window { background-color: #2a2a2a; padding: 15px; border-radius: 8px; border: 2px solid #444; width: 100%; height: 100%; text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
         .modal-window { background: linear-gradient(135deg, #38bdf8, #0369a1); border: 4px solid #bae6fd; box-shadow: 0 8px 16px rgba(0,0,0,0.6); }
         
         /* Estilo específico ventana Bolsa */
-        .bag-window { background: linear-gradient(135deg, #d97706, #b45309); border: 4px solid #fde68a; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; position: relative; border-radius: 8px; }
+        .bag-window { background: linear-gradient(135deg, #d97706, #b45309); border: 4px solid #fde68a; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; position: relative; border-radius: 6px; }
         .bag-tabs { display: flex; justify-content: space-around; background: rgba(0,0,0,0.3); padding: 3px; border-radius: 6px; gap: 2px; }
         .bag-tab-btn { background: #78350f; border: 2px solid #92400e; border-radius: 4px; padding: 4px; cursor: pointer; font-size: 13px; color: #fff; flex: 1; text-align: center; }
         .bag-tab-btn.active { background: #f59e0b; border-color: #fef3c7; }
@@ -67,32 +67,29 @@
         .sprite-container { display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 30px; margin-top: 5px; }
         .exploration-log { position: relative; z-index: 2; background-color: rgba(0, 0, 0, 0.85); border: 1px solid #555; border-radius: 6px; padding: 10px; width: 100%; min-height: 70px; font-size: 11px; color: #d4d4d4; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-        /* --- PANTALLA DE COMBATE SUPERPUESTA (Cubre mapa, botones de exploración y barra de navegación inferior) --- */
-        #combat-screen { 
+        /* --- PANTALLA DE COMBATE VIEWPORT (Estrictamente dentro de la ventanita verde) --- */
+        #combat-viewport-screen { 
             position: absolute; 
-            top: 45px; 
-            left: 15px; 
-            right: 15px; 
-            bottom: 35px; 
-            background-color: #1a1a1a; 
-            z-index: 90; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: linear-gradient(to bottom, #3b82f6, #1e3a8a); 
+            z-index: 70; 
             display: none; 
             flex-direction: column; 
             justify-content: space-between; 
             padding: 10px; 
-            border-radius: 8px; 
-            border: 2px solid #555; 
+            border-radius: 6px; 
         }
 
-        .combat-viewport { width: 100%; height: 180px; background: linear-gradient(to bottom, #3b82f6, #1e3a8a); border: 2px solid #444; border-radius: 6px; position: relative; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; }
-        
         .combat-enemy-info, .combat-player-info { background-color: rgba(200, 200, 200, 0.9); color: #000; padding: 3px 6px; border-radius: 4px; font-size: 10px; width: 65%; border: 1px solid #333; }
         .combat-enemy-info { align-self: flex-start; }
         .combat-player-info { align-self: flex-end; }
         .hp-bar-bg { background-color: #555; height: 5px; width: 100%; border-radius: 3px; margin-top: 2px; overflow: hidden; }
         .combat-sprites { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 15px; font-size: 28px; }
 
-        .combat-dialogue { background-color: #222; border: 2px solid #c0c0c0; border-radius: 6px; padding: 6px; font-size: 10px; color: #fff; min-height: 45px; text-align: center; overflow-y: auto; }
+        .combat-dialogue { background-color: #222; border: 2px solid #c0c0c0; border-radius: 6px; padding: 6px; font-size: 10px; color: #fff; min-height: 40px; text-align: center; overflow-y: auto; }
 
         .combat-controls-container { display: flex; flex-direction: column; gap: 6px; position: relative; }
         .top-attacks-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
@@ -100,7 +97,7 @@
         .bottom-actions-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px; }
 
         .btn-attack-type { color: white; border: 2px solid rgba(0,0,0,0.5); padding: 8px; font-weight: bold; border-radius: 4px; cursor: pointer; text-shadow: 1px 1px 1px #000; font-size: 10px; text-transform: uppercase; }
-        .btn-hidden-power { width: 45px; height: 45px; border-radius: 50%; border: 3px solid #fff; cursor: pointer; font-weight: bold; font-size: 7px; color: white; text-shadow: 1px 1px 1px #000; display: flex; justify-content: center; align-items: center; box-shadow: 0 3px 6px rgba(0,0,0,0.6); position: relative; top: -6px; text-transform: uppercase; text-align: center; }
+        .btn-hidden-power { width: 42px; height: 42px; border-radius: 50%; border: 3px solid #fff; cursor: pointer; font-weight: bold; font-size: 7px; color: white; text-shadow: 1px 1px 1px #000; display: flex; justify-content: center; align-items: center; box-shadow: 0 3px 6px rgba(0,0,0,0.6); position: relative; top: -6px; text-transform: uppercase; text-align: center; }
         
         .btn-capture { background-color: #eab308; color: black; border: none; padding: 8px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 10px; }
         .btn-flee { background-color: #ef4444; color: white; border: none; padding: 8px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 10px; }
@@ -179,93 +176,6 @@
             </div>
         </div>
 
-        <!-- Menús In-game (Menú, Equipo, PC, Bolsa) -->
-        <div id="menu-screen" class="modal-screen">
-            <div class="modal-window">
-                <div class="modal-title">- MENÚ PRINCIPAL -</div>
-                <div class="menu-grid-container">
-                    <div class="menu-row">
-                        <button class="menu-icon-btn" onclick="alert('Dispositivo / Pokedex')">📱</button>
-                        <button class="menu-icon-btn" onclick="alert('Cofre / Objetos')">📦</button>
-                        <button class="menu-icon-btn" onclick="abrirPC()">💻</button>
-                    </div>
-                    <div class="menu-row">
-                        <button class="menu-icon-btn" onclick="alert('Máquina / Tienda')">🎰</button>
-                        <button class="menu-icon-btn" onclick="alert('Búsqueda / Info')">🔍</button>
-                    </div>
-                </div>
-                <button class="modal-close-btn" onclick="cerrarMenu()">CERRAR</button>
-            </div>
-        </div>
-
-        <div id="team-screen" class="modal-screen">
-            <div class="modal-window">
-                <div class="modal-title">- EQUIPO POKÉMON -</div>
-                <div id="team-slots-container" style="display: flex; flex-direction: column; gap: 5px; overflow-y: auto; flex-grow: 1;"></div>
-                <button class="modal-close-btn" onclick="cerrarEquipo()">CERRAR</button>
-            </div>
-        </div>
-
-        <div id="pc-screen" class="modal-screen">
-            <div class="modal-window">
-                <div class="modal-title">- TUS POKÉMON (PC) -</div>
-                <div id="pc-slots-container" style="display: flex; flex-direction: column; gap: 5px; overflow-y: auto; flex-grow: 1;"></div>
-                <button class="modal-close-btn" onclick="cerrarPC()">CERRAR</button>
-            </div>
-        </div>
-
-        <div id="bag-screen" class="modal-screen">
-            <div class="bag-window">
-                <div class="bag-tabs">
-                    <button class="bag-tab-btn active" onclick="cambiarPestanaBolsa('potions')" title="Pociones">🧪</button>
-                    <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('proteins')" title="Proteínas">💊</button>
-                    <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('energy')" title="Energía">⚡</button>
-                    <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('wallet')" title="Monedero">💰</button>
-                    <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('mts')" title="MTs">💿</button>
-                    <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('eggs')" title="Huevos">🥚</button>
-                    <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('others')" title="Otros">📦</button>
-                </div>
-                
-                <div class="bag-content-grid" id="bag-items-container"></div>
-
-                <div class="bag-desc-box">
-                    <span id="bag-item-desc">Selecciona un objeto para ver su descripción.</span>
-                    <button id="bag-use-action-btn" class="bag-use-btn" style="display:none;" onclick="usarObjetoSeleccionado()">USAR</button>
-                </div>
-
-                <button class="bag-close-btn" onclick="cerrarBolsa()">CERRAR</button>
-            </div>
-        </div>
-
-        <!-- Combate (Superpuesto cubriendo mapa, exploración y la barra inferior de navegación) -->
-        <div id="combat-screen">
-            <div class="combat-viewport">
-                <div id="enemy-initiative-bubble" class="initiative-bubble" style="top: 35px; left: 40px;">--</div>
-                
-                <div class="combat-enemy-info">
-                    <div id="enemy-name-lvl">ENEMIGO Lv.7</div>
-                    <div class="hp-bar-bg"><div id="enemy-hp-fill" class="hp-bar-fill" style="width: 100%;"></div></div>
-                </div>
-                
-                <div class="combat-sprites">
-                    <span id="player-battle-sprite" class="idle-anim">🦖</span>
-                    <span id="enemy-battle-sprite" class="idle-anim">🦊</span>
-                </div>
-                
-                <div id="player-initiative-bubble" class="initiative-bubble" style="bottom: 40px; right: 40px;">--</div>
-
-                <div class="combat-player-info">
-                    <div id="player-battle-name">JUGADOR Lv.5</div>
-                    <div class="hp-bar-bg"><div id="player-hp-fill" class="hp-bar-fill" style="width: 100%;"></div></div>
-                    <div style="font-size: 9px; text-align: right;" id="player-battle-hp-text">--/-- PS</div>
-                </div>
-            </div>
-            
-            <div class="combat-dialogue" id="combat-dialogue-text">¡Comienza el enfrentamiento!</div>
-
-            <div class="combat-controls-container" id="combat-buttons-container"></div>
-        </div>
-
         <!-- HUD Principal -->
         <div class="top-bar">
             <button class="logout-btn" onclick="handleLogout()">CERRAR</button>
@@ -279,32 +189,126 @@
             </div>
         </div>
 
-        <div class="map-viewport">
+        <!-- Ventanita Verde (.map-viewport) Contenedor Principal de Vista y Menús -->
+        <div class="map-viewport" id="map-viewport">
             <div class="map-background"></div>
-            <div class="map-content">
+            
+            <div class="map-content" id="map-content-inner">
                 <div class="zone-title" id="current-zone-name">Pueblo Inicial (Zona 1)</div>
                 <div class="sprite-container">
                     <span id="zone-sprite">🏡</span><span id="hud-pokemon-icon">🐾</span>
                 </div>
                 <p style="font-size: 11px; margin-top: 3px; color: #ccc;" id="hud-pokemon-info">Sin Pokémon</p>
             </div>
+            
             <div class="exploration-log" id="explore-log">¡Bienvenido a Pokémon Trails! Explora o avanza.</div>
+
+            <!-- Menús In-game (Dentro de la ventanita verde) -->
+            <div id="menu-screen" class="modal-screen">
+                <div class="modal-window">
+                    <div class="modal-title">- MENÚ PRINCIPAL -</div>
+                    <div class="menu-grid-container">
+                        <div class="menu-row">
+                            <button class="menu-icon-btn" onclick="alert('Dispositivo / Pokedex')">📱</button>
+                            <button class="menu-icon-btn" onclick="alert('Cofre / Objetos')">📦</button>
+                            <button class="menu-icon-btn" onclick="abrirPC()">💻</button>
+                        </div>
+                        <div class="menu-row">
+                            <button class="menu-icon-btn" onclick="alert('Máquina / Tienda')">🎰</button>
+                            <button class="menu-icon-btn" onclick="alert('Búsqueda / Info')">🔍</button>
+                        </div>
+                    </div>
+                    <button class="modal-close-btn" onclick="cerrarMenu()">CERRAR</button>
+                </div>
+            </div>
+
+            <div id="team-screen" class="modal-screen">
+                <div class="modal-window">
+                    <div class="modal-title">- EQUIPO POKÉMON -</div>
+                    <div id="team-slots-container" style="display: flex; flex-direction: column; gap: 5px; overflow-y: auto; flex-grow: 1;"></div>
+                    <button class="modal-close-btn" onclick="cerrarEquipo()">CERRAR</button>
+                </div>
+            </div>
+
+            <div id="pc-screen" class="modal-screen">
+                <div class="modal-window">
+                    <div class="modal-title">- TUS POKÉMON (PC) -</div>
+                    <div id="pc-slots-container" style="display: flex; flex-direction: column; gap: 5px; overflow-y: auto; flex-grow: 1;"></div>
+                    <button class="modal-close-btn" onclick="cerrarPC()">CERRAR</button>
+                </div>
+            </div>
+
+            <div id="bag-screen" class="modal-screen">
+                <div class="bag-window">
+                    <div class="bag-tabs">
+                        <button class="bag-tab-btn active" onclick="cambiarPestanaBolsa('potions')" title="Pociones">🧪</button>
+                        <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('proteins')" title="Proteínas">💊</button>
+                        <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('energy')" title="Energía">⚡</button>
+                        <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('wallet')" title="Monedero">💰</button>
+                        <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('mts')" title="MTs">💿</button>
+                        <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('eggs')" title="Huevos">🥚</button>
+                        <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('others')" title="Otros">📦</button>
+                    </div>
+                    
+                    <div class="bag-content-grid" id="bag-items-container"></div>
+
+                    <div class="bag-desc-box">
+                        <span id="bag-item-desc">Selecciona un objeto para ver su descripción.</span>
+                        <button id="bag-use-action-btn" class="bag-use-btn" style="display:none;" onclick="usarObjetoSeleccionado()">USAR</button>
+                    </div>
+
+                    <button class="bag-close-btn" onclick="cerrarBolsa()">CERRAR</button>
+                </div>
+            </div>
+
+            <!-- Vista de Combate (Dentro de la ventanita verde) -->
+            <div id="combat-viewport-screen">
+                <div id="enemy-initiative-bubble" class="initiative-bubble" style="top: 25px; left: 30px;">--</div>
+                
+                <div class="combat-enemy-info">
+                    <div id="enemy-name-lvl">ENEMIGO Lv.7</div>
+                    <div class="hp-bar-bg"><div id="enemy-hp-fill" class="hp-bar-fill" style="width: 100%;"></div></div>
+                </div>
+                
+                <div class="combat-sprites">
+                    <span id="player-battle-sprite" class="idle-anim">🦖</span>
+                    <span id="enemy-battle-sprite" class="idle-anim">🦊</span>
+                </div>
+                
+                <div id="player-initiative-bubble" class="initiative-bubble" style="bottom: 45px; right: 30px;">--</div>
+
+                <div class="combat-player-info">
+                    <div id="enemy-name-lvl-dummy" style="display:none;"></div>
+                    <div id="player-battle-name">JUGADOR Lv.5</div>
+                    <div class="hp-bar-bg"><div id="player-hp-fill" class="hp-bar-fill" style="width: 100%;"></div></div>
+                    <div style="font-size: 9px; text-align: right;" id="player-battle-hp-text">--/-- PS</div>
+                </div>
+
+                <div class="combat-dialogue" id="combat-dialogue-text">¡Comienza el enfrentamiento!</div>
+            </div>
         </div>
 
-        <div class="action-buttons">
+        <!-- Botones de Exploración (Ocultos en combate) -->
+        <div class="action-buttons" id="exploration-action-buttons">
             <button id="btn-explore-main" class="btn-action btn-explore" onclick="exploreZone()">EXPLORAR ZONA</button>
             <button class="btn-action btn-advance" onclick="advanceZone()">AVANZAR</button>
         </div>
 
-        <div class="bottom-nav">
+        <!-- Barra de navegación inferior (Oculta en combate) -->
+        <div class="bottom-nav" id="normal-bottom-nav">
             <button class="btn-nav" onclick="abrirBolsa()">BOLSA</button>
             <button class="btn-nav" onclick="abrirEquipo()">EQUIPO</button>
             <button id="btn-username-display" class="btn-nav" style="color: #6ee7b7; font-weight: bold;">JUGADOR</button>
         </div>
 
+        <!-- Botones de combate (Reemplazan explore/advance + bottom-nav durante combate) -->
+        <div id="combat-controls-bar" style="display: none; flex-direction: column; gap: 6px;">
+            <div class="combat-controls-container" id="combat-buttons-container"></div>
+        </div>
+
         <div class="footer-info">
             <button class="chat-btn" onclick="alert('Chat global')">CHAT (5)</button>
-            <span>Pokémon TRAILS v. 2.1.5</span>
+            <span>Pokémon TRAILS v. 2.2.0</span>
         </div>
     </div>
 
@@ -532,7 +536,7 @@
             guardarDatos();
             localStorage.removeItem("pt_current_user");
             
-            document.getElementById("combat-screen").style.display = "none";
+            cerrarCombate("");
             document.getElementById("menu-screen").style.display = "none";
             document.getElementById("team-screen").style.display = "none";
             document.getElementById("pc-screen").style.display = "none";
@@ -862,7 +866,16 @@
                 document.getElementById("combat-dialogue-text").innerHTML = `¡${randomTrainer} te desafía y envía a ${currentEnemy.nombre}!`;
             }
 
-            document.getElementById("combat-screen").style.display = "flex";
+            // Ocultar map-content y exploration-log, mostrar combat-viewport-screen dentro de la ventanita verde
+            document.getElementById("map-content-inner").style.display = "none";
+            document.getElementById("explore-log").style.display = "none";
+            document.getElementById("combat-viewport-screen").style.display = "flex";
+
+            // Ocultar action-buttons y bottom-nav, mostrar combat-controls-bar sobre ellos
+            document.getElementById("exploration-action-buttons").style.display = "none";
+            document.getElementById("normal-bottom-nav").style.display = "none";
+            document.getElementById("combat-controls-bar").style.display = "flex";
+
             document.getElementById("enemy-name-lvl").innerText = `${currentEnemy.nombre.toUpperCase()} Lv.${nivel}`;
             document.getElementById("player-battle-name").innerText = `${lider.nombre.toUpperCase()} Lv.${lider.nivel}`;
             
@@ -984,8 +997,8 @@
                         currentEnemy.hpActual = Math.max(0, currentEnemy.hpActual - dañoInfo.daño);
                         log += `⚔️ Usaste ${tipoAtq.toUpperCase()}: ${dañoInfo.daño} daño.${getMensajeEfectividad(dañoInfo.multi)}<br>`;
                     } else {
-                        lider.hpActual = Math.max(0, lider.hpActual - dañoInfo.daño);
-                        log += `⚠️ Rival usó ${tipoAtq.toUpperCase()}: ${dañoInfo.daño} daño.${getMensajeEfectividad(dañoInfo.multi)}<br>`;
+                        lider.hpActual = Math.max(0, lider.hpActual - resE.daño);
+                        log += `⚠️ Rival usó ${tipoAtq.toUpperCase()}: ${resE.daño} daño.${getMensajeEfectividad(resE.multi)}<br>`;
                     }
 
                     actualizarBarrasHP();
@@ -1044,8 +1057,17 @@
         }
 
         function cerrarCombate(msg) { 
-            document.getElementById("combat-screen").style.display = "none"; 
-            document.getElementById("explore-log").innerHTML = msg; 
+            document.getElementById("combat-viewport-screen").style.display = "none"; 
+            document.getElementById("map-content-inner").style.display = "block";
+            document.getElementById("explore-log").style.display = "flex";
+
+            document.getElementById("combat-controls-bar").style.display = "none";
+            document.getElementById("exploration-action-buttons").style.display = "grid";
+            document.getElementById("normal-bottom-nav").style.display = "grid";
+
+            if (msg) {
+                document.getElementById("explore-log").innerHTML = msg;
+            }
             combatEnCurso = false;
             guardarDatos(); 
             actualizarHUD(); 
