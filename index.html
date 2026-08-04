@@ -86,7 +86,7 @@
 <body>
 
     <div id="game-container">
-        <!-- Login con control de usuarios registrados -->
+        <!-- Login -->
         <div id="login-screen" class="screen-overlay">
             <div class="box-container">
                 <h2>Pokémon Trails</h2>
@@ -102,9 +102,9 @@
             <div class="box-container">
                 <h2>Prof. Oak: ¡Elige tu compañero!</h2>
                 <div class="starter-grid">
-                    <button class="starter-btn" onclick="chooseStarter('Bulbasaur', {hp:45, attack:49, defense:49, special_attack:65, special_defense:65}, 'planta', 'veneno')">🌿 Bulbasaur</button>
-                    <button class="starter-btn" onclick="chooseStarter('Charmander', {hp:39, attack:52, defense:43, special_attack:60, special_defense:50}, 'fuego', 'normal')">🔥 Charmander</button>
-                    <button class="starter-btn" onclick="chooseStarter('Squirtle', {hp:44, attack:48, defense:65, special_attack:50, special_defense:64}, 'agua', 'normal')">💧 Squirtle</button>
+                    <button class="starter-btn" onclick="chooseStarter('Bulbasaur', {hp:45, attack:49, defense:49, special_attack:65, special_defense:65}, 'grass', 'poison')">🌿 Bulbasaur</button>
+                    <button class="starter-btn" onclick="chooseStarter('Charmander', {hp:39, attack:52, defense:43, special_attack:60, special_defense:50}, 'fire', 'normal')">🔥 Charmander</button>
+                    <button class="starter-btn" onclick="chooseStarter('Squirtle', {hp:44, attack:48, defense:65, special_attack:50, special_defense:64}, 'water', 'normal')">💧 Squirtle</button>
                 </div>
             </div>
         </div>
@@ -185,7 +185,7 @@
             <div class="map-content">
                 <div class="zone-title" id="current-zone-name">Pueblo Inicial (Zona 1)</div>
                 <div class="sprite-container">
-                    <span>🧢👤</span><span id="hud-pokemon-icon">🐾</span>
+                    <span id="zone-sprite">🏡</span><span id="hud-pokemon-icon">🐾</span>
                 </div>
                 <p style="font-size: 11px; margin-top: 3px; color: #ccc;" id="hud-pokemon-info">Sin Pokémon</p>
             </div>
@@ -211,29 +211,45 @@
 
     <script>
         let POKEDEX_GLOBAL = [];
-        const zones = ["Pueblo Inicial (Zona 1)", "Ruta 1 - Senda Tranquila", "Bosque Verde - Espesura", "Ruta 2 - Camino de Piedra", "Ciudad Vetusta (Zona 5)"];
+
+        // --- CONFIGURACIÓN DE ZONAS (Sprite y Tipos permitidos) ---
+        const zonesConfig = [
+            { name: "Pueblo Inicial (Zona 1)", sprite: "🏡", types: ["normal", "flying"] },
+            { name: "Ruta 1 - Senda Tranquila", sprite: "🌿", types: ["grass", "bug"] },
+            { name: "Bosque Verde - Espesura", sprite: "🌲", types: ["bug", "poison"] },
+            { name: "Ruta 2 - Camino de Piedra", sprite: "⛰️", types: ["rock", "ground"] },
+            { name: "Ciudad Vetusta (Zona 5)", sprite: "🏙️", types: ["water", "psychic"] }
+        ];
+
         let currentZoneIndex = 0;
         let teamPokemon = []; 
         let pcStorage = [];   
         let currentEnemy = null;
         let zonaExplorada = false;
 
-        // --- SISTEMA DE ENERGÍA CON TIMESTAMPS ---
+        // --- MAPPER DE TIPOS (Inglés JSON -> Español Sistema) ---
+        const typeMap = {
+            "normal": "normal", "fire": "fuego", "water": "agua", "grass": "planta",
+            "electric": "electrico", "ice": "hielo", "fighting": "lucha", "poison": "veneno",
+            "ground": "tierra", "flying": "volador", "psychic": "psiquico", "bug": "bicho",
+            "rock": "roca", "ghost": "fantasma", "dragon": "dragon", "dark": "siniestro",
+            "steel": "acero", "fairy": "hada"
+        };
+        function mapType(t) { if (!t) return null; return typeMap[t.toLowerCase()] || t.toLowerCase(); }
+
+        // --- SISTEMA DE ENERGÍA ---
         let energiaActual = 20;
         const energiaMax = 20;
         let ultimoTimestamp = Date.now();
-        const intervaloRecargaMs = 15 * 60 * 1000; // 15 minutos
+        const intervaloRecargaMs = 15 * 60 * 1000;
 
         function calcularEnergiaOffline() {
             if (energiaActual < energiaMax) {
                 const ahora = Date.now();
                 const transcurrido = ahora - ultimoTimestamp;
-                
                 if (transcurrido >= intervaloRecargaMs) {
                     const ciclos = Math.floor(transcurrido / intervaloRecargaMs);
-                    const energiaGanada = ciclos * 3;
-                    
-                    energiaActual = Math.min(energiaMax, energiaActual + energiaGanada);
+                    energiaActual = Math.min(energiaMax, energiaActual + (ciclos * 3));
                     ultimoTimestamp = ahora - (transcurrido % intervaloRecargaMs);
                     guardarDatos();
                 }
@@ -244,11 +260,7 @@
 
         function actualizarHUDEnergia() {
             calcularEnergiaOffline();
-            
-            let bloquesLlenos = energiaActual;
-            let bloquesVacios = energiaMax - energiaActual;
-            let barraVisual = "█".repeat(bloquesLlenos) + "░".repeat(bloquesVacios);
-            
+            let barraVisual = "█".repeat(energiaActual) + "░".repeat(energiaMax - energiaActual);
             document.getElementById("energy-bars").innerText = barraVisual;
             document.getElementById("energy-text").innerText = `${energiaActual}/${energiaMax}`;
 
@@ -256,19 +268,14 @@
                 document.getElementById("energy-timer").innerText = "(ENERGÍA LLENA)";
                 ultimoTimestamp = Date.now();
             } else {
-                const transcurrido = Date.now() - ultimoTimestamp;
-                const restanteMs = Math.max(0, intervaloRecargaMs - (transcurrido % intervaloRecargaMs));
-                const segundosRestantes = Math.ceil(restanteMs / 1000);
-
-                let mins = Math.floor(segundosRestantes / 60).toString().padStart(2, '0');
-                let secs = (segundosRestantes % 60).toString().padStart(2, '0');
-                document.getElementById("energy-timer").innerText = `+3 en ${mins}:${secs}`;
+                const restanteMs = Math.max(0, intervaloRecargaMs - ((Date.now() - ultimoTimestamp) % intervaloRecargaMs));
+                const segs = Math.ceil(restanteMs / 1000);
+                document.getElementById("energy-timer").innerText = `+3 en ${Math.floor(segs/60).toString().padStart(2,'0')}:${(segs%60).toString().padStart(2,'0')}`;
             }
         }
+        setInterval(actualizarHUDEnergia, 1000);
 
-        setInterval(() => { actualizarHUDEnergia(); }, 1000);
-
-        // --- MATRIZ COMPLETA DE LOS 18 TIPOS ---
+        // --- MATRIZ DE TIPOS ---
         const ALL_TYPES = ["normal", "fuego", "agua", "planta", "electrico", "hielo", "lucha", "veneno", "tierra", "volador", "psiquico", "bicho", "roca", "fantasma", "dragon", "siniestro", "acero", "hada"];
         const TYPE_COLORS = { "normal": "#A8A77A", "fuego": "#EE8130", "agua": "#6390F0", "planta": "#7AC74C", "electrico": "#F7D02C", "hielo": "#96D9D6", "lucha": "#C22E28", "veneno": "#A33EA1", "tierra": "#E2BF65", "volador": "#A98FF3", "psiquico": "#F95587", "bicho": "#A6B91A", "roca": "#B6A136", "fantasma": "#735797", "dragon": "#6F35FC", "siniestro": "#705898", "acero": "#B7B7CE", "hada": "#D685AD" };
         
@@ -304,16 +311,21 @@
             return multi;
         }
 
-        function getTipoOcultoAleatorio(tipo1, tipo2) {
-            const disponibles = ALL_TYPES.filter(t => t !== tipo1 && t !== tipo2);
-            return disponibles[Math.floor(Math.random() * disponibles.length)];
+        function getTipoOcultoAleatorio(t1, t2) {
+            let disp = ALL_TYPES.filter(t => t !== mapType(t1) && t !== mapType(t2));
+            return disp[Math.floor(Math.random() * disp.length)];
         }
 
-        // Fórmulas oficiales
         function calcularHPFinal(baseHp, nivel, iv = 15) { return Math.floor(((2 * baseHp + iv) * nivel) / 100) + nivel + 10; }
         function calcularStatFinal(baseStat, nivel, iv = 15) { return Math.floor(((2 * baseStat + iv) * nivel) / 100) + 5; }
 
-        // Carga del JSON Global al iniciar
+        // --- CÁLCULO DE NIVEL ESCALADO ---
+        function calcularNivelEnemigo() {
+            let liderNivel = teamPokemon[0] ? teamPokemon[0].nivel : 5;
+            let minNivel = Math.max(1, liderNivel - 3); // Entre 3 niveles por debajo y tu nivel actual
+            return Math.floor(Math.random() * (liderNivel - minNivel + 1)) + minNivel;
+        }
+
         window.onload = async function() {
             try {
                 const response = await fetch('data/pokemon.json');
@@ -344,7 +356,6 @@
             }
 
             let usersDb = JSON.parse(localStorage.getItem("pt_users_db") || "{}");
-
             if (usersDb[user]) {
                 if (usersDb[user] === pass) {
                     localStorage.setItem("pt_current_user", user);
@@ -372,11 +383,8 @@
             energiaActual = parseInt(localStorage.getItem(prefix + "energia") ?? "20");
             ultimoTimestamp = parseInt(localStorage.getItem(prefix + "timestamp") ?? Date.now());
 
-            if (teamPokemon.length > 0) {
-                actualizarHUD();
-            } else {
-                document.getElementById("starter-screen").style.display = "flex";
-            }
+            if (teamPokemon.length > 0) actualizarHUD();
+            else document.getElementById("starter-screen").style.display = "flex";
             actualizarHUDEnergia();
         }
 
@@ -419,8 +427,11 @@
         }
 
         function advanceZone() {
-            currentZoneIndex = (currentZoneIndex + 1) % zones.length;
-            document.getElementById("current-zone-name").innerText = zones[currentZoneIndex];
+            currentZoneIndex = (currentZoneIndex + 1) % zonesConfig.length;
+            let zonaObj = zonesConfig[currentZoneIndex];
+            
+            document.getElementById("current-zone-name").innerText = zonaObj.name;
+            document.getElementById("zone-sprite").innerText = zonaObj.sprite;
             
             let curados = 0;
             teamPokemon.forEach(p => {
@@ -431,7 +442,7 @@
                 }
             });
             
-            let logMsg = `Has avanzado a ${zones[currentZoneIndex]}.`;
+            let logMsg = `Has avanzado a ${zonaObj.name}.`;
             if (curados > 0) logMsg += `<br><span style="color:#4CAF50;">¡El equipo recuperó un 5% de PS por el paseo!</span>`;
             
             document.getElementById("explore-log").innerHTML = logMsg;
@@ -442,42 +453,44 @@
             document.getElementById("btn-explore-main").disabled = false;
         }
 
+        // --- ENCUENTROS SALVAJES FILTRADOS POR ZONA Y SIN LEGENDARIOS ---
         function explorarGenerarPokemonSalvaje(nivel) {
-            if (POKEDEX_GLOBAL.length > 0) {
-                const randomEntry = POKEDEX_GLOBAL[Math.floor(Math.random() * POKEDEX_GLOBAL.length)];
-                const iv = 15;
-                const hpMax = calcularHPFinal(randomEntry.stats.hp, nivel, iv);
-                const atkComb = Math.floor((randomEntry.stats.attack + randomEntry.stats.special_attack) / 2);
-                const defComb = Math.floor((randomEntry.stats.defense + randomEntry.stats.special_defense) / 2);
+            let zonaObj = zonesConfig[currentZoneIndex];
+            
+            // Filtrar: Excluir legendarios/míticos y asegurar que coincida con los tipos de la zona
+            let permitidos = POKEDEX_GLOBAL.filter(p => {
+                if (p.is_legendary || p.is_mythical) return false;
+                if (!p.types) return false;
+                return p.types.some(t => zonaObj.types.includes(t.toLowerCase()));
+            });
 
-                const t1 = randomEntry.types[0] || "normal";
-                const t2 = randomEntry.types[1] || null;
-
-                return {
-                    tipoCombate: 'wild',
-                    nombre: randomEntry.name.charAt(0).toUpperCase() + randomEntry.name.slice(1),
-                    nivel: nivel,
-                    hpMax: hpMax,
-                    hpActual: hpMax,
-                    ataque: calcularStatFinal(atkComb, nivel, iv),
-                    defensa: calcularStatFinal(defComb, nivel, iv),
-                    tipo1: t1,
-                    tipo2: t2,
-                    tipoOculto: getTipoOcultoAleatorio(t1, t2),
-                    icono: '🐾'
-                };
-            } else {
-                // Fallback de respaldo si el JSON aún no cargó
-                return {
-                    tipoCombate: 'wild',
-                    nombre: "Sneasel Salvaje",
-                    nivel: nivel,
-                    hpMax: calcularHPFinal(45, nivel), hpActual: calcularHPFinal(45, nivel),
-                    ataque: calcularStatFinal(50, nivel), defensa: calcularStatFinal(45, nivel),
-                    tipo1: 'siniestro', tipo2: 'hielo', tipoOculto: getTipoOcultoAleatorio('siniestro', 'hielo'),
-                    icono: '🦊'
-                };
+            // Fallback general si la lista filtrada queda vacía
+            if (permitidos.length === 0) {
+                permitidos = POKEDEX_GLOBAL.filter(p => !p.is_legendary && !p.is_mythical);
             }
+
+            const randomEntry = permitidos[Math.floor(Math.random() * permitidos.length)] || POKEDEX_GLOBAL[0];
+            const iv = 15;
+            const hpMax = calcularHPFinal(randomEntry.stats.hp, nivel, iv);
+            const atkComb = Math.floor((randomEntry.stats.attack + randomEntry.stats.special_attack) / 2);
+            const defComb = Math.floor((randomEntry.stats.defense + randomEntry.stats.special_defense) / 2);
+
+            const t1 = randomEntry.types[0] || "normal";
+            const t2 = randomEntry.types[1] || null;
+
+            return {
+                tipoCombate: 'wild',
+                nombre: randomEntry.name.charAt(0).toUpperCase() + randomEntry.name.slice(1),
+                nivel: nivel,
+                hpMax: hpMax,
+                hpActual: hpMax,
+                ataque: calcularStatFinal(atkComb, nivel, iv),
+                defensa: calcularStatFinal(defComb, nivel, iv),
+                tipo1: t1,
+                tipo2: t2,
+                tipoOculto: getTipoOcultoAleatorio(t1, t2),
+                icono: '🐾'
+            };
         }
 
         function exploreZone() {
@@ -490,9 +503,7 @@
                 return;
             }
             
-            if (energiaActual === energiaMax) {
-                ultimoTimestamp = Date.now();
-            }
+            if (energiaActual === energiaMax) ultimoTimestamp = Date.now();
             energiaActual--;
             guardarDatos();
             actualizarHUDEnergia();
@@ -506,10 +517,8 @@
                 guardarDatos();
                 actualizarHUD();
                 document.getElementById("explore-log").innerHTML = `🏥 ¡Encontraste una poción! Recuperas 50% de PS.`;
-            } else if (r < 0.8) {
-                iniciarCombate('wild');
             } else {
-                iniciarCombate('trainer');
+                iniciarCombate(r < 0.8 ? 'wild' : 'trainer');
             }
             zonaExplorada = true;
             document.getElementById("btn-explore-main").disabled = true;
@@ -517,18 +526,18 @@
 
         function iniciarCombate(tipo) {
             let lider = teamPokemon[0];
-            const nivel = 5 + currentZoneIndex;
+            const nivel = calcularNivelEnemigo(); // Nivel escalado al jugador
             
             if (tipo === 'wild') {
                 currentEnemy = explorarGenerarPokemonSalvaje(nivel);
             } else {
                 currentEnemy = {
                     tipoCombate: 'trainer',
-                    nombre: "Entrenador Luis",
+                    nombre: "Entrenador de Zona",
                     nivel: nivel,
-                    hpMax: calcularHPFinal(50, nivel), hpActual: calcularHPFinal(50, nivel),
-                    ataque: calcularStatFinal(55, nivel), defensa: calcularStatFinal(50, nivel),
-                    tipo1: 'lucha', tipo2: 'normal', tipoOculto: getTipoOcultoAleatorio('lucha', 'normal'),
+                    hpMax: calcularHPFinal(45, nivel), hpActual: calcularHPFinal(45, nivel),
+                    ataque: calcularStatFinal(48, nivel), defensa: calcularStatFinal(45, nivel),
+                    tipo1: zonesConfig[currentZoneIndex].types[0], tipo2: 'normal', tipoOculto: getTipoOcultoAleatorio('normal', 'normal'),
                     icono: '👤'
                 };
             }
@@ -540,17 +549,21 @@
             actualizarBarrasHP();
             document.getElementById("combat-dialogue-text").innerHTML = `¡Un ${currentEnemy.nombre} apareció!`;
 
-            let c1 = TYPE_COLORS[lider.tipo1] || "#777";
-            let c2 = TYPE_COLORS[lider.tipo2] || TYPE_COLORS["normal"];
-            let cOculto = TYPE_COLORS[lider.tipoOculto] || "#fff";
+            let t1Map = mapType(lider.tipo1);
+            let t2Map = mapType(lider.tipo2);
+            let tOcultoMap = mapType(lider.tipoOculto);
+
+            let c1 = TYPE_COLORS[t1Map] || "#777";
+            let c2 = TYPE_COLORS[t2Map] || TYPE_COLORS["normal"];
+            let cOculto = TYPE_COLORS[tOcultoMap] || "#fff";
 
             let botones = `
                 <div class="top-attacks-row">
-                    <button class="btn-attack-type" style="background-color: ${c1};" onclick="ejecutarTurnoCombate('atacar', '${lider.tipo1}')">${lider.tipo1}</button>
-                    <button class="btn-attack-type" style="background-color: ${c2};" onclick="ejecutarTurnoCombate('atacar', '${lider.tipo2}')">${lider.tipo2 || 'normal'}</button>
+                    <button class="btn-attack-type" style="background-color: ${c1};" onclick="ejecutarTurnoCombate('atacar', '${t1Map}')">${lider.tipo1}</button>
+                    <button class="btn-attack-type" style="background-color: ${c2};" onclick="ejecutarTurnoCombate('atacar', '${t2Map}')">${lider.tipo2 || 'normal'}</button>
                 </div>
                 <div class="mid-hidden-row">
-                    <button class="btn-hidden-power" style="background-color: ${cOculto};" onclick="ejecutarTurnoCombate('atacar', '${lider.tipoOculto}')" title="Poder Oculto">${lider.tipoOculto}</button>
+                    <button class="btn-hidden-power" style="background-color: ${cOculto};" onclick="ejecutarTurnoCombate('atacar', '${tOcultoMap}')" title="Poder Oculto">${lider.tipoOculto}</button>
                 </div>
                 <div class="bottom-actions-row">
                     ${tipo === 'wild' ? `<button class="btn-capture" onclick="ejecutarTurnoCombate('capturar')">CAPTURAR</button>` : ``}
@@ -568,7 +581,7 @@
         }
 
         function calcularDaño(atacante, defensor, tipoAtaque) {
-            let tiposDef = [defensor.tipo1, defensor.tipo2];
+            let tiposDef = [mapType(defensor.tipo1), mapType(defensor.tipo2)];
             let multiplicador = getEffectiveness(tipoAtaque, tiposDef);
             let dañoBase = Math.max(1, atacante.ataque - defensor.defensa + Math.floor(Math.random() * 5));
             return { daño: Math.floor(dañoBase * multiplicador), multi: multiplicador };
@@ -605,7 +618,7 @@
                 const initE = Math.floor(Math.random() * 99) + 1;
                 
                 let resJ = calcularDaño(lider, currentEnemy, tipoAtaqueSeleccionado);
-                let tiposEnemigoDisponibles = [currentEnemy.tipo1, currentEnemy.tipo2, currentEnemy.tipoOculto].filter(Boolean);
+                let tiposEnemigoDisponibles = [currentEnemy.tipo1, currentEnemy.tipo2, currentEnemy.tipoOculto].filter(Boolean).map(mapType);
                 let tipoEnemigo = tiposEnemigoDisponibles[Math.floor(Math.random() * tiposEnemigoDisponibles.length)];
                 let resE = calcularDaño(currentEnemy, lider, tipoEnemigo);
 
@@ -642,7 +655,7 @@
 
         function turnoEnemigoAtaca() {
             let lider = teamPokemon[0];
-            let tiposEnemigoDisponibles = [currentEnemy.tipo1, currentEnemy.tipo2, currentEnemy.tipoOculto].filter(Boolean);
+            let tiposEnemigoDisponibles = [currentEnemy.tipo1, currentEnemy.tipo2, currentEnemy.tipoOculto].filter(Boolean).map(mapType);
             let tipoEnemigo = tiposEnemigoDisponibles[Math.floor(Math.random() * tiposEnemigoDisponibles.length)];
             let resE = calcularDaño(currentEnemy, lider, tipoEnemigo);
             lider.hpActual = Math.max(0, lider.hpActual - resE.daño);
