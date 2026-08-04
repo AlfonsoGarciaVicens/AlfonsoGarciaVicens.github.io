@@ -16,6 +16,21 @@
         .box-container, .modal-window { background-color: #2a2a2a; padding: 25px; border-radius: 8px; border: 2px solid #444; width: 100%; max-width: 340px; text-align: center; }
         .modal-window { background: linear-gradient(135deg, #38bdf8, #0369a1); border: 4px solid #bae6fd; box-shadow: 0 8px 16px rgba(0,0,0,0.6); padding: 15px; gap: 10px; display: flex; flex-direction: column; }
         
+        /* Estilo específico ventana Bolsa */
+        .bag-window { background: linear-gradient(135deg, #d97706, #b45309); border: 4px solid #fde68a; width: 360px; max-width: 95%; height: 480px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative; border-radius: 10px; }
+        .bag-tabs { display: flex; justify-content: space-around; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 6px; gap: 2px; }
+        .bag-tab-btn { background: #78350f; border: 2px solid #92400e; border-radius: 4px; padding: 6px; cursor: pointer; font-size: 16px; color: #fff; flex: 1; text-align: center; }
+        .bag-tab-btn.active { background: #f59e0b; border-color: #fef3c7; }
+        
+        .bag-content-grid { background: #ffffff; border: 3px solid #78350f; border-radius: 6px; height: 180px; padding: 8px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; }
+        .bag-item-row { background: #fef3c7; border: 1px solid #d97706; color: #111; padding: 6px 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 11px; font-weight: bold; }
+        .bag-item-row:hover { background: #fde68a; }
+        .bag-item-row.selected { background: #f59e0b; color: white; border-color: #b45309; }
+
+        .bag-desc-box { background: #4b5563; border: 3px solid #1f2937; border-radius: 6px; padding: 10px; color: #f3f4f6; font-size: 11px; text-align: left; height: 90px; display: flex; flex-direction: column; justify-content: space-between; }
+        .bag-use-btn { background: #10b981; border: none; color: white; padding: 6px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 11px; align-self: flex-end; }
+        .bag-close-btn { background: #ef4444; border: 2px solid #991b1b; color: white; padding: 8px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 12px; width: 100%; text-align: center; }
+
         .box-container h2 { margin-bottom: 15px; color: #4CAF50; font-size: 18px; }
         .box-container input { width: 100%; padding: 10px; margin-bottom: 15px; background-color: #1a1a1a; border: 1px solid #555; color: #fff; border-radius: 4px; }
         .box-container button, .starter-btn, .modal-close-btn { width: 100%; padding: 10px; background-color: #4CAF50; border: none; color: white; font-weight: bold; border-radius: 4px; cursor: pointer; margin-top: 5px; }
@@ -180,6 +195,32 @@
             </div>
         </div>
 
+        <!-- Pantalla de Bolsa -->
+        <div id="bag-screen" class="modal-screen">
+            <div class="bag-window">
+                <div class="bag-tabs">
+                    <button class="bag-tab-btn active" onclick="cambiarPestanaBolsa('potions')" title="Pociones">🧪</button>
+                    <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('proteins')" title="Proteínas">💊</button>
+                    <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('energy')" title="Energía">⚡</button>
+                    <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('wallet')" title="Monedero">💰</button>
+                    <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('mts')" title="MTs">💿</button>
+                    <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('eggs')" title="Huevos">🥚</button>
+                    <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('others')" title="Otros">📦</button>
+                </div>
+                
+                <div class="bag-content-grid" id="bag-items-container">
+                    <!-- Los items de la categoría activa se cargarán aquí -->
+                </div>
+
+                <div class="bag-desc-box">
+                    <span id="bag-item-desc">Selecciona un objeto para ver su descripción.</span>
+                    <button id="bag-use-action-btn" class="bag-use-btn" style="display:none;" onclick="usarObjetoSeleccionado()">USAR</button>
+                </div>
+
+                <button class="bag-close-btn" onclick="cerrarBolsa()">CERRAR</button>
+            </div>
+        </div>
+
         <!-- Combate -->
         <div id="combat-screen">
             <div class="combat-viewport">
@@ -242,14 +283,14 @@
         </div>
 
         <div class="bottom-nav">
-            <button class="btn-nav" onclick="alert('Bolsa no implementada aún')">BOLSA</button>
+            <button class="btn-nav" onclick="abrirBolsa()">BOLSA</button>
             <button class="btn-nav" onclick="abrirEquipo()">EQUIPO</button>
             <button id="btn-username-display" class="btn-nav" style="color: #6ee7b7; font-weight: bold;">JUGADOR</button>
         </div>
 
         <div class="footer-info">
             <button class="chat-btn" onclick="alert('Chat global')">CHAT (5)</button>
-            <span>Pokémon TRAILS v. 1.3.3</span>
+            <span>Pokémon TRAILS v. 2.1.0</span>
         </div>
     </div>
 
@@ -264,6 +305,36 @@
         let zonaExplorada = false;
         let playerMedals = 0;
         let combatEnCurso = false;
+
+        // Estructura de la bolsa del jugador
+        let playerInventory = {
+            potions: [
+                { id: 'potion', name: 'Poción', count: 3, desc: 'Cura un 20% de PS a un Pokémon.' },
+                { id: 'super_potion', name: 'Superpoción', count: 1, desc: 'Cura un 50% de PS a un Pokémon.' }
+            ],
+            proteins: [
+                { id: 'protein', name: 'Proteína', count: 2, desc: 'Aumenta permanentemente el ataque de un Pokémon.' }
+            ],
+            energy: [
+                { id: 'energy_drink', name: 'Bebida Energética', count: 2, desc: 'Restaura 5 puntos de energía al instante.' }
+            ],
+            wallet: [
+                { id: 'stardust', name: 'Polvoestelar', count: 1, desc: 'Objeto valioso que se puede vender por dinero.' },
+                { id: 'nugget', name: 'Pasita / Pepita', count: 1, desc: 'Pepita de oro puro muy valiosa.' }
+            ],
+            mts: [
+                { id: 'mt_hidden', name: 'MT Poder Oculto', count: 1, desc: 'Permite cambiar aleatoriamente el tipo del Poder Oculto de tu Pokémon líder.' }
+            ],
+            eggs: [
+                { id: 'mystery_egg', name: 'Huevo Misterioso', count: 1, desc: 'Un huevo Pokémon que eclosionará tras explorar suficientes zonas.' }
+            ],
+            others: [
+                { id: 'repel', name: 'Repelente', count: 5, desc: 'Evita encuentros débiles temporalmente.' }
+            ]
+        };
+
+        let pestanaActivaBolsa = 'potions';
+        let objetoSeleccionadoBolsa = null;
 
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -451,11 +522,11 @@
             guardarDatos();
             localStorage.removeItem("pt_current_user");
             
-            // Ocultar pantallas de juego y mostrar login
             document.getElementById("combat-screen").style.display = "none";
             document.getElementById("menu-screen").style.display = "none";
             document.getElementById("team-screen").style.display = "none";
             document.getElementById("pc-screen").style.display = "none";
+            document.getElementById("bag-screen").style.display = "none";
             document.getElementById("starter-screen").style.display = "none";
             
             document.getElementById("username-input").value = "";
@@ -474,6 +545,11 @@
             ultimoTimestamp = parseInt(localStorage.getItem(prefix + "timestamp") ?? Date.now());
             playerMedals = parseInt(localStorage.getItem(prefix + "medals") ?? "0");
 
+            let savedInv = localStorage.getItem(prefix + "inventory");
+            if (savedInv) {
+                playerInventory = JSON.parse(savedInv);
+            }
+
             if (esUsuarioFonso()) energiaActual = energiaMax;
 
             if (teamPokemon.length > 0) actualizarHUD();
@@ -491,6 +567,7 @@
                 localStorage.setItem(prefix + "energia", esUsuarioFonso() ? 20 : energiaActual);
                 localStorage.setItem(prefix + "timestamp", ultimoTimestamp);
                 localStorage.setItem(prefix + "medals", playerMedals);
+                localStorage.setItem(prefix + "inventory", JSON.stringify(playerInventory));
             } catch(e) {}
         }
 
@@ -620,18 +697,144 @@
 
             const r = Math.random();
             if (r < 0.3) {
-                document.getElementById("explore-log").innerHTML = `📦 ¡Has encontrado objetos!`;
+                // Añadir objeto aleatorio a la bolsa al explorar
+                agregarObjetoAleatorioInventario();
+                document.getElementById("explore-log").innerHTML = `📦 ¡Has encontrado un objeto y se ha guardado en tu Bolsa!`;
             } else if (r < 0.5) {
                 let lider = teamPokemon[0];
                 lider.hpActual = Math.min(lider.hpMax, lider.hpActual + Math.floor(lider.hpMax * 0.5));
                 guardarDatos();
                 actualizarHUD();
-                document.getElementById("explore-log").innerHTML = `🏥 ¡Encontraste una poción! Recuperas 50% de PS.`;
+                document.getElementById("explore-log").innerHTML = `🏥 ¡Encontraste una poción natural! Recuperas 50% de PS.`;
             } else {
                 iniciarCombate(r < 0.8 ? 'wild' : 'trainer');
             }
             zonaExplorada = true;
-            document.getElementById("btn-explore-main").disabled = true;
+            document.getElementById("btn-explore-main").disabled = false; // Desbloqueado tras explorar
+        }
+
+        function agregarObjetoAleatorioInventario() {
+            const posibles = [
+                { cat: 'potions', id: 'potion', name: 'Poción', desc: 'Cura un 20% de PS a un Pokémon.' },
+                { cat: 'energy', id: 'energy_drink', name: 'Bebida Energética', desc: 'Restaura 5 puntos de energía al instante.' },
+                { cat: 'wallet', id: 'stardust', name: 'Polvoestelar', desc: 'Objeto valioso que se puede vender por dinero.' }
+            ];
+            let elegido = posibles[Math.floor(Math.random() * posibles.length)];
+            let listaCat = playerInventory[elegido.cat];
+            let existente = listaCat.find(i => i.id === elegido.id);
+            if (existente) {
+                existente.count++;
+            } else {
+                listaCat.push({ id: elegido.id, name: elegido.name, count: 1, desc: elegido.desc });
+            }
+            guardarDatos();
+        }
+
+        // --- SISTEMA DE LA BOLSA ---
+        function abrirBolsa() {
+            document.getElementById("bag-screen").style.display = "flex";
+            cambiarPestanaBolsa('potions');
+        }
+
+        function cerrarBolsa() {
+            document.getElementById("bag-screen").style.display = "none";
+        }
+
+        function cambiarPestanaBolsa(categoria) {
+            pestanaActivaBolsa = categoria;
+            objetoSeleccionadoBolsa = null;
+
+            // Actualizar botones de pestañas visuales
+            let botones = document.querySelectorAll(".bag-tab-btn");
+            botones.forEach(btn => btn.classList.remove('active'));
+            event && event.currentTarget && event.currentTarget.classList.add('active');
+
+            renderizarItemsBolsa();
+            document.getElementById("bag-item-desc").innerText = "Selecciona un objeto para ver su descripción.";
+            document.getElementById("bag-use-action-btn").style.display = "none";
+        }
+
+        function renderizarItemsBolsa() {
+            const contenedor = document.getElementById("bag-items-container");
+            contenedor.innerHTML = "";
+
+            let lista = playerInventory[pestanaActivaBolsa] || [];
+            if (lista.length === 0) {
+                contenedor.innerHTML = `<div style="text-align:center; color:#666; font-size:11px; margin-top:20px;">No hay objetos en esta categoría.</div>`;
+                return;
+            }
+
+            lista.forEach((item, index) => {
+                let div = document.createElement("div");
+                div.className = "bag-item-row";
+                div.innerHTML = `<span>${item.name}</span><span>x${item.count}</span>`;
+                div.onclick = () => seleccionarItemBolsa(item, div);
+                contenedor.appendChild(div);
+            });
+        }
+
+        function seleccionarItemBolsa(item, elementoDOM) {
+            let filas = document.querySelectorAll(".bag-item-row");
+            filas.forEach(f => f.classList.remove('selected'));
+            elementoDOM.classList.add('selected');
+
+            objetoSeleccionadoBolsa = item;
+            document.getElementById("bag-item-desc").innerText = item.desc;
+
+            let btnUsar = document.getElementById("bag-use-action-btn");
+            // Mostrar botón usar solo si pertenece a categorías utilizables
+            if (['potions', 'proteins', 'energy', 'mts'].includes(pestanaActivaBolsa)) {
+                btnUsar.style.display = "block";
+            } else {
+                btnUsar.style.display = "none";
+            }
+        }
+
+        function usarObjetoSeleccionado() {
+            if (!objetoSeleccionadoBolsa || objetoSeleccionadoBolsa.count <= 0) return;
+
+            let lider = teamPokemon[0];
+            if (!lider && pestanaActivaBolsa !== 'energy') {
+                alert("¡No tienes ningún Pokémon en el equipo para usar esto!");
+                return;
+            }
+
+            if (pestanaActivaBolsa === 'potions') {
+                if (lider.hpActual >= lider.hpMax) {
+                    alert("¡Tu Pokémon ya tiene los PS al máximo!");
+                    return;
+                }
+                let curacion = Math.floor(lider.hpMax * (objetoSeleccionadoBolsa.id === 'super_potion' ? 0.5 : 0.2));
+                lider.hpActual = Math.min(lider.hpMax, lider.hpActual + curacion);
+                alert(`¡Usaste ${objetoSeleccionadoBolsa.name}! Recuperó ${curacion} PS.`);
+                
+            } else if (pestanaActivaBolsa === 'energy') {
+                energiaActual = Math.min(energiaMax, energiaActual + 5);
+                alert(`¡Usaste ${objetoSeleccionadoBolsa.name}! Has recuperado 5 de energía.`);
+                actualizarHUDEnergia();
+
+            } else if (pestanaActivaBolsa === 'mts') {
+                lider.tipoOculto = getTipoOcultoAleatorio(lider.tipo1, lider.tipo2);
+                alert(`¡MT utilizada! El Poder Oculto de ${lider.nombre} ha cambiado a tipo: ${lider.tipoOculto.toUpperCase()}`);
+
+            } else if (pestanaActivaBolsa === 'proteins') {
+                lider.ataque += 3;
+                alert(`¡Proteína aplicada! El ataque de ${lider.nombre} ha aumentado.`);
+            }
+
+            // Reducir cantidad o eliminar si llega a 0
+            objetoSeleccionadoBolsa.count--;
+            if (objetoSeleccionadoBolsa.count <= 0) {
+                let lista = playerInventory[pestanaActivaBolsa];
+                playerInventory[pestanaActivaBolsa] = lista.filter(i => i.id !== objetoSeleccionadoBolsa.id);
+                objetoSeleccionadoBolsa = null;
+                document.getElementById("bag-item-desc").innerText = "Selecciona un objeto para ver su descripción.";
+                document.getElementById("bag-use-action-btn").style.display = "none";
+            }
+
+            guardarDatos();
+            renderizarItemsBolsa();
+            actualizarHUD();
         }
 
         function iniciarCombate(tipo) {
