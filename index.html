@@ -115,6 +115,17 @@
         .gba-hp-bar { background: #111; height: 5px; width: 100%; border-radius: 3px; margin-top: 2px; overflow: hidden; border: 1px solid #000; }
         .gba-hp-fill { background: #22c55e; height: 100%; }
 
+        /* Estilo PC Rediseñado (Basado en la imagen de referencia GBA) */
+        .pc-window-gba { background: linear-gradient(135deg, #38bdf8, #0284c7); border: 3px solid #bae6fd; border-radius: 6px; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
+        .pc-main-layout { display: flex; gap: 6px; flex-grow: 1; overflow: hidden; margin-top: 4px; }
+        .pc-grid-box { background: rgba(0,0,0,0.2); border: 2px solid #0369a1; border-radius: 4px; width: 55%; padding: 4px; display: grid; grid-template-columns: repeat(5, 1fr); grid-auto-rows: 32px; gap: 3px; overflow-y: auto; align-content: start; }
+        .pc-cell { background: #e2e8f0; border: 2px solid #cbd5e1; border-radius: 4px; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; font-size: 16px; }
+        .pc-cell.selected-pc { border: 2px solid #ef4444; box-shadow: 0 0 6px #ef4444; background: #fef08a; }
+        .pc-preview-box { background: #e2e8f0; border: 2px solid #94a3b8; border-radius: 4px; width: 45%; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; color: #111; font-size: 9px; }
+        .pc-sprite-frame { background: #ffffff; border: 2px solid #cbd5e1; border-radius: 3px; height: 70px; display: flex; justify-content: center; align-items: center; margin-bottom: 4px; }
+        .pc-action-btn { background: #2563eb; border: 2px solid #1d4ed8; color: white; padding: 4px 2px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 9px; text-align: center; text-shadow: 1px 1px 1px #000; width: 100%; margin-bottom: 2px; }
+        .pc-action-btn:hover { background: #3b82f6; }
+
         /* Estilo Menú Datos Pokémon (Basado en la referencia GBA) */
         .summary-window { background: linear-gradient(135deg, #d97706, #b45309); border: 3px solid #fde68a; border-radius: 6px; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
         .summary-content { display: flex; gap: 8px; flex-grow: 1; margin-bottom: 5px; }
@@ -168,7 +179,6 @@
         .combat-sprites { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 10px; height: 95px; }
         .battle-sprite-img { width: 85px; height: 85px; image-rendering: pixelated; object-fit: contain; }
         
-        /* Bajar la ubicación del sprite del usuario en combate */
         #player-battle-sprite {
             position: relative;
             top: 18px;
@@ -223,7 +233,6 @@
             display: none;
         }
 
-        /* Contenedor inferior unificado para evitar cualquier desplazamiento vertical (layout shift) */
         #bottom-panel-wrapper {
             width: 100%;
             height: 105px;
@@ -322,38 +331,54 @@
             <div id="team-screen" class="modal-screen">
                 <div class="team-window-gba">
                     <div class="modal-title" style="border:none; color:#fff;">- EQUIPO POKÉMON -</div>
-                    
-                    <!-- Pokémon Líder Activo Superior -->
                     <div id="gba-lead-container"></div>
-
-                    <!-- Lista de Reservas del Equipo -->
                     <div id="gba-party-container" class="gba-party-container"></div>
-
-                    <!-- Botones Inferiores Dinámicos -->
                     <div id="gba-bottom-buttons" style="display: flex; gap: 5px; margin-top: 6px;">
                         <button class="modal-close-btn" onclick="cerrarEquipo()">CERRAR</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Ventana de Datos / Resumen del Pokémon (Estilo GBA basado en la imagen) -->
-            <div id="summary-screen" class="modal-screen">
-                <div class="summary-window">
-                    <div class="modal-title" style="border:none; color:#fff;">- DATOS DEL POKÉMON -</div>
+            <!-- Ventana de PC Rediseñada (Estilo GBA con rejilla y panel de acciones) -->
+            <div id="pc-screen" class="modal-screen">
+                <div class="pc-window-gba">
+                    <div class="modal-title" style="border:none; color:#fff;">- PC POKÉMON -</div>
                     
-                    <div class="summary-content" id="summary-content-body">
-                        <!-- Se rellena dinámicamente -->
+                    <div class="pc-main-layout">
+                        <!-- Rejilla de almacenamiento izquierda -->
+                        <div class="pc-grid-box" id="pc-grid-container">
+                            <!-- Se rellena con celdas -->
+                        </div>
+
+                        <!-- Panel derecho de previsualización y acciones -->
+                        <div class="pc-preview-box">
+                            <div>
+                                <div class="pc-sprite-frame" id="pc-preview-sprite-box">
+                                    <span style="font-size:24px;">💻</span>
+                                </div>
+                                <div id="pc-preview-info" style="font-weight:bold; font-size:10px; text-align:center; margin-bottom:4px;">VACÍO</div>
+                                <div style="font-size:8px; color:#334155; line-height:1.2;" id="pc-preview-stats">Selecciona un Pokémon</div>
+                            </div>
+                            
+                            <div style="display:flex; flex-direction:column; gap:2px;">
+                                <button class="pc-action-btn" onclick="pcAccionDatos()">DATOS</button>
+                                <button class="pc-action-btn" onclick="pcAccionMover()">MOVER</button>
+                                <button class="pc-action-btn" onclick="pcAccionVender()">VENDER</button>
+                                <button class="pc-action-btn" onclick="pcAccionFav()">+ FAV</button>
+                            </div>
+                        </div>
                     </div>
 
-                    <button class="modal-close-btn" onclick="cerrarDatosPokemon()">CERRAR</button>
+                    <button class="modal-close-btn" onclick="cerrarPC()" style="margin-top:6px;">CERRAR</button>
                 </div>
             </div>
 
-            <div id="pc-screen" class="modal-screen">
-                <div class="modal-window">
-                    <div class="modal-title">- TUS POKÉMON (PC) -</div>
-                    <div id="pc-slots-container" style="display: flex; flex-direction: column; gap: 5px; overflow-y: auto; flex-grow: 1;"></div>
-                    <button class="modal-close-btn" onclick="cerrarPC()">CERRAR</button>
+            <!-- Ventana de Datos / Resumen del Pokémon -->
+            <div id="summary-screen" class="modal-screen">
+                <div class="summary-window">
+                    <div class="modal-title" style="border:none; color:#fff;">- DATOS DEL POKÉMON -</div>
+                    <div class="summary-content" id="summary-content-body"></div>
+                    <button class="modal-close-btn" onclick="cerrarDatosPokemon()">CERRAR</button>
                 </div>
             </div>
 
@@ -405,7 +430,7 @@
                 </div>
             </div>
 
-            <!-- Vista de Combate con Sprites Oficiales (Back y Front + Shiny) -->
+            <!-- Vista de Combate -->
             <div id="combat-viewport-screen" class="modal-screen">
                 <div class="combat-modal-window">
                     <div id="enemy-initiative-bubble" class="initiative-bubble" style="top: 35px; left: 40px;">--</div>
@@ -437,9 +462,8 @@
             </div>
         </div>
 
-        <!-- Contenedor inferior unificado (Evita cualquier cambio de altura o desplazamiento vertical) -->
+        <!-- Contenedor inferior unificado -->
         <div id="bottom-panel-wrapper">
-            <!-- Vista Normal (Exploración y Navegación) -->
             <div id="normal-controls-view" style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
                 <div class="action-buttons" id="exploration-action-buttons">
                     <button id="btn-explore-main" class="btn-action btn-explore" onclick="exploreZone()">EXPLORAR ZONA</button>
@@ -452,7 +476,6 @@
                 </div>
             </div>
 
-            <!-- Vista de Combate (Botones de Ataque, Capturar, Huir) -->
             <div id="combat-controls-view" style="display: none; flex-direction: column; justify-content: center; height: 100%;">
                 <div class="combat-controls-container" id="combat-buttons-container"></div>
             </div>
@@ -478,9 +501,11 @@
         let playerMoney = 2000;
         let lastDailyClaim = 0;
 
-        // Variables para la gestión interactiva de equipo estilo GBA
+        // Variables para la gestión interactiva de equipo y PC
         let indicePokemonSeleccionado = null;
         let modoMoverEquipo = false;
+        let pcIndiceSeleccionado = null;
+        let pcModoMover = false;
 
         const defaultInventory = {
             potions: [
@@ -513,7 +538,7 @@
         let pestanaActivaBolsa = 'potions';
         let objetoSeleccionadoBolsa = null;
 
-        // --- CONFIGURACIÓN DE GACHAS (Todos los tipos elementales) ---
+        // --- CONFIGURACIÓN DE GACHAS (Incluyendo Gacha Shiny de Pruebas y Tipos) ---
         const typeGachaConfig = [
             { type: 'normal', name: 'Normal', icon: '⚪' },
             { type: 'fire', name: 'Fuego', icon: '🔥' },
@@ -559,6 +584,14 @@
                 desc: 'Consigue 1 CD de MT de Poder Oculto para personalizar los tipos de tus Pokémon.',
                 cost: 600,
                 type: 'mt'
+            },
+            {
+                id: 'shiny_test',
+                title: 'GACHA SHINY (TEST)',
+                icons: ['🌟', '✨', '💎'],
+                desc: '¡Garantiza 100% de probabilidad de obtener un Pokémon Shiny para pruebas!',
+                cost: 2000,
+                type: 'shiny_test'
             }
         ];
 
@@ -698,10 +731,10 @@
             return Math.floor(Math.random() * (liderNivel - minNivel + 1)) + minNivel;
         }
 
-        // Función centralizada para generar Pokémon con soporte Shiny (1/4096) y Back/Front Sprites
-        function generarDatosPokemonBase(pokeData, nivel) {
+        // Función centralizada para generar Pokémon con soporte Shiny (1/4096) y forzado
+        function generarDatosPokemonBase(pokeData, nivel, forzarShiny = false) {
             let idDex = pokeData.id || 25;
-            let isShiny = Math.random() < (1 / 4096);
+            let isShiny = forzarShiny ? true : (Math.random() < (1 / 4096));
             let iv = 15;
             let hpMax = calcularHPFinal(pokeData.stats.hp, nivel, iv);
             let atkComb = Math.floor((pokeData.stats.attack + pokeData.stats.special_attack) / 2);
@@ -727,12 +760,13 @@
                 exp: 0,
                 idDex: idDex,
                 trainerId: "03101",
-                potencial: "15 / 31",
+                potencial: Math.floor(Math.random() * 31) + 1 + " / 31",
                 amistad: "50 / 100",
                 origen: `Obtenido al nivel ${nivel}.`,
                 sprite_url: frontUrl,
                 back_sprite_url: backUrl,
-                isShiny: isShiny
+                isShiny: isShiny,
+                favorito: false
             };
         }
 
@@ -743,11 +777,14 @@
 
                 const resZones = await fetch('data/zones.json');
                 zonesConfig = await resZones.json();
+
+                // Añadir el Bosque Shiny a la lista de zonas de prueba
+                zonesConfig.push({ name: "Bosque Shiny (Zona Especial)", sprite: "✨", types: ["normal", "fairy", "grass"], shinyOnly: true });
             } catch (error) {
                 console.error("Error al cargar los archivos JSON:", error);
                 zonesConfig = [
                     { name: "Pueblo Inicial (Zona 1)", sprite: "🏡", types: ["normal", "flying"] },
-                    { name: "Ruta 1 - Senda Tranquila", sprite: "🌿", types: ["grass", "bug"] }
+                    { name: "Bosque Shiny (Zona Especial)", sprite: "✨", types: ["normal"], shinyOnly: true }
                 ];
             }
 
@@ -854,14 +891,12 @@
                 if (p.hpActual === undefined || p.hpActual < 0) p.hpActual = p.hpMax;
                 if (p.exp === undefined) p.exp = 0;
                 if (!p.nivel) p.nivel = 5;
-                if (!p.sprite_url) {
-                    let match = POKEDEX_GLOBAL.find(x => x.name.toLowerCase() === p.nombre.toLowerCase().replace(' ✨',''));
-                    p.sprite_url = match ? match.sprite_url : '';
-                }
-                if (!p.back_sprite_url) {
-                    let id = p.idDex || 25;
-                    p.back_sprite_url = p.isShiny ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${id}.png` : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${id}.png`;
-                }
+            });
+
+            pcStorage.forEach(p => {
+                if (!p.hpMax || p.hpMax <= 0) p.hpMax = 50;
+                if (p.hpActual === undefined) p.hpActual = p.hpMax;
+                if (p.favorito === undefined) p.favorito = false;
             });
 
             if (esUsuarioFonso()) energiaActual = energiaMax;
@@ -961,6 +996,7 @@
 
         function explorarGenerarPokemon(nivel) {
             let zonaObj = zonesConfig[currentZoneIndex];
+            let forzarShiny = zonaObj.shinyOnly ? true : false;
             let maxBstPermitido = getMaxBstByMedals(playerMedals);
             
             let permitidos = POKEDEX_GLOBAL.filter(p => {
@@ -971,7 +1007,7 @@
                 let bst = (stats.hp || 0) + (stats.attack || 0) + (stats.defense || 0) + 
                           (stats.special_attack || 0) + (stats.special_defense || 0) + (stats.speed || 0);
 
-                let coincideTipo = p.types.some(t => {
+                let coincideTipo = zonaObj.shinyOnly ? true : p.types.some(t => {
                     let typeName = typeof t === 'string' ? t : (t.name || t.type?.name || '');
                     return zonaObj.types.includes(typeName.toLowerCase());
                 });
@@ -981,21 +1017,11 @@
             });
 
             if (permitidos.length === 0) {
-                permitidos = POKEDEX_GLOBAL.filter(p => {
-                    if (p.is_legendary || p.is_mythical) return false;
-                    let stats = p.stats || {};
-                    let bst = (stats.hp || 0) + (stats.attack || 0) + (stats.defense || 0) + 
-                              (stats.special_attack || 0) + (stats.special_defense || 0) + (stats.speed || 0);
-                    return bst <= maxBstPermitido;
-                });
-            }
-
-            if (permitidos.length === 0) {
                 permitidos = POKEDEX_GLOBAL.filter(p => !p.is_legendary && !p.is_mythical);
             }
 
             const randomEntry = permitidos[Math.floor(Math.random() * permitidos.length)] || POKEDEX_GLOBAL[0];
-            let enemyPoke = generarDatosPokemonBase(randomEntry, nivel);
+            let enemyPoke = generarDatosPokemonBase(randomEntry, nivel, forzarShiny);
             enemyPoke.origen = `Encontrado explorando al nivel ${nivel}.`;
             return enemyPoke;
         }
@@ -1280,53 +1306,53 @@
 
                 alert(`💿 ¡Has conseguido una MT de Poder Oculto!`);
 
-            } else if (maquina.type === 'pokemon') {
+            } else if (maquina.type === 'pokemon' || maquina.type === 'shiny_test') {
                 if (POKEDEX_GLOBAL.length === 0) {
                     alert("La Pokédex aún no está cargada.");
                     playerMoney += maquina.cost;
                     return;
                 }
 
-                const specialExclusions = [
-                    "nihilego", "buzzwole", "pheromosa", "xurkitree", "celesteela", 
-                    "kartana", "guzzlord", "poipole", "naganadel", "stakataka", "blacephalon",
-                    "great-tusk", "scream-tail", "brute-bonnet", "flutter-mane", "slither-wing", 
-                    "sandy-shocks", "iron-treads", "iron-bundle", "iron-hands", "iron-jugulis", 
-                    "iron-moth", "iron-thorns", "roaring-moon", "iron-valiant", "walking-wake", 
-                    "iron-leaves", "gouging-fire", "raging-bolt", "iron-boulder", "iron-crown"
-                ];
+                let forzarShiny = maquina.type === 'shiny_test' ? true : false;
+                let pool = POKEDEX_GLOBAL;
 
-                let tipoFiltro = maquina.targetType.toLowerCase();
-                let pool = POKEDEX_GLOBAL.filter(p => {
-                    if (p.is_legendary || p.is_mythical) return false;
-                    if (p.evolves_from && p.evolves_from !== "None") return false;
-                    
-                    let pNameLower = p.name.toLowerCase();
-                    if (specialExclusions.includes(pNameLower)) return false;
+                if (!forzarShiny) {
+                    const specialExclusions = [
+                        "nihilego", "buzzwole", "pheromosa", "xurkitree", "celesteela", 
+                        "kartana", "guzzlord", "poipole", "naganadel", "stakataka", "blacephalon",
+                        "great-tusk", "scream-tail", "brute-bonnet", "flutter-mane", "slither-wing", 
+                        "sandy-shocks", "iron-treads", "iron-bundle", "iron-hands", "iron-jugulis", 
+                        "iron-moth", "iron-thorns", "roaring-moon", "iron-valiant", "walking-wake", 
+                        "iron-leaves", "gouging-fire", "raging-bolt", "iron-boulder", "iron-crown"
+                    ];
 
-                    if (!p.types || !Array.isArray(p.types)) return false;
-                    return p.types.some(t => t.toLowerCase() === tipoFiltro);
-                });
-
-                if (pool.length === 0) {
+                    let tipoFiltro = maquina.targetType.toLowerCase();
                     pool = POKEDEX_GLOBAL.filter(p => {
+                        if (p.is_legendary || p.is_mythical) return false;
+                        if (p.evolves_from && p.evolves_from !== "None") return false;
+                        
                         let pNameLower = p.name.toLowerCase();
-                        return !p.is_legendary && !p.is_mythical && 
-                               (!p.evolves_from || p.evolves_from === "None") && 
-                               !specialExclusions.includes(pNameLower);
+                        if (specialExclusions.includes(pNameLower)) return false;
+
+                        if (!p.types || !Array.isArray(p.types)) return false;
+                        return p.types.some(t => t.toLowerCase() === tipoFiltro);
                     });
+
+                    if (pool.length === 0) {
+                        pool = POKEDEX_GLOBAL.filter(p => !p.is_legendary && !p.is_mythical && (!p.evolves_from || p.evolves_from === "None") && !specialExclusions.includes(p.name.toLowerCase()));
+                    }
                 }
 
                 let pokeData = pool[Math.floor(Math.random() * pool.length)] || POKEDEX_GLOBAL[0];
-                let nuevoPoke = generarDatosPokemonBase(pokeData, 5);
-                nuevoPoke.origen = "Encontrado en GACHA al nivel 5.";
+                let nuevoPoke = generarDatosPokemonBase(pokeData, 5, forzarShiny);
+                nuevoPoke.origen = forzarShiny ? "Obtenido en Gacha Shiny (Test)." : "Encontrado en GACHA al nivel 5.";
 
                 if (teamPokemon.length < 4) {
                     teamPokemon.push(nuevoPoke);
-                    alert(`✨ ¡Has obtenido una 1ª evolución, ${nuevoPoke.nombre} (Lv.5), y se ha unido a tu equipo!`);
+                    alert(`✨ ¡Has obtenido a ${nuevoPoke.nombre} (Lv.5) y se ha unido a tu equipo!`);
                 } else {
                     pcStorage.push(nuevoPoke);
-                    alert(`✨ ¡Has obtenido una 1ª evolución, ${nuevoPoke.nombre} (Lv.5)! Tu equipo está lleno, se envió al PC.`);
+                    alert(`✨ ¡Has obtenido a ${nuevoPoke.nombre} (Lv.5)! Tu equipo está lleno, se envió al PC.`);
                 }
                 actualizarHUD();
             }
@@ -1371,7 +1397,6 @@
             document.getElementById("enemy-name-lvl").innerText = `${currentEnemy.nombre.toUpperCase()} Lv.${nivel}`;
             document.getElementById("player-battle-name").innerText = `${lider.nombre.toUpperCase()} Lv.${lider.nivel}`;
             
-            // Asignar los sprites de espalda (back) para el jugador y de frente para el enemigo
             let pSpriteImg = document.getElementById("player-battle-sprite");
             let eSpriteImg = document.getElementById("enemy-battle-sprite");
 
@@ -1629,14 +1654,171 @@
         function abrirMenu() { document.getElementById("menu-screen").style.display = "flex"; }
         function cerrarMenu() { document.getElementById("menu-screen").style.display = "none"; }
         
+        // --- SISTEMA DE PC GBA INTERACTIVO ---
         function abrirPC() {
             cerrarMenu();
-            const c = document.getElementById("pc-slots-container"); c.innerHTML = "";
-            if (pcStorage.length === 0) c.innerHTML = `<div style="text-align:center; color:#fff; font-size:11px;">The PC is empty.</div>`;
-            else pcStorage.forEach(p => { c.innerHTML += `<div class="team-slot"><span style="font-size:22px;">${p.icono}</span><div class="slot-info"><div><b>${p.nombre.toUpperCase()}</b> Lv.${p.nivel}</div><div style="font-size:10px;">HP: ${p.hpActual}/${p.hpMax}</div></div></div>`; });
+            pcIndiceSeleccionado = null;
+            pcModoMover = false;
+            renderizarVentanaPC();
             document.getElementById("pc-screen").style.display = "flex";
         }
-        function cerrarPC() { document.getElementById("pc-screen").style.display = "none"; }
+
+        function cerrarPC() {
+            document.getElementById("pc-screen").style.display = "none";
+        }
+
+        function seleccionarCeldaPC(index) {
+            if (!pcStorage[index]) return;
+            pcIndiceSeleccionado = index;
+            pcModoMover = false;
+            renderizarVentanaPC();
+        }
+
+        function renderizarVentanaPC() {
+            const gridContainer = document.getElementById("pc-grid-container");
+            const previewSpriteBox = document.getElementById("pc-preview-sprite-box");
+            const previewInfo = document.getElementById("pc-preview-info");
+            const previewStats = document.getElementById("pc-preview-stats");
+
+            gridContainer.innerHTML = "";
+
+            // Crear rejilla fija de 30 espacios (6 filas x 5 columnas)
+            for (let i = 0; i < 30; i++) {
+                let p = pcStorage[i];
+                let isSelected = pcIndiceSeleccionado === i ? 'selected-pc' : '';
+                
+                if (p) {
+                    gridContainer.innerHTML += `
+                        <div class="pc-cell ${isSelected}" onclick="seleccionarCeldaPC(${i})">
+                            <img src="${p.sprite_url}" style="width:26px; height:26px; image-rendering:pixelated;" alt="Icon">
+                            ${p.isShiny ? '<span style="position:absolute; top:0; right:1px; font-size:7px;">⭐</span>' : ''}
+                        </div>
+                    `;
+                } else {
+                    gridContainer.innerHTML += `<div class="pc-cell" style="opacity:0.3; cursor:default;"></div>`;
+                }
+            }
+
+            // Actualizar panel derecho de previsualización
+            if (pcIndiceSeleccionado !== null && pcStorage[pcIndiceSeleccionado]) {
+                let p = pcStorage[pcIndiceSeleccionado];
+                let t1Map = mapType(p.tipo1);
+                let tOcultoMap = mapType(p.tipoOculto);
+                let colorOculto = TYPE_COLORS[tOcultoMap] || "#fff";
+
+                previewSpriteBox.innerHTML = `<img src="${p.sprite_url}" style="width:60px; height:60px; image-rendering:pixelated;" alt="Preview">`;
+                previewInfo.innerHTML = `${p.nombre.toUpperCase()}`;
+                previewStats.innerHTML = `
+                    POTENCIAL: <b>${p.potencial || '15 / 31'}</b><br>
+                    PODER OCULTO: <b style="color:${colorOculto};">${p.tipoOculto.toUpperCase()}</b><br>
+                    FAVORITO: <b>${p.favorito ? 'SÍ' : 'NO'}</b>
+                `;
+            } else {
+                previewSpriteBox.innerHTML = `<span style="font-size:24px;">💻</span>`;
+                previewInfo.innerHTML = `VACÍO`;
+                previewStats.innerHTML = `Selecciona un Pokémon`;
+            }
+        }
+
+        function pcAccionDatos() {
+            if (pcIndiceSeleccionado === null || !pcStorage[pcIndiceSeleccionado]) return;
+            let p = pcStorage[pcIndiceSeleccionado];
+            
+            let t1Map = mapType(p.tipo1);
+            let t2Map = mapType(p.tipo2);
+            let tOcultoMap = mapType(p.tipoOculto);
+
+            let colorT1 = TYPE_COLORS[t1Map] || "#777";
+            let colorT2 = t2Map ? (TYPE_COLORS[t2Map] || "#777") : null;
+            let colorOculto = TYPE_COLORS[tOcultoMap] || "#fff";
+
+            let tiposHtml = `<div class="summary-type-badge" style="background:${colorT1};">${p.tipo1.toUpperCase()}</div>`;
+            if (p.tipo2) {
+                tiposHtml += `<div class="summary-type-badge" style="background:${colorT2};">${p.tipo2.toUpperCase()}</div>`;
+            }
+
+            let bodyHTML = `
+                <div class="summary-left">
+                    <div style="font-size:10px; font-weight:bold; color:#374151; width:100%; display:flex; justify-content:space-between;">
+                        <span>Pokédex No.${p.idDex || 25}</span>
+                    </div>
+                    <div style="font-size:11px; font-weight:bold; color:#1f2937; align-self:flex-start;">Lv. ${p.nivel}</div>
+                    <div style="margin: 5px 0;"><img src="${p.sprite_url}" style="width:75px; height:75px; image-rendering:pixelated;" alt="Sprite"></div>
+                    <div style="background:#1f2937; color:#fff; font-size:11px; font-weight:bold; width:100%; padding:4px; border-radius:3px; text-align:center;">${p.nombre.toUpperCase()}</div>
+                    <div style="display:flex; gap:4px; width:100%; margin-top:4px;">${tiposHtml}</div>
+                </div>
+                <div class="summary-right">
+                    <div class="summary-table-row"><span>Trainer ID</span><b>${p.trainerId || '03101'}</b></div>
+                    <div class="summary-table-row"><span>Salud</span><b>${p.hpActual || p.hpMax} PS</b></div>
+                    <div class="summary-table-row"><span>Ataque</span><b>${p.ataque}</b></div>
+                    <div class="summary-table-row"><span>Defensa</span><b>${p.defensa}</b></div>
+                    <div class="summary-table-row"><span>Potencial</span><b>${p.potencial || '15 / 31'}</b></div>
+                    <div class="summary-table-row"><span>Poder Oculto</span><b style="color:${colorOculto}; text-shadow:1px 1px 0 #000;">${p.tipoOculto.toUpperCase()}</b></div>
+                    <div class="summary-table-row"><span>Amistad</span><b>${p.amistad || '50 / 100'}</b></div>
+                    <div style="font-size:8px; color:#4b5563; margin-top:2px; line-height:1.1;">${p.origen || 'En almacenamiento PC.'}</div>
+                </div>
+            `;
+
+            document.getElementById("summary-content-body").innerHTML = bodyHTML;
+            document.getElementById("pc-screen").style.display = "none";
+            document.getElementById("summary-screen").style.display = "flex";
+        }
+
+        function pcAccionMover() {
+            if (pcIndiceSeleccionado === null || !pcStorage[pcIndiceSeleccionado]) return;
+            let pokePC = pcStorage[pcIndiceSeleccionado];
+
+            // Si hay hueco en el equipo (menos de 4), se pasa directo al equipo
+            if (teamPokemon.length < 4) {
+                teamPokemon.push(pokePC);
+                pcStorage.splice(pcIndiceSeleccionado, 1);
+                pcIndiceSeleccionado = null;
+                guardarDatos();
+                actualizarHUD();
+                renderizarVentanaPC();
+                alert("¡Pokémon movido del PC a tu equipo!");
+            } else {
+                // Si el equipo está lleno, intercambiar con el líder actual (posición 0) o elegir hueco
+                let slotDestino = prompt("Tu equipo está lleno (4/4). Introduce la posición del equipo con la que deseas intercambiar (0 para líder, 1, 2 o 3):", "0");
+                if (slotDestino !== null && !isNaN(slotDestino)) {
+                    let idx = parseInt(slotDestino);
+                    if (idx >= 0 && idx < 4) {
+                        let temp = teamPokemon[idx];
+                        teamPokemon[idx] = pokePC;
+                        pcStorage[pcIndiceSeleccionado] = temp;
+                        pcIndiceSeleccionado = null;
+                        guardarDatos();
+                        actualizarHUD();
+                        renderizarVentanaPC();
+                        alert("¡Intercambio realizado con éxito entre el PC y el equipo!");
+                    } else {
+                        alert("Posición de equipo inválida.");
+                    }
+                }
+            }
+        }
+
+        function pcAccionVender() {
+            if (pcIndiceSeleccionado === null || !pcStorage[pcIndiceSeleccionado]) return;
+            let p = pcStorage[pcIndiceSeleccionado];
+            if (confirm(`¿Deseas vender a ${p.nombre} por 300 ₱?`)) {
+                pcStorage.splice(pcIndiceSeleccionado, 1);
+                playerMoney += 300;
+                pcIndiceSeleccionado = null;
+                guardarDatos();
+                renderizarVentanaPC();
+                alert("¡Pokémon vendido con éxito!");
+            }
+        }
+
+        function pcAccionFav() {
+            if (pcIndiceSeleccionado === null || !pcStorage[pcIndiceSeleccionado]) return;
+            let p = pcStorage[pcIndiceSeleccionado];
+            p.favorito = !p.favorito;
+            guardarDatos();
+            renderizarVentanaPC();
+            alert(p.favorito ? "¡Marcado como favorito!" : "Quitado de favoritos.");
+        }
 
         // --- SISTEMA INTERACTIVO DE EQUIPO ESTILO GBA ---
         function abrirEquipo() {
@@ -1744,8 +1926,8 @@
                     document.querySelector('.team-window-gba .modal-title').innerText = "- SELECCIONA DESTINO -";
                 } else {
                     bottomButtons.innerHTML = `
-                        <button class="modal-close-btn" style="background:#0284c7;" onclick="abrirDatosPokemon()">DATOS</button>
-                        <button class="modal-close-btn" style="background:#eab308; color:#000;" onclick="activarModoMover()">MOVER</button>
+                        <button class="modal-close-btn" style="background:#0284c7;" onclick="abrirDatosPokemonTeam()">DATOS</button>
+                        <button class="modal-close-btn" style="background:#eab308; color:#000;" onclick="activarModoMoverTeam()">MOVER</button>
                         <button class="modal-close-btn" style="background:#ef4444;" onclick="cancelarSeleccionEquipo()">CANCELAR</button>
                     `;
                     let pokeSel = teamPokemon[indicePokemonSeleccionado];
@@ -1759,8 +1941,7 @@
             }
         }
 
-        // --- VENTANA DE DATOS / RESUMEN DEL POKÉMON ---
-        function abrirDatosPokemon() {
+        function abrirDatosPokemonTeam() {
             if (indicePokemonSeleccionado === null) return;
             let p = teamPokemon[indicePokemonSeleccionado];
 
@@ -1783,11 +1964,9 @@
                         <span>Pokédex No.${p.idDex || 25}</span>
                     </div>
                     <div style="font-size:11px; font-weight:bold; color:#1f2937; align-self:flex-start;">Lv. ${p.nivel}</div>
-                    <div style="margin: 5px 0;"><img src="${p.sprite_url || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png'}" style="width:75px; height:75px; image-rendering:pixelated;" alt="Sprite"></div>
+                    <div style="margin: 5px 0;"><img src="${p.sprite_url}" style="width:75px; height:75px; image-rendering:pixelated;" alt="Sprite"></div>
                     <div style="background:#1f2937; color:#fff; font-size:11px; font-weight:bold; width:100%; padding:4px; border-radius:3px; text-align:center;">${p.nombre.toUpperCase()}</div>
-                    <div style="display:flex; gap:4px; width:100%; margin-top:4px;">
-                        ${tiposHtml}
-                    </div>
+                    <div style="display:flex; gap:4px; width:100%; margin-top:4px;">${tiposHtml}</div>
                 </div>
                 <div class="summary-right">
                     <div class="summary-table-row"><span>Trainer ID</span><b>${p.trainerId || '03101'}</b></div>
@@ -1797,7 +1976,7 @@
                     <div class="summary-table-row"><span>Potencial</span><b>${p.potencial || '15 / 31'}</b></div>
                     <div class="summary-table-row"><span>Poder Oculto</span><b style="color:${colorOculto}; text-shadow:1px 1px 0 #000;">${p.tipoOculto.toUpperCase()}</b></div>
                     <div class="summary-table-row"><span>Amistad</span><b>${p.amistad || '50 / 100'}</b></div>
-                    <div style="font-size:8px; color:#4b5563; margin-top:2px; line-height:1.1;">${p.origen || 'Encontrado en aventura.'}</div>
+                    <div style="font-size:8px; color:#4b5563; margin-top:2px; line-height:1.1;">${p.origen || 'En equipo activo.'}</div>
                 </div>
             `;
 
@@ -1808,10 +1987,14 @@
 
         function cerrarDatosPokemon() {
             document.getElementById("summary-screen").style.display = "none";
-            document.getElementById("team-screen").style.display = "flex";
+            if (document.getElementById("pc-screen").style.display === "flex") {
+                document.getElementById("pc-screen").style.display = "flex";
+            } else {
+                document.getElementById("team-screen").style.display = "flex";
+            }
         }
 
-        function activarModoMover() {
+        function activarModoMoverTeam() {
             if (indicePokemonSeleccionado === null) return;
             modoMoverEquipo = true;
             renderizarVentanaEquipo();
