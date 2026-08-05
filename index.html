@@ -23,6 +23,18 @@
             box-shadow: 0 0 20px rgba(0,0,0,0.8); 
         }
 
+        /* Escudo invisible para bloquear clics durante la animación de caminata */
+        #input-blocker {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 200;
+            display: none;
+            background: transparent;
+        }
+
         /* Overlays de pantalla completa (Login / Selección Inicial) */
         .screen-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
         
@@ -142,7 +154,16 @@
         .energy-bars { color: #4ade80; font-family: monospace; letter-spacing: -1px; font-weight: bold; }
         .menu-btn { background-color: #2196F3; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; }
 
-        /* Ventana de zona ajustada exactamente a 320x320 píxeles cuadrados para visualizar imágenes completas sin recortes */
+        /* Animación de caminata horizontal durante 5 segundos */
+        @keyframes walkSlide {
+            0% { background-position: 0% center; }
+            100% { background-position: 100% center; }
+        }
+        .map-viewport.walking {
+            animation: walkSlide 5s linear forwards;
+        }
+
+        /* Ventana cuadrada de 320x320 para visualizar las imágenes completas de los mapas sin recortes ni capas oscuras */
         .map-viewport { 
             width: 320px; 
             height: 320px; 
@@ -159,11 +180,11 @@
             align-items: center; 
             padding: 15px; 
             box-sizing: border-box; 
-            background-size: contain;
+            background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
         }
-        .map-background { position: absolute; width: 100%; height: 100%; background-image: radial-gradient(#388e3c 15%, transparent 16%), radial-gradient(#1b5e20 15%, transparent 16%); background-size: 30px 30px; background-position: 0 0, 15px 15px; opacity: 0.4; z-index: 1; }
+        .map-background { display: none; } /* Oculto para evitar capas oscuras o patrones encima de las imágenes */
         .map-content { position: relative; z-index: 2; text-align: center; width: 100%; }
         .zone-title { background-color: rgba(0, 0, 0, 0.7); padding: 8px 15px; border-radius: 4px; font-size: 14px; border: 1px solid #555; margin-bottom: 5px; display: inline-block; }
         .sprite-container { display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 30px; margin-top: 5px; }
@@ -277,6 +298,9 @@
 <body>
 
     <div id="game-container">
+        <!-- Escudo invisible para bloquear clics durante la animación -->
+        <div id="input-blocker"></div>
+
         <!-- Login -->
         <div id="login-screen" class="screen-overlay">
             <div class="box-container" style="height: auto;">
@@ -313,7 +337,7 @@
             </div>
         </div>
 
-        <!-- Ventanita Verde (.map-viewport) Contenedor Principal de Vista y Menús -->
+        <!-- Ventanita Cuadrada 320x320 (.map-viewport) Contenedor Principal de Vista y Menús -->
         <div class="map-viewport" id="map-viewport">
             <div class="map-background"></div>
             
@@ -366,9 +390,7 @@
                     
                     <div class="pc-main-layout">
                         <!-- Rejilla de almacenamiento izquierda -->
-                        <div class="pc-grid-box" id="pc-grid-container">
-                            <!-- Se rellena con celdas -->
-                        </div>
+                        <div class="pc-grid-box" id="pc-grid-container"></div>
 
                         <!-- Panel derecho de previsualización y acciones -->
                         <div class="pc-preview-box">
@@ -520,6 +542,7 @@
         let combatEnCurso = false;
         let playerMoney = 2000;
         let lastDailyClaim = 0;
+        let isWalking = false; // Control para bloquear interacciones al caminar
 
         // Variables para la gestión interactiva de equipo y PC
         let indicePokemonSeleccionado = null;
@@ -936,10 +959,10 @@
                 
                 let viewport = document.getElementById("map-viewport");
                 if (zonaObj.bg_image) {
-                    viewport.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('${zonaObj.bg_image}')`;
-                    viewport.style.backgroundSize = "contain";
+                    viewport.style.backgroundImage = `url('${zonaObj.bg_image}')`;
+                    viewport.style.backgroundSize = "cover";
                     viewport.style.backgroundRepeat = "no-repeat";
-                    viewport.style.backgroundPosition = "center";
+                    viewport.style.backgroundPosition = "center center";
                 } else {
                     viewport.style.backgroundImage = "";
                 }
@@ -1007,7 +1030,12 @@
             return subioNivel;
         }
 
+        // --- AVANZAR DE ZONA CON ANIMACIÓN DE CAMINATA DE 5 SEGUNDOS Y BLOQUEO DE CLICS ---
         function advanceZone() {
+            if (isWalking) return;
+            isWalking = true;
+            document.getElementById("input-blocker").style.display = "block"; // Bloquea clics
+
             currentZoneIndex = (currentZoneIndex + 1) % zonesConfig.length;
             let zonaObj = zonesConfig[currentZoneIndex];
             
@@ -1016,33 +1044,45 @@
             
             let viewport = document.getElementById("map-viewport");
             if (zonaObj.bg_image) {
-                viewport.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('${zonaObj.bg_image}')`;
-                viewport.style.backgroundSize = "contain";
+                viewport.style.backgroundImage = `url('${zonaObj.bg_image}')`;
+                viewport.style.backgroundSize = "cover";
                 viewport.style.backgroundRepeat = "no-repeat";
-                viewport.style.backgroundPosition = "center";
+                
+                // Activar animación de caminata horizontal durante 5s
+                viewport.classList.add("walking");
             } else {
                 viewport.style.backgroundImage = "";
             }
-            
-            let curados = 0;
-            teamPokemon.forEach(p => {
-                if (!p.hpMax) p.hpMax = 50;
-                let healAmount = Math.max(1, Math.floor(p.hpMax * 0.05));
-                if (p.hpActual < p.hpMax) {
-                    p.hpActual = Math.min(p.hpMax, p.hpActual + healAmount);
-                    curados++;
-                }
-            });
-            
-            let logMsg = `Has avanzado a ${zonaObj.name}.`;
-            if (curados > 0) logMsg += `<br><span style="color:#4CAF50;">¡El equipo recuperó un 5% de PS por el paseo!</span>`;
-            
-            document.getElementById("explore-log").innerHTML = logMsg;
-            guardarDatos();
-            actualizarHUD();
-            
-            zonaExplorada = false;
-            document.getElementById("btn-explore-main").disabled = false;
+
+            document.getElementById("explore-log").innerHTML = `Caminando hacia ${zonaObj.name}...`;
+
+            // Duración exacta de la animación: 5 segundos
+            setTimeout(() => {
+                viewport.classList.remove("walking");
+
+                let curados = 0;
+                teamPokemon.forEach(p => {
+                    if (!p.hpMax) p.hpMax = 50;
+                    let healAmount = Math.max(1, Math.floor(p.hpMax * 0.05));
+                    if (p.hpActual < p.hpMax) {
+                        p.hpActual = Math.min(p.hpMax, p.hpActual + healAmount);
+                        curados++;
+                    }
+                });
+                
+                let logMsg = `Has llegado a ${zonaObj.name}.`;
+                if (curados > 0) logMsg += `<br><span style="color:#4CAF50;">¡El equipo recuperó un 5% de PS por el paseo!</span>`;
+                
+                document.getElementById("explore-log").innerHTML = logMsg;
+                guardarDatos();
+                actualizarHUD();
+                
+                zonaExplorada = false;
+                document.getElementById("btn-explore-main").disabled = false;
+                
+                isWalking = false;
+                document.getElementById("input-blocker").style.display = "none"; // Desbloquea clics
+            }, 5000);
         }
 
         function explorarGenerarPokemon(nivel) {
@@ -1078,6 +1118,7 @@
         }
 
         function exploreZone() {
+            if (isWalking) return;
             if (teamPokemon.length === 0) return alert("¡Elige un inicial!");
             if (zonaExplorada) return;
 
@@ -1129,6 +1170,7 @@
         }
 
         function abrirBolsa() {
+            if (isWalking) return;
             document.getElementById("bag-screen").style.display = "flex";
             cambiarPestanaBolsa('potions');
         }
@@ -1236,6 +1278,7 @@
 
         // --- SISTEMA DE GACHA ---
         function abrirGacha() {
+            if (isWalking) return;
             cerrarMenu();
             currentGachaIndex = 0;
             actualizarUIGacha();
@@ -1414,6 +1457,7 @@
 
         // --- MENÚ DEV (CHEATS) ---
         function abrirDevMenu() {
+            if (isWalking) return;
             let opcion = prompt(
                 "--- MENÚ DEV (TESTEO) ---\n" +
                 "1. Añadir 50.000 ₱\n" +
@@ -1758,11 +1802,15 @@
             actualizarHUD(); 
         }
         
-        function abrirMenu() { document.getElementById("menu-screen").style.display = "flex"; }
+        function abrirMenu() {
+            if (isWalking) return;
+            document.getElementById("menu-screen").style.display = "flex";
+        }
         function cerrarMenu() { document.getElementById("menu-screen").style.display = "none"; }
         
         // --- SISTEMA DE PC GBA INTERACTIVO ---
         function abrirPC() {
+            if (isWalking) return;
             cerrarMenu();
             pcIndiceSeleccionado = null;
             pcModoMover = false;
@@ -1925,6 +1973,7 @@
 
         // --- SISTEMA INTERACTIVO DE EQUIPO ESTILO GBA ---
         function abrirEquipo() {
+            if (isWalking) return;
             indicePokemonSeleccionado = null;
             modoMoverEquipo = false;
             renderizarVentanaEquipo();
