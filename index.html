@@ -26,7 +26,7 @@
         /* Overlays de pantalla completa (Login / Selección Inicial) */
         .screen-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
         
-        /* Menús in-game y Combate: Estrictamente contenidos dentro de la ventanita verde */
+        /* Menús in-game y Combate: Estrictamente contenidos dentro de la ventanita cuadrada GBA */
         .modal-screen { 
             position: absolute; 
             top: 0; 
@@ -142,15 +142,34 @@
         .energy-bars { color: #4ade80; font-family: monospace; letter-spacing: -1px; font-weight: bold; }
         .menu-btn { background-color: #2196F3; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; }
 
-        /* Ventana verde con la medida exacta original de 320px fija */
-        .map-viewport { width: 100%; height: 320px; flex-shrink: 0; background: linear-gradient(135deg, #2e7d32, #1b5e20); border: 4px solid #333; border-radius: 8px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 15px; box-sizing: border-box; }
+        /* Ventana de zona ajustada exactamente a 320x320 píxeles cuadrados para visualizar imágenes completas sin recortes */
+        .map-viewport { 
+            width: 320px; 
+            height: 320px; 
+            margin: 0 auto; 
+            flex-shrink: 0; 
+            background: linear-gradient(135deg, #2e7d32, #1b5e20); 
+            border: 4px solid #333; 
+            border-radius: 8px; 
+            position: relative; 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 15px; 
+            box-sizing: border-box; 
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
         .map-background { position: absolute; width: 100%; height: 100%; background-image: radial-gradient(#388e3c 15%, transparent 16%), radial-gradient(#1b5e20 15%, transparent 16%); background-size: 30px 30px; background-position: 0 0, 15px 15px; opacity: 0.4; z-index: 1; }
         .map-content { position: relative; z-index: 2; text-align: center; width: 100%; }
         .zone-title { background-color: rgba(0, 0, 0, 0.7); padding: 8px 15px; border-radius: 4px; font-size: 14px; border: 1px solid #555; margin-bottom: 5px; display: inline-block; }
         .sprite-container { display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 30px; margin-top: 5px; }
         .exploration-log { position: relative; z-index: 2; background-color: rgba(0, 0, 0, 0.85); border: 1px solid #555; border-radius: 6px; padding: 10px; width: 100%; min-height: 70px; font-size: 11px; color: #d4d4d4; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-        /* Ventana de combate adaptada exactamente al espacio interior de la ventanita verde */
+        /* Ventana de combate adaptada exactamente al espacio interior de la ventanita 320x320 */
         .combat-modal-window { 
             background: linear-gradient(135deg, #1e3a8a, #1d4ed8); 
             border: 4px solid #bae6fd; 
@@ -308,7 +327,7 @@
             
             <div class="exploration-log" id="explore-log">¡Bienvenido a Pokémon Trails! Explora o avanza.</div>
 
-            <!-- Menús In-game (Dentro de la ventanita verde) -->
+            <!-- Menús In-game (Dentro de la ventanita cuadrada GBA) -->
             <div id="menu-screen" class="modal-screen">
                 <div class="modal-window">
                     <div class="modal-title">- MENÚ PRINCIPAL -</div>
@@ -918,7 +937,8 @@
                 let viewport = document.getElementById("map-viewport");
                 if (zonaObj.bg_image) {
                     viewport.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('${zonaObj.bg_image}')`;
-                    viewport.style.backgroundSize = "cover";
+                    viewport.style.backgroundSize = "contain";
+                    viewport.style.backgroundRepeat = "no-repeat";
                     viewport.style.backgroundPosition = "center";
                 } else {
                     viewport.style.backgroundImage = "";
@@ -997,7 +1017,8 @@
             let viewport = document.getElementById("map-viewport");
             if (zonaObj.bg_image) {
                 viewport.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('${zonaObj.bg_image}')`;
-                viewport.style.backgroundSize = "cover";
+                viewport.style.backgroundSize = "contain";
+                viewport.style.backgroundRepeat = "no-repeat";
                 viewport.style.backgroundPosition = "center";
             } else {
                 viewport.style.backgroundImage = "";
