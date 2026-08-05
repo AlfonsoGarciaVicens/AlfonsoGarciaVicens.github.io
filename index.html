@@ -321,6 +321,7 @@
                         <div class="menu-row">
                             <button class="menu-icon-btn" onclick="abrirGacha()">🎰</button>
                             <button class="menu-icon-btn" onclick="alert('Búsqueda / Info')">🔍</button>
+                            <button class="menu-icon-btn" onclick="abrirDevMenu()" title="Menú Dev">🛠️</button>
                         </div>
                     </div>
                     <button class="modal-close-btn" onclick="cerrarMenu()">CERRAR</button>
@@ -538,7 +539,7 @@
         let pestanaActivaBolsa = 'potions';
         let objetoSeleccionadoBolsa = null;
 
-        // --- CONFIGURACIÓN DE GACHAS (Incluyendo Gacha Shiny de Pruebas y Tipos) ---
+        // --- CONFIGURACIÓN DE GACHAS (Incluyendo Gacha Shiny Test y Tipos) ---
         const typeGachaConfig = [
             { type: 'normal', name: 'Normal', icon: '⚪' },
             { type: 'fire', name: 'Fuego', icon: '🔥' },
@@ -731,7 +732,6 @@
             return Math.floor(Math.random() * (liderNivel - minNivel + 1)) + minNivel;
         }
 
-        // Función centralizada para generar Pokémon con soporte Shiny (1/4096) y forzado
         function generarDatosPokemonBase(pokeData, nivel, forzarShiny = false) {
             let idDex = pokeData.id || 25;
             let isShiny = forzarShiny ? true : (Math.random() < (1 / 4096));
@@ -778,13 +778,12 @@
                 const resZones = await fetch('data/zones.json');
                 zonesConfig = await resZones.json();
 
-                // Añadir el Bosque Shiny a la lista de zonas de prueba
-                zonesConfig.push({ name: "Bosque Shiny (Zona Especial)", sprite: "✨", types: ["normal", "fairy", "grass"], shinyOnly: true });
+                zonesConfig.push({ name: "Bosque Shiny (Zona Especial)", sprite: "✨", bg_image: "img/zones/bosque_shiny.webp", types: ["normal", "fairy", "grass"], shinyOnly: true });
             } catch (error) {
                 console.error("Error al cargar los archivos JSON:", error);
                 zonesConfig = [
-                    { name: "Pueblo Inicial (Zona 1)", sprite: "🏡", types: ["normal", "flying"] },
-                    { name: "Bosque Shiny (Zona Especial)", sprite: "✨", types: ["normal"], shinyOnly: true }
+                    { name: "Pueblo Inicial (Zona 1)", sprite: "🏡", bg_image: "", types: ["normal", "flying"] },
+                    { name: "Bosque Shiny (Zona Especial)", sprite: "✨", bg_image: "", types: ["normal"], shinyOnly: true }
                 ];
             }
 
@@ -972,6 +971,16 @@
             
             document.getElementById("current-zone-name").innerText = zonaObj.name;
             document.getElementById("zone-sprite").innerText = zonaObj.sprite;
+            
+            // Actualizar imagen de fondo de la zona si existe bg_image
+            let viewport = document.getElementById("map-viewport");
+            if (zonaObj.bg_image) {
+                viewport.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('${zonaObj.bg_image}')`;
+                viewport.style.backgroundSize = "cover";
+                viewport.style.backgroundPosition = "center";
+            } else {
+                viewport.style.backgroundImage = "";
+            }
             
             let curados = 0;
             teamPokemon.forEach(p => {
@@ -1361,6 +1370,62 @@
             actualizarUIGacha();
         }
 
+        // --- MENÚ DEV (CHEATS) ---
+        function abrirDevMenu() {
+            let opcion = prompt(
+                "--- MENÚ DEV (TESTEO) ---\n" +
+                "1. Añadir 50.000 ₱\n" +
+                "2. Curar Equipo al 100%\n" +
+                "3. Recargar Energía al Máximo\n" +
+                "4. Generar Pokémon Shiny de Prueba\n\n" +
+                "Introduce el número de opción:"
+            );
+
+            if (opcion === "1") {
+                playerMoney += 50000;
+                guardarDatos();
+                alert("💰 ¡Se han añadido 50.000 ₱ a tu cartera!");
+            } 
+            else if (opcion === "2") {
+                if (teamPokemon.length === 0) {
+                    alert("No tienes ningún Pokémon en el equipo.");
+                    return;
+                }
+                teamPokemon.forEach(p => {
+                    if (!p.hpMax) p.hpMax = 50;
+                    p.hpActual = p.hpMax;
+                });
+                guardarDatos();
+                actualizarHUD();
+                alert("🏥 ¡Todo tu equipo ha sido curado al máximo!");
+            } 
+            else if (opcion === "3") {
+                energiaActual = energiaMax;
+                guardarDatos();
+                actualizarHUDEnergia();
+                alert("⚡ ¡Energía recargada por completo!");
+            } 
+            else if (opcion === "4") {
+                if (POKEDEX_GLOBAL.length === 0) {
+                    alert("La Pokédex aún se está cargando, espera un segundo.");
+                    return;
+                }
+                let randomEntry = POKEDEX_GLOBAL[Math.floor(Math.random() * POKEDEX_GLOBAL.length)];
+                let shinyPoke = generarDatosPokemonBase(randomEntry, 5, true);
+                shinyPoke.origen = "Generado por Menú Dev (Test Shiny).";
+
+                if (teamPokemon.length < 4) {
+                    teamPokemon.push(shinyPoke);
+                    alert(`✨ ¡Has invocado a ${shinyPoke.nombre} Shiny y se ha unido a tu equipo!`);
+                } else {
+                    pcStorage.push(shinyPoke);
+                    alert(`✨ ¡Has invocado a ${shinyPoke.nombre} Shiny! Tu equipo está lleno, se envió al PC.`);
+                }
+                guardarDatos();
+                actualizarHUD();
+            }
+        }
+
         function iniciarCombate(tipo) {
             let lider = teamPokemon[0];
             if (!lider.hpMax || lider.hpMax <= 0) lider.hpMax = 50;
@@ -1682,7 +1747,6 @@
 
             gridContainer.innerHTML = "";
 
-            // Crear rejilla fija de 30 espacios (6 filas x 5 columnas)
             for (let i = 0; i < 30; i++) {
                 let p = pcStorage[i];
                 let isSelected = pcIndiceSeleccionado === i ? 'selected-pc' : '';
@@ -1699,7 +1763,6 @@
                 }
             }
 
-            // Actualizar panel derecho de previsualización
             if (pcIndiceSeleccionado !== null && pcStorage[pcIndiceSeleccionado]) {
                 let p = pcStorage[pcIndiceSeleccionado];
                 let t1Map = mapType(p.tipo1);
@@ -1768,7 +1831,6 @@
             if (pcIndiceSeleccionado === null || !pcStorage[pcIndiceSeleccionado]) return;
             let pokePC = pcStorage[pcIndiceSeleccionado];
 
-            // Si hay hueco en el equipo (menos de 4), se pasa directo al equipo
             if (teamPokemon.length < 4) {
                 teamPokemon.push(pokePC);
                 pcStorage.splice(pcIndiceSeleccionado, 1);
@@ -1778,8 +1840,7 @@
                 renderizarVentanaPC();
                 alert("¡Pokémon movido del PC a tu equipo!");
             } else {
-                // Si el equipo está lleno, intercambiar con el líder actual (posición 0) o elegir hueco
-                let slotDestino = prompt("Tu equipo está lleno (4/4). Introduce la posición del equipo con la que deseas intercambiar (0 para líder, 1, 2 o 3):", "0");
+                let slotDestino = prompt("Tu equipo está lleno (4/4). Introduce la posición del equipo (0, 1, 2 o 3) con la que deseas intercambiar:", "0");
                 if (slotDestino !== null && !isNaN(slotDestino)) {
                     let idx = parseInt(slotDestino);
                     if (idx >= 0 && idx < 4) {
@@ -1792,7 +1853,7 @@
                         renderizarVentanaPC();
                         alert("¡Intercambio realizado con éxito entre el PC y el equipo!");
                     } else {
-                        alert("Posición de equipo inválida.");
+                        alert("Posición inválida.");
                     }
                 }
             }
