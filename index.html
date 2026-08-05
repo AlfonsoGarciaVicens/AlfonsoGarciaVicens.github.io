@@ -151,6 +151,7 @@
         .combat-enemy-info { align-self: flex-start; }
         .combat-player-info { align-self: flex-end; }
         .hp-bar-bg { background-color: #555; height: 6px; width: 100%; border-radius: 3px; margin-top: 2px; overflow: hidden; }
+        .exp-bar-bg { background-color: #1e293b; height: 4px; width: 75%; display: inline-block; vertical-align: middle; border-radius: 2px; overflow: hidden; border: 1px solid #0f172a; }
         .combat-sprites { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 20px; font-size: 30px; }
 
         .combat-dialogue { background-color: #222; border: 2px solid #c0c0c0; border-radius: 6px; padding: 8px; font-size: 10px; color: #fff; min-height: 50px; text-align: center; overflow-y: auto; }
@@ -393,7 +394,7 @@
                         <div id="player-battle-name">JUGADOR Lv.5</div>
                         <div class="hp-bar-bg"><div id="player-hp-fill" class="hp-bar-fill" style="width: 100%;"></div></div>
                         <div style="font-size: 9px; margin-top: 2px;">
-                            EXP: <div class="hp-bar-bg" style="height: 4px; display: inline-block; width: 75%; vertical-align: middle;"><div id="player-exp-fill" class="hp-bar-fill" style="width: 0%; background-color: #38bdf8;"></div></div>
+                            EXP: <div class="exp-bar-bg"><div id="player-exp-fill" class="hp-bar-fill" style="width: 0%; background-color: #38bdf8;"></div></div>
                         </div>
                         <div style="font-size: 9px; text-align: right;" id="player-battle-hp-text">--/-- PS</div>
                     </div>
@@ -776,11 +777,12 @@
                 playerInventory = JSON.parse(JSON.stringify(defaultInventory));
             }
 
-            // Asegurar integridad de propiedades en pokémon cargados
+            // Asegurar integridad de propiedades en pokémon cargados para evitar barras vacías (NaN)
             teamPokemon.forEach(p => {
-                if (p.hpMax === undefined) p.hpMax = 50;
-                if (p.hpActual === undefined) p.hpActual = p.hpMax;
+                if (!p.hpMax || p.hpMax <= 0) p.hpMax = 50;
+                if (p.hpActual === undefined || p.hpActual < 0) p.hpActual = p.hpMax;
                 if (p.exp === undefined) p.exp = 0;
+                if (!p.nivel) p.nivel = 5;
             });
 
             if (esUsuarioFonso()) energiaActual = energiaMax;
@@ -828,6 +830,8 @@
         function actualizarHUD() {
             if (teamPokemon.length > 0) {
                 let lider = teamPokemon[0];
+                if (!lider.hpMax) lider.hpMax = 50;
+                if (lider.hpActual === undefined) lider.hpActual = lider.hpMax;
                 document.getElementById("hud-pokemon-info").innerText = `${lider.nombre} - Lv.${lider.nivel} (PS: ${lider.hpActual}/${lider.hpMax})`;
                 document.getElementById("hud-pokemon-icon").innerText = lider.icono;
             }
@@ -864,6 +868,7 @@
             
             let curados = 0;
             teamPokemon.forEach(p => {
+                if (!p.hpMax) p.hpMax = 50;
                 let healAmount = Math.max(1, Math.floor(p.hpMax * 0.05));
                 if (p.hpActual < p.hpMax) {
                     p.hpActual = Math.min(p.hpMax, p.hpActual + healAmount);
@@ -963,6 +968,7 @@
                 document.getElementById("explore-log").innerHTML = `📦 ¡Has encontrado un objeto y se ha guardado en tu Bolsa!`;
             } else if (r < 0.5) {
                 let lider = teamPokemon[0];
+                if (!lider.hpMax) lider.hpMax = 50;
                 lider.hpActual = Math.min(lider.hpMax, lider.hpActual + Math.floor(lider.hpMax * 0.5));
                 guardarDatos();
                 actualizarHUD();
@@ -1058,6 +1064,7 @@
             }
 
             if (pestanaActivaBolsa === 'potions') {
+                if (!lider.hpMax) lider.hpMax = 50;
                 if (lider.hpActual >= lider.hpMax) {
                     alert("¡Tu Pokémon ya tiene los PS al máximo!");
                     return;
@@ -1296,6 +1303,9 @@
 
         function iniciarCombate(tipo) {
             let lider = teamPokemon[0];
+            if (!lider.hpMax) lider.hpMax = 50;
+            if (lider.hpActual === undefined) lider.hpActual = lider.hpMax;
+
             const nivel = calcularNivelEnemigo();
             
             currentEnemy = explorarGenerarPokemon(nivel);
@@ -1353,6 +1363,12 @@
         function actualizarBarrasHP() {
             let lider = teamPokemon[0];
             if (!lider) return;
+            if (!lider.hpMax || lider.hpMax <= 0) lider.hpMax = 50;
+            if (lider.hpActual === undefined) lider.hpActual = lider.hpMax;
+
+            if (!currentEnemy.hpMax || currentEnemy.hpMax <= 0) currentEnemy.hpMax = 50;
+            if (currentEnemy.hpActual === undefined) currentEnemy.hpActual = currentEnemy.hpMax;
+
             document.getElementById("player-hp-fill").style.width = Math.max(0, Math.min(100, (lider.hpActual / lider.hpMax * 100))) + "%";
             document.getElementById("enemy-hp-fill").style.width = Math.max(0, Math.min(100, (currentEnemy.hpActual / currentEnemy.hpMax * 100))) + "%";
             document.getElementById("player-battle-hp-text").innerText = `${lider.hpActual}/${lider.hpMax} PS`;
@@ -1411,7 +1427,7 @@
                     dialogue.innerHTML = `¡El Pokémon escapó de la Poké Ball! El rival contraataca.`;
                     await sleep(1200);
 
-                    // Turno del enemigo tras fallo de captura (pokeballs infinitas, no gastan inventario)
+                    // Turno del enemigo tras fallo de captura (pokeballs infinitas)
                     let tiposEnemigoDisponibles = [currentEnemy.tipo1, currentEnemy.tipo2, currentEnemy.tipoOculto].filter(Boolean).map(mapType);
                     let tipoEnemigo = tiposEnemigoDisponibles[Math.floor(Math.random() * tiposEnemigoDisponibles.length)];
                     let resE = calcularDaño(currentEnemy, lider, tipoEnemigo);
@@ -1617,6 +1633,9 @@
             // 1. Renderizar líder activo superior (Índice 0)
             if (teamPokemon[0]) {
                 let p = teamPokemon[0];
+                if (!p.hpMax) p.hpMax = 50;
+                if (p.hpActual === undefined) p.hpActual = p.hpMax;
+
                 let isSelected = indicePokemonSeleccionado === 0 ? 'selected-slot' : '';
                 let hpPorc = Math.max(0, Math.min(100, (p.hpActual / p.hpMax) * 100));
                 
@@ -1642,6 +1661,9 @@
             for (let i = 1; i < 4; i++) {
                 let p = teamPokemon[i];
                 if (p) {
+                    if (!p.hpMax) p.hpMax = 50;
+                    if (p.hpActual === undefined) p.hpActual = p.hpMax;
+
                     let isSelected = indicePokemonSeleccionado === i ? 'selected-slot' : '';
                     let hpPorc = Math.max(0, Math.min(100, (p.hpActual / p.hpMax) * 100));
                     partyContainer.innerHTML += `
