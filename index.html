@@ -393,8 +393,7 @@
                         <div id="player-battle-name">JUGADOR Lv.5</div>
                         <div class="hp-bar-bg"><div id="player-hp-fill" class="hp-bar-fill" style="width: 100%;"></div></div>
                         <div style="font-size: 9px; margin-top: 2px;">
-                            EXP: <div class="hp-bar-bg" style="height: 4px; display: inline-block; width: 65%; vertical-align: middle;"><div id="player-exp-fill" class="hp-bar-fill" style="width: 0%; background-color: #38bdf8;"></div></div>
-                            <span id="player-battle-exp-text" style="font-size: 8px;">0/500</span>
+                            EXP: <div class="hp-bar-bg" style="height: 4px; display: inline-block; width: 75%; vertical-align: middle;"><div id="player-exp-fill" class="hp-bar-fill" style="width: 0%; background-color: #38bdf8;"></div></div>
                         </div>
                         <div style="font-size: 9px; text-align: right;" id="player-battle-hp-text">--/-- PS</div>
                     </div>
@@ -445,7 +444,7 @@
         let playerMoney = 2000;
         let lastDailyClaim = 0;
 
-        // Variables para la gestión interactiva de equipo (Estilo GBA)
+        // Variables para la gestión interactiva de equipo estilo GBA
         let indicePokemonSeleccionado = null;
         let modoMoverEquipo = false;
 
@@ -776,6 +775,13 @@
             } else {
                 playerInventory = JSON.parse(JSON.stringify(defaultInventory));
             }
+
+            // Asegurar integridad de propiedades en pokémon cargados
+            teamPokemon.forEach(p => {
+                if (p.hpMax === undefined) p.hpMax = 50;
+                if (p.hpActual === undefined) p.hpActual = p.hpMax;
+                if (p.exp === undefined) p.exp = 0;
+            });
 
             if (esUsuarioFonso()) energiaActual = energiaMax;
 
@@ -1346,14 +1352,14 @@
 
         function actualizarBarrasHP() {
             let lider = teamPokemon[0];
-            document.getElementById("player-hp-fill").style.width = (lider.hpActual / lider.hpMax * 100) + "%";
-            document.getElementById("enemy-hp-fill").style.width = (currentEnemy.hpActual / currentEnemy.hpMax * 100) + "%";
+            if (!lider) return;
+            document.getElementById("player-hp-fill").style.width = Math.max(0, Math.min(100, (lider.hpActual / lider.hpMax * 100))) + "%";
+            document.getElementById("enemy-hp-fill").style.width = Math.max(0, Math.min(100, (currentEnemy.hpActual / currentEnemy.hpMax * 100))) + "%";
             document.getElementById("player-battle-hp-text").innerText = `${lider.hpActual}/${lider.hpMax} PS`;
 
             let expReq = lider.nivel * 100;
             let expPorc = Math.min(100, ((lider.exp || 0) / expReq) * 100);
             document.getElementById("player-exp-fill").style.width = expPorc + "%";
-            document.getElementById("player-battle-exp-text").innerText = `${lider.exp || 0}/${expReq}`;
         }
 
         function calcularDaño(atacante, defensor, tipoAtaque) {
@@ -1405,7 +1411,7 @@
                     dialogue.innerHTML = `¡El Pokémon escapó de la Poké Ball! El rival contraataca.`;
                     await sleep(1200);
 
-                    // Turno del enemigo tras fallo de captura (sin gastar ni restar pokeballs ya que son infinitas)
+                    // Turno del enemigo tras fallo de captura (pokeballs infinitas, no gastan inventario)
                     let tiposEnemigoDisponibles = [currentEnemy.tipo1, currentEnemy.tipo2, currentEnemy.tipoOculto].filter(Boolean).map(mapType);
                     let tipoEnemigo = tiposEnemigoDisponibles[Math.floor(Math.random() * tiposEnemigoDisponibles.length)];
                     let resE = calcularDaño(currentEnemy, lider, tipoEnemigo);
@@ -1663,7 +1669,7 @@
                 }
             }
 
-            // 3. Renderizar Botones Inferiores Dinámicos
+            // 3. Renderizar Botones Inferiores Dinámicos según selección
             if (indicePokemonSeleccionado !== null) {
                 if (modoMoverEquipo) {
                     bottomButtons.innerHTML = `
@@ -1690,7 +1696,7 @@
         function verDatosSeleccionado() {
             if (indicePokemonSeleccionado === null) return;
             let p = teamPokemon[indicePokemonSeleccionado];
-            alert(`📋 DATOS DE ${p.nombre.toUpperCase()}:\n- Nivel: ${p.nivel}\n- Tipo 1: ${p.tipo1}\n- Tipo 2: ${p.tipo2 || 'Ninguno'}\n- Poder Oculto: ${p.tipoOculto.toUpperCase()}\n- Ataque: ${p.ataque}\n- Defensa: ${p.defensa}\n- PS: ${p.hpActual}/${p.hpMax}\n- EXP: ${p.exp || 0}/${p.nivel * 100}`);
+            alert(`📋 DATOS DE ${p.nombre.toUpperCase()}:\n- Nivel: ${p.nivel}\n- Tipo 1: ${p.tipo1}\n- Tipo 2: ${p.tipo2 || 'Ninguno'}\n- Poder Oculto: ${p.tipoOculto.toUpperCase()}\n- Ataque: ${p.ataque}\n- Defensa: ${p.defensa}\n- PS: ${p.hpActual}/${p.hpMax}`);
         }
 
         function activarModoMover() {
