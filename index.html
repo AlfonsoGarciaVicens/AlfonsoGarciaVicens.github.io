@@ -165,7 +165,9 @@
         .exp-bar-bg { background-color: #1e293b; height: 5px; width: 75%; display: inline-block; vertical-align: middle; border-radius: 3px; overflow: hidden; border: 1px solid #0f172a; }
         .exp-bar-fill { background-color: #38bdf8 !important; height: 100%; transition: width 0.3s ease; display: block; }
 
-        .combat-sprites { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 20px; font-size: 30px; }
+        /* Estilo para los sprites oficiales de combate (PokeAPI) */
+        .combat-sprites { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 10px; height: 95px; }
+        .battle-sprite-img { width: 85px; height: 85px; image-rendering: pixelated; object-fit: contain; }
 
         .combat-dialogue { background-color: #222; border: 2px solid #c0c0c0; border-radius: 6px; padding: 8px; font-size: 10px; color: #fff; min-height: 50px; text-align: center; overflow-y: auto; }
 
@@ -398,7 +400,7 @@
                 </div>
             </div>
 
-            <!-- Vista de Combate (Dentro de la ventanita verde) -->
+            <!-- Vista de Combate con Sprites Oficiales (PokeAPI) -->
             <div id="combat-viewport-screen" class="modal-screen">
                 <div class="combat-modal-window">
                     <div id="enemy-initiative-bubble" class="initiative-bubble" style="top: 35px; left: 40px;">--</div>
@@ -409,8 +411,8 @@
                     </div>
                     
                     <div class="combat-sprites">
-                        <span id="player-battle-sprite" class="idle-anim">🦖</span>
-                        <span id="enemy-battle-sprite" class="idle-anim">🦊</span>
+                        <img id="player-battle-sprite" class="battle-sprite-img idle-anim" src="" alt="Player">
+                        <img id="enemy-battle-sprite" class="battle-sprite-img idle-anim" src="" alt="Enemy">
                     </div>
                     
                     <div id="player-initiative-bubble" class="initiative-bubble" style="bottom: 70px; right: 40px;">--</div>
@@ -809,6 +811,10 @@
                 if (p.hpActual === undefined || p.hpActual < 0) p.hpActual = p.hpMax;
                 if (p.exp === undefined) p.exp = 0;
                 if (!p.nivel) p.nivel = 5;
+                if (!p.sprite_url) {
+                    let match = POKEDEX_GLOBAL.find(x => x.name.toLowerCase() === p.nombre.toLowerCase());
+                    p.sprite_url = match ? match.sprite_url : '';
+                }
             });
 
             if (esUsuarioFonso()) energiaActual = energiaMax;
@@ -837,6 +843,7 @@
         function chooseStarter(name, statsBase, t1, t2) {
             const nivel = 5, iv = 15;
             const hpMax = calcularHPFinal(statsBase.hp, nivel, iv);
+            let pokeFound = POKEDEX_GLOBAL.find(x => x.name.toLowerCase() === name.toLowerCase());
             
             const starter = {
                 nombre: name, nivel: nivel, hpMax: hpMax, hpActual: hpMax,
@@ -845,11 +852,12 @@
                 tipo1: t1, tipo2: t2, tipoOculto: getTipoOcultoAleatorio(t1, t2),
                 icono: name === 'Bulbasaur' ? '🌿' : (name === 'Charmander' ? '🔥' : '💧'),
                 exp: 0,
-                idDex: name === 'Bulbasaur' ? 1 : (name === 'Charmander' ? 4 : 7),
+                idDex: pokeFound ? pokeFound.id : (name === 'Bulbasaur' ? 1 : (name === 'Charmander' ? 4 : 7)),
                 trainerId: "03101",
                 potencial: "15 / 31",
                 amistad: "50 / 100",
-                origen: "Elegido del Prof. Oak al nivel 5."
+                origen: "Elegido del Prof. Oak al nivel 5.",
+                sprite_url: pokeFound ? pokeFound.sprite_url : ""
             };
 
             teamPokemon = [starter];
@@ -978,7 +986,8 @@
                 trainerId: "03101",
                 potencial: "15 / 31",
                 amistad: "50 / 100",
-                origen: `Encontrado explorando al nivel ${nivel}.`
+                origen: `Encontrado explorando al nivel ${nivel}.`,
+                sprite_url: randomEntry.sprite_url || ""
             };
         }
 
@@ -1325,7 +1334,8 @@
                     trainerId: "03101",
                     potencial: "15 / 31",
                     amistad: "50 / 100",
-                    origen: "Encontrado en GACHA al nivel 5."
+                    origen: "Encontrado en GACHA al nivel 5.",
+                    sprite_url: pokeData.sprite_url || ""
                 };
 
                 if (teamPokemon.length < 4) {
@@ -1378,6 +1388,13 @@
             document.getElementById("enemy-name-lvl").innerText = `${currentEnemy.nombre.toUpperCase()} Lv.${nivel}`;
             document.getElementById("player-battle-name").innerText = `${lider.nombre.toUpperCase()} Lv.${lider.nivel}`;
             
+            // Asignar los sprites oficiales de la PokeAPI a las imágenes de combate
+            let pSpriteImg = document.getElementById("player-battle-sprite");
+            let eSpriteImg = document.getElementById("enemy-battle-sprite");
+
+            pSpriteImg.src = lider.sprite_url || "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png";
+            eSpriteImg.src = currentEnemy.sprite_url || "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png";
+
             actualizarBarrasHP();
 
             let t1Map = mapType(lider.tipo1);
@@ -1442,11 +1459,11 @@
         }
 
         function getMensajeEfectividad(multi) {
-            if (multi >= 4) return " <span style='color:#22c55e;'>¡Es cuádruplemente eficaz!</span>";
-            if (multi > 1) return " <span style='color:#4CAF50;'>¡Es muy eficaz!</span>";
-            if (multi <= 0.25) return " <span style='color:#ef4444;'>¡Es extremadamente poco eficaz...</span>";
-            if (multi < 1 && multi > 0) return " <span style='color:#ef4444;'>No es muy eficaz...</span>";
-            if (multi === 0) return " <span style='color:#a8a29e;'>No afecta al enemigo.</span>";
+            if (multi >= 4) return " <span style='color:#22c55e; font-weight:bold;'>¡Es cuádruplemente eficaz!</span>";
+            if (multi > 1) return " <span style='color:#4CAF50; font-weight:bold;'>¡Es muy eficaz!</span>";
+            if (multi <= 0.25) return " <span style='color:#ef4444; font-weight:bold;'>¡Es extremadamente poco eficaz...</span>";
+            if (multi < 1 && multi > 0) return " <span style='color:#ef4444; font-weight:bold;'>No es muy eficaz...</span>";
+            if (multi === 0) return " <span style='color:#a8a29e; font-weight:bold;'>No afecta al enemigo.</span>";
             return "";
         }
 
@@ -1783,7 +1800,7 @@
                         <span>Pokédex No.${p.idDex || 25}</span>
                     </div>
                     <div style="font-size:11px; font-weight:bold; color:#1f2937; align-self:flex-start;">Lv. ${p.nivel}</div>
-                    <div style="font-size:38px; margin: 10px 0;">${p.icono || '🐾'}</div>
+                    <div style="margin: 5px 0;"><img src="${p.sprite_url || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png'}" style="width:75px; height:75px; image-rendering:pixelated;" alt="Sprite"></div>
                     <div style="background:#1f2937; color:#fff; font-size:11px; font-weight:bold; width:100%; padding:4px; border-radius:3px; text-align:center;">${p.nombre.toUpperCase()}</div>
                     <div style="display:flex; gap:4px; width:100%; margin-top:4px;">
                         ${tiposHtml}
