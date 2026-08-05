@@ -78,13 +78,13 @@
         }
         .gacha-header-row { display: flex; justify-content: space-between; align-items: center; }
         .gacha-money-badge { background: rgba(0,0,0,0.5); border: 1px solid #f472b6; padding: 3px 8px; border-radius: 4px; font-size: 11px; color: #fdf2f8; font-weight: bold; }
-        .gacha-main-title { font-size: 13px; font-weight: bold; color: #fff; letter-spacing: 1px; text-align: center; flex-grow: 1; text-transform: uppercase; }
+        .gacha-main-title { font-size: 14px; font-weight: bold; color: #fff; letter-spacing: 1px; text-align: center; flex-grow: 1; text-transform: uppercase; }
         
         .gacha-carousel-container { display: flex; align-items: center; justify-content: space-between; flex-grow: 1; margin: 8px 0; gap: 5px; }
         .gacha-arrow-btn { background: #475569; border: 2px solid #94a3b8; color: white; font-size: 16px; padding: 10px 6px; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .gacha-arrow-btn:hover { background: #64748b; }
 
-        .gacha-display-box { background: rgba(0, 0, 0, 0.3); border: 2px dashed #fbcfe8; border-radius: 8px; flex-grow: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; text-align: center; gap: 8px; }
+        .gacha-display-box { background: rgba(0, 0, 0, 0.3); border: 2px dashed #f472b6; border-radius: 8px; flex-grow: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; text-align: center; gap: 8px; }
         .gacha-item-preview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 24px; background: rgba(255,255,255,0.1); padding: 8px; border-radius: 6px; width: 100%; justify-items: center; align-items: center; }
         .gacha-desc { font-size: 10px; color: #fbcfe8; min-height: 25px; }
 
@@ -223,12 +223,12 @@
 <body>
 
     <div id="game-container">
-        <!-- Login con soporte para Enter -->
+        <!-- Login limpio sin atributos extra en inputs -->
         <div id="login-screen" class="screen-overlay">
             <div class="box-container" style="height: auto;">
                 <h2>Pokémon Trails</h2>
-                <input type="text" id="username-input" placeholder="Usuario" onkeydown="if(event.key==='Enter') handleLogin()">
-                <input type="password" id="password-input" placeholder="Contraseña" onkeydown="if(event.key==='Enter') handleLogin()">
+                <input type="text" id="username-input" placeholder="Usuario">
+                <input type="password" id="password-input" placeholder="Contraseña">
                 <button onclick="handleLogin()">ENTRAR / REGISTRARSE</button>
                 <p id="login-msg" style="font-size: 10px; color: #aaa; margin-top: 10px;">Si eres nuevo, se creará tu cuenta automáticamente.</p>
             </div>
@@ -455,28 +455,6 @@
         let pestanaActivaBolsa = 'potions';
         let objetoSeleccionadoBolsa = null;
 
-        // --- MANEJO SEGURO DE LOCALSTORAGE ---
-        function safeGet(key, fallback) {
-            try {
-                const val = localStorage.getItem(key);
-                return val !== null ? val : fallback;
-            } catch (e) {
-                return fallback;
-            }
-        }
-
-        function safeSet(key, val) {
-            try {
-                localStorage.setItem(key, val);
-            } catch (e) {}
-        }
-
-        function safeRemove(key) {
-            try {
-                localStorage.removeItem(key);
-            } catch (e) {}
-        }
-
         // --- CONFIGURACIÓN DE GACHAS ---
         const gachaMachines = [
             {
@@ -540,7 +518,7 @@
         const intervaloRecargaMs = 15 * 60 * 1000;
 
         function esUsuarioFonso() {
-            const currentUser = safeGet("pt_current_user", "");
+            const currentUser = localStorage.getItem("pt_current_user");
             return currentUser && currentUser.toLowerCase() === "fonso";
         }
 
@@ -653,16 +631,13 @@
             }
 
             try {
-                const currentUser = safeGet("pt_current_user", null);
+                const currentUser = localStorage.getItem("pt_current_user");
                 if (currentUser) {
                     document.getElementById("login-screen").style.display = "none";
                     document.getElementById("btn-username-display").innerText = currentUser.toUpperCase();
                     cargarDatosUsuario(currentUser);
                 }
-            } catch (e) {
-                safeRemove("pt_current_user");
-                document.getElementById("login-screen").style.display = "flex";
-            }
+            } catch (e) {}
         };
 
         function handleLogin() {
@@ -676,14 +651,10 @@
                 return;
             }
 
-            let usersDb = {};
-            try {
-                usersDb = JSON.parse(safeGet("pt_users_db", "{}"));
-            } catch(e) { usersDb = {}; }
-
+            let usersDb = JSON.parse(localStorage.getItem("pt_users_db") || "{}");
             if (usersDb[user]) {
                 if (usersDb[user] === pass) {
-                    safeSet("pt_current_user", user);
+                    localStorage.setItem("pt_current_user", user);
                     document.getElementById("login-screen").style.display = "none";
                     document.getElementById("btn-username-display").innerText = user.toUpperCase();
                     cargarDatosUsuario(user);
@@ -693,8 +664,8 @@
                 }
             } else {
                 usersDb[user] = pass;
-                safeSet("pt_users_db", JSON.stringify(usersDb));
-                safeSet("pt_current_user", user);
+                localStorage.setItem("pt_users_db", JSON.stringify(usersDb));
+                localStorage.setItem("pt_current_user", user);
                 document.getElementById("login-screen").style.display = "none";
                 document.getElementById("btn-username-display").innerText = user.toUpperCase();
                 document.getElementById("starter-screen").style.display = "flex";
@@ -703,7 +674,7 @@
 
         function handleLogout() {
             guardarDatos();
-            safeRemove("pt_current_user");
+            localStorage.removeItem("pt_current_user");
             
             cerrarCombate("");
             document.getElementById("menu-screen").style.display = "none";
@@ -723,46 +694,39 @@
 
         function cargarDatosUsuario(user) {
             const prefix = `pt_${user}_`;
-            
-            try { teamPokemon = JSON.parse(safeGet(prefix + "team", "[]")); } catch(e) { teamPokemon = []; }
-            try { pcStorage = JSON.parse(safeGet(prefix + "pc", "[]")); } catch(e) { pcStorage = []; }
-            
-            energiaActual = parseInt(safeGet(prefix + "energia", "20"));
-            ultimoTimestamp = parseInt(safeGet(prefix + "timestamp", Date.now()));
-            playerMedals = parseInt(safeGet(prefix + "medals", "0"));
-            playerMoney = parseInt(safeGet(prefix + "money", "2000"));
-            lastDailyClaim = parseInt(safeGet(prefix + "last_daily", "0"));
+            teamPokemon = JSON.parse(localStorage.getItem(prefix + "team") || "[]");
+            pcStorage = JSON.parse(localStorage.getItem(prefix + "pc") || "[]");
+            energiaActual = parseInt(localStorage.getItem(prefix + "energia") ?? "20");
+            ultimoTimestamp = parseInt(localStorage.getItem(prefix + "timestamp") ?? Date.now());
+            playerMedals = parseInt(localStorage.getItem(prefix + "medals") ?? "0");
+            playerMoney = parseInt(localStorage.getItem(prefix + "money") ?? "2000");
+            lastDailyClaim = parseInt(localStorage.getItem(prefix + "last_daily") ?? "0");
 
-            try {
-                let savedInv = safeGet(prefix + "inventory", null);
-                if (savedInv) {
-                    playerInventory = JSON.parse(savedInv);
-                }
-            } catch(e) {}
+            let savedInv = localStorage.getItem(prefix + "inventory");
+            if (savedInv) {
+                playerInventory = JSON.parse(savedInv);
+            }
 
             if (esUsuarioFonso()) energiaActual = energiaMax;
 
-            if (teamPokemon.length > 0) {
-                actualizarHUD();
-            } else {
-                document.getElementById("starter-screen").style.display = "flex";
-            }
+            if (teamPokemon.length > 0) actualizarHUD();
+            else document.getElementById("starter-screen").style.display = "flex";
             actualizarHUDEnergia();
         }
 
         function guardarDatos() {
             try {
-                const user = safeGet("pt_current_user", null);
+                const user = localStorage.getItem("pt_current_user");
                 if (!user) return;
                 const prefix = `pt_${user}_`;
-                safeSet(prefix + "team", JSON.stringify(teamPokemon));
-                safeSet(prefix + "pc", JSON.stringify(pcStorage));
-                safeSet(prefix + "energia", esUsuarioFonso() ? 20 : energiaActual);
-                safeSet(prefix + "timestamp", ultimoTimestamp);
-                safeSet(prefix + "medals", playerMedals);
-                safeSet(prefix + "money", playerMoney);
-                safeSet(prefix + "last_daily", lastDailyClaim);
-                safeSet(prefix + "inventory", JSON.stringify(playerInventory));
+                localStorage.setItem(prefix + "team", JSON.stringify(teamPokemon));
+                localStorage.setItem(prefix + "pc", JSON.stringify(pcStorage));
+                localStorage.setItem(prefix + "energia", esUsuarioFonso() ? 20 : energiaActual);
+                localStorage.setItem(prefix + "timestamp", ultimoTimestamp);
+                localStorage.setItem(prefix + "medals", playerMedals);
+                localStorage.setItem(prefix + "money", playerMoney);
+                localStorage.setItem(prefix + "last_daily", lastDailyClaim);
+                localStorage.setItem(prefix + "inventory", JSON.stringify(playerInventory));
             } catch(e) {}
         }
 
@@ -1030,43 +994,6 @@
         }
 
         // --- SISTEMA DE GACHA ---
-        const gachaMachines = [
-            {
-                id: 'daily',
-                title: 'BONUS DIARIO',
-                icons: ['🎁', '✨', '💰'],
-                desc: 'Reclamable 1 vez al día. Obtén entre 500 y 5.000 Poké-dólares gratis.',
-                cost: 0,
-                type: 'daily'
-            },
-            {
-                id: 'items',
-                title: 'CAJA DE OBJETOS',
-                icons: ['📦', '🧪', '💊'],
-                desc: 'Consigue 1 objeto aleatorio basado en la tabla de rarezas oficial.',
-                cost: 400,
-                type: 'item'
-            },
-            {
-                id: 'pokemon_fire',
-                title: 'GACHA POKÉMON (FUEGO)',
-                icons: ['🔥', '🐾', '🌟'],
-                desc: 'Obtén una 1ª evolución Pokémon de tipo Fuego aleatoria.',
-                cost: 800,
-                type: 'pokemon',
-                targetType: 'fire'
-            },
-            {
-                id: 'hidden_power',
-                title: 'DISCO PODER OCULTO',
-                icons: ['💿', '✨', '⚡'],
-                desc: 'Consigue 1 CD de MT de Poder Oculto para personalizar los tipos de tus Pokémon.',
-                cost: 600,
-                type: 'mt'
-            }
-        ];
-        let currentGachaIndex = 0;
-
         function abrirGacha() {
             cerrarMenu();
             currentGachaIndex = 0;
