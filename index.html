@@ -154,16 +154,7 @@
         .energy-bars { color: #4ade80; font-family: monospace; letter-spacing: -1px; font-weight: bold; }
         .menu-btn { background-color: #2196F3; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; }
 
-        /* Animación de caminata horizontal durante 5 segundos */
-        @keyframes walkSlide {
-            0% { background-position: 0% center; }
-            100% { background-position: 100% center; }
-        }
-        .map-viewport.walking {
-            animation: walkSlide 5s linear forwards;
-        }
-
-        /* Ventana cuadrada de 320x320 para visualizar las imágenes completas de los mapas sin recortes ni capas oscuras */
+        /* Ventana cuadrada de 320x320 para visualizar imágenes completas sin recortes ni capas oscuras */
         .map-viewport { 
             width: 320px; 
             height: 320px; 
@@ -182,7 +173,7 @@
             box-sizing: border-box; 
             background-size: cover;
             background-repeat: no-repeat;
-            background-position: center;
+            background-position: center center;
         }
         .map-background { display: none; } /* Oculto para evitar capas oscuras o patrones encima de las imágenes */
         .map-content { position: relative; z-index: 2; text-align: center; width: 100%; }
@@ -298,7 +289,7 @@
 <body>
 
     <div id="game-container">
-        <!-- Escudo invisible para bloquear clics durante la animación -->
+        <!-- Escudo invisible para bloquear clics durante la animación de caminata -->
         <div id="input-blocker"></div>
 
         <!-- Login -->
@@ -339,6 +330,12 @@
 
         <!-- Ventanita Cuadrada 320x320 (.map-viewport) Contenedor Principal de Vista y Menús -->
         <div class="map-viewport" id="map-viewport">
+            <!-- Pista deslizante lateral para transición de mapas (640px de ancho total, 2 paneles de 320px) -->
+            <div id="map-track" style="position: absolute; top: 0; left: 0; width: 640px; height: 320px; display: flex; transform: translateX(0px);">
+                <div id="map-panel-1" style="width: 320px; height: 320px; background-size: cover; background-position: center;"></div>
+                <div id="map-panel-2" style="width: 320px; height: 320px; background-size: cover; background-position: center;"></div>
+            </div>
+
             <div class="map-background"></div>
             
             <div class="map-content" id="map-content-inner">
@@ -390,7 +387,9 @@
                     
                     <div class="pc-main-layout">
                         <!-- Rejilla de almacenamiento izquierda -->
-                        <div class="pc-grid-box" id="pc-grid-container"></div>
+                        <div class="pc-grid-box" id="pc-grid-container">
+                            <!-- Se rellena con celdas -->
+                        </div>
 
                         <!-- Panel derecho de previsualización y acciones -->
                         <div class="pc-preview-box">
@@ -542,7 +541,7 @@
         let combatEnCurso = false;
         let playerMoney = 2000;
         let lastDailyClaim = 0;
-        let isWalking = false; // Control para bloquear interacciones al caminar
+        let isWalking = false; // Control de bloqueo durante la caminata de 5s
 
         // Variables para la gestión interactiva de equipo y PC
         let indicePokemonSeleccionado = null;
@@ -1030,35 +1029,70 @@
             return subioNivel;
         }
 
-        // --- AVANZAR DE ZONA CON ANIMACIÓN DE CAMINATA DE 5 SEGUNDOS Y BLOQUEO DE CLICS ---
+        // --- AVANZAR DE ZONA CON TRANSICIÓN LADO A LADO HACIA LA DERECHA (5 SEGUNDOS) Y BLOQUEO ---
         function advanceZone() {
             if (isWalking) return;
             isWalking = true;
             document.getElementById("input-blocker").style.display = "block"; // Bloquea clics
 
+            let oldZoneIndex = currentZoneIndex;
+            let oldZona = zonesConfig[oldZoneIndex];
+            
             currentZoneIndex = (currentZoneIndex + 1) % zonesConfig.length;
             let zonaObj = zonesConfig[currentZoneIndex];
             
-            document.getElementById("current-zone-name").innerText = zonaObj.name;
-            document.getElementById("zone-sprite").innerText = zonaObj.sprite;
-            
-            let viewport = document.getElementById("map-viewport");
+            let panel1 = document.getElementById("map-panel-1");
+            let panel2 = document.getElementById("map-panel-2");
+            let track = document.getElementById("map-track");
+
+            // Configurar paneles para transicionar juntos hacia la derecha:
+            // Panel 1 (izquierda) = Nueva zona, Panel 2 (derecha) = Zona anterior
             if (zonaObj.bg_image) {
-                viewport.style.backgroundImage = `url('${zonaObj.bg_image}')`;
-                viewport.style.backgroundSize = "cover";
-                viewport.style.backgroundRepeat = "no-repeat";
-                
-                // Activar animación de caminata horizontal durante 5s
-                viewport.classList.add("walking");
+                panel1.style.backgroundImage = `url('${zonaObj.bg_image}')`;
+                panel1.style.backgroundSize = "cover";
+                panel1.style.backgroundPosition = "center center";
             } else {
-                viewport.style.backgroundImage = "";
+                panel1.style.backgroundImage = "linear-gradient(135deg, #2e7d32, #1b5e20)";
             }
 
+            if (oldZona.bg_image) {
+                panel2.style.backgroundImage = `url('${oldZona.bg_image}')`;
+                panel2.style.backgroundSize = "cover";
+                panel2.style.backgroundPosition = "center center";
+            } else {
+                panel2.style.backgroundImage = "linear-gradient(135deg, #2e7d32, #1b5e20)";
+            }
+
+            // Empezar situados en -320px (mostrando la imagen de la derecha / zona anterior)
+            track.style.transition = "none";
+            track.style.transform = "translateX(-320px)";
+            
+            void track.offsetWidth; // Forzar reflow
+
+            document.getElementById("current-zone-name").innerText = zonaObj.name;
+            document.getElementById("zone-sprite").innerText = zonaObj.sprite;
             document.getElementById("explore-log").innerHTML = `Caminando hacia ${zonaObj.name}...`;
 
-            // Duración exacta de la animación: 5 segundos
+            // Animar track hacia translateX(0px) moviéndose hacia la derecha durante 5 segundos exactos
+            track.style.transition = "transform 5s linear";
+            track.style.transform = "translateX(0px)";
+
             setTimeout(() => {
-                viewport.classList.remove("walking");
+                // Al terminar los 5s, fijar la imagen estática en el fondo y limpiar el track
+                let viewport = document.getElementById("map-viewport");
+                if (zonaObj.bg_image) {
+                    viewport.style.backgroundImage = `url('${zonaObj.bg_image}')`;
+                    viewport.style.backgroundSize = "cover";
+                    viewport.style.backgroundRepeat = "no-repeat";
+                    viewport.style.backgroundPosition = "center center";
+                } else {
+                    viewport.style.backgroundImage = "";
+                }
+
+                panel1.style.backgroundImage = "";
+                panel2.style.backgroundImage = "";
+                track.style.transition = "none";
+                track.style.transform = "translateX(0px)";
 
                 let curados = 0;
                 teamPokemon.forEach(p => {
