@@ -78,13 +78,13 @@
         }
         .gacha-header-row { display: flex; justify-content: space-between; align-items: center; }
         .gacha-money-badge { background: rgba(0,0,0,0.5); border: 1px solid #f472b6; padding: 3px 8px; border-radius: 4px; font-size: 11px; color: #fdf2f8; font-weight: bold; }
-        .gacha-main-title { font-size: 14px; font-weight: bold; color: #fff; letter-spacing: 1px; text-align: center; flex-grow: 1; text-transform: uppercase; }
+        .gacha-main-title { font-size: 12px; font-weight: bold; color: #fff; letter-spacing: 1px; text-align: center; flex-grow: 1; text-transform: uppercase; }
         
         .gacha-carousel-container { display: flex; align-items: center; justify-content: space-between; flex-grow: 1; margin: 8px 0; gap: 5px; }
         .gacha-arrow-btn { background: #475569; border: 2px solid #94a3b8; color: white; font-size: 16px; padding: 10px 6px; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .gacha-arrow-btn:hover { background: #64748b; }
 
-        .gacha-display-box { background: rgba(0, 0, 0, 0.3); border: 2px dashed #f472b6; border-radius: 8px; flex-grow: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; text-align: center; gap: 8px; }
+        .gacha-display-box { background: rgba(0, 0, 0, 0.3); border: 2px dashed #fbcfe8; border-radius: 8px; flex-grow: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; text-align: center; gap: 8px; }
         .gacha-item-preview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 24px; background: rgba(255,255,255,0.1); padding: 8px; border-radius: 6px; width: 100%; justify-items: center; align-items: center; }
         .gacha-desc { font-size: 10px; color: #fbcfe8; min-height: 25px; }
 
@@ -457,8 +457,29 @@
         let pestanaActivaBolsa = 'potions';
         let objetoSeleccionadoBolsa = null;
 
-        // --- CONFIGURACIÓN DE GACHAS ---
-        const gachaMachines = [
+        // --- CONFIGURACIÓN DE GACHAS (Incluyendo todos los tipos de Pokémon) ---
+        const typeGachaConfig = [
+            { type: 'normal', name: 'Normal', icon: '⚪' },
+            { type: 'fire', name: 'Fuego', icon: '🔥' },
+            { type: 'water', name: 'Agua', icon: '💧' },
+            { type: 'grass', name: 'Planta', icon: '🌿' },
+            { type: 'electric', name: 'Eléctrico', icon: '⚡' },
+            { type: 'ice', name: 'Hielo', icon: '❄️' },
+            { type: 'fighting', name: 'Lucha', icon: '🥊' },
+            { type: 'poison', name: 'Veneno', icon: '☠️' },
+            { type: 'ground', name: 'Tierra', icon: '🌍' },
+            { type: 'flying', name: 'Volador', icon: '🦅' },
+            { type: 'psychic', name: 'Psíquico', icon: '🔮' },
+            { type: 'bug', name: 'Bicho', icon: '🐛' },
+            { type: 'rock', name: 'Roca', icon: '🪨' },
+            { type: 'ghost', name: 'Fantasma', icon: '👻' },
+            { type: 'dragon', name: 'Dragón', icon: '🐉' },
+            { type: 'dark', name: 'Siniestro', icon: '🌑' },
+            { type: 'steel', name: 'Acero', icon: '⚙️' },
+            { type: 'fairy', name: 'Hada', icon: '🌸' }
+        ];
+
+        let gachaMachines = [
             {
                 id: 'daily',
                 title: 'BONUS DIARIO',
@@ -476,15 +497,6 @@
                 type: 'item'
             },
             {
-                id: 'pokemon_fire',
-                title: 'GACHA POKÉMON (FUEGO)',
-                icons: ['🔥', '🐾', '🌟'],
-                desc: 'Obtén una 1ª evolución Pokémon de tipo Fuego aleatoria.',
-                cost: 800,
-                type: 'pokemon',
-                targetType: 'fire'
-            },
-            {
                 id: 'hidden_power',
                 title: 'DISCO PODER OCULTO',
                 icons: ['💿', '✨', '⚡'],
@@ -493,6 +505,20 @@
                 type: 'mt'
             }
         ];
+
+        // Añadir máquinas gacha de Pokémon por cada tipo elemental
+        typeGachaConfig.forEach(tc => {
+            gachaMachines.push({
+                id: 'pokemon_' + tc.type,
+                title: `GACHA POKÉMON (${tc.name.toUpperCase()})`,
+                icons: [tc.icon, '🐾', '🌟'],
+                desc: `Obtén una 1ª evolución Pokémon de tipo ${tc.name} aleatoria.`,
+                cost: 800,
+                type: 'pokemon',
+                targetType: tc.type
+            });
+        });
+
         let currentGachaIndex = 0;
 
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -1150,33 +1176,27 @@
                     return;
                 }
 
-                let tipoFiltro = maquina.targetType;
+                let tipoFiltro = maquina.targetType.toLowerCase();
                 let pool = POKEDEX_GLOBAL.filter(p => {
                     if (p.is_legendary || p.is_mythical) return false;
-                    if (!p.types) return false;
-                    if (p.evolves_from || p.evolution_from) return false;
-
-                    return p.types.some(t => {
-                        let typeName = typeof t === 'string' ? t : (t.name || t.type?.name || '');
-                        return typeName.toLowerCase() === tipoFiltro;
-                    });
+                    if (p.evolves_from && p.evolves_from !== "None") return false;
+                    if (!p.types || !Array.isArray(p.types)) return false;
+                    return p.types.some(t => t.toLowerCase() === tipoFiltro);
                 });
 
                 if (pool.length === 0) {
-                    pool = POKEDEX_GLOBAL.filter(p => !p.is_legendary && !p.is_mythical && !p.evolves_from && !p.evolution_from);
+                    pool = POKEDEX_GLOBAL.filter(p => !p.is_legendary && !p.is_mythical && (!p.evolves_from || p.evolves_from === "None"));
                 }
 
-                let pokeData = pool[Math.floor(Math.random() * pool.length)] || POKEDEX_GLOBAL[Math.floor(Math.random() * POKEDEX_GLOBAL.length)];
+                let pokeData = pool[Math.floor(Math.random() * pool.length)] || POKEDEX_GLOBAL[0];
                 let nivel = 5;
                 let iv = 15;
                 let hpMax = calcularHPFinal(pokeData.stats.hp, nivel, iv);
                 let atkComb = Math.floor((pokeData.stats.attack + pokeData.stats.special_attack) / 2);
                 let defComb = Math.floor((pokeData.stats.defense + pokeData.stats.special_defense) / 2);
                 
-                let rawT1 = pokeData.types[0] || "normal";
-                let rawT2 = pokeData.types[1] || null;
-                let t1 = typeof rawT1 === 'string' ? rawT1 : (rawT1.name || rawT1.type?.name || 'normal');
-                let t2 = rawT2 ? (typeof rawT2 === 'string' ? rawT2 : (rawT2.name || rawT2.type?.name || null)) : null;
+                let t1 = pokeData.types[0] || "normal";
+                let t2 = pokeData.types[1] || null;
 
                 let nuevoPoke = {
                     nombre: pokeData.name.charAt(0).toUpperCase() + pokeData.name.slice(1),
@@ -1185,10 +1205,10 @@
                     hpActual: hpMax,
                     ataque: calcularStatFinal(atkComb, nivel, iv),
                     defensa: calcularStatFinal(defComb, nivel, iv),
-                    tipo1: t1,
-                    tipo2: t2,
+                    tipo1: typeof t1 === 'string' ? t1 : (t1.name || 'normal'),
+                    tipo2: t2 ? (typeof t2 === 'string' ? t2 : (t2.name || null)) : null,
                     tipoOculto: getTipoOcultoAleatorio(t1, t2),
-                    icono: '🔥'
+                    icono: '🐾'
                 };
 
                 if (teamPokemon.length < 4) {
