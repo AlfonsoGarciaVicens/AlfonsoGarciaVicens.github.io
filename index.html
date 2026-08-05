@@ -165,9 +165,14 @@
         .exp-bar-bg { background-color: #1e293b; height: 5px; width: 75%; display: inline-block; vertical-align: middle; border-radius: 3px; overflow: hidden; border: 1px solid #0f172a; }
         .exp-bar-fill { background-color: #38bdf8 !important; height: 100%; transition: width 0.3s ease; display: block; }
 
-        /* Estilo para los sprites oficiales de combate (PokeAPI) */
         .combat-sprites { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 10px; height: 95px; }
         .battle-sprite-img { width: 85px; height: 85px; image-rendering: pixelated; object-fit: contain; }
+        
+        /* Bajar la ubicación del sprite del usuario en combate */
+        #player-battle-sprite {
+            position: relative;
+            top: 18px;
+        }
 
         .combat-dialogue { background-color: #222; border: 2px solid #c0c0c0; border-radius: 6px; padding: 8px; font-size: 10px; color: #fff; min-height: 50px; text-align: center; overflow-y: auto; }
 
@@ -400,7 +405,7 @@
                 </div>
             </div>
 
-            <!-- Vista de Combate con Sprites Oficiales (PokeAPI) -->
+            <!-- Vista de Combate con Sprites Oficiales (Back y Front + Shiny) -->
             <div id="combat-viewport-screen" class="modal-screen">
                 <div class="combat-modal-window">
                     <div id="enemy-initiative-bubble" class="initiative-bubble" style="top: 35px; left: 40px;">--</div>
@@ -411,8 +416,8 @@
                     </div>
                     
                     <div class="combat-sprites">
-                        <img id="player-battle-sprite" class="battle-sprite-img idle-anim" src="" alt="Player">
-                        <img id="enemy-battle-sprite" class="battle-sprite-img idle-anim" src="" alt="Enemy">
+                        <img id="player-battle-sprite" class="battle-sprite-img idle-anim" src="" alt="Player Back">
+                        <img id="enemy-battle-sprite" class="battle-sprite-img idle-anim" src="" alt="Enemy Front">
                     </div>
                     
                     <div id="player-initiative-bubble" class="initiative-bubble" style="bottom: 70px; right: 40px;">--</div>
@@ -693,6 +698,44 @@
             return Math.floor(Math.random() * (liderNivel - minNivel + 1)) + minNivel;
         }
 
+        // Función centralizada para generar Pokémon con soporte Shiny (1/4096) y Back/Front Sprites
+        function generarDatosPokemonBase(pokeData, nivel) {
+            let idDex = pokeData.id || 25;
+            let isShiny = Math.random() < (1 / 4096);
+            let iv = 15;
+            let hpMax = calcularHPFinal(pokeData.stats.hp, nivel, iv);
+            let atkComb = Math.floor((pokeData.stats.attack + pokeData.stats.special_attack) / 2);
+            let defComb = Math.floor((pokeData.stats.defense + pokeData.stats.special_defense) / 2);
+            
+            let t1 = pokeData.types[0] || "normal";
+            let t2 = pokeData.types[1] || null;
+
+            let frontUrl = isShiny ? (pokeData.shiny_sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${idDex}.png`) : (pokeData.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idDex}.png`);
+            let backUrl = isShiny ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${idDex}.png` : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${idDex}.png`;
+
+            return {
+                nombre: pokeData.name.charAt(0).toUpperCase() + pokeData.name.slice(1) + (isShiny ? " ✨" : ""),
+                nivel: nivel,
+                hpMax: hpMax,
+                hpActual: hpMax,
+                ataque: calcularStatFinal(atkComb, nivel, iv),
+                defensa: calcularStatFinal(defComb, nivel, iv),
+                tipo1: typeof t1 === 'string' ? t1 : (t1.name || 'normal'),
+                tipo2: t2 ? (typeof t2 === 'string' ? t2 : (t2.name || null)) : null,
+                tipoOculto: getTipoOcultoAleatorio(t1, t2),
+                icono: isShiny ? '🌟' : '🐾',
+                exp: 0,
+                idDex: idDex,
+                trainerId: "03101",
+                potencial: "15 / 31",
+                amistad: "50 / 100",
+                origen: `Obtenido al nivel ${nivel}.`,
+                sprite_url: frontUrl,
+                back_sprite_url: backUrl,
+                isShiny: isShiny
+            };
+        }
+
         window.onload = async function() {
             try {
                 const resPoke = await fetch('data/pokemon.json');
@@ -812,8 +855,12 @@
                 if (p.exp === undefined) p.exp = 0;
                 if (!p.nivel) p.nivel = 5;
                 if (!p.sprite_url) {
-                    let match = POKEDEX_GLOBAL.find(x => x.name.toLowerCase() === p.nombre.toLowerCase());
+                    let match = POKEDEX_GLOBAL.find(x => x.name.toLowerCase() === p.nombre.toLowerCase().replace(' ✨',''));
                     p.sprite_url = match ? match.sprite_url : '';
+                }
+                if (!p.back_sprite_url) {
+                    let id = p.idDex || 25;
+                    p.back_sprite_url = p.isShiny ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${id}.png` : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${id}.png`;
                 }
             });
 
@@ -841,24 +888,10 @@
         }
 
         function chooseStarter(name, statsBase, t1, t2) {
-            const nivel = 5, iv = 15;
-            const hpMax = calcularHPFinal(statsBase.hp, nivel, iv);
-            let pokeFound = POKEDEX_GLOBAL.find(x => x.name.toLowerCase() === name.toLowerCase());
+            let pokeFound = POKEDEX_GLOBAL.find(x => x.name.toLowerCase() === name.toLowerCase()) || { id: name === 'Bulbasaur' ? 1 : (name === 'Charmander' ? 4 : 7), name: name, stats: statsBase, types: [t1, t2].filter(Boolean) };
             
-            const starter = {
-                nombre: name, nivel: nivel, hpMax: hpMax, hpActual: hpMax,
-                ataque: calcularStatFinal(Math.floor((statsBase.attack + statsBase.special_attack) / 2), nivel, iv),
-                defensa: calcularStatFinal(Math.floor((statsBase.defense + statsBase.special_defense) / 2), nivel, iv),
-                tipo1: t1, tipo2: t2, tipoOculto: getTipoOcultoAleatorio(t1, t2),
-                icono: name === 'Bulbasaur' ? '🌿' : (name === 'Charmander' ? '🔥' : '💧'),
-                exp: 0,
-                idDex: pokeFound ? pokeFound.id : (name === 'Bulbasaur' ? 1 : (name === 'Charmander' ? 4 : 7)),
-                trainerId: "03101",
-                potencial: "15 / 31",
-                amistad: "50 / 100",
-                origen: "Elegido del Prof. Oak al nivel 5.",
-                sprite_url: pokeFound ? pokeFound.sprite_url : ""
-            };
+            let starter = generarDatosPokemonBase(pokeFound, 5);
+            starter.origen = "Elegido del Prof. Oak al nivel 5.";
 
             teamPokemon = [starter];
             guardarDatos();
@@ -962,33 +995,9 @@
             }
 
             const randomEntry = permitidos[Math.floor(Math.random() * permitidos.length)] || POKEDEX_GLOBAL[0];
-            const iv = 15;
-            const hpMax = calcularHPFinal(randomEntry.stats.hp, nivel, iv);
-            const atkComb = Math.floor((randomEntry.stats.attack + randomEntry.stats.special_attack) / 2);
-            const defComb = Math.floor((randomEntry.stats.defense + randomEntry.stats.special_defense) / 2);
-
-            const t1 = randomEntry.types[0] || "normal";
-            const t2 = randomEntry.types[1] || null;
-
-            return {
-                nombre: randomEntry.name.charAt(0).toUpperCase() + randomEntry.name.slice(1),
-                nivel: nivel,
-                hpMax: hpMax,
-                hpActual: hpMax,
-                ataque: calcularStatFinal(atkComb, nivel, iv),
-                defensa: calcularStatFinal(defComb, nivel, iv),
-                tipo1: typeof t1 === 'string' ? t1 : (t1.name || t1.type?.name || 'normal'),
-                tipo2: t2 ? (typeof t2 === 'string' ? t2 : (t2.name || t2.type?.name || null)) : null,
-                tipoOculto: getTipoOcultoAleatorio(t1, t2),
-                icono: '🐾',
-                exp: 0,
-                idDex: randomEntry.id || 25,
-                trainerId: "03101",
-                potencial: "15 / 31",
-                amistad: "50 / 100",
-                origen: `Encontrado explorando al nivel ${nivel}.`,
-                sprite_url: randomEntry.sprite_url || ""
-            };
+            let enemyPoke = generarDatosPokemonBase(randomEntry, nivel);
+            enemyPoke.origen = `Encontrado explorando al nivel ${nivel}.`;
+            return enemyPoke;
         }
 
         function exploreZone() {
@@ -1309,41 +1318,15 @@
                 }
 
                 let pokeData = pool[Math.floor(Math.random() * pool.length)] || POKEDEX_GLOBAL[0];
-                let nivel = 5;
-                let iv = 15;
-                let hpMax = calcularHPFinal(pokeData.stats.hp, nivel, iv);
-                let atkComb = Math.floor((pokeData.stats.attack + pokeData.stats.special_attack) / 2);
-                let defComb = Math.floor((pokeData.stats.defense + pokeData.stats.special_defense) / 2);
-                
-                let t1 = pokeData.types[0] || "normal";
-                let t2 = pokeData.types[1] || null;
-
-                let nuevoPoke = {
-                    nombre: pokeData.name.charAt(0).toUpperCase() + pokeData.name.slice(1),
-                    nivel: nivel,
-                    hpMax: hpMax,
-                    hpActual: hpMax,
-                    ataque: calcularStatFinal(atkComb, nivel, iv),
-                    defensa: calcularStatFinal(defComb, nivel, iv),
-                    tipo1: typeof t1 === 'string' ? t1 : (t1.name || 'normal'),
-                    tipo2: t2 ? (typeof t2 === 'string' ? t2 : (t2.name || null)) : null,
-                    tipoOculto: getTipoOcultoAleatorio(t1, t2),
-                    icono: '🐾',
-                    exp: 0,
-                    idDex: pokeData.id || 25,
-                    trainerId: "03101",
-                    potencial: "15 / 31",
-                    amistad: "50 / 100",
-                    origen: "Encontrado en GACHA al nivel 5.",
-                    sprite_url: pokeData.sprite_url || ""
-                };
+                let nuevoPoke = generarDatosPokemonBase(pokeData, 5);
+                nuevoPoke.origen = "Encontrado en GACHA al nivel 5.";
 
                 if (teamPokemon.length < 4) {
                     teamPokemon.push(nuevoPoke);
-                    alert(`✨ ¡Has obtenido una 1ª evolución, ${nuevoPoke.nombre} (Lv.${nivel}), y se ha unido a tu equipo!`);
+                    alert(`✨ ¡Has obtenido una 1ª evolución, ${nuevoPoke.nombre} (Lv.5), y se ha unido a tu equipo!`);
                 } else {
                     pcStorage.push(nuevoPoke);
-                    alert(`✨ ¡Has obtenido una 1ª evolución, ${nuevoPoke.nombre} (Lv.${nivel})! Tu equipo está lleno, se envió al PC.`);
+                    alert(`✨ ¡Has obtenido una 1ª evolución, ${nuevoPoke.nombre} (Lv.5)! Tu equipo está lleno, se envió al PC.`);
                 }
                 actualizarHUD();
             }
@@ -1388,11 +1371,11 @@
             document.getElementById("enemy-name-lvl").innerText = `${currentEnemy.nombre.toUpperCase()} Lv.${nivel}`;
             document.getElementById("player-battle-name").innerText = `${lider.nombre.toUpperCase()} Lv.${lider.nivel}`;
             
-            // Asignar los sprites oficiales de la PokeAPI a las imágenes de combate
+            // Asignar los sprites de espalda (back) para el jugador y de frente para el enemigo
             let pSpriteImg = document.getElementById("player-battle-sprite");
             let eSpriteImg = document.getElementById("enemy-battle-sprite");
 
-            pSpriteImg.src = lider.sprite_url || "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png";
+            pSpriteImg.src = lider.back_sprite_url || (lider.sprite_url ? lider.sprite_url.replace('/pokemon/', '/pokemon/back/') : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/25.png");
             eSpriteImg.src = currentEnemy.sprite_url || "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png";
 
             actualizarBarrasHP();
