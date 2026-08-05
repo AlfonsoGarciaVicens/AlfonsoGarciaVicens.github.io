@@ -778,7 +778,7 @@
                 const resZones = await fetch('data/zones.json');
                 zonesConfig = await resZones.json();
 
-                zonesConfig.push({ name: "Bosque Shiny (Zona Especial)", sprite: "✨", bg_image: "img/zones/bosque_shiny.webp", types: ["normal", "fairy", "grass"], shinyOnly: true });
+                zonesConfig.push({ name: "Bosque Shiny (Zona Especial)", sprite: "✨", bg_image: "img/zones/bosque_shiny.png", types: ["normal", "fairy", "grass"], shinyOnly: true });
             } catch (error) {
                 console.error("Error al cargar los archivos JSON:", error);
                 zonesConfig = [
@@ -900,9 +900,30 @@
 
             if (esUsuarioFonso()) energiaActual = energiaMax;
 
-            if (teamPokemon.length > 0) actualizarHUD();
-            else document.getElementById("starter-screen").style.display = "flex";
+            if (teamPokemon.length > 0) {
+                actualizarHUD();
+                actualizarFondoZonaInicial();
+            } else {
+                document.getElementById("starter-screen").style.display = "flex";
+            }
             actualizarHUDEnergia();
+        }
+
+        function actualizarFondoZonaInicial() {
+            if (zonesConfig.length > 0) {
+                let zonaObj = zonesConfig[currentZoneIndex] || zonesConfig[0];
+                document.getElementById("current-zone-name").innerText = zonaObj.name;
+                document.getElementById("zone-sprite").innerText = zonaObj.sprite;
+                
+                let viewport = document.getElementById("map-viewport");
+                if (zonaObj.bg_image) {
+                    viewport.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('${zonaObj.bg_image}')`;
+                    viewport.style.backgroundSize = "cover";
+                    viewport.style.backgroundPosition = "center";
+                } else {
+                    viewport.style.backgroundImage = "";
+                }
+            }
         }
 
         function guardarDatos() {
@@ -931,6 +952,7 @@
             guardarDatos();
             document.getElementById("starter-screen").style.display = "none";
             actualizarHUD();
+            actualizarFondoZonaInicial();
         }
 
         function actualizarHUD() {
@@ -972,7 +994,6 @@
             document.getElementById("current-zone-name").innerText = zonaObj.name;
             document.getElementById("zone-sprite").innerText = zonaObj.sprite;
             
-            // Actualizar imagen de fondo de la zona si existe bg_image
             let viewport = document.getElementById("map-viewport");
             if (zonaObj.bg_image) {
                 viewport.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('${zonaObj.bg_image}')`;
