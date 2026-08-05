@@ -457,7 +457,7 @@
         let pestanaActivaBolsa = 'potions';
         let objetoSeleccionadoBolsa = null;
 
-        // --- CONFIGURACIÓN DE GACHAS (Incluyendo todos los tipos de Pokémon) ---
+        // --- CONFIGURACIÓN DE GACHAS (Todos los tipos elementales) ---
         const typeGachaConfig = [
             { type: 'normal', name: 'Normal', icon: '⚪' },
             { type: 'fire', name: 'Fuego', icon: '🔥' },
@@ -506,7 +506,6 @@
             }
         ];
 
-        // Añadir máquinas gacha de Pokémon por cada tipo elemental
         typeGachaConfig.forEach(tc => {
             gachaMachines.push({
                 id: 'pokemon_' + tc.type,
@@ -1176,16 +1175,34 @@
                     return;
                 }
 
+                const specialExclusions = [
+                    "nihilego", "buzzwole", "pheromosa", "xurkitree", "celesteela", 
+                    "kartana", "guzzlord", "poipole", "naganadel", "stakataka", "blacephalon",
+                    "great-tusk", "scream-tail", "brute-bonnet", "flutter-mane", "slither-wing", 
+                    "sandy-shocks", "iron-treads", "iron-bundle", "iron-hands", "iron-jugulis", 
+                    "iron-moth", "iron-thorns", "roaring-moon", "iron-valiant", "walking-wake", 
+                    "iron-leaves", "gouging-fire", "raging-bolt", "iron-boulder", "iron-crown"
+                ];
+
                 let tipoFiltro = maquina.targetType.toLowerCase();
                 let pool = POKEDEX_GLOBAL.filter(p => {
                     if (p.is_legendary || p.is_mythical) return false;
                     if (p.evolves_from && p.evolves_from !== "None") return false;
+                    
+                    let pNameLower = p.name.toLowerCase();
+                    if (specialExclusions.includes(pNameLower)) return false;
+
                     if (!p.types || !Array.isArray(p.types)) return false;
                     return p.types.some(t => t.toLowerCase() === tipoFiltro);
                 });
 
                 if (pool.length === 0) {
-                    pool = POKEDEX_GLOBAL.filter(p => !p.is_legendary && !p.is_mythical && (!p.evolves_from || p.evolves_from === "None"));
+                    pool = POKEDEX_GLOBAL.filter(p => {
+                        let pNameLower = p.name.toLowerCase();
+                        return !p.is_legendary && !p.is_mythical && 
+                               (!p.evolves_from || p.evolves_from === "None") && 
+                               !specialExclusions.includes(pNameLower);
+                    });
                 }
 
                 let pokeData = pool[Math.floor(Math.random() * pool.length)] || POKEDEX_GLOBAL[0];
