@@ -11,7 +11,7 @@
     "id": 2,
     "name": "Ruta 1 - Senda Tranquila",
     "sprite": "🌿",
-    "bg_image": "img/zones/pueblo1.webp",
+    "bg_image": "img/zones/ruta1.png",
     "types": ["grass", "bug"],
     "special_encounters": []
   },
@@ -19,7 +19,7 @@
     "id": 3,
     "name": "Bosque Verde - Espesura",
     "sprite": "🌲",
-    "bg_image": "img/zones/pueblo1.webp",
+    "bg_image": "img/zones/pueblo1.png",
     "types": ["bug", "poison"],
     "special_encounters": []
   },
