@@ -115,6 +115,14 @@
         .gba-hp-bar { background: #111; height: 5px; width: 100%; border-radius: 3px; margin-top: 2px; overflow: hidden; border: 1px solid #000; }
         .gba-hp-fill { background: #22c55e; height: 100%; }
 
+        /* Estilo Menú Datos Pokémon (Basado en la referencia GBA) */
+        .summary-window { background: linear-gradient(135deg, #d97706, #b45309); border: 3px solid #fde68a; border-radius: 6px; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
+        .summary-content { display: flex; gap: 8px; flex-grow: 1; margin-bottom: 5px; }
+        .summary-left { background: #e5e7eb; border: 2px solid #9ca3af; border-radius: 4px; width: 45%; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; color: #111; }
+        .summary-right { background: #e5e7eb; border: 2px solid #9ca3af; border-radius: 4px; width: 55%; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; color: #111; font-size: 9px; text-align: left; }
+        .summary-table-row { display: flex; justify-content: space-between; border-bottom: 1px solid #d1d5db; padding: 2px 0; }
+        .summary-type-badge { padding: 2px 6px; border-radius: 3px; font-size: 9px; color: white; font-weight: bold; text-align: center; flex: 1; }
+
         .top-bar { display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
         .logout-btn { background-color: #dc2626; color: white; padding: 4px 8px; border-radius: 4px; border: none; font-weight: bold; font-size: 10px; cursor: pointer; }
         .right-hud { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
@@ -318,6 +326,19 @@
                     <div id="gba-bottom-buttons" style="display: flex; gap: 5px; margin-top: 6px;">
                         <button class="modal-close-btn" onclick="cerrarEquipo()">CERRAR</button>
                     </div>
+                </div>
+            </div>
+
+            <!-- Ventana de Datos / Resumen del Pokémon (Estilo GBA basado en la imagen) -->
+            <div id="summary-screen" class="modal-screen">
+                <div class="summary-window">
+                    <div class="modal-title" style="border:none; color:#fff;">- DATOS DEL POKÉMON -</div>
+                    
+                    <div class="summary-content" id="summary-content-body">
+                        <!-- Se rellena dinámicamente -->
+                    </div>
+
+                    <button class="modal-close-btn" onclick="cerrarDatosPokemon()">CERRAR</button>
                 </div>
             </div>
 
@@ -751,6 +772,7 @@
             cerrarCombate("");
             document.getElementById("menu-screen").style.display = "none";
             document.getElementById("team-screen").style.display = "none";
+            document.getElementById("summary-screen").style.display = "none";
             document.getElementById("pc-screen").style.display = "none";
             document.getElementById("bag-screen").style.display = "none";
             document.getElementById("gacha-screen").style.display = "none";
@@ -822,7 +844,12 @@
                 defensa: calcularStatFinal(Math.floor((statsBase.defense + statsBase.special_defense) / 2), nivel, iv),
                 tipo1: t1, tipo2: t2, tipoOculto: getTipoOcultoAleatorio(t1, t2),
                 icono: name === 'Bulbasaur' ? '🌿' : (name === 'Charmander' ? '🔥' : '💧'),
-                exp: 0
+                exp: 0,
+                idDex: name === 'Bulbasaur' ? 1 : (name === 'Charmander' ? 4 : 7),
+                trainerId: "03101",
+                potencial: "15 / 31",
+                amistad: "50 / 100",
+                origen: "Elegido del Prof. Oak al nivel 5."
             };
 
             teamPokemon = [starter];
@@ -946,7 +973,12 @@
                 tipo2: t2 ? (typeof t2 === 'string' ? t2 : (t2.name || t2.type?.name || null)) : null,
                 tipoOculto: getTipoOcultoAleatorio(t1, t2),
                 icono: '🐾',
-                exp: 0
+                exp: 0,
+                idDex: randomEntry.id || 25,
+                trainerId: "03101",
+                potencial: "15 / 31",
+                amistad: "50 / 100",
+                origen: `Encontrado explorando al nivel ${nivel}.`
             };
         }
 
@@ -1288,7 +1320,12 @@
                     tipo2: t2 ? (typeof t2 === 'string' ? t2 : (t2.name || null)) : null,
                     tipoOculto: getTipoOcultoAleatorio(t1, t2),
                     icono: '🐾',
-                    exp: 0
+                    exp: 0,
+                    idDex: pokeData.id || 25,
+                    trainerId: "03101",
+                    potencial: "15 / 31",
+                    amistad: "50 / 100",
+                    origen: "Encontrado en GACHA al nivel 5."
                 };
 
                 if (teamPokemon.length < 4) {
@@ -1707,7 +1744,7 @@
                     document.querySelector('.team-window-gba .modal-title').innerText = "- SELECCIONA DESTINO -";
                 } else {
                     bottomButtons.innerHTML = `
-                        <button class="modal-close-btn" style="background:#0284c7;" onclick="verDatosSeleccionado()">DATOS</button>
+                        <button class="modal-close-btn" style="background:#0284c7;" onclick="abrirDatosPokemon()">DATOS</button>
                         <button class="modal-close-btn" style="background:#eab308; color:#000;" onclick="activarModoMover()">MOVER</button>
                         <button class="modal-close-btn" style="background:#ef4444;" onclick="cancelarSeleccionEquipo()">CANCELAR</button>
                     `;
@@ -1722,10 +1759,56 @@
             }
         }
 
-        function verDatosSeleccionado() {
+        // --- VENTANA DE DATOS / RESUMEN DEL POKÉMON ---
+        function abrirDatosPokemon() {
             if (indicePokemonSeleccionado === null) return;
             let p = teamPokemon[indicePokemonSeleccionado];
-            alert(`📋 DATOS DE ${p.nombre.toUpperCase()}:\n- Nivel: ${p.nivel}\n- Tipo 1: ${p.tipo1}\n- Tipo 2: ${p.tipo2 || 'Ninguno'}\n- Poder Oculto: ${p.tipoOculto.toUpperCase()}\n- Ataque: ${p.ataque}\n- Defensa: ${p.defensa}\n- PS: ${p.hpActual}/${p.hpMax}`);
+
+            let t1Map = mapType(p.tipo1);
+            let t2Map = mapType(p.tipo2);
+            let tOcultoMap = mapType(p.tipoOculto);
+
+            let colorT1 = TYPE_COLORS[t1Map] || "#777";
+            let colorT2 = t2Map ? (TYPE_COLORS[t2Map] || "#777") : null;
+            let colorOculto = TYPE_COLORS[tOcultoMap] || "#fff";
+
+            let tiposHtml = `<div class="summary-type-badge" style="background:${colorT1};">${p.tipo1.toUpperCase()}</div>`;
+            if (p.tipo2) {
+                tiposHtml += `<div class="summary-type-badge" style="background:${colorT2};">${p.tipo2.toUpperCase()}</div>`;
+            }
+
+            let bodyHTML = `
+                <div class="summary-left">
+                    <div style="font-size:10px; font-weight:bold; color:#374151; width:100%; display:flex; justify-content:space-between;">
+                        <span>Pokédex No.${p.idDex || 25}</span>
+                    </div>
+                    <div style="font-size:11px; font-weight:bold; color:#1f2937; align-self:flex-start;">Lv. ${p.nivel}</div>
+                    <div style="font-size:38px; margin: 10px 0;">${p.icono || '🐾'}</div>
+                    <div style="background:#1f2937; color:#fff; font-size:11px; font-weight:bold; width:100%; padding:4px; border-radius:3px; text-align:center;">${p.nombre.toUpperCase()}</div>
+                    <div style="display:flex; gap:4px; width:100%; margin-top:4px;">
+                        ${tiposHtml}
+                    </div>
+                </div>
+                <div class="summary-right">
+                    <div class="summary-table-row"><span>Trainer ID</span><b>${p.trainerId || '03101'}</b></div>
+                    <div class="summary-table-row"><span>Salud</span><b>${p.hpActual || p.hpMax} PS</b></div>
+                    <div class="summary-table-row"><span>Ataque</span><b>${p.ataque}</b></div>
+                    <div class="summary-table-row"><span>Defensa</span><b>${p.defensa}</b></div>
+                    <div class="summary-table-row"><span>Potencial</span><b>${p.potencial || '15 / 31'}</b></div>
+                    <div class="summary-table-row"><span>Poder Oculto</span><b style="color:${colorOculto}; text-shadow:1px 1px 0 #000;">${p.tipoOculto.toUpperCase()}</b></div>
+                    <div class="summary-table-row"><span>Amistad</span><b>${p.amistad || '50 / 100'}</b></div>
+                    <div style="font-size:8px; color:#4b5563; margin-top:2px; line-height:1.1;">${p.origen || 'Encontrado en aventura.'}</div>
+                </div>
+            `;
+
+            document.getElementById("summary-content-body").innerHTML = bodyHTML;
+            document.getElementById("team-screen").style.display = "none";
+            document.getElementById("summary-screen").style.display = "flex";
+        }
+
+        function cerrarDatosPokemon() {
+            document.getElementById("summary-screen").style.display = "none";
+            document.getElementById("team-screen").style.display = "flex";
         }
 
         function activarModoMover() {
