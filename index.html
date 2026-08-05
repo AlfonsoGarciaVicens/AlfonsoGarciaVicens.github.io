@@ -154,7 +154,7 @@
         .energy-bars { color: #4ade80; font-family: monospace; letter-spacing: -1px; font-weight: bold; }
         .menu-btn { background-color: #2196F3; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; }
 
-        /* Ventana cuadrada de 320x320 para visualizar imágenes completas sin recortes ni capas oscuras */
+        /* Ventana cuadrada de 320x320 para visualizar imágenes completas sin recortes ni zoom */
         .map-viewport { 
             width: 320px; 
             height: 320px; 
@@ -171,11 +171,8 @@
             align-items: center; 
             padding: 15px; 
             box-sizing: border-box; 
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center center;
         }
-        .map-background { display: none; } /* Oculto para evitar capas oscuras o patrones encima de las imágenes */
+        .map-background { display: none; }
         .map-content { position: relative; z-index: 2; text-align: center; width: 100%; }
         .zone-title { background-color: rgba(0, 0, 0, 0.7); padding: 8px 15px; border-radius: 4px; font-size: 14px; border: 1px solid #555; margin-bottom: 5px; display: inline-block; }
         .sprite-container { display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 30px; margin-top: 5px; }
@@ -289,7 +286,7 @@
 <body>
 
     <div id="game-container">
-        <!-- Escudo invisible para bloquear clics durante la animación de caminata -->
+        <!-- Escudo invisible para bloquear clics durante la animación -->
         <div id="input-blocker"></div>
 
         <!-- Login -->
@@ -332,8 +329,8 @@
         <div class="map-viewport" id="map-viewport">
             <!-- Pista deslizante lateral para transición de mapas (640px de ancho total, 2 paneles de 320px) -->
             <div id="map-track" style="position: absolute; top: 0; left: 0; width: 640px; height: 320px; display: flex; transform: translateX(0px);">
-                <div id="map-panel-1" style="width: 320px; height: 320px; background-size: cover; background-position: center;"></div>
-                <div id="map-panel-2" style="width: 320px; height: 320px; background-size: cover; background-position: center;"></div>
+                <div id="map-panel-1" style="width: 320px; height: 320px; background-size: 320px 320px; background-repeat: no-repeat; background-position: center center;"></div>
+                <div id="map-panel-2" style="width: 320px; height: 320px; background-size: 320px 320px; background-repeat: no-repeat; background-position: center center;"></div>
             </div>
 
             <div class="map-background"></div>
@@ -387,9 +384,7 @@
                     
                     <div class="pc-main-layout">
                         <!-- Rejilla de almacenamiento izquierda -->
-                        <div class="pc-grid-box" id="pc-grid-container">
-                            <!-- Se rellena con celdas -->
-                        </div>
+                        <div class="pc-grid-box" id="pc-grid-container"></div>
 
                         <!-- Panel derecho de previsualización y acciones -->
                         <div class="pc-preview-box">
@@ -959,7 +954,7 @@
                 let viewport = document.getElementById("map-viewport");
                 if (zonaObj.bg_image) {
                     viewport.style.backgroundImage = `url('${zonaObj.bg_image}')`;
-                    viewport.style.backgroundSize = "cover";
+                    viewport.style.backgroundSize = "320px 320px";
                     viewport.style.backgroundRepeat = "no-repeat";
                     viewport.style.backgroundPosition = "center center";
                 } else {
@@ -1029,7 +1024,7 @@
             return subioNivel;
         }
 
-        // --- AVANZAR DE ZONA CON TRANSICIÓN LADO A LADO HACIA LA DERECHA (5 SEGUNDOS) Y BLOQUEO ---
+        // --- AVANZAR DE ZONA: TRANSICIÓN DIRECCIÓN OPUESTA (PANEL 1 = ANTERIOR, PANEL 2 = NUEVA) Y 5S ---
         function advanceZone() {
             if (isWalking) return;
             isWalking = true;
@@ -1045,27 +1040,22 @@
             let panel2 = document.getElementById("map-panel-2");
             let track = document.getElementById("map-track");
 
-            // Configurar paneles para transicionar juntos hacia la derecha:
-            // Panel 1 (izquierda) = Nueva zona, Panel 2 (derecha) = Zona anterior
-            if (zonaObj.bg_image) {
-                panel1.style.backgroundImage = `url('${zonaObj.bg_image}')`;
-                panel1.style.backgroundSize = "cover";
-                panel1.style.backgroundPosition = "center center";
+            // Panel 1 (izquierda) = Zona anterior, Panel 2 (derecha) = Nueva zona
+            if (oldZona.bg_image) {
+                panel1.style.backgroundImage = `url('${oldZona.bg_image}')`;
             } else {
                 panel1.style.backgroundImage = "linear-gradient(135deg, #2e7d32, #1b5e20)";
             }
 
-            if (oldZona.bg_image) {
-                panel2.style.backgroundImage = `url('${oldZona.bg_image}')`;
-                panel2.style.backgroundSize = "cover";
-                panel2.style.backgroundPosition = "center center";
+            if (zonaObj.bg_image) {
+                panel2.style.backgroundImage = `url('${zonaObj.bg_image}')`;
             } else {
                 panel2.style.backgroundImage = "linear-gradient(135deg, #2e7d32, #1b5e20)";
             }
 
-            // Empezar situados en -320px (mostrando la imagen de la derecha / zona anterior)
+            // Empezar en 0px (mostrando Panel 1 / zona anterior)
             track.style.transition = "none";
-            track.style.transform = "translateX(-320px)";
+            track.style.transform = "translateX(0px)";
             
             void track.offsetWidth; // Forzar reflow
 
@@ -1073,16 +1063,15 @@
             document.getElementById("zone-sprite").innerText = zonaObj.sprite;
             document.getElementById("explore-log").innerHTML = `Caminando hacia ${zonaObj.name}...`;
 
-            // Animar track hacia translateX(0px) moviéndose hacia la derecha durante 5 segundos exactos
+            // Animar track hacia translateX(-320px) moviéndose hacia la derecha/izquierda de forma natural durante 5 segundos
             track.style.transition = "transform 5s linear";
-            track.style.transform = "translateX(0px)";
+            track.style.transform = "translateX(-320px)";
 
             setTimeout(() => {
-                // Al terminar los 5s, fijar la imagen estática en el fondo y limpiar el track
                 let viewport = document.getElementById("map-viewport");
                 if (zonaObj.bg_image) {
                     viewport.style.backgroundImage = `url('${zonaObj.bg_image}')`;
-                    viewport.style.backgroundSize = "cover";
+                    viewport.style.backgroundSize = "320px 320px";
                     viewport.style.backgroundRepeat = "no-repeat";
                     viewport.style.backgroundPosition = "center center";
                 } else {
