@@ -9,18 +9,18 @@
   },
   {
     "id": 2,
-    "name": "Ruta 1 - Senda Tranquila",
-    "sprite": "🌿",
+    "name": "Ruta 01",
+    "sprite": "",
     "bg_image": "img/zones/Ruta1.png",
-    "types": ["grass", "bug"],
+    "types": ["normal", "flying", "electric"],
     "special_encounters": []
   },
   {
     "id": 3,
-    "name": "Bosque Verde - Espesura",
-    "sprite": "🌲",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["bug", "poison"],
+    "name": "Ruta 02",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta02.png",
+    "types": ["normal", "flying", "electric"],
     "special_encounters": []
   },
   {
