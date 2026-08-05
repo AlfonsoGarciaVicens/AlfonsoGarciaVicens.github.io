@@ -223,7 +223,7 @@
 <body>
 
     <div id="game-container">
-        <!-- Login limpio sin atributos extra en inputs -->
+        <!-- Login -->
         <div id="login-screen" class="screen-overlay">
             <div class="box-container" style="height: auto;">
                 <h2>Pokémon Trails</h2>
@@ -426,7 +426,7 @@
         let playerMoney = 2000;
         let lastDailyClaim = 0;
 
-        let playerInventory = {
+        const defaultInventory = {
             potions: [
                 { id: 'potion', name: 'Poción', count: 3, desc: 'Cura un 20% de PS a un Pokémon.' },
                 { id: 'super_potion', name: 'Superpoción', count: 1, desc: 'Cura un 50% de PS a un Pokémon.' }
@@ -451,6 +451,8 @@
                 { id: 'repel', name: 'Repelente', count: 5, desc: 'Evita encuentros débiles temporalmente.' }
             ]
         };
+
+        let playerInventory = JSON.parse(JSON.stringify(defaultInventory));
 
         let pestanaActivaBolsa = 'potions';
         let objetoSeleccionadoBolsa = null;
@@ -668,6 +670,16 @@
                 localStorage.setItem("pt_current_user", user);
                 document.getElementById("login-screen").style.display = "none";
                 document.getElementById("btn-username-display").innerText = user.toUpperCase();
+                
+                // Limpiar variables de memoria para cuenta nueva
+                teamPokemon = [];
+                pcStorage = [];
+                playerMoney = 2000;
+                lastDailyClaim = 0;
+                playerMedals = 0;
+                energiaActual = 20;
+                playerInventory = JSON.parse(JSON.stringify(defaultInventory));
+
                 document.getElementById("starter-screen").style.display = "flex";
             }
         }
@@ -676,6 +688,15 @@
             guardarDatos();
             localStorage.removeItem("pt_current_user");
             
+            // Limpiar memoria al cerrar sesión para evitar solapamientos
+            teamPokemon = [];
+            pcStorage = [];
+            playerMoney = 2000;
+            lastDailyClaim = 0;
+            playerMedals = 0;
+            energiaActual = 20;
+            playerInventory = JSON.parse(JSON.stringify(defaultInventory));
+
             cerrarCombate("");
             document.getElementById("menu-screen").style.display = "none";
             document.getElementById("team-screen").style.display = "none";
@@ -694,6 +715,8 @@
 
         function cargarDatosUsuario(user) {
             const prefix = `pt_${user}_`;
+            
+            // Cargar o limpiar datos por defecto de este usuario específico
             teamPokemon = JSON.parse(localStorage.getItem(prefix + "team") || "[]");
             pcStorage = JSON.parse(localStorage.getItem(prefix + "pc") || "[]");
             energiaActual = parseInt(localStorage.getItem(prefix + "energia") ?? "20");
@@ -705,6 +728,8 @@
             let savedInv = localStorage.getItem(prefix + "inventory");
             if (savedInv) {
                 playerInventory = JSON.parse(savedInv);
+            } else {
+                playerInventory = JSON.parse(JSON.stringify(defaultInventory));
             }
 
             if (esUsuarioFonso()) energiaActual = energiaMax;
@@ -971,7 +996,7 @@
 
             } else if (pestanaActivaBolsa === 'mts') {
                 lider.tipoOculto = getTipoOcultoAleatorio(lider.tipo1, lider.tipo2);
-                alert(`¡MT utilizada! El Poder Oculto de ${lider.nombre} ha cambiado a tipo: ${lider.tipoOculto.toUpperCase()}`);
+                alert(`💿 ¡MT utilizada! El Poder Oculto de ${lider.nombre} ha cambiado a tipo: ${lider.tipoOculto.toUpperCase()}`);
 
             } else if (pestanaActivaBolsa === 'proteins') {
                 let boost = objetoSeleccionadoBolsa.id === 'max_protein' ? 8 : (objetoSeleccionadoBolsa.id === 'protein' ? 3 : 1);
