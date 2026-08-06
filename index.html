@@ -1288,6 +1288,7 @@
 
         function cerrarCinematicaGacha() {
             document.getElementById("gacha-pack-overlay").style.display = "none";
+            actualizarUIGacha();
         }
 
         // --- AVANZAR DE ZONA: TRANSICIÓN PERFECTA ALINEADA EXACTAMENTE A 320x320 Y 5 SEGUNDOS ---
@@ -1726,8 +1727,7 @@
                 let nuevoPoke = generarDatosPokemonBase(pokeData, 5, forzarShiny);
                 nuevoPoke.origen = forzarShiny ? "Obtenido en Gacha Shiny (Test)." : "Encontrado en GACHA al nivel 5.";
 
-                // Lanzar animación tipo sobre de FIFA dentro de la ventanita
-                cerrarGacha();
+                // Lanzar animación tipo sobre de FIFA dentro de la ventanita (manteniendo la tienda gacha abierta por detrás)
                 abrirCinematicaGacha(nuevoPoke);
             }
 
