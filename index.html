@@ -23,7 +23,7 @@
             box-shadow: 0 0 20px rgba(0,0,0,0.8); 
         }
 
-        /* Escudo invisible para bloquear clics durante la animación */
+        /* Escudo invisible para bloquear clics durante la animación de caminata */
         #input-blocker {
             position: absolute;
             top: 0;
@@ -104,17 +104,58 @@
         .gacha-pull-btn:hover { background: #0ea5e9; }
         .gacha-close-btn { background: #ef4444; border: 2px solid #991b1b; color: white; padding: 6px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 11px; width: 100%; text-align: center; }
 
-        .box-container h2 { margin-bottom: 10px; color: #4CAF50; font-size: 16px; }
-        .box-container input { width: 100%; padding: 8px; margin-bottom: 10px; background-color: #1a1a1a; border: 1px solid #555; color: #fff; border-radius: 4px; }
-        .box-container button, .starter-btn, .modal-close-btn { width: 100%; padding: 8px; background-color: #4CAF50; border: none; color: white; font-weight: bold; border-radius: 4px; cursor: pointer; margin-top: 4px; font-size: 11px; }
-        .starter-btn, .modal-close-btn { background-color: #2563eb; }
-        .starter-grid { display: flex; flex-direction: column; gap: 8px; margin-top: 5px; }
+        /* --- ESTILOS CINEMÁTICOS PACK GACHA FIFA STYLE --- */
+        #gacha-pack-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #1e293b 0%, #0f172a 100%);
+            z-index: 300;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
 
-        .modal-title { text-align: center; font-size: 12px; font-weight: bold; color: #fff; border-bottom: 2px solid #bae6fd; padding-bottom: 2px; margin-bottom: 2px; letter-spacing: 1px; }
+        .fut-card {
+            width: 240px;
+            height: 350px;
+            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            border: 4px solid #fef3c7;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(251, 191, 36, 0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .fut-card.shiny-card {
+            background: linear-gradient(135deg, #38bdf8 0%, #9333ea 50%, #ec4899 100%);
+            border: 4px solid #fbcfe8;
+            box-shadow: 0 0 30px rgba(236, 72, 153, 0.8);
+        }
+        .fut-card:hover { transform: scale(1.03); }
 
-        .menu-grid-container { display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: center; flex-grow: 1; }
-        .menu-row { display: flex; gap: 12px; justify-content: center; }
-        .menu-icon-btn { background-color: #1e293b; border: 3px solid #64748b; border-radius: 8px; width: 50px; height: 50px; font-size: 22px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+        .anim-pulse { animation: pulseGlow 1.2s infinite ease-in-out; }
+
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .anim-slide { animation: slideDown 0.6s ease forwards; }
 
         /* Estilo interfaz equipo estilo GBA */
         .team-window-gba { background: linear-gradient(135deg, #3b82f6, #1d4ed8); border: 3px solid #93c5fd; border-radius: 6px; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
@@ -154,7 +195,7 @@
         .energy-bars { color: #4ade80; font-family: monospace; letter-spacing: -1px; font-weight: bold; }
         .menu-btn { background-color: #2196F3; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; }
 
-        /* Ventana cuadrada fija de 320x320 píxeles absolutos con box-sizing content-box para alinear perfectamente el contenido de 320x320 sin recortes ni zoom */
+        /* Ventana cuadrada fija de 320x320 píxeles absolutos con box-sizing content-box */
         .map-viewport { 
             width: 320px; 
             height: 320px; 
@@ -171,7 +212,6 @@
             background-position: center center;
         }
 
-        /* Contenedor interno con dimensiones y padding exactos de 320x320 */
         .map-viewport-inner {
             position: absolute;
             top: 0;
@@ -307,6 +347,13 @@
     <div id="game-container">
         <!-- Escudo invisible para bloquear clics durante la animación -->
         <div id="input-blocker"></div>
+
+        <!-- Pantalla Cinemática Gacha Pack (FUT Style) -->
+        <div id="gacha-pack-overlay">
+            <div id="gacha-pack-content" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:15px; width:100%; height:100%;">
+                <!-- Se llena dinámicamente con los pasos de la animación -->
+            </div>
+        </div>
 
         <!-- Login -->
         <div id="login-screen" class="screen-overlay">
@@ -668,6 +715,50 @@
 
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+        // --- WEB AUDIO API PARA EFECTOS DE SONIDO SINTETIZADOS ---
+        function playGachaSound(toneType) {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (toneType === 'gen') { // Tono grave emocionante
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(150, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.4);
+                    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.4);
+                } else if (toneType === 'type') { // Tono medio brillante
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(440, ctx.currentTime);
+                    osc.frequency.setValueAtTime(660, ctx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.35);
+                } else if (toneType === 'score') { // Tic repiqueteo
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(800, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.04, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.08);
+                } else if (toneType === 'reveal') { // Fanfarria final de revelación
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(300, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(950, ctx.currentTime + 0.7);
+                    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.7);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.7);
+                }
+            } catch(e) {}
+        }
+
         const typeMap = {
             "normal": "normal", "fire": "fuego", "water": "agua", "grass": "planta",
             "electric": "electrico", "ice": "hielo", "fighting": "lucha", "poison": "veneno",
@@ -788,6 +879,29 @@
             return Math.floor(Math.random() * (liderNivel - minNivel + 1)) + minNivel;
         }
 
+        // --- CÁLCULO DE PUNTUACIÓN 1-100 BASADO EN STATS BASE (BST) ---
+        function calcularPuntuacionPokemon(stats) {
+            if (!stats) return 50;
+            let bst = (stats.hp || 0) + (stats.attack || 0) + (stats.defense || 0) + 
+                      (stats.special_attack || 0) + (stats.special_defense || 0) + (stats.speed || 0);
+            let minBst = 180; // Ej: Sunkern o Pichu
+            let maxBst = 720; // Ej: Legendarios / Pseudo-legendarios estándar
+            let score = Math.round(((bst - minBst) / (maxBst - minBst)) * 99) + 1;
+            return Math.min(100, Math.max(1, score));
+        }
+
+        function obtenerGeneracion(idDex) {
+            if (idDex <= 151) return "Generación 1 (Kanto)";
+            if (idDex <= 251) return "Generación 2 (Johto)";
+            if (idDex <= 386) return "Generación 3 (Hoenn)";
+            if (idDex <= 493) return "Generación 4 (Sinnoh)";
+            if (idDex <= 649) return "Generación 5 (Teselia)";
+            if (idDex <= 721) return "Generación 6 (Kalos)";
+            if (idDex <= 809) return "Generación 7 (Alola)";
+            if (idDex <= 905) return "Generación 8 (Galar)";
+            return "Generación 9 (Paldea)";
+        }
+
         function generarDatosPokemonBase(pokeData, nivel, forzarShiny = false) {
             let idDex = pokeData.id || 25;
             let isShiny = forzarShiny ? true : (Math.random() < (1 / 4096));
@@ -822,7 +936,8 @@
                 sprite_url: frontUrl,
                 back_sprite_url: backUrl,
                 isShiny: isShiny,
-                favorito: false
+                favorito: false,
+                stats: pokeData.stats
             };
         }
 
@@ -1041,6 +1156,122 @@
             return subioNivel;
         }
 
+        // --- ANIMACIÓN CINEMÁTICA TIPO PACK FIFA (GACHA POKÉMON) ---
+        function abrirCinematicaGacha(nuevoPoke) {
+            const overlay = document.getElementById("gacha-pack-overlay");
+            const content = document.getElementById("gacha-pack-content");
+            overlay.style.display = "flex";
+
+            let genTexto = obtenerGeneracion(nuevoPoke.idDex);
+            let score = calcularPuntuacionPokemon(nuevoPoke.stats);
+            let t1Map = mapType(nuevoPoke.tipo1);
+            let t2Map = mapType(nuevoPoke.tipo2);
+            let colorT1 = TYPE_COLORS[t1Map] || "#777";
+            let colorT2 = t2Map ? (TYPE_COLORS[t2Map] || "#777") : null;
+
+            // Fase 1: Generación
+            playGachaSound('gen');
+            content.innerHTML = `
+                <div style="font-size: 14px; color: #94a3b8; letter-spacing: 2px;">ABRIendo SOBRE...</div>
+                <div class="anim-slide" style="font-size: 20px; font-weight: bold; color: #f59e0b; margin-top: 20px; text-shadow: 0 0 10px rgba(245,158,11,0.6);">${genTexto}</div>
+            `;
+
+            setTimeout(() => {
+                // Fase 2: Tipo del Pokémon
+                playGachaSound('type');
+                let tiposHtml = `<span style="background:${colorT1}; padding:4px 12px; border-radius:4px; font-weight:bold; font-size:12px; color:#fff;">${nuevoPoke.tipo1.toUpperCase()}</span>`;
+                if (nuevoPoke.tipo2) {
+                    tiposHtml += ` <span style="background:${colorT2}; padding:4px 12px; border-radius:4px; font-weight:bold; font-size:12px; color:#fff;">${nuevoPoke.tipo2.toUpperCase()}</span>`;
+                }
+
+                content.innerHTML = `
+                    <div style="font-size: 14px; color: #94a3b8;">TIPO ELEMENTAL</div>
+                    <div class="anim-slide" style="display:flex; gap:10px; margin-top:20px;">${tiposHtml}</div>
+                `;
+
+                setTimeout(() => {
+                    // Fase 3: Puntuación 1-100 con contador animado
+                    playGachaSound('score');
+                    let currentNum = 1;
+                    let stepTime = Math.max(10, Math.floor(1000 / score));
+                    
+                    content.innerHTML = `
+                        <div style="font-size: 14px; color: #94a3b8;">VALORACIÓN BST</div>
+                        <div class="anim-pulse" id="gacha-score-counter" style="font-size: 48px; font-weight: bold; color: #38bdf8; margin-top: 20px; text-shadow: 0 0 15px rgba(56,189,248,0.8);">1</div>
+                    `;
+
+                    let counterInterval = setInterval(() => {
+                        currentNum++;
+                        playGachaSound('score');
+                        document.getElementById("gacha-score-counter").innerText = currentNum;
+                        if (currentNum >= score) {
+                            clearInterval(counterInterval);
+                        }
+                    }, stepTime);
+
+                    setTimeout(() => {
+                        // Fase 4: Carta oculta listada para abrir haciendo clic
+                        content.innerHTML = `
+                            <div style="font-size: 12px; color: #fef08a; margin-bottom: 5px; animation: pulseGlow 1s infinite;">¡HA SALIDO ALGO ÉPICO!</div>
+                            <div class="fut-card ${nuevoPoke.isShiny ? 'shiny-card' : ''}" onclick="revelarSpriteGacha('${encodeURIComponent(JSON.stringify(nuevoPoke))}', ${score})">
+                                <div style="font-size: 11px; font-weight: bold; width: 100%; display: flex; justify-content: space-between;">
+                                    <span>⭐ ${score}</span>
+                                    <span>${nuevoPoke.isShiny ? 'SHINY ✨' : 'NORMAL'}</span>
+                                </div>
+                                <div style="font-size: 55px; margin: 30px 0;" class="anim-pulse">🎴</div>
+                                <div style="background: rgba(0,0,0,0.4); padding: 6px; border-radius: 4px; width: 100%; font-size: 11px; font-weight: bold;">TOCA PARA GIRAR</div>
+                            </div>
+                        `;
+                    }, 1400);
+
+                }, 1500);
+
+            }, 1500);
+        }
+
+        function revelarSpriteGacha(pokeJsonStr, score) {
+            playGachaSound('reveal');
+            let nuevoPoke = JSON.parse(decodeURIComponent(pokeJsonStr));
+            const content = document.getElementById("gacha-pack-content");
+
+            let t1Map = mapType(nuevoPoke.tipo1);
+            let t2Map = mapType(nuevoPoke.tipo2);
+            let colorT1 = TYPE_COLORS[t1Map] || "#777";
+            let colorT2 = t2Map ? (TYPE_COLORS[t2Map] || "#777") : null;
+            let tiposHtml = `<span style="background:${colorT1}; padding:2px 8px; border-radius:3px; font-size:9px; color:#fff;">${nuevoPoke.tipo1.toUpperCase()}</span>`;
+            if (nuevoPoke.tipo2) tiposHtml += ` <span style="background:${colorT2}; padding:2px 8px; border-radius:3px; font-size:9px; color:#fff;">${nuevoPoke.tipo2.toUpperCase()}</span>`;
+
+            content.innerHTML = `
+                <div style="font-size: 12px; color: #4ade80; font-weight: bold;">¡NUEVO POKÉMON OBTENIDO!</div>
+                <div class="fut-card ${nuevoPoke.isShiny ? 'shiny-card' : ''} anim-slide" style="cursor: default;">
+                    <div style="font-size: 11px; font-weight: bold; width: 100%; display: flex; justify-content: space-between;">
+                        <span>⭐ ${score}</span>
+                        <span>Lv.${nuevoPoke.nivel}</span>
+                    </div>
+                    <div style="margin: 10px 0;">
+                        <img src="${nuevoPoke.sprite_url}" style="width: 90px; height: 90px; image-rendering: pixelated;" alt="Sprite">
+                    </div>
+                    <div style="font-size: 12px; font-weight: bold; background: rgba(0,0,0,0.6); width: 100%; padding: 4px; border-radius: 4px; color: #fff;">
+                        ${nuevoPoke.nombre.toUpperCase()}
+                    </div>
+                    <div style="display:flex; gap:4px; margin-top:2px;">${tiposHtml}</div>
+                </div>
+                <button class="gacha-pull-btn" style="background:#10b981; margin-top: 10px; width: 240px;" onclick="cerrarCinematicaGacha()">CONTINUAR</button>
+            `;
+
+            if (teamPokemon.length < 4) {
+                teamPokemon.push(nuevoPoke);
+            } else {
+                pcStorage.push(nuevoPoke);
+            }
+            guardarDatos();
+            actualizarHUD();
+        }
+
+        function cerrarCinematicaGacha() {
+            document.getElementById("gacha-pack-overlay").style.display = "none";
+        }
+
         // --- AVANZAR DE ZONA: TRANSICIÓN PERFECTA ALINEADA EXACTAMENTE A 320x320 Y 5 SEGUNDOS ---
         function advanceZone() {
             if (isWalking) return;
@@ -1058,10 +1289,8 @@
             let track = document.getElementById("map-track");
             let viewport = document.getElementById("map-viewport");
 
-            // Ocultar fondo estático del viewport para evitar saltos o zoom
             viewport.style.backgroundImage = "none";
 
-            // Panel 1 = Zona anterior, Panel 2 = Nueva zona
             if (oldZona.bg_image) {
                 panel1.style.backgroundImage = `url('${oldZona.bg_image}')`;
             } else {
@@ -1074,17 +1303,15 @@
                 panel2.style.backgroundImage = "linear-gradient(135deg, #2e7d32, #1b5e20)";
             }
 
-            // Empezar en 0px (mostrando Panel 1 / zona anterior exactamente alineada)
             track.style.transition = "none";
             track.style.transform = "translateX(0px)";
             
-            void track.offsetWidth; // Forzar reflow
+            void track.offsetWidth;
 
             document.getElementById("current-zone-name").innerText = zonaObj.name;
             document.getElementById("zone-sprite").innerText = zonaObj.sprite;
             document.getElementById("explore-log").innerHTML = `Caminando hacia ${zonaObj.name}...`;
 
-            // Animar track hacia translateX(-320px) exactamente a la misma altura y escala
             track.style.transition = "transform 5s linear";
             track.style.transform = "translateX(-320px)";
 
@@ -1121,7 +1348,7 @@
                 document.getElementById("btn-explore-main").disabled = false;
                 
                 isWalking = false;
-                document.getElementById("input-blocker").style.display = "none"; // Desbloquea clics
+                document.getElementById("input-blocker").style.display = "none";
             }, 5000);
         }
 
@@ -1481,14 +1708,9 @@
                 let nuevoPoke = generarDatosPokemonBase(pokeData, 5, forzarShiny);
                 nuevoPoke.origen = forzarShiny ? "Obtenido en Gacha Shiny (Test)." : "Encontrado en GACHA al nivel 5.";
 
-                if (teamPokemon.length < 4) {
-                    teamPokemon.push(nuevoPoke);
-                    alert(`✨ ¡Has obtenido a ${nuevoPoke.nombre} (Lv.5) y se ha unido a tu equipo!`);
-                } else {
-                    pcStorage.push(nuevoPoke);
-                    alert(`✨ ¡Has obtenido a ${nuevoPoke.nombre} (Lv.5)! Tu equipo está lleno, se envió al PC.`);
-                }
-                actualizarHUD();
+                // Lanzar animación tipo sobre de FIFA en lugar de alert directo
+                cerrarGacha();
+                abrirCinematicaGacha(nuevoPoke);
             }
 
             guardarDatos();
@@ -1540,14 +1762,7 @@
                 let shinyPoke = generarDatosPokemonBase(randomEntry, 5, true);
                 shinyPoke.origen = "Generado por Menú Dev (Test Shiny).";
 
-                if (teamPokemon.length < 4) {
-                    teamPokemon.push(shinyPoke);
-                    alert(`✨ ¡Has invocado a ${shinyPoke.nombre} Shiny y se ha unido a tu equipo!`);
-                } else {
-                    pcStorage.push(shinyPoke);
-                    alert(`✨ ¡Has invocado a ${shinyPoke.nombre} Shiny! Tu equipo está lleno, se envió al PC.`);
-                }
-                guardarDatos();
+                abrirCinematicaGacha(shinyPoke);
                 actualizarHUD();
             }
         }
