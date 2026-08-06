@@ -165,9 +165,12 @@
             border-radius: 8px; 
             position: relative; 
             overflow: hidden; 
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
         }
 
-        /* Contenedor interno con padding original para evitar corrimiento vertical */
+        /* Contenedor interno con padding original para textos y logs sin desplazamiento vertical */
         .map-viewport-inner {
             position: absolute;
             top: 0;
@@ -342,13 +345,13 @@
 
         <!-- Ventanita Cuadrada 320x320 (.map-viewport) Contenedor Principal de Vista y Menús -->
         <div class="map-viewport" id="map-viewport">
-            <!-- Pista deslizante lateral para transición de mapas (640px ancho total, Panel 1 = Nueva zona, Panel 2 = Zona anterior) -->
-            <div id="map-track" style="position: absolute; top: 0; left: 0; width: 640px; height: 320px; display: flex; transform: translateX(-320px); z-index: 1;">
+            <!-- Pista deslizante lateral (640px ancho, panel 1 = zona anterior, panel 2 = nueva zona para ir de izquierda a derecha) -->
+            <div id="map-track" style="position: absolute; top: 0; left: 0; width: 640px; height: 320px; display: flex; transform: translateX(0px); z-index: 1;">
                 <div id="map-panel-1" style="width: 320px; height: 320px; background-size: 320px 320px; background-repeat: no-repeat; background-position: center center;"></div>
                 <div id="map-panel-2" style="width: 320px; height: 320px; background-size: 320px 320px; background-repeat: no-repeat; background-position: center center;"></div>
             </div>
 
-            <!-- Contenedor interno con padding original para textos y logs -->
+            <!-- Contenedor interno con padding original para textos y logs sin desplazamiento vertical -->
             <div class="map-viewport-inner">
                 <div class="map-content" id="map-content-inner">
                     <div class="zone-title" id="current-zone-name">Pueblo Inicial (Zona 1)</div>
@@ -1040,7 +1043,7 @@
             return subioNivel;
         }
 
-        // --- AVANZAR DE ZONA: TRANSICIÓN DIRECCIÓN OPUESTA (PANEL 1 = NUEVA, PANEL 2 = ANTERIOR) Y 5S ---
+        // --- AVANZAR DE ZONA: TRANSICIÓN DIRECCIÓN CORRECTA Y 5 SEGUNDOS ---
         function advanceZone() {
             if (isWalking) return;
             isWalking = true;
@@ -1055,21 +1058,25 @@
             let panel1 = document.getElementById("map-panel-1");
             let panel2 = document.getElementById("map-panel-2");
             let track = document.getElementById("map-track");
+            let viewport = document.getElementById("map-viewport");
 
-            // Panel 1 (izquierda) = Nueva zona, Panel 2 (derecha) = Zona anterior
-            if (zonaObj.bg_image) {
-                panel1.style.backgroundImage = `url('${zonaObj.bg_image}')`;
+            // Ocultar fondo estático del viewport para que no interfiera durante la animación
+            viewport.style.backgroundImage = "none";
+
+            // Panel 1 (izquierda) = Zona anterior, Panel 2 (derecha) = Nueva zona
+            if (oldZona.bg_image) {
+                panel1.style.backgroundImage = `url('${oldZona.bg_image}')`;
             } else {
                 panel1.style.backgroundImage = "linear-gradient(135deg, #2e7d32, #1b5e20)";
             }
 
-            if (oldZona.bg_image) {
-                panel2.style.backgroundImage = `url('${oldZona.bg_image}')`;
+            if (zonaObj.bg_image) {
+                panel2.style.backgroundImage = `url('${zonaObj.bg_image}')`;
             } else {
                 panel2.style.backgroundImage = "linear-gradient(135deg, #2e7d32, #1b5e20)";
             }
 
-            // Empezar situados en 0px (mostrando Panel 1 / nueva zona a la izquierda, moviéndose a la derecha para revelar)
+            // Empezar en 0px (mostrando Panel 1 / zona anterior)
             track.style.transition = "none";
             track.style.transform = "translateX(0px)";
             
@@ -1079,12 +1086,11 @@
             document.getElementById("zone-sprite").innerText = zonaObj.sprite;
             document.getElementById("explore-log").innerHTML = `Caminando hacia ${zonaObj.name}...`;
 
-            // Animar track hacia translateX(-320px) para que la nueva zona se desplace y ocupe toda la vista
+            // Animar track hacia translateX(-320px) para revelar la nueva zona de forma fluida hacia la dirección correcta
             track.style.transition = "transform 5s linear";
             track.style.transform = "translateX(-320px)";
 
             setTimeout(() => {
-                let viewport = document.getElementById("map-viewport");
                 if (zonaObj.bg_image) {
                     viewport.style.backgroundImage = `url('${zonaObj.bg_image}')`;
                     viewport.style.backgroundSize = "320px 320px";
@@ -1097,7 +1103,7 @@
                 panel1.style.backgroundImage = "";
                 panel2.style.backgroundImage = "";
                 track.style.transition = "none";
-                track.style.transform = "translateX(-320px)";
+                track.style.transform = "translateX(0px)";
 
                 let curados = 0;
                 teamPokemon.forEach(p => {
