@@ -23,7 +23,7 @@
             box-shadow: 0 0 20px rgba(0,0,0,0.8); 
         }
 
-        /* Escudo invisible para bloquear clics durante la animación de caminata */
+        /* Escudo invisible para bloquear clics durante la animación */
         #input-blocker {
             position: absolute;
             top: 0;
@@ -154,10 +154,11 @@
         .energy-bars { color: #4ade80; font-family: monospace; letter-spacing: -1px; font-weight: bold; }
         .menu-btn { background-color: #2196F3; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; }
 
-        /* Ventana cuadrada fija de 320x320 píxeles absolutos */
+        /* Ventana cuadrada fija de 320x320 píxeles absolutos con box-sizing content-box para alinear perfectamente el contenido de 320x320 sin recortes ni zoom */
         .map-viewport { 
             width: 320px; 
             height: 320px; 
+            box-sizing: content-box !important;
             margin: 0 auto; 
             flex-shrink: 0; 
             background: linear-gradient(135deg, #2e7d32, #1b5e20); 
@@ -170,7 +171,7 @@
             background-position: center center;
         }
 
-        /* Contenedor interno con padding original para textos y logs sin desplazamiento vertical */
+        /* Contenedor interno con dimensiones y padding exactos de 320x320 */
         .map-viewport-inner {
             position: absolute;
             top: 0;
@@ -1040,7 +1041,7 @@
             return subioNivel;
         }
 
-        // --- AVANZAR DE ZONA: TRANSICIÓN FLUIDA SIN ZOOM Y 5 SEGUNDOS ---
+        // --- AVANZAR DE ZONA: TRANSICIÓN PERFECTA ALINEADA EXACTAMENTE A 320x320 Y 5 SEGUNDOS ---
         function advanceZone() {
             if (isWalking) return;
             isWalking = true;
@@ -1057,7 +1058,7 @@
             let track = document.getElementById("map-track");
             let viewport = document.getElementById("map-viewport");
 
-            // Ocultar fondo estático del viewport para evitar solapamientos/zoom
+            // Ocultar fondo estático del viewport para evitar saltos o zoom
             viewport.style.backgroundImage = "none";
 
             // Panel 1 = Zona anterior, Panel 2 = Nueva zona
@@ -1073,7 +1074,7 @@
                 panel2.style.backgroundImage = "linear-gradient(135deg, #2e7d32, #1b5e20)";
             }
 
-            // Empezar en 0px (mostrando Panel 1 / zona anterior)
+            // Empezar en 0px (mostrando Panel 1 / zona anterior exactamente alineada)
             track.style.transition = "none";
             track.style.transform = "translateX(0px)";
             
@@ -1083,7 +1084,7 @@
             document.getElementById("zone-sprite").innerText = zonaObj.sprite;
             document.getElementById("explore-log").innerHTML = `Caminando hacia ${zonaObj.name}...`;
 
-            // Animar track hacia translateX(-320px) para revelar la nueva zona hacia la izquierda limpiamente
+            // Animar track hacia translateX(-320px) exactamente a la misma altura y escala
             track.style.transition = "transform 5s linear";
             track.style.transform = "translateX(-320px)";
 
