@@ -23,7 +23,7 @@
             box-shadow: 0 0 20px rgba(0,0,0,0.8); 
         }
 
-        /* Escudo invisible para bloquear clics durante la animación de caminata */
+        /* Escudo invisible para bloquear clics durante la animación */
         #input-blocker {
             position: absolute;
             top: 0;
@@ -38,7 +38,7 @@
         /* Overlays de pantalla completa (Login / Selección Inicial) */
         .screen-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
         
-        /* Menús in-game y Combate: Estrictamente contenidos dentro de la ventanita cuadrada GBA */
+        /* Menús in-game y Combate: Estrictamente contenidos dentro de la ventanita verde */
         .modal-screen { 
             position: absolute; 
             top: 0; 
@@ -104,58 +104,17 @@
         .gacha-pull-btn:hover { background: #0ea5e9; }
         .gacha-close-btn { background: #ef4444; border: 2px solid #991b1b; color: white; padding: 6px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 11px; width: 100%; text-align: center; }
 
-        /* --- ESTILOS CINEMÁTICOS PACK GACHA FIFA STYLE --- */
-        #gacha-pack-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, #1e293b 0%, #0f172a 100%);
-            z-index: 300;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
-            text-align: center;
-        }
+        .box-container h2 { margin-bottom: 10px; color: #4CAF50; font-size: 16px; }
+        .box-container input { width: 100%; padding: 8px; margin-bottom: 10px; background-color: #1a1a1a; border: 1px solid #555; color: #fff; border-radius: 4px; }
+        .box-container button, .starter-btn, .modal-close-btn { width: 100%; padding: 8px; background-color: #4CAF50; border: none; color: white; font-weight: bold; border-radius: 4px; cursor: pointer; margin-top: 4px; font-size: 11px; }
+        .starter-btn, .modal-close-btn { background-color: #2563eb; }
+        .starter-grid { display: flex; flex-direction: column; gap: 8px; margin-top: 5px; }
 
-        .fut-card {
-            width: 240px;
-            height: 350px;
-            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
-            border: 4px solid #fef3c7;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(251, 191, 36, 0.4);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px;
-            position: relative;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-        .fut-card.shiny-card {
-            background: linear-gradient(135deg, #38bdf8 0%, #9333ea 50%, #ec4899 100%);
-            border: 4px solid #fbcfe8;
-            box-shadow: 0 0 30px rgba(236, 72, 153, 0.8);
-        }
-        .fut-card:hover { transform: scale(1.03); }
+        .modal-title { text-align: center; font-size: 12px; font-weight: bold; color: #fff; border-bottom: 2px solid #bae6fd; padding-bottom: 2px; margin-bottom: 2px; letter-spacing: 1px; }
 
-        @keyframes pulseGlow {
-            0%, 100% { opacity: 0.8; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.05); }
-        }
-        .anim-pulse { animation: pulseGlow 1.2s infinite ease-in-out; }
-
-        @keyframes slideDown {
-            from { transform: translateY(-30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .anim-slide { animation: slideDown 0.6s ease forwards; }
+        .menu-grid-container { display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: center; flex-grow: 1; }
+        .menu-row { display: flex; gap: 12px; justify-content: center; }
+        .menu-icon-btn { background-color: #1e293b; border: 3px solid #64748b; border-radius: 8px; width: 50px; height: 50px; font-size: 22px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
 
         /* Estilo interfaz equipo estilo GBA */
         .team-window-gba { background: linear-gradient(135deg, #3b82f6, #1d4ed8); border: 3px solid #93c5fd; border-radius: 6px; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
@@ -212,6 +171,7 @@
             background-position: center center;
         }
 
+        /* Contenedor interno con dimensiones y padding exactos de 320x320 */
         .map-viewport-inner {
             position: absolute;
             top: 0;
@@ -236,6 +196,59 @@
         .zone-title { background-color: rgba(0, 0, 0, 0.7); padding: 8px 15px; border-radius: 4px; font-size: 14px; border: 1px solid #555; margin-bottom: 5px; display: inline-block; }
         .sprite-container { display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 30px; margin-top: 5px; }
         .exploration-log { position: relative; z-index: 2; background-color: rgba(0, 0, 0, 0.85); border: 1px solid #555; border-radius: 6px; padding: 10px; width: 100%; min-height: 70px; font-size: 11px; color: #d4d4d4; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+        /* --- CINEMÁTICA GACHA PACK (FUT STYLE) ESTRICTAMENTE DENTRO DE LA VENTANITA 320x320 --- */
+        #gacha-pack-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 320px;
+            height: 320px;
+            background: radial-gradient(circle, #1e293b 0%, #0f172a 100%);
+            z-index: 95;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .fut-card {
+            width: 150px;
+            height: 220px;
+            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            border: 3px solid #fef3c7;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(251, 191, 36, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .fut-card.shiny-card {
+            background: linear-gradient(135deg, #38bdf8 0%, #9333ea 50%, #ec4899 100%);
+            border: 3px solid #fbcfe8;
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.9);
+        }
+        .fut-card:hover { transform: scale(1.05); }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.06); }
+        }
+        .anim-pulse { animation: pulseGlow 1.4s infinite ease-in-out; }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .anim-slide { animation: slideDown 0.8s ease forwards; }
 
         /* Ventana de combate adaptada exactamente al espacio interior de la ventanita 320x320 */
         .combat-modal-window { 
@@ -348,13 +361,6 @@
         <!-- Escudo invisible para bloquear clics durante la animación -->
         <div id="input-blocker"></div>
 
-        <!-- Pantalla Cinemática Gacha Pack (FUT Style) -->
-        <div id="gacha-pack-overlay">
-            <div id="gacha-pack-content" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:15px; width:100%; height:100%;">
-                <!-- Se llena dinámicamente con los pasos de la animación -->
-            </div>
-        </div>
-
         <!-- Login -->
         <div id="login-screen" class="screen-overlay">
             <div class="box-container" style="height: auto;">
@@ -397,6 +403,13 @@
             <div id="map-track" style="position: absolute; top: 0; left: 0; width: 640px; height: 320px; display: flex; transform: translateX(0px); z-index: 1;">
                 <div id="map-panel-1" style="width: 320px; height: 320px; background-size: 320px 320px; background-repeat: no-repeat; background-position: center center;"></div>
                 <div id="map-panel-2" style="width: 320px; height: 320px; background-size: 320px 320px; background-repeat: no-repeat; background-position: center center;"></div>
+            </div>
+
+            <!-- Pantalla Cinemática Gacha Pack (FUT Style) contenida exactamente dentro de la ventanita 320x320 -->
+            <div id="gacha-pack-overlay">
+                <div id="gacha-pack-content" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; width:100%; height:100%;">
+                    <!-- Se llena dinámicamente con los pasos de la animación -->
+                </div>
             </div>
 
             <!-- Contenedor interno con padding original para textos y logs sin desplazamiento vertical -->
@@ -715,7 +728,7 @@
 
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-        // --- WEB AUDIO API PARA EFECTOS DE SONIDO SINTETIZADOS ---
+        // --- WEB AUDIO API PARA MÚSICA Y EFECTOS FELICES Y DE TENSIÓN ---
         function playGachaSound(toneType) {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -724,37 +737,43 @@
                 osc.connect(gain);
                 gain.connect(ctx.destination);
 
-                if (toneType === 'gen') { // Tono grave emocionante
+                if (toneType === 'gen') { // Tono grave emocionante de tensión
                     osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(150, ctx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.4);
+                    osc.frequency.setValueAtTime(130, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(260, ctx.currentTime + 0.8);
                     gain.gain.setValueAtTime(0.12, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.8);
                     osc.start();
-                    osc.stop(ctx.currentTime + 0.4);
+                    osc.stop(ctx.currentTime + 0.8);
                 } else if (toneType === 'type') { // Tono medio brillante
                     osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(440, ctx.currentTime);
-                    osc.frequency.setValueAtTime(660, ctx.currentTime + 0.15);
+                    osc.frequency.setValueAtTime(392, ctx.currentTime);
+                    osc.frequency.setValueAtTime(587, ctx.currentTime + 0.3);
                     gain.gain.setValueAtTime(0.1, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
                     osc.start();
-                    osc.stop(ctx.currentTime + 0.35);
+                    osc.stop(ctx.currentTime + 0.6);
                 } else if (toneType === 'score') { // Tic repiqueteo
                     osc.type = 'sine';
-                    osc.frequency.setValueAtTime(800, ctx.currentTime);
-                    gain.gain.setValueAtTime(0.04, ctx.currentTime);
+                    osc.frequency.setValueAtTime(700, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.03, ctx.currentTime);
                     gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
                     osc.start();
                     osc.stop(ctx.currentTime + 0.08);
-                } else if (toneType === 'reveal') { // Fanfarria final de revelación
-                    osc.type = 'square';
-                    osc.frequency.setValueAtTime(300, ctx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(950, ctx.currentTime + 0.7);
-                    gain.gain.setValueAtTime(0.15, ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.7);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.7);
+                } else if (toneType === 'happy_melody') { // Melodía feliz y triunfal tipo triunfo de juego retro
+                    const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                    notes.forEach((freq, idx) => {
+                        let o = ctx.createOscillator();
+                        let g = ctx.createGain();
+                        o.type = 'sine';
+                        o.frequency.setValueAtTime(freq, ctx.currentTime + (idx * 0.15));
+                        g.gain.setValueAtTime(0.1, ctx.currentTime + (idx * 0.15));
+                        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + (idx * 0.15) + 0.5);
+                        o.connect(g);
+                        g.connect(ctx.destination);
+                        o.start(ctx.currentTime + (idx * 0.15));
+                        o.stop(ctx.currentTime + (idx * 0.15) + 0.5);
+                    });
                 }
             } catch(e) {}
         }
@@ -879,13 +898,12 @@
             return Math.floor(Math.random() * (liderNivel - minNivel + 1)) + minNivel;
         }
 
-        // --- CÁLCULO DE PUNTUACIÓN 1-100 BASADO EN STATS BASE (BST) ---
         function calcularPuntuacionPokemon(stats) {
             if (!stats) return 50;
             let bst = (stats.hp || 0) + (stats.attack || 0) + (stats.defense || 0) + 
                       (stats.special_attack || 0) + (stats.special_defense || 0) + (stats.speed || 0);
-            let minBst = 180; // Ej: Sunkern o Pichu
-            let maxBst = 720; // Ej: Legendarios / Pseudo-legendarios estándar
+            let minBst = 180; 
+            let maxBst = 720; 
             let score = Math.round(((bst - minBst) / (maxBst - minBst)) * 99) + 1;
             return Math.min(100, Math.max(1, score));
         }
@@ -1156,7 +1174,7 @@
             return subioNivel;
         }
 
-        // --- ANIMACIÓN CINEMÁTICA TIPO PACK FIFA (GACHA POKÉMON) ---
+        // --- CINEMÁTICA PACK GACHA ESTRICTAMENTE DENTRO DE LA VENTANITA 320x320 ---
         function abrirCinematicaGacha(nuevoPoke) {
             const overlay = document.getElementById("gacha-pack-overlay");
             const content = document.getElementById("gacha-pack-content");
@@ -1169,35 +1187,35 @@
             let colorT1 = TYPE_COLORS[t1Map] || "#777";
             let colorT2 = t2Map ? (TYPE_COLORS[t2Map] || "#777") : null;
 
-            // Fase 1: Generación
+            // Fase 1: Generación con más tensión y duración (2.2s)
             playGachaSound('gen');
             content.innerHTML = `
-                <div style="font-size: 14px; color: #94a3b8; letter-spacing: 2px;">ABRIendo SOBRE...</div>
-                <div class="anim-slide" style="font-size: 20px; font-weight: bold; color: #f59e0b; margin-top: 20px; text-shadow: 0 0 10px rgba(245,158,11,0.6);">${genTexto}</div>
+                <div style="font-size: 11px; color: #94a3b8; letter-spacing: 1px;">ABRIENDO SOBRE GACHA...</div>
+                <div class="anim-slide" style="font-size: 15px; font-weight: bold; color: #f59e0b; margin-top: 10px; text-shadow: 0 0 10px rgba(245,158,11,0.6);">${genTexto}</div>
             `;
 
             setTimeout(() => {
-                // Fase 2: Tipo del Pokémon
+                // Fase 2: Tipo del Pokémon (2.2s)
                 playGachaSound('type');
-                let tiposHtml = `<span style="background:${colorT1}; padding:4px 12px; border-radius:4px; font-weight:bold; font-size:12px; color:#fff;">${nuevoPoke.tipo1.toUpperCase()}</span>`;
+                let tiposHtml = `<span style="background:${colorT1}; padding:3px 10px; border-radius:3px; font-weight:bold; font-size:10px; color:#fff;">${nuevoPoke.tipo1.toUpperCase()}</span>`;
                 if (nuevoPoke.tipo2) {
-                    tiposHtml += ` <span style="background:${colorT2}; padding:4px 12px; border-radius:4px; font-weight:bold; font-size:12px; color:#fff;">${nuevoPoke.tipo2.toUpperCase()}</span>`;
+                    tiposHtml += ` <span style="background:${colorT2}; padding:3px 10px; border-radius:3px; font-weight:bold; font-size:10px; color:#fff;">${nuevoPoke.tipo2.toUpperCase()}</span>`;
                 }
 
                 content.innerHTML = `
-                    <div style="font-size: 14px; color: #94a3b8;">TIPO ELEMENTAL</div>
-                    <div class="anim-slide" style="display:flex; gap:10px; margin-top:20px;">${tiposHtml}</div>
+                    <div style="font-size: 11px; color: #94a3b8;">IDENTIFICANDO TIPO...</div>
+                    <div class="anim-slide" style="display:flex; gap:6px; margin-top:10px;">${tiposHtml}</div>
                 `;
 
                 setTimeout(() => {
-                    // Fase 3: Puntuación 1-100 con contador animado
+                    // Fase 3: Puntuación 1-100 con contador lento para generar tensión (2.5s)
                     playGachaSound('score');
                     let currentNum = 1;
-                    let stepTime = Math.max(10, Math.floor(1000 / score));
+                    let stepTime = Math.max(25, Math.floor(1800 / score));
                     
                     content.innerHTML = `
-                        <div style="font-size: 14px; color: #94a3b8;">VALORACIÓN BST</div>
-                        <div class="anim-pulse" id="gacha-score-counter" style="font-size: 48px; font-weight: bold; color: #38bdf8; margin-top: 20px; text-shadow: 0 0 15px rgba(56,189,248,0.8);">1</div>
+                        <div style="font-size: 11px; color: #94a3b8;">CALCULANDO ESTADÍSTICAS</div>
+                        <div class="anim-pulse" id="gacha-score-counter" style="font-size: 38px; font-weight: bold; color: #38bdf8; margin-top: 5px; text-shadow: 0 0 12px rgba(56,189,248,0.8);">1</div>
                     `;
 
                     let counterInterval = setInterval(() => {
@@ -1212,25 +1230,25 @@
                     setTimeout(() => {
                         // Fase 4: Carta oculta listada para abrir haciendo clic
                         content.innerHTML = `
-                            <div style="font-size: 12px; color: #fef08a; margin-bottom: 5px; animation: pulseGlow 1s infinite;">¡HA SALIDO ALGO ÉPICO!</div>
+                            <div style="font-size: 10px; color: #fef08a; font-weight: bold; animation: pulseGlow 1s infinite;">¡TOCA LA CARTA PARA REVELAR!</div>
                             <div class="fut-card ${nuevoPoke.isShiny ? 'shiny-card' : ''}" onclick="revelarSpriteGacha('${encodeURIComponent(JSON.stringify(nuevoPoke))}', ${score})">
-                                <div style="font-size: 11px; font-weight: bold; width: 100%; display: flex; justify-content: space-between;">
+                                <div style="font-size: 9px; font-weight: bold; width: 100%; display: flex; justify-content: space-between;">
                                     <span>⭐ ${score}</span>
                                     <span>${nuevoPoke.isShiny ? 'SHINY ✨' : 'NORMAL'}</span>
                                 </div>
-                                <div style="font-size: 55px; margin: 30px 0;" class="anim-pulse">🎴</div>
-                                <div style="background: rgba(0,0,0,0.4); padding: 6px; border-radius: 4px; width: 100%; font-size: 11px; font-weight: bold;">TOCA PARA GIRAR</div>
+                                <div style="font-size: 40px; margin: 15px 0;" class="anim-pulse">🎴</div>
+                                <div style="background: rgba(0,0,0,0.5); padding: 4px; border-radius: 4px; width: 100%; font-size: 9px; font-weight: bold;">GIRAR CARTA</div>
                             </div>
                         `;
-                    }, 1400);
+                    }, 2000);
 
-                }, 1500);
+                }, 2200);
 
-            }, 1500);
+            }, 2200);
         }
 
         function revelarSpriteGacha(pokeJsonStr, score) {
-            playGachaSound('reveal');
+            playGachaSound('happy_melody'); // Música y sonidos felices y triunfales
             let nuevoPoke = JSON.parse(decodeURIComponent(pokeJsonStr));
             const content = document.getElementById("gacha-pack-content");
 
@@ -1238,25 +1256,25 @@
             let t2Map = mapType(nuevoPoke.tipo2);
             let colorT1 = TYPE_COLORS[t1Map] || "#777";
             let colorT2 = t2Map ? (TYPE_COLORS[t2Map] || "#777") : null;
-            let tiposHtml = `<span style="background:${colorT1}; padding:2px 8px; border-radius:3px; font-size:9px; color:#fff;">${nuevoPoke.tipo1.toUpperCase()}</span>`;
-            if (nuevoPoke.tipo2) tiposHtml += ` <span style="background:${colorT2}; padding:2px 8px; border-radius:3px; font-size:9px; color:#fff;">${nuevoPoke.tipo2.toUpperCase()}</span>`;
+            let tiposHtml = `<span style="background:${colorT1}; padding:2px 6px; border-radius:3px; font-size:8px; color:#fff;">${nuevoPoke.tipo1.toUpperCase()}</span>`;
+            if (nuevoPoke.tipo2) tiposHtml += ` <span style="background:${colorT2}; padding:2px 6px; border-radius:3px; font-size:8px; color:#fff;">${nuevoPoke.tipo2.toUpperCase()}</span>`;
 
             content.innerHTML = `
-                <div style="font-size: 12px; color: #4ade80; font-weight: bold;">¡NUEVO POKÉMON OBTENIDO!</div>
-                <div class="fut-card ${nuevoPoke.isShiny ? 'shiny-card' : ''} anim-slide" style="cursor: default;">
-                    <div style="font-size: 11px; font-weight: bold; width: 100%; display: flex; justify-content: space-between;">
+                <div style="font-size: 11px; color: #4ade80; font-weight: bold;">¡NUEVO POKÉMON OBTENIDO!</div>
+                <div class="fut-card ${nuevoPoke.isShiny ? 'shiny-card' : ''} anim-slide" style="cursor: default; width: 140px; height: 190px; padding: 6px;">
+                    <div style="font-size: 9px; font-weight: bold; width: 100%; display: flex; justify-content: space-between;">
                         <span>⭐ ${score}</span>
                         <span>Lv.${nuevoPoke.nivel}</span>
                     </div>
-                    <div style="margin: 10px 0;">
-                        <img src="${nuevoPoke.sprite_url}" style="width: 90px; height: 90px; image-rendering: pixelated;" alt="Sprite">
+                    <div style="margin: 2px 0;">
+                        <img src="${nuevoPoke.sprite_url}" style="width: 70px; height: 70px; image-rendering: pixelated;" alt="Sprite">
                     </div>
-                    <div style="font-size: 12px; font-weight: bold; background: rgba(0,0,0,0.6); width: 100%; padding: 4px; border-radius: 4px; color: #fff;">
+                    <div style="font-size: 10px; font-weight: bold; background: rgba(0,0,0,0.6); width: 100%; padding: 3px; border-radius: 3px; color: #fff;">
                         ${nuevoPoke.nombre.toUpperCase()}
                     </div>
-                    <div style="display:flex; gap:4px; margin-top:2px;">${tiposHtml}</div>
+                    <div style="display:flex; gap:3px; margin-top:1px;">${tiposHtml}</div>
                 </div>
-                <button class="gacha-pull-btn" style="background:#10b981; margin-top: 10px; width: 240px;" onclick="cerrarCinematicaGacha()">CONTINUAR</button>
+                <button class="gacha-pull-btn" style="background:#10b981; margin-top: 4px; width: 160px; padding: 6px; font-size: 11px;" onclick="cerrarCinematicaGacha()">CONTINUAR</button>
             `;
 
             if (teamPokemon.length < 4) {
@@ -1708,7 +1726,7 @@
                 let nuevoPoke = generarDatosPokemonBase(pokeData, 5, forzarShiny);
                 nuevoPoke.origen = forzarShiny ? "Obtenido en Gacha Shiny (Test)." : "Encontrado en GACHA al nivel 5.";
 
-                // Lanzar animación tipo sobre de FIFA en lugar de alert directo
+                // Lanzar animación tipo sobre de FIFA dentro de la ventanita
                 cerrarGacha();
                 abrirCinematicaGacha(nuevoPoke);
             }
