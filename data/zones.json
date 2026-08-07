@@ -3,7 +3,7 @@
     "id": 1,
     "name": "Pueblo Inicial (Zona 1)",
     "sprite": "🏡",
-    "bg_image": "img/zones/Ruta1.png",
+    "bg_image": "img/zones/ClaroOrientacion.png",
     "types": ["normal", "flying"],
     "special_encounters": []
   },
