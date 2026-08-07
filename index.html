@@ -604,6 +604,25 @@
     </div>
 
     <script>
+        // --- CONFIGURACIÓN DE MÚSICA DE FONDO (BGM) ---
+        const bgm = new Audio('audio/route1.mp3');
+        bgm.loop = true;
+        bgm.volume = 0.4;
+
+        function iniciarMusicaFondo() {
+            bgm.play().catch(() => {
+                // Si el navegador bloquea la reproducción automática sin interacción previa,
+                // se activará con el primer clic o toque en cualquier parte de la pantalla.
+                const playOnInteraction = () => {
+                    bgm.play().catch(() => {});
+                    window.removeEventListener('click', playOnInteraction);
+                    window.removeEventListener('keydown', playOnInteraction);
+                };
+                window.addEventListener('click', playOnInteraction);
+                window.addEventListener('keydown', playOnInteraction);
+            });
+        }
+
         let POKEDEX_GLOBAL = [];
         let zonesConfig = [];
 
@@ -966,13 +985,10 @@
 
                 const resZones = await fetch('data/zones.json');
                 zonesConfig = await resZones.json();
-
-                zonesConfig.push({ name: "Bosque Shiny (Zona Especial)", sprite: "✨", bg_image: "img/zones/bosque_shiny.png", types: ["normal", "fairy", "grass"], shinyOnly: true });
             } catch (error) {
                 console.error("Error al cargar los archivos JSON:", error);
                 zonesConfig = [
-                    { name: "Pueblo Inicial (Zona 1)", sprite: "🏡", bg_image: "", types: ["normal", "flying"] },
-                    { name: "Bosque Shiny (Zona Especial)", sprite: "✨", bg_image: "", types: ["normal"], shinyOnly: true }
+                    { name: "Pueblo Inicial (Zona 1)", sprite: "🏡", bg_image: "", types: ["normal", "flying"] }
                 ];
             }
 
@@ -982,6 +998,7 @@
                     document.getElementById("login-screen").style.display = "none";
                     document.getElementById("btn-username-display").innerText = currentUser.toUpperCase();
                     cargarDatosUsuario(currentUser);
+                    iniciarMusicaFondo(); // Se activa automáticamente si ya hay sesión por caché
                 }
             } catch (e) {}
         };
@@ -1004,6 +1021,7 @@
                     document.getElementById("login-screen").style.display = "none";
                     document.getElementById("btn-username-display").innerText = user.toUpperCase();
                     cargarDatosUsuario(user);
+                    iniciarMusicaFondo(); // Se activa al loguearse correctamente
                 } else {
                     msg.style.color = "#ef4444";
                     msg.innerText = "Contraseña incorrecta.";
@@ -1024,6 +1042,7 @@
                 playerInventory = JSON.parse(JSON.stringify(defaultInventory));
 
                 document.getElementById("starter-screen").style.display = "flex";
+                iniciarMusicaFondo(); // Se activa al registrarse y seleccionar inicial
             }
         }
 
@@ -1291,7 +1310,7 @@
             actualizarUIGacha();
         }
 
-        // --- AVANZAR DE ZONA: TRANSICIÓN PERFECTA ALINEADA EXACTAMENTE A 320x320 Y 5 SEGUNDOS ---
+        // --- AVANZAR DE ZONA: SELECCIÓN ALEATORIA DE ZONAS Y TRANSICIÓN DE 5 SEGUNDOS ---
         function advanceZone() {
             if (isWalking) return;
             isWalking = true;
@@ -1300,7 +1319,17 @@
             let oldZoneIndex = currentZoneIndex;
             let oldZona = zonesConfig[oldZoneIndex];
             
-            currentZoneIndex = (currentZoneIndex + 1) % zonesConfig.length;
+            // Selección aleatoria de zona sin repetir la actual
+            if (zonesConfig.length > 1) {
+                let newIndex = currentZoneIndex;
+                while (newIndex === currentZoneIndex) {
+                    newIndex = Math.floor(Math.random() * zonesConfig.length);
+                }
+                currentZoneIndex = newIndex;
+            } else {
+                currentZoneIndex = 0;
+            }
+
             let zonaObj = zonesConfig[currentZoneIndex];
             
             let panel1 = document.getElementById("map-panel-1");
@@ -1727,7 +1756,6 @@
                 let nuevoPoke = generarDatosPokemonBase(pokeData, 5, forzarShiny);
                 nuevoPoke.origen = forzarShiny ? "Obtenido en Gacha Shiny (Test)." : "Encontrado en GACHA al nivel 5.";
 
-                // Lanzar animación tipo sobre de FIFA dentro de la ventanita (manteniendo la tienda gacha abierta por detrás)
                 abrirCinematicaGacha(nuevoPoke);
             }
 
