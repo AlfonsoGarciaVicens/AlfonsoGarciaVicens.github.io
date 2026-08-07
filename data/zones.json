@@ -16,6 +16,14 @@
     "special_encounters": []
   },
   {
+    "id": 2,
+    "name": "Ruta 03",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying", "electric"],
+    "special_encounters": []
+  },
+  {
     "id": 3,
     "name": "Ruta 02",
     "sprite": "",
