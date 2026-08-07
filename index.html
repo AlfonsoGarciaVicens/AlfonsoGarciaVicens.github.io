@@ -171,6 +171,19 @@
             background-position: center center;
         }
 
+        /* Sprite del jugador en el mapa (Fila inferior, 4º cuadrado desde la derecha: left: 192px, top: 288px) */
+        #player-sprite {
+            position: absolute;
+            left: 192px;
+            top: 288px;
+            width: 32px;
+            height: 32px;
+            background-image: url('img/player_sheet.png');
+            background-position: 0px 0px; /* Mirando hacia abajo por defecto */
+            image-rendering: pixelated;
+            z-index: 50;
+        }
+
         /* Contenedor interno con dimensiones y padding exactos de 320x320 */
         .map-viewport-inner {
             position: absolute;
@@ -405,6 +418,9 @@
                 <div id="map-panel-2" style="width: 320px; height: 320px; background-size: 320px 320px; background-repeat: no-repeat; background-position: center center;"></div>
             </div>
 
+            <!-- Sprite del Jugador Overworld (Fila inferior, 4º cuadrado desde la derecha) -->
+            <div id="player-sprite"></div>
+
             <!-- Pantalla Cinemática Gacha Pack (FUT Style) contenida exactamente dentro de la ventanita 320x320 -->
             <div id="gacha-pack-overlay">
                 <div id="gacha-pack-content" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; width:100%; height:100%;">
@@ -605,14 +621,12 @@
 
     <script>
         // --- CONFIGURACIÓN DE MÚSICA DE FONDO (BGM) ---
-        const bgm = new Audio('audio/ethan.ogg');
+        const bgm = new Audio('audio/route1.mp3');
         bgm.loop = true;
         bgm.volume = 0.4;
 
         function iniciarMusicaFondo() {
             bgm.play().catch(() => {
-                // Si el navegador bloquea la reproducción automática sin interacción previa,
-                // se activará con el primer clic o toque en cualquier parte de la pantalla.
                 const playOnInteraction = () => {
                     bgm.play().catch(() => {});
                     window.removeEventListener('click', playOnInteraction);
@@ -635,7 +649,36 @@
         let combatEnCurso = false;
         let playerMoney = 2000;
         let lastDailyClaim = 0;
-        let isWalking = false; // Control de bloqueo durante la caminata de 5s
+        let isWalking = false;
+
+        // Variables de animación del personaje overworld
+        let playerAnimInterval = null;
+        let playerFrame = 0;
+
+        function reiniciarMirarAbajo() {
+            const sprite = document.getElementById('player-sprite');
+            if (!sprite) return;
+            if (playerAnimInterval) { clearInterval(playerAnimInterval); playerAnimInterval = null; }
+            sprite.style.backgroundPosition = "0px 0px"; // Fila superior (Abajo)
+        }
+
+        function iniciarAnimacionCaminar() {
+            const sprite = document.getElementById('player-sprite');
+            if (!sprite) return;
+            playerFrame = 0;
+            if (playerAnimInterval) clearInterval(playerAnimInterval);
+            playerAnimInterval = setInterval(() => {
+                playerFrame = (playerFrame + 1) % 3; // 3 frames de caminata
+                sprite.style.backgroundPosition = `-${playerFrame * 32}px -64px`; // Fila de caminar a la derecha
+            }, 150);
+        }
+
+        function detenerAnimacionMirarArriba() {
+            const sprite = document.getElementById('player-sprite');
+            if (!sprite) return;
+            if (playerAnimInterval) { clearInterval(playerAnimInterval); playerAnimInterval = null; }
+            sprite.style.backgroundPosition = "0px -96px"; // Fila inferior/última (Arriba)
+        }
 
         // Variables para la gestión interactiva de equipo y PC
         let indicePokemonSeleccionado = null;
@@ -674,7 +717,7 @@
         let pestanaActivaBolsa = 'potions';
         let objetoSeleccionadoBolsa = null;
 
-        // --- CONFIGURACIÓN DE GACHAS (Incluyendo Gacha Shiny Test y Tipos) ---
+        // --- CONFIGURACIÓN DE GACHAS (Tipos y Test Shiny) ---
         const typeGachaConfig = [
             { type: 'normal', name: 'Normal', icon: '⚪' },
             { type: 'fire', name: 'Fuego', icon: '🔥' },
@@ -747,7 +790,6 @@
 
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-        // --- WEB AUDIO API PARA MÚSICA Y EFECTOS FELICES Y DE TENSIÓN ---
         function playGachaSound(toneType) {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -756,7 +798,7 @@
                 osc.connect(gain);
                 gain.connect(ctx.destination);
 
-                if (toneType === 'gen') { // Tono grave emocionante de tensión
+                if (toneType === 'gen') {
                     osc.type = 'sawtooth';
                     osc.frequency.setValueAtTime(130, ctx.currentTime);
                     osc.frequency.exponentialRampToValueAtTime(260, ctx.currentTime + 0.8);
@@ -764,7 +806,7 @@
                     gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.8);
                     osc.start();
                     osc.stop(ctx.currentTime + 0.8);
-                } else if (toneType === 'type') { // Tono medio brillante
+                } else if (toneType === 'type') {
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(392, ctx.currentTime);
                     osc.frequency.setValueAtTime(587, ctx.currentTime + 0.3);
@@ -772,15 +814,15 @@
                     gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
                     osc.start();
                     osc.stop(ctx.currentTime + 0.6);
-                } else if (toneType === 'score') { // Tic repiqueteo
+                } else if (toneType === 'score') {
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(700, ctx.currentTime);
                     gain.gain.setValueAtTime(0.03, ctx.currentTime);
                     gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
                     osc.start();
                     osc.stop(ctx.currentTime + 0.08);
-                } else if (toneType === 'happy_melody') { // Melodía feliz y triunfal tipo triunfo de juego retro
-                    const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                } else if (toneType === 'happy_melody') {
+                    const notes = [523.25, 659.25, 783.99, 1046.50];
                     notes.forEach((freq, idx) => {
                         let o = ctx.createOscillator();
                         let g = ctx.createGain();
@@ -998,7 +1040,7 @@
                     document.getElementById("login-screen").style.display = "none";
                     document.getElementById("btn-username-display").innerText = currentUser.toUpperCase();
                     cargarDatosUsuario(currentUser);
-                    iniciarMusicaFondo(); // Se activa automáticamente si ya hay sesión por caché
+                    iniciarMusicaFondo();
                 }
             } catch (e) {}
         };
@@ -1021,7 +1063,7 @@
                     document.getElementById("login-screen").style.display = "none";
                     document.getElementById("btn-username-display").innerText = user.toUpperCase();
                     cargarDatosUsuario(user);
-                    iniciarMusicaFondo(); // Se activa al loguearse correctamente
+                    iniciarMusicaFondo();
                 } else {
                     msg.style.color = "#ef4444";
                     msg.innerText = "Contraseña incorrecta.";
@@ -1042,7 +1084,7 @@
                 playerInventory = JSON.parse(JSON.stringify(defaultInventory));
 
                 document.getElementById("starter-screen").style.display = "flex";
-                iniciarMusicaFondo(); // Se activa al registrarse y seleccionar inicial
+                iniciarMusicaFondo();
             }
         }
 
@@ -1115,6 +1157,7 @@
                 document.getElementById("starter-screen").style.display = "flex";
             }
             actualizarHUDEnergia();
+            reiniciarMirarAbajo();
         }
 
         function actualizarFondoZonaInicial() {
@@ -1159,6 +1202,7 @@
             document.getElementById("starter-screen").style.display = "none";
             actualizarHUD();
             actualizarFondoZonaInicial();
+            reiniciarMirarAbajo();
         }
 
         function actualizarHUD() {
@@ -1206,7 +1250,6 @@
             let colorT1 = TYPE_COLORS[t1Map] || "#777";
             let colorT2 = t2Map ? (TYPE_COLORS[t2Map] || "#777") : null;
 
-            // Fase 1: Generación con más tensión y duración (2.2s)
             playGachaSound('gen');
             content.innerHTML = `
                 <div style="font-size: 11px; color: #94a3b8; letter-spacing: 1px;">ABRIENDO SOBRE GACHA...</div>
@@ -1214,7 +1257,6 @@
             `;
 
             setTimeout(() => {
-                // Fase 2: Tipo del Pokémon (2.2s)
                 playGachaSound('type');
                 let tiposHtml = `<span style="background:${colorT1}; padding:3px 10px; border-radius:3px; font-weight:bold; font-size:10px; color:#fff;">${nuevoPoke.tipo1.toUpperCase()}</span>`;
                 if (nuevoPoke.tipo2) {
@@ -1227,7 +1269,6 @@
                 `;
 
                 setTimeout(() => {
-                    // Fase 3: Puntuación 1-100 con contador lento para generar tensión (2.5s)
                     playGachaSound('score');
                     let currentNum = 1;
                     let stepTime = Math.max(25, Math.floor(1800 / score));
@@ -1247,7 +1288,6 @@
                     }, stepTime);
 
                     setTimeout(() => {
-                        // Fase 4: Carta oculta listada para abrir haciendo clic
                         content.innerHTML = `
                             <div style="font-size: 10px; color: #fef08a; font-weight: bold; animation: pulseGlow 1s infinite;">¡TOCA LA CARTA PARA REVELAR!</div>
                             <div class="fut-card ${nuevoPoke.isShiny ? 'shiny-card' : ''}" onclick="revelarSpriteGacha('${encodeURIComponent(JSON.stringify(nuevoPoke))}', ${score})">
@@ -1267,7 +1307,7 @@
         }
 
         function revelarSpriteGacha(pokeJsonStr, score) {
-            playGachaSound('happy_melody'); // Música y sonidos felices y triunfales
+            playGachaSound('happy_melody');
             let nuevoPoke = JSON.parse(decodeURIComponent(pokeJsonStr));
             const content = document.getElementById("gacha-pack-content");
 
@@ -1310,7 +1350,7 @@
             actualizarUIGacha();
         }
 
-        // --- AVANZAR DE ZONA: SELECCIÓN ALEATORIA DE ZONAS Y TRANSICIÓN DE 5 SEGUNDOS ---
+        // --- AVANZAR DE ZONA: ZONA ALEATORIA SIN REPETIR Y ANIMACIÓN DE CAMINAR / MIRAR ARRIBA ---
         function advanceZone() {
             if (isWalking) return;
             isWalking = true;
@@ -1360,6 +1400,9 @@
             document.getElementById("zone-sprite").innerText = zonaObj.sprite;
             document.getElementById("explore-log").innerHTML = `Caminando hacia ${zonaObj.name}...`;
 
+            // Iniciar animación de caminar hacia la derecha
+            iniciarAnimacionCaminar();
+
             track.style.transition = "transform 5s linear";
             track.style.transform = "translateX(-320px)";
 
@@ -1374,6 +1417,9 @@
                 panel2.style.backgroundImage = "";
                 track.style.transition = "none";
                 track.style.transform = "translateX(0px)";
+
+                // Al llegar al destino, el personaje se detiene y mira hacia arriba
+                detenerAnimacionMirarArriba();
 
                 let curados = 0;
                 teamPokemon.forEach(p => {
