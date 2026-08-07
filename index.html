@@ -171,15 +171,15 @@
             background-position: center center;
         }
 
-        /* Sprite del jugador en el mapa: Tamaño duplicado (64x64) y subido 32px (top: 256px) */
+        /* Sprite del jugador en el mapa: Tamaño duplicado (64x64) y subido 32px más (top: 224px) */
         #player-sprite {
             position: absolute;
             left: 192px;
-            top: 256px;
+            top: 224px;
             width: 64px;
             height: 64px;
             background-image: url('img/player_sheet.png');
-            background-size: 192px 256px; /* Doble de 96x128 */
+            background-size: 192px 256px;
             background-position: -128px -64px; /* Posición 6 inicial al iniciar sesión */
             image-rendering: pixelated;
             z-index: 50;
@@ -419,7 +419,7 @@
                 <div id="map-panel-2" style="width: 320px; height: 320px; background-size: 320px 320px; background-repeat: no-repeat; background-position: center center;"></div>
             </div>
 
-            <!-- Sprite del Jugador Overworld (64x64, subido 32px, posición 6 inicial) -->
+            <!-- Sprite del Jugador Overworld (64x64, subido a top: 224px, posición 6 inicial) -->
             <div id="player-sprite"></div>
 
             <!-- Pantalla Cinemática Gacha Pack (FUT Style) contenida exactamente dentro de la ventanita 320x320 -->
@@ -656,7 +656,7 @@
         let playerAnimInterval = null;
         let walkStep = 0;
 
-        // Posición 6 inicial al iniciar sesión (Fila 2, Columna 3 en hoja de sprites duplicada: -128px -64px)
+        // Posición 6 inicial al iniciar sesión (Bloque 6: -128px -64px)
         function reiniciarPosicionSesion() {
             const sprite = document.getElementById('player-sprite');
             if (!sprite) return;
@@ -664,15 +664,15 @@
             sprite.style.backgroundPosition = "-128px -64px"; 
         }
 
-        // Alternar entre el 5º bloque y el 8º bloque (Bloque 5 y Bloque 8)
+        // Alternar estrictamente entre el 5º bloque y el 8º bloque para caminar
         function iniciarAnimacionCaminar() {
             const sprite = document.getElementById('player-sprite');
             if (!sprite) return;
             walkStep = 0;
             if (playerAnimInterval) clearInterval(playerAnimInterval);
             const walkFrames = [
-                "-64px -64px",   // 5º bloque (duplicado)
-                "-64px -128px"   // 8º bloque (duplicado)
+                "-64px -64px",   // 5º bloque
+                "-64px -128px"   // 8º bloque
             ];
             playerAnimInterval = setInterval(() => {
                 walkStep = (walkStep + 1) % walkFrames.length;
@@ -680,12 +680,12 @@
             }, 150);
         }
 
-        // Al parar, vuelve a la posición 1 (mirando para arriba / primer bloque)
+        // Al parar, vuelve al 1º bloque (mirando para arriba)
         function detenerAnimacionParar() {
             const sprite = document.getElementById('player-sprite');
             if (!sprite) return;
             if (playerAnimInterval) { clearInterval(playerAnimInterval); playerAnimInterval = null; }
-            sprite.style.backgroundPosition = "0px 0px"; // Posición 1
+            sprite.style.backgroundPosition = "0px 0px"; // 1º bloque
         }
 
         // Variables para la gestión interactiva de equipo y PC
@@ -1358,7 +1358,7 @@
             actualizarUIGacha();
         }
 
-        // --- AVANZAR DE ZONA: ZONA ALEATORIA SIN REPETIR Y ANIMACIÓN DE CAMINAR / PARAR ---
+        // --- AVANZAR DE ZONA: ZONA ALEATORIA SIN REPETIR Y ANIMACIÓN DE CAMINAR (BLOQUE 5 Y 8) ---
         function advanceZone() {
             if (isWalking) return;
             isWalking = true;
@@ -1426,7 +1426,7 @@
                 track.style.transition = "none";
                 track.style.transform = "translateX(0px)";
 
-                // Al llegar, se detiene y vuelve a la posición 1 (mirando para arriba)
+                // Al llegar, se detiene y vuelve al 1º bloque (mirando para arriba)
                 detenerAnimacionParar();
 
                 let curados = 0;
