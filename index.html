@@ -59,14 +59,14 @@
         .box-container, .modal-window { background-color: #2a2a2a; padding: 15px; border-radius: 8px; border: 2px solid #444; width: 100%; height: 100%; text-align: center; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
         .modal-window { background: linear-gradient(135deg, #38bdf8, #0369a1); border: 4px solid #bae6fd; box-shadow: 0 8px 16px rgba(0,0,0,0.6); }
         
-        /* Estilo específico ventana Pokédex */
-        .pokedex-window { background: #f3f4f6; border: 4px solid #94a3b8; border-radius: 6px; width: 100%; height: 100%; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; color: #111; font-size: 10px; }
-        .pokedex-top-card { background: #fff; border: 2px solid #cbd5e1; border-radius: 4px; padding: 6px; display: flex; flex-direction: column; gap: 4px; position: relative; }
-        .pokedex-grid-scroll { background: #fff; border: 2px solid #cbd5e1; border-radius: 4px; flex-grow: 1; margin-top: 4px; overflow-y: auto; display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; padding: 4px; align-content: start; }
-        .pokedex-grid-cell { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; padding: 2px; height: 36px; position: relative; }
+        /* Estilo específico ventana Pokédex compacta */
+        .pokedex-window { background: #f3f4f6; border: 4px solid #94a3b8; border-radius: 6px; width: 100%; height: 100%; padding: 4px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; color: #111; font-size: 9px; }
+        .pokedex-top-card { background: #fff; border: 2px solid #cbd5e1; border-radius: 4px; padding: 4px; display: flex; flex-direction: column; gap: 2px; position: relative; }
+        .pokedex-grid-scroll { background: #fff; border: 2px solid #cbd5e1; border-radius: 4px; flex-grow: 1; margin-top: 2px; overflow-y: auto; display: grid; grid-template-columns: repeat(8, 1fr); gap: 1px; padding: 2px; align-content: start; }
+        .pokedex-grid-cell { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; padding: 1px; height: 32px; position: relative; }
         .pokedex-grid-cell.selected { background: #fef08a; border-color: #f59e0b; }
-        .pokedex-cell-num { font-size: 7px; color: #64748b; font-weight: bold; }
-        .pokedex-cell-img { width: 22px; height: 22px; image-rendering: pixelated; }
+        .pokedex-cell-num { font-size: 6px; color: #64748b; font-weight: bold; }
+        .pokedex-cell-img { width: 20px; height: 20px; image-rendering: pixelated; }
 
         /* Estilo específico ventana Bolsa */
         .bag-window { background: linear-gradient(135deg, #d97706, #b45309); border: 4px solid #fde68a; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; position: relative; border-radius: 6px; box-sizing: border-box; }
@@ -471,39 +471,41 @@
                 </div>
             </div>
 
-            <!-- Ventana Pokédex Rediseñada (Estilo GBA / Referencia) -->
+            <!-- Ventana Pokédex Rediseñada Estilo Referencia (Compacta, con contador y vista de estados) -->
             <div id="pokedex-screen" class="modal-screen" style="z-index: 88;">
                 <div class="pokedex-window">
                     <div style="display: flex; justify-content: space-between; align-items: center; font-weight: bold; margin-bottom: 2px;">
-                        <span id="pokedex-header-title">Nº 001 - BULBASAUR</span>
-                        <button onclick="cerrarPokedex()" style="background:none; border:none; font-size:14px; font-weight:bold; cursor:pointer; color:#111;">✖</button>
+                        <span id="pokedex-header-title">Nº 001 - PUPITAR</span>
+                        <button onclick="cerrarPokedex()" style="background:none; border:none; font-size:13px; font-weight:bold; cursor:pointer; color:#111;">✖</button>
                     </div>
                     
                     <div class="pokedex-top-card">
-                        <div style="display: flex; gap: 8px; align-items: center;">
-                            <div style="background: #fee2e2; border: 2px solid #fca5a5; border-radius: 4px; width: 75px; height: 75px; display: flex; justify-content: center; align-items: center; position: relative;">
-                                <img id="pokedex-preview-img" src="" style="width: 60px; height: 60px; image-rendering: pixelated;" alt="Poke">
-                                <div style="position: absolute; bottom: 0; width: 100%; background: #ef4444; color: white; font-size: 7px; font-weight: bold; text-align: center; border-radius: 0 0 2px 2px;">COMMON</div>
+                        <div style="display: flex; gap: 6px; align-items: center;">
+                            <div style="background: #e2e8f0; border: 2px solid #cbd5e1; border-radius: 4px; width: 65px; height: 65px; display: flex; justify-content: center; align-items: center; position: relative; flex-shrink: 0;">
+                                <img id="pokedex-preview-img" src="" style="width: 50px; height: 50px; image-rendering: pixelated;" alt="Poke">
+                                <div id="pokedex-rarity-badge" style="position: absolute; bottom: 0; width: 100%; background: #ef4444; color: white; font-size: 6px; font-weight: bold; text-align: center; border-radius: 0 0 2px 2px;">COMMON</div>
                             </div>
-                            <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 3px;">
-                                <div id="pokedex-types-container" style="display: flex; gap: 4px;"></div>
-                                <div id="pokedex-evolution-text" style="font-size: 8px; color: #4b5563; font-style: italic;">- EVOLVES AT LEVEL 16 -</div>
-                                <div style="display: flex; gap: 10px; font-size: 9px; font-weight: bold; color: #374151; margin-top: 2px;">
-                                    <span>🐾 <span id="pokedex-caught-count">0</span></span>
-                                    <span>👁️ <span id="pokedex-seen-count">0</span></span>
+                            <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px; overflow: hidden;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div id="pokedex-types-container" style="display: flex; gap: 3px;"></div>
+                                    <div style="display: flex; gap: 6px; font-size: 8px; font-weight: bold; color: #374151;">
+                                        <span>🐾 <span id="pokedex-caught-count">0</span></span>
+                                        <span>👁️ <span id="pokedex-seen-count">0</span></span>
+                                    </div>
                                 </div>
+                                <div id="pokedex-evolution-text" style="font-size: 7px; color: #4b5563; font-style: italic;">- EVOLVES AT LEVEL 40 -</div>
                             </div>
                         </div>
                         
-                        <div style="display: flex; flex-direction: column; gap: 2px; margin-top: 4px;">
-                            <div style="display: flex; justify-content: space-between; font-size: 8px; font-weight: bold;"><span>HEALTH</span><span id="stat-hp-val">45</span></div>
-                            <div class="hp-bar-bg" style="height: 5px;"><div id="stat-hp-fill" class="hp-bar-fill" style="width: 50%;"></div></div>
+                        <div style="display: flex; flex-direction: column; gap: 1px; margin-top: 2px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 7px; font-weight: bold;"><span>SALUD</span><span id="stat-hp-val">70</span></div>
+                            <div class="hp-bar-bg" style="height: 4px;"><div id="stat-hp-fill" class="hp-bar-fill" style="width: 50%;"></div></div>
                             
-                            <div style="display: flex; justify-content: space-between; font-size: 8px; font-weight: bold;"><span>ATTACK</span><span id="stat-atk-val">49</span></div>
-                            <div class="hp-bar-bg" style="height: 5px;"><div id="stat-atk-fill" class="hp-bar-fill" style="background-color: #38bdf8 !important; width: 50%;"></div></div>
+                            <div style="display: flex; justify-content: space-between; font-size: 7px; font-weight: bold;"><span>ATAQUE</span><span id="stat-atk-val">84</span></div>
+                            <div class="hp-bar-bg" style="height: 4px;"><div id="stat-atk-fill" class="hp-bar-fill" style="background-color: #38bdf8 !important; width: 50%;"></div></div>
                             
-                            <div style="display: flex; justify-content: space-between; font-size: 8px; font-weight: bold;"><span>DEFENSE</span><span id="stat-def-val">49</span></div>
-                            <div class="hp-bar-bg" style="height: 5px;"><div id="stat-def-fill" class="hp-bar-fill" style="background-color: #eab308 !important; width: 50%;"></div></div>
+                            <div style="display: flex; justify-content: space-between; font-size: 7px; font-weight: bold;"><span>DEFENSA</span><span id="stat-def-val">70</span></div>
+                            <div class="hp-bar-bg" style="height: 4px;"><div id="stat-def-fill" class="hp-bar-fill" style="background-color: #eab308 !important; width: 50%;"></div></div>
                         </div>
                     </div>
 
@@ -511,7 +513,7 @@
                         <!-- Se llena dinámicamente con TODOS los Pokémon -->
                     </div>
 
-                    <button class="bag-close-btn" onclick="cerrarPokedex()" style="margin-top: 4px;">CERRAR</button>
+                    <button class="bag-close-btn" onclick="cerrarPokedex()" style="margin-top: 2px; padding: 3px;">CERRAR</button>
                 </div>
             </div>
 
@@ -709,7 +711,6 @@
         let playerAnimInterval = null;
         let walkStep = 0;
 
-        // Posición 6 inicial al iniciar sesión (Bloque 6: -128px -64px)
         function reiniciarPosicionSesion() {
             const sprite = document.getElementById('player-sprite');
             if (!sprite) return;
@@ -717,7 +718,6 @@
             sprite.style.backgroundPosition = "-128px -64px"; 
         }
 
-        // Animación de caminata: Alternando entre puesto 5, puesto 2 y puesto 8
         function iniciarAnimacionCaminar() {
             const sprite = document.getElementById('player-sprite');
             if (!sprite) return;
@@ -734,12 +734,59 @@
             }, 150);
         }
 
-        // Al parar, vuelve al 1º bloque (mirando para arriba)
         function detenerAnimacionParar() {
             const sprite = document.getElementById('player-sprite');
             if (!sprite) return;
             if (playerAnimInterval) { clearInterval(playerAnimInterval); playerAnimInterval = null; }
             sprite.style.backgroundPosition = "0px 0px"; // Puesto 1
+        }
+
+        // --- SISTEMA DE ESTADOS POKÉDX (VISTO / ATRAPADO) ---
+        function getPokedexStatus(idDex) {
+            const user = localStorage.getItem("pt_current_user") || "default";
+            const prefix = `pt_${user}_`;
+            let caughtList = JSON.parse(localStorage.getItem(prefix + "pokedex_caught") || "[]");
+            let seenList = JSON.parse(localStorage.getItem(prefix + "pokedex_seen") || "[]");
+
+            const inTeamOrPC = teamPokemon.some(p => p.idDex === idDex) || pcStorage.some(p => p.idDex === idDex);
+            if (inTeamOrPC && !caughtList.includes(idDex)) {
+                caughtList.push(idDex);
+                seenList.push(idDex);
+                localStorage.setItem(prefix + "pokedex_caught", JSON.stringify(caughtList));
+                localStorage.setItem(prefix + "pokedex_seen", JSON.stringify(seenList));
+            }
+
+            const isCaught = caughtList.includes(idDex) || inTeamOrPC;
+            const isSeen = seenList.includes(idDex) || isCaught;
+
+            return { isCaught, isSeen };
+        }
+
+        function marcarVisto(idDex) {
+            if (!idDex) return;
+            const user = localStorage.getItem("pt_current_user") || "default";
+            const prefix = `pt_${user}_`;
+            let seenList = JSON.parse(localStorage.getItem(prefix + "pokedex_seen") || "[]");
+            if (!seenList.includes(idDex)) {
+                seenList.push(idDex);
+                localStorage.setItem(prefix + "pokedex_seen", JSON.stringify(seenList));
+            }
+        }
+
+        function marcarAtrapado(idDex) {
+            if (!idDex) return;
+            const user = localStorage.getItem("pt_current_user") || "default";
+            const prefix = `pt_${user}_`;
+            let caughtList = JSON.parse(localStorage.getItem(prefix + "pokedex_caught") || "[]");
+            let seenList = JSON.parse(localStorage.getItem(prefix + "pokedex_seen") || "[]");
+            if (!caughtList.includes(idDex)) {
+                caughtList.push(idDex);
+                localStorage.setItem(prefix + "pokedex_caught", JSON.stringify(caughtList));
+            }
+            if (!seenList.includes(idDex)) {
+                seenList.push(idDex);
+                localStorage.setItem(prefix + "pokedex_seen", JSON.stringify(seenList));
+            }
         }
 
         // Variables para la gestión interactiva de equipo y PC
@@ -1057,6 +1104,8 @@
             let frontUrl = isShiny ? (pokeData.shiny_sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${idDex}.png`) : (pokeData.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idDex}.png`);
             let backUrl = isShiny ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${idDex}.png` : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${idDex}.png`;
 
+            marcarVisto(idDex);
+
             return {
                 nombre: pokeData.name.charAt(0).toUpperCase() + pokeData.name.slice(1) + (isShiny ? " ✨" : ""),
                 nivel: nivel,
@@ -1203,12 +1252,14 @@
                 if (p.hpActual === undefined || p.hpActual < 0) p.hpActual = p.hpMax;
                 if (p.exp === undefined) p.exp = 0;
                 if (!p.nivel) p.nivel = 5;
+                marcarAtrapado(p.idDex);
             });
 
             pcStorage.forEach(p => {
                 if (!p.hpMax || p.hpMax <= 0) p.hpMax = 50;
                 if (p.hpActual === undefined) p.hpActual = p.hpMax;
                 if (p.favorito === undefined) p.favorito = false;
+                marcarAtrapado(p.idDex);
             });
 
             if (esUsuarioFonso()) energiaActual = energiaMax;
@@ -1260,6 +1311,8 @@
             let starter = generarDatosPokemonBase(pokeFound, 5);
             starter.origen = "Elegido del Prof. Oak al nivel 5.";
 
+            marcarAtrapado(starter.idDex);
+
             teamPokemon = [starter];
             guardarDatos();
             document.getElementById("starter-screen").style.display = "none";
@@ -1300,7 +1353,7 @@
             return subioNivel;
         }
 
-        // --- SISTEMA POKÉDEX ESTILO REFERENCIA ---
+        // --- SISTEMA POKÉDEX ESTILO REFERENCIA (CON ESTADOS VISTO / ATTRAPADO / NO VISTO) ---
         let pokedexSelectedIndex = 0;
 
         function abrirPokedex() {
@@ -1328,63 +1381,129 @@
             if (POKEDEX_GLOBAL.length === 0) return;
             let poke = POKEDEX_GLOBAL[pokedexSelectedIndex] || POKEDEX_GLOBAL[0];
             let idDex = poke.id || (pokedexSelectedIndex + 1);
-            let nombreMayus = poke.name.toUpperCase();
-
-            document.getElementById("pokedex-header-title").innerText = `Nº ${idDex.toString().padStart(3, '0')} - ${nombreMayus}`;
-            document.getElementById("pokedex-preview-img").src = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idDex}.png`;
             
-            // Tipos
-            let t1 = poke.types[0] || "normal";
-            let t2 = poke.types[1] || null;
-            let t1Map = mapType(t1);
-            let t2Map = mapType(t2);
-            let c1 = TYPE_COLORS[t1Map] || "#777";
-            let c2 = t2Map ? (TYPE_COLORS[t2Map] || "#777") : null;
+            const { isCaught, isSeen } = getPokedexStatus(idDex);
 
-            let tiposHtml = `<span style="background:${c1}; padding:2px 6px; border-radius:3px; font-size:8px; color:#fff; font-weight:bold;">${t1.toUpperCase()}</span>`;
-            if (t2) {
-                tiposHtml += ` <span style="background:${c2}; padding:2px 6px; border-radius:3px; font-size:8px; color:#fff; font-weight:bold;">${t2.toUpperCase()}</span>`;
+            const headerTitle = document.getElementById("pokedex-header-title");
+            const previewImg = document.getElementById("pokedex-preview-img");
+            const rarityBadge = document.getElementById("pokedex-rarity-badge");
+            const typesContainer = document.getElementById("pokedex-types-container");
+            const evolutionText = document.getElementById("pokedex-evolution-text");
+            const hpValEl = document.getElementById("stat-hp-val");
+            const hpFillEl = document.getElementById("stat-hp-fill");
+            const atkValEl = document.getElementById("stat-atk-val");
+            const atkFillEl = document.getElementById("stat-atk-fill");
+            const defValEl = document.getElementById("stat-def-val");
+            const defFillEl = document.getElementById("stat-def-fill");
+
+            if (!isSeen) {
+                // No visto: silueta negra, sin información
+                headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ???`;
+                previewImg.src = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idDex}.png`;
+                previewImg.style.filter = "brightness(0)";
+                rarityBadge.innerText = "???";
+                rarityBadge.style.background = "#666";
+                typesContainer.innerHTML = `<span style="background:#666; padding:2px 6px; border-radius:3px; font-size:7px; color:#fff; font-weight:bold;">???</span>`;
+                evolutionText.innerText = `- UNKNOWN -`;
+                hpValEl.innerText = "???";
+                hpFillEl.style.width = "0%";
+                atkValEl.innerText = "???";
+                atkFillEl.style.width = "0%";
+                defValEl.innerText = "???";
+                defFillEl.style.width = "0%";
+            } else if (!isCaught) {
+                // Visto pero no atrapado: imagen con filtro gris, estadísticas ???
+                headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ${poke.name.toUpperCase()}`;
+                previewImg.src = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idDex}.png`;
+                previewImg.style.filter = "grayscale(100%)";
+                rarityBadge.innerText = "SEEN";
+                rarityBadge.style.background = "#64748b";
+
+                let t1 = poke.types[0] || "normal";
+                let t2 = poke.types[1] || null;
+                let c1 = TYPE_COLORS[mapType(t1)] || "#777";
+                let tiposHtml = `<span style="background:${c1}; padding:2px 5px; border-radius:3px; font-size:7px; color:#fff; font-weight:bold;">${t1.toUpperCase()}</span>`;
+                if (t2) {
+                    let c2 = TYPE_COLORS[mapType(t2)] || "#777";
+                    tiposHtml += ` <span style="background:${c2}; padding:2px 5px; border-radius:3px; font-size:7px; color:#fff; font-weight:bold;">${t2.toUpperCase()}</span>`;
+                }
+                typesContainer.innerHTML = tiposHtml;
+                evolutionText.innerText = poke.evolves_from && poke.evolves_from !== "None" ? `- EVOLVES FROM ${poke.evolves_from.toUpperCase()} -` : `- FIRST STAGE -`;
+
+                hpValEl.innerText = "???";
+                hpFillEl.style.width = "0%";
+                atkValEl.innerText = "???";
+                atkFillEl.style.width = "0%";
+                defValEl.innerText = "???";
+                defFillEl.style.width = "0%";
+            } else {
+                // Atrapado: Color completo y estadísticas reales
+                headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ${poke.name.toUpperCase()}`;
+                previewImg.src = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idDex}.png`;
+                previewImg.style.filter = "none";
+                rarityBadge.innerText = "COMMON";
+                rarityBadge.style.background = "#ef4444";
+
+                let t1 = poke.types[0] || "normal";
+                let t2 = poke.types[1] || null;
+                let c1 = TYPE_COLORS[mapType(t1)] || "#777";
+                let tiposHtml = `<span style="background:${c1}; padding:2px 5px; border-radius:3px; font-size:7px; color:#fff; font-weight:bold;">${t1.toUpperCase()}</span>`;
+                if (t2) {
+                    let c2 = TYPE_COLORS[mapType(t2)] || "#777";
+                    tiposHtml += ` <span style="background:${c2}; padding:2px 5px; border-radius:3px; font-size:7px; color:#fff; font-weight:bold;">${t2.toUpperCase()}</span>`;
+                }
+                typesContainer.innerHTML = tiposHtml;
+                evolutionText.innerText = poke.evolves_from && poke.evolves_from !== "None" ? `- EVOLVES FROM ${poke.evolves_from.toUpperCase()} -` : `- FIRST STAGE -`;
+
+                let stats = poke.stats || { hp: 45, attack: 49, defense: 49 };
+                let hpVal = stats.hp || 45;
+                let atkVal = stats.attack || 49;
+                let defVal = stats.defense || 49;
+
+                hpValEl.innerText = hpVal;
+                hpFillEl.style.width = Math.min(100, (hpVal / 150) * 100) + "%";
+                atkValEl.innerText = atkVal;
+                atkFillEl.style.width = Math.min(100, (atkVal / 150) * 100) + "%";
+                defValEl.innerText = defVal;
+                defFillEl.style.width = Math.min(100, (defVal / 150) * 100) + "%";
             }
-            document.getElementById("pokedex-types-container").innerHTML = tiposHtml;
 
-            // Evolución
-            document.getElementById("pokedex-evolution-text").innerText = poke.evolves_from && poke.evolves_from !== "None" ? `- EVOLUCIONA DE ${poke.evolves_from.toUpperCase()} -` : `- PRIMERA FASE -`;
+            // Contadores totales
+            let totalCaughtCount = 0;
+            let totalSeenCount = 0;
+            POKEDEX_GLOBAL.forEach((p, i) => {
+                let pId = p.id || (i + 1);
+                let status = getPokedexStatus(pId);
+                if (status.isCaught) totalCaughtCount++;
+                if (status.isSeen) totalSeenCount++;
+            });
+            document.getElementById("pokedex-caught-count").innerText = totalCaughtCount;
+            document.getElementById("pokedex-seen-count").innerText = totalSeenCount;
 
-            // Contadores capturados / vistos
-            let capturados = teamPokemon.filter(p => p.idDex === idDex).length + pcStorage.filter(p => p.idDex === idDex).length;
-            document.getElementById("pokedex-caught-count").innerText = capturados + 120;
-            document.getElementById("pokedex-seen-count").innerText = capturados + 150;
-
-            // Stats
-            let stats = poke.stats || { hp: 45, attack: 49, defense: 49 };
-            let hpVal = stats.hp || 45;
-            let atkVal = stats.attack || 49;
-            let defVal = stats.defense || 49;
-
-            document.getElementById("stat-hp-val").innerText = hpVal;
-            document.getElementById("stat-hp-fill").style.width = Math.min(100, (hpVal / 150) * 100) + "%";
-
-            document.getElementById("stat-atk-val").innerText = atkVal;
-            document.getElementById("stat-atk-fill").style.width = Math.min(100, (atkVal / 150) * 100) + "%";
-
-            document.getElementById("stat-def-val").innerText = defVal;
-            document.getElementById("stat-def-fill").style.width = Math.min(100, (defVal / 150) * 100) + "%";
-
-            // Renderizar rejilla con TODOS los Pokémon (8 columnas)
+            // Renderizar la rejilla con TODOS los Pokémon (8 columnas)
             const grid = document.getElementById("pokedex-grid-container");
             grid.innerHTML = "";
 
             POKEDEX_GLOBAL.forEach((p, idx) => {
                 let pId = p.id || (idx + 1);
+                let status = getPokedexStatus(pId);
                 let pSprite = p.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pId}.png`;
                 let isSelected = pokedexSelectedIndex === idx ? 'selected' : '';
 
                 let cell = document.createElement("div");
                 cell.className = `pokedex-grid-cell ${isSelected}`;
                 cell.onclick = () => seleccionarPokemonPokedex(idx);
+
+                let imgStyle = "width: 20px; height: 20px; image-rendering: pixelated;";
+                if (!status.isSeen) {
+                    imgStyle += " filter: brightness(0);";
+                } else if (!status.isCaught) {
+                    imgStyle += " filter: grayscale(100%);";
+                }
+
                 cell.innerHTML = `
-                    <span class="pokedex-cell-num">${pId}</span>
-                    <img src="${pSprite}" class="pokedex-cell-img" alt="P">
+                    <span class="pokedex-cell-num">${pId.toString().padStart(3, '0')}</span>
+                    <img src="${pSprite}" style="${imgStyle}" alt="P">
                 `;
                 grid.appendChild(cell);
             });
@@ -1488,6 +1607,8 @@
                 </div>
                 <button class="gacha-pull-btn" style="background:#10b981; margin-top: 4px; width: 160px; padding: 6px; font-size: 11px;" onclick="cerrarCinematicaGacha()">CONTINUAR</button>
             `;
+
+            marcarAtrapado(nuevoPoke.idDex);
 
             if (teamPokemon.length < 4) {
                 teamPokemon.push(nuevoPoke);
@@ -2138,6 +2259,7 @@
 
                 if (Math.random() < 0.6) {
                     let nuevo = { ...currentEnemy };
+                    marcarAtrapado(nuevo.idDex);
                     if (teamPokemon.length < 4) teamPokemon.push(nuevo); else pcStorage.push(nuevo);
                     
                     let expGanada = Math.floor(currentEnemy.nivel * 20);
