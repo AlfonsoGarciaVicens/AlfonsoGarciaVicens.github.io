@@ -59,6 +59,141 @@
         .box-container, .modal-window { background-color: #2a2a2a; padding: 15px; border-radius: 8px; border: 2px solid #444; width: 100%; height: 100%; text-align: center; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
         .modal-window { background: linear-gradient(135deg, #38bdf8, #0369a1); border: 4px solid #bae6fd; box-shadow: 0 8px 16px rgba(0,0,0,0.6); }
         
+        /* Estilo específico ventana Pokédex (Basado en la imagen de referencia) */
+        .pokedex-window {
+            background: #ffffff;
+            border: 4px solid #334155;
+            width: 100%;
+            height: 100%;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            border-radius: 6px;
+            box-sizing: border-box;
+            color: #111;
+            overflow: hidden;
+        }
+        .pokedex-grid-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: 65px;
+            gap: 4px;
+            overflow-y: auto;
+            flex-grow: 1;
+            background: #f1f5f9;
+            border: 2px solid #cbd5e1;
+            padding: 4px;
+            border-radius: 4px;
+        }
+        .pokedex-cell {
+            background: #ffffff;
+            border: 1px solid #94a3b8;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            font-size: 9px;
+            font-weight: bold;
+            padding: 2px;
+        }
+        .pokedex-cell.unseen {
+            background: #e2e8f0;
+            color: #64748b;
+        }
+        .pokedex-cell.unseen img {
+            filter: brightness(0);
+            opacity: 0.8;
+        }
+        .pokedex-cell img {
+            width: 36px;
+            height: 36px;
+            image-rendering: pixelated;
+        }
+        
+        /* Tarjeta de detalle flotante en la Pokédex */
+        .pokedex-detail-card {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            background: #ffffff;
+            border: 3px solid #ef4444;
+            border-radius: 6px;
+            padding: 8px;
+            z-index: 50;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            color: #111;
+            text-align: left;
+        }
+        .pokedex-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #cbd5e1;
+            padding-bottom: 3px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .pokedex-detail-body {
+            display: flex;
+            gap: 8px;
+            margin-top: 6px;
+        }
+        .pokedex-detail-sprite-box {
+            width: 90px;
+            height: 90px;
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .pokedex-detail-sprite-box img {
+            width: 75px;
+            height: 75px;
+            image-rendering: pixelated;
+        }
+        .pokedex-rarity-banner {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #ef4444;
+            color: white;
+            font-size: 8px;
+            font-weight: bold;
+            text-align: center;
+            padding: 1px 0;
+        }
+        .pokedex-stats-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 9px;
+        }
+        .pokedex-stat-bar-bg {
+            background: #e2e8f0;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+            width: 100%;
+            border: 1px solid #cbd5e1;
+        }
+        .pokedex-stat-fill {
+            height: 100%;
+            background: #22c55e;
+        }
+
         /* Estilo específico ventana Bolsa */
         .bag-window { background: linear-gradient(135deg, #d97706, #b45309); border: 4px solid #fde68a; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; position: relative; border-radius: 6px; box-sizing: border-box; }
         .bag-tabs { display: flex; justify-content: space-around; background: rgba(0,0,0,0.3); padding: 3px; border-radius: 6px; gap: 2px; }
@@ -171,14 +306,14 @@
             background-position: center center;
         }
 
-        /* Sprite del jugador en el mapa: Tamaño duplicado (64x64), top: 240 left: 160px */
+        /* Sprite del jugador en el mapa: Tamaño duplicado (64x64), top: 264px, left: 160px */
         #player-sprite {
             position: absolute;
             left: 160px;
-            top: 240px;
+            top: 264px;
             width: 64px;
             height: 64px;
-            background-image: url('img/player_sheet2.png');
+            background-image: url('img/player_sheet.png');
             background-size: 192px 256px;
             background-position: -128px -64px; /* Posición 6 inicial al iniciar sesión */
             image-rendering: pixelated;
@@ -448,7 +583,7 @@
                     <div class="modal-title">- MENÚ PRINCIPAL -</div>
                     <div class="menu-grid-container">
                         <div class="menu-row">
-                            <button class="menu-icon-btn" onclick="alert('Dispositivo / Pokedex')">📱</button>
+                            <button class="menu-icon-btn" onclick="abrirPokedex()">📱</button>
                             <button class="menu-icon-btn" onclick="alert('Cofre / Objetos')">📦</button>
                             <button class="menu-icon-btn" onclick="abrirPC()">💻</button>
                         </div>
@@ -459,6 +594,50 @@
                         </div>
                     </div>
                     <button class="modal-close-btn" onclick="cerrarMenu()">CERRAR</button>
+                </div>
+            </div>
+
+            <!-- Ventana de Pokédex Estilo GBA (Basada en la imagen de referencia) -->
+            <div id="pokedex-screen" class="modal-screen" style="z-index: 85;">
+                <div class="pokedex-window">
+                    <!-- Tarjeta de detalle flotante superior -->
+                    <div id="pokedex-detail-card" class="pokedex-detail-card">
+                        <div class="pokedex-detail-header">
+                            <span id="pokedex-det-title">Nº 245 - SUICUNE</span>
+                            <span style="cursor:pointer; font-weight:bold; color:#555;" onclick="cerrarDetallePokedex()">✖</span>
+                        </div>
+                        <div class="pokedex-detail-body">
+                            <div class="pokedex-detail-sprite-box">
+                                <img id="pokedex-det-sprite" src="" alt="Sprite">
+                                <div id="pokedex-det-rarity" class="pokedex-rarity-banner">EXTRAORDINARY</div>
+                            </div>
+                            <div class="pokedex-stats-container">
+                                <div><span id="pokedex-det-type" style="background:#6390F0; color:#fff; padding:1px 6px; border-radius:3px; font-size:8px; font-weight:bold;">WATER</span></div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">
+                                    <span>Vistos: <b id="pokedex-det-seen">430</b></span>
+                                    <span>Atrapados: <b id="pokedex-det-caught">329</b></span>
+                                </div>
+                                <div style="margin-top:2px;">
+                                    HEALTH: <span id="pokedex-det-hp-val">100</span>
+                                    <div class="pokedex-stat-bar-bg"><div id="pokedex-det-hp-fill" class="pokedex-stat-fill" style="width:100%;"></div></div>
+                                </div>
+                                <div>
+                                    ATTACK: <span id="pokedex-det-atk-val">90</span>
+                                    <div class="pokedex-stat-bar-bg"><div id="pokedex-det-atk-fill" class="pokedex-stat-fill" style="width:90%; background:#38bdf8;"></div></div>
+                                </div>
+                                <div>
+                                    DEFENSE: <span id="pokedex-det-def-val">115</span>
+                                    <div class="pokedex-stat-bar-bg"><div id="pokedex-det-def-fill" class="pokedex-stat-fill" style="width:100%; background:#eab308;"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rejilla central de Pokémon -->
+                    <div class="pokedex-grid-container" id="pokedex-grid"></div>
+
+                    <!-- Botón Cerrar -->
+                    <button class="modal-close-btn" onclick="cerrarPokedex()" style="margin-top:4px; background:#334155;">CERRAR</button>
                 </div>
             </div>
 
@@ -1116,6 +1295,7 @@
             document.getElementById("pc-screen").style.display = "none";
             document.getElementById("bag-screen").style.display = "none";
             document.getElementById("gacha-screen").style.display = "none";
+            document.getElementById("pokedex-screen").style.display = "none";
             document.getElementById("starter-screen").style.display = "none";
             
             document.getElementById("username-input").value = "";
@@ -1244,6 +1424,77 @@
             guardarDatos();
             actualizarHUD();
             return subioNivel;
+        }
+
+        // --- SISTEMA DE POKÉDEX (Estilo Referencia) ---
+        function abrirPokedex() {
+            if (isWalking) return;
+            cerrarMenu();
+            renderizarPokedexGrid();
+            document.getElementById("pokedex-screen").style.display = "flex";
+        }
+
+        function cerrarPokedex() {
+            document.getElementById("pokedex-screen").style.display = "none";
+        }
+
+        function renderizarPokedexGrid() {
+            const grid = document.getElementById("pokedex-grid");
+            grid.innerHTML = "";
+
+            // Recopilar IDs únicos atrapados o vistos en equipo o PC
+            let dexConseguidos = new Set();
+            teamPokemon.forEach(p => dexConseguidos.add(p.idDex));
+            pcStorage.forEach(p => dexConseguidos.add(p.idDex));
+
+            // Si no hay Pokedex cargada aún, rellenar de ejemplo con los primeros 30
+            let listaPokes = POKEDEX_GLOBAL.length > 0 ? POKEDEX_GLOBAL.slice(0, 50) : [];
+
+            listaPokes.forEach(poke => {
+                let id = poke.id || 1;
+                let captureName = poke.name.charAt(0).toUpperCase() + poke.name.slice(1);
+                let sprite = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+                let isOwned = dexConseguidos.has(id);
+
+                let cell = document.createElement("div");
+                cell.className = `pokedex-cell ${isOwned ? '' : 'unseen'}`;
+                cell.innerHTML = `
+                    <span style="font-size:8px; color:#555; position:absolute; top:2px; left:3px;">${id}</span>
+                    <img src="${sprite}" alt="Poke">
+                    <span style="font-size:8px; width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${isOwned ? captureName : '-----'}</span>
+                `;
+
+                if (isOwned) {
+                    cell.onclick = () => mostrarDetallePokedex(poke);
+                }
+                grid.appendChild(cell);
+            });
+        }
+
+        function mostrarDetallePokedex(poke) {
+            let card = document.getElementById("pokedex-detail-card");
+            card.style.display = "flex";
+
+            document.getElementById("pokedex-det-title").innerText = `Nº ${poke.id || 1} - ${poke.name.toUpperCase()}`;
+            document.getElementById("pokedex-det-sprite").src = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${poke.id || 1}.png`;
+            
+            let t1 = poke.types && poke.types[0] ? poke.types[0].toUpperCase() : "NORMAL";
+            let typeBadge = document.getElementById("pokedex-det-type");
+            typeBadge.innerText = t1;
+            typeBadge.style.background = TYPE_COLORS[mapType(t1)] || "#6390F0";
+
+            let stats = poke.stats || { hp: 45, attack: 49, defense: 49 };
+            document.getElementById("pokedex-det-hp-val").innerText = stats.hp || 50;
+            document.getElementById("pokedex-det-atk-val").innerText = stats.attack || 50;
+            document.getElementById("pokedex-det-def-val").innerText = stats.defense || 50;
+
+            document.getElementById("pokedex-det-hp-fill").style.width = Math.min(100, (stats.hp / 150) * 100) + "%";
+            document.getElementById("pokedex-det-atk-fill").style.width = Math.min(100, (stats.attack / 150) * 100) + "%";
+            document.getElementById("pokedex-det-def-fill").style.width = Math.min(100, (stats.defense / 150) * 100) + "%";
+        }
+
+        function cerrarDetallePokedex() {
+            document.getElementById("pokedex-detail-card").style.display = "none";
         }
 
         // --- CINEMÁTICA PACK GACHA ESTRICTAMENTE DENTRO DE LA VENTANITA 320x320 ---
