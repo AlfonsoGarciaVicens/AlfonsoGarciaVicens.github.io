@@ -59,7 +59,7 @@
         .box-container, .modal-window { background-color: #2a2a2a; padding: 15px; border-radius: 8px; border: 2px solid #444; width: 100%; height: 100%; text-align: center; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
         .modal-window { background: linear-gradient(135deg, #38bdf8, #0369a1); border: 4px solid #bae6fd; box-shadow: 0 8px 16px rgba(0,0,0,0.6); }
         
-        /* Estilo específico ventana Pokédex compacta */
+        /* Estilo específico ventana Pokédex compacta (3 filas y media visibles) */
         .pokedex-window { background: #f3f4f6; border: 4px solid #94a3b8; border-radius: 6px; width: 100%; height: 100%; padding: 4px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; color: #111; font-size: 9px; }
         .pokedex-top-card { background: #fff; border: 2px solid #cbd5e1; border-radius: 4px; padding: 4px; display: flex; flex-direction: column; gap: 2px; position: relative; }
         .pokedex-grid-scroll { background: #fff; border: 2px solid #cbd5e1; border-radius: 4px; flex-grow: 1; margin-top: 2px; overflow-y: auto; display: grid; grid-template-columns: repeat(8, 1fr); gap: 1px; padding: 2px; align-content: start; }
@@ -1353,7 +1353,7 @@
             return subioNivel;
         }
 
-        // --- SISTEMA POKÉDEX ESTILO REFERENCIA (CON ESTADOS VISTO / ATRAPADO / NO VISTO Y STATS MEDIAS) ---
+        // --- SISTEMA POKÉDEX ESTILO REFERENCIA (CON ESTADOS VISTO / ATRAPADO / NO VISTO) ---
         let pokedexSelectedIndex = 0;
 
         function abrirPokedex() {
@@ -1397,7 +1397,7 @@
             const defFillEl = document.getElementById("stat-def-fill");
 
             if (!isSeen) {
-                // No visto: silueta con signo de interrogación o icono misterioso
+                // No visto: silueta con icono de interrogación o círculo misterioso
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ???`;
                 previewImg.src = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idDex}.png`;
                 previewImg.style.filter = "brightness(0)";
@@ -1543,7 +1543,7 @@
                 setTimeout(() => {
                     playGachaSound('score');
                     let currentNum = 1;
-                    let stepTime = Math.max(25, Math.floor(1800 / score));
+                    let stepTime = 35; // 35ms por número para una animación fluida que no se corta nunca
                     
                     content.innerHTML = `
                         <div style="font-size: 11px; color: #94a3b8;">CALCULANDO ESTADÍSTICAS</div>
@@ -1553,25 +1553,28 @@
                     let counterInterval = setInterval(() => {
                         currentNum++;
                         playGachaSound('score');
-                        document.getElementById("gacha-score-counter").innerText = currentNum;
+                        const counterEl = document.getElementById("gacha-score-counter");
+                        if (counterEl) counterEl.innerText = currentNum;
+
                         if (currentNum >= score) {
                             clearInterval(counterInterval);
+                            
+                            // Una vez alcanzada la puntuación final, pausamos 1.8 segundos para que el jugador la vea y se fije antes de la carta
+                            setTimeout(() => {
+                                content.innerHTML = `
+                                    <div style="font-size: 10px; color: #fef08a; font-weight: bold; animation: pulseGlow 1s infinite;">¡TOCA LA CARTA PARA REVELAR!</div>
+                                    <div class="fut-card ${nuevoPoke.isShiny ? 'shiny-card' : ''}" onclick="revelarSpriteGacha('${encodeURIComponent(JSON.stringify(nuevoPoke))}', ${score})">
+                                        <div style="font-size: 9px; font-weight: bold; width: 100%; display: flex; justify-content: space-between;">
+                                            <span>⭐ ${score}</span>
+                                            <span>${nuevoPoke.isShiny ? 'SHINY ✨' : 'NORMAL'}</span>
+                                        </div>
+                                        <div style="font-size: 40px; margin: 15px 0;" class="anim-pulse">🎴</div>
+                                        <div style="background: rgba(0,0,0,0.5); padding: 4px; border-radius: 4px; width: 100%; font-size: 9px; font-weight: bold;">GIRAR CARTA</div>
+                                    </div>
+                                `;
+                            }, 1800); // 1.8 segundos de pausa estática con la puntuación final visible
                         }
                     }, stepTime);
-
-                    setTimeout(() => {
-                        content.innerHTML = `
-                            <div style="font-size: 10px; color: #fef08a; font-weight: bold; animation: pulseGlow 1s infinite;">¡TOCA LA CARTA PARA REVELAR!</div>
-                            <div class="fut-card ${nuevoPoke.isShiny ? 'shiny-card' : ''}" onclick="revelarSpriteGacha('${encodeURIComponent(JSON.stringify(nuevoPoke))}', ${score})">
-                                <div style="font-size: 9px; font-weight: bold; width: 100%; display: flex; justify-content: space-between;">
-                                    <span>⭐ ${score}</span>
-                                    <span>${nuevoPoke.isShiny ? 'SHINY ✨' : 'NORMAL'}</span>
-                                </div>
-                                <div style="font-size: 40px; margin: 15px 0;" class="anim-pulse">🎴</div>
-                                <div style="background: rgba(0,0,0,0.5); padding: 4px; border-radius: 4px; width: 100%; font-size: 9px; font-weight: bold;">GIRAR CARTA</div>
-                            </div>
-                        `;
-                    }, 2000);
 
                 }, 2200);
 
@@ -2781,7 +2784,7 @@
 
         function cancelarSeleccionEquipo() {
             indicePokemonSeleccionado = null;
-            modoMoverEnemy = false;
+            modoMoverEquipo = false;
             renderizarVentanaEquipo();
         }
     </script>
