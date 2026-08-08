@@ -471,41 +471,41 @@
                 </div>
             </div>
 
-            <!-- Ventana Pokédex Rediseñada Estilo Referencia (Compacta, con contador y vista de estados) -->
+            <!-- Ventana Pokédex Rediseñada Estilo Referencia (Compacta, con contadores a la derecha y vista de estados) -->
             <div id="pokedex-screen" class="modal-screen" style="z-index: 88;">
                 <div class="pokedex-window">
-                    <div style="display: flex; justify-content: space-between; align-items: center; font-weight: bold; margin-bottom: 2px;">
-                        <span id="pokedex-header-title">Nº 001 - PUPITAR</span>
-                        <button onclick="cerrarPokedex()" style="background:none; border:none; font-size:13px; font-weight:bold; cursor:pointer; color:#111;">✖</button>
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-weight: bold; margin-bottom: 1px;">
+                        <span id="pokedex-header-title">Nº 001 - BULBASAUR</span>
+                        <button onclick="cerrarPokedex()" style="background:none; border:none; font-size:12px; font-weight:bold; cursor:pointer; color:#111;">✖</button>
                     </div>
                     
                     <div class="pokedex-top-card">
-                        <div style="display: flex; gap: 6px; align-items: center;">
-                            <div style="background: #e2e8f0; border: 2px solid #cbd5e1; border-radius: 4px; width: 65px; height: 65px; display: flex; justify-content: center; align-items: center; position: relative; flex-shrink: 0;">
-                                <img id="pokedex-preview-img" src="" style="width: 50px; height: 50px; image-rendering: pixelated;" alt="Poke">
-                                <div id="pokedex-rarity-badge" style="position: absolute; bottom: 0; width: 100%; background: #ef4444; color: white; font-size: 6px; font-weight: bold; text-align: center; border-radius: 0 0 2px 2px;">COMMON</div>
+                        <div style="display: flex; gap: 4px; align-items: center;">
+                            <div style="background: #e2e8f0; border: 2px solid #cbd5e1; border-radius: 3px; width: 55px; height: 55px; display: flex; justify-content: center; align-items: center; position: relative; flex-shrink: 0;">
+                                <img id="pokedex-preview-img" src="" style="width: 44px; height: 44px; image-rendering: pixelated;" alt="Poke">
+                                <div id="pokedex-rarity-badge" style="position: absolute; bottom: 0; width: 100%; background: #ef4444; color: white; font-size: 5px; font-weight: bold; text-align: center; border-radius: 0 0 2px 2px;">COMMON</div>
                             </div>
-                            <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px; overflow: hidden;">
+                            <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 1px; overflow: hidden;">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div id="pokedex-types-container" style="display: flex; gap: 3px;"></div>
+                                    <div id="pokedex-types-container" style="display: flex; gap: 2px;"></div>
                                     <div style="display: flex; gap: 6px; font-size: 8px; font-weight: bold; color: #374151;">
                                         <span>🐾 <span id="pokedex-caught-count">0</span></span>
                                         <span>👁️ <span id="pokedex-seen-count">0</span></span>
                                     </div>
                                 </div>
-                                <div id="pokedex-evolution-text" style="font-size: 7px; color: #4b5563; font-style: italic;">- EVOLVES AT LEVEL 40 -</div>
+                                <div id="pokedex-evolution-text" style="font-size: 6px; color: #4b5563; font-style: italic;">- FIRST STAGE -</div>
                             </div>
                         </div>
                         
-                        <div style="display: flex; flex-direction: column; gap: 1px; margin-top: 2px;">
-                            <div style="display: flex; justify-content: space-between; font-size: 7px; font-weight: bold;"><span>SALUD</span><span id="stat-hp-val">70</span></div>
-                            <div class="hp-bar-bg" style="height: 4px;"><div id="stat-hp-fill" class="hp-bar-fill" style="width: 50%;"></div></div>
+                        <div style="display: flex; flex-direction: column; gap: 1px; margin-top: 1px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 6px; font-weight: bold;"><span>SALUD</span><span id="stat-hp-val">45</span></div>
+                            <div class="hp-bar-bg" style="height: 3px;"><div id="stat-hp-fill" class="hp-bar-fill" style="width: 50%;"></div></div>
                             
-                            <div style="display: flex; justify-content: space-between; font-size: 7px; font-weight: bold;"><span>ATAQUE</span><span id="stat-atk-val">84</span></div>
-                            <div class="hp-bar-bg" style="height: 4px;"><div id="stat-atk-fill" class="hp-bar-fill" style="background-color: #38bdf8 !important; width: 50%;"></div></div>
+                            <div style="display: flex; justify-content: space-between; font-size: 6px; font-weight: bold;"><span>ATAQUE</span><span id="stat-atk-val">49</span></div>
+                            <div class="hp-bar-bg" style="height: 3px;"><div id="stat-atk-fill" class="hp-bar-fill" style="background-color: #38bdf8 !important; width: 50%;"></div></div>
                             
-                            <div style="display: flex; justify-content: space-between; font-size: 7px; font-weight: bold;"><span>DEFENSA</span><span id="stat-def-val">70</span></div>
-                            <div class="hp-bar-bg" style="height: 4px;"><div id="stat-def-fill" class="hp-bar-fill" style="background-color: #eab308 !important; width: 50%;"></div></div>
+                            <div style="display: flex; justify-content: space-between; font-size: 6px; font-weight: bold;"><span>DEFENSA</span><span id="stat-def-val">49</span></div>
+                            <div class="hp-bar-bg" style="height: 3px;"><div id="stat-def-fill" class="hp-bar-fill" style="background-color: #eab308 !important; width: 50%;"></div></div>
                         </div>
                     </div>
 
@@ -513,7 +513,7 @@
                         <!-- Se llena dinámicamente con TODOS los Pokémon -->
                     </div>
 
-                    <button class="bag-close-btn" onclick="cerrarPokedex()" style="margin-top: 2px; padding: 3px;">CERRAR</button>
+                    <button class="bag-close-btn" onclick="cerrarPokedex()" style="margin-top: 2px; padding: 2px; font-size: 10px;">CERRAR</button>
                 </div>
             </div>
 
@@ -741,7 +741,7 @@
             sprite.style.backgroundPosition = "0px 0px"; // Puesto 1
         }
 
-        // --- SISTEMA DE ESTADOS POKÉDX (VISTO / ATRAPADO) ---
+        // --- SISTEMA DE ESTADOS POKÉDEX (VISTO / ATRAPADO / NO VISTO) ---
         function getPokedexStatus(idDex) {
             const user = localStorage.getItem("pt_current_user") || "default";
             const prefix = `pt_${user}_`;
@@ -1353,7 +1353,7 @@
             return subioNivel;
         }
 
-        // --- SISTEMA POKÉDEX ESTILO REFERENCIA (CON ESTADOS VISTO / ATTRAPADO / NO VISTO) ---
+        // --- SISTEMA POKÉDEX ESTILO REFERENCIA (CON ESTADOS VISTO / ATRAPADO / NO VISTO Y STATS MEDIAS) ---
         let pokedexSelectedIndex = 0;
 
         function abrirPokedex() {
@@ -1397,13 +1397,13 @@
             const defFillEl = document.getElementById("stat-def-fill");
 
             if (!isSeen) {
-                // No visto: silueta negra, sin información
+                // No visto: silueta con signo de interrogación o icono misterioso
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ???`;
                 previewImg.src = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idDex}.png`;
                 previewImg.style.filter = "brightness(0)";
                 rarityBadge.innerText = "???";
                 rarityBadge.style.background = "#666";
-                typesContainer.innerHTML = `<span style="background:#666; padding:2px 6px; border-radius:3px; font-size:7px; color:#fff; font-weight:bold;">???</span>`;
+                typesContainer.innerHTML = `<span style="background:#666; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">???</span>`;
                 evolutionText.innerText = `- UNKNOWN -`;
                 hpValEl.innerText = "???";
                 hpFillEl.style.width = "0%";
@@ -1412,7 +1412,7 @@
                 defValEl.innerText = "???";
                 defFillEl.style.width = "0%";
             } else if (!isCaught) {
-                // Visto pero no atrapado: imagen con filtro gris, estadísticas ???
+                // Visto pero no atrapado: imagen con filtro gris y estadísticas ???
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ${poke.name.toUpperCase()}`;
                 previewImg.src = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idDex}.png`;
                 previewImg.style.filter = "grayscale(100%)";
@@ -1422,10 +1422,10 @@
                 let t1 = poke.types[0] || "normal";
                 let t2 = poke.types[1] || null;
                 let c1 = TYPE_COLORS[mapType(t1)] || "#777";
-                let tiposHtml = `<span style="background:${c1}; padding:2px 5px; border-radius:3px; font-size:7px; color:#fff; font-weight:bold;">${t1.toUpperCase()}</span>`;
+                let tiposHtml = `<span style="background:${c1}; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">${t1.toUpperCase()}</span>`;
                 if (t2) {
                     let c2 = TYPE_COLORS[mapType(t2)] || "#777";
-                    tiposHtml += ` <span style="background:${c2}; padding:2px 5px; border-radius:3px; font-size:7px; color:#fff; font-weight:bold;">${t2.toUpperCase()}</span>`;
+                    tiposHtml += ` <span style="background:${c2}; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">${t2.toUpperCase()}</span>`;
                 }
                 typesContainer.innerHTML = tiposHtml;
                 evolutionText.innerText = poke.evolves_from && poke.evolves_from !== "None" ? `- EVOLVES FROM ${poke.evolves_from.toUpperCase()} -` : `- FIRST STAGE -`;
@@ -1437,7 +1437,7 @@
                 defValEl.innerText = "???";
                 defFillEl.style.width = "0%";
             } else {
-                // Atrapado: Color completo y estadísticas reales
+                // Atrapado: Color completo y estadísticas adaptadas (medias combinadas igual que en el juego)
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ${poke.name.toUpperCase()}`;
                 previewImg.src = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idDex}.png`;
                 previewImg.style.filter = "none";
@@ -1447,25 +1447,25 @@
                 let t1 = poke.types[0] || "normal";
                 let t2 = poke.types[1] || null;
                 let c1 = TYPE_COLORS[mapType(t1)] || "#777";
-                let tiposHtml = `<span style="background:${c1}; padding:2px 5px; border-radius:3px; font-size:7px; color:#fff; font-weight:bold;">${t1.toUpperCase()}</span>`;
+                let tiposHtml = `<span style="background:${c1}; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">${t1.toUpperCase()}</span>`;
                 if (t2) {
                     let c2 = TYPE_COLORS[mapType(t2)] || "#777";
-                    tiposHtml += ` <span style="background:${c2}; padding:2px 5px; border-radius:3px; font-size:7px; color:#fff; font-weight:bold;">${t2.toUpperCase()}</span>`;
+                    tiposHtml += ` <span style="background:${c2}; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">${t2.toUpperCase()}</span>`;
                 }
                 typesContainer.innerHTML = tiposHtml;
                 evolutionText.innerText = poke.evolves_from && poke.evolves_from !== "None" ? `- EVOLVES FROM ${poke.evolves_from.toUpperCase()} -` : `- FIRST STAGE -`;
 
-                let stats = poke.stats || { hp: 45, attack: 49, defense: 49 };
+                let stats = poke.stats || { hp: 45, attack: 49, defense: 49, special_attack: 49, special_defense: 49 };
                 let hpVal = stats.hp || 45;
-                let atkVal = stats.attack || 49;
-                let defVal = stats.defense || 49;
+                let atkVal = Math.floor(((stats.attack || 49) + (stats.special_attack || 49)) / 2);
+                let defVal = Math.floor(((stats.defense || 49) + (stats.special_defense || 49)) / 2);
 
                 hpValEl.innerText = hpVal;
-                hpFillEl.style.width = Math.min(100, (hpVal / 150) * 100) + "%";
+                hpFillEl.style.width = Math.min(100, (hpVal / 200) * 100) + "%";
                 atkValEl.innerText = atkVal;
-                atkFillEl.style.width = Math.min(100, (atkVal / 150) * 100) + "%";
+                atkFillEl.style.width = Math.min(100, (atkVal / 200) * 100) + "%";
                 defValEl.innerText = defVal;
-                defFillEl.style.width = Math.min(100, (defVal / 150) * 100) + "%";
+                defFillEl.style.width = Math.min(100, (defVal / 200) * 100) + "%";
             }
 
             // Contadores totales
@@ -1494,7 +1494,7 @@
                 cell.className = `pokedex-grid-cell ${isSelected}`;
                 cell.onclick = () => seleccionarPokemonPokedex(idx);
 
-                let imgStyle = "width: 20px; height: 20px; image-rendering: pixelated;";
+                let imgStyle = "width: 18px; height: 18px; image-rendering: pixelated;";
                 if (!status.isSeen) {
                     imgStyle += " filter: brightness(0);";
                 } else if (!status.isCaught) {
@@ -2781,7 +2781,7 @@
 
         function cancelarSeleccionEquipo() {
             indicePokemonSeleccionado = null;
-            modoMoverEquipo = false;
+            modoMoverEnemy = false;
             renderizarVentanaEquipo();
         }
     </script>
