@@ -66,7 +66,7 @@
         .pokedex-grid-cell { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; padding: 1px; height: 32px; position: relative; }
         .pokedex-grid-cell.selected { background: #fef08a; border-color: #f59e0b; }
         .pokedex-cell-num { font-size: 6px; color: #64748b; font-weight: bold; }
-        .pokedex-cell-img { width: 20px; height: 20px; image-rendering: pixelated; }
+        .pokedex-cell-img { width: 28px; height: 28px; image-rendering: pixelated; }
 
         /* Estilo específico ventana Bolsa */
         .bag-window { background: linear-gradient(135deg, #d97706, #b45309); border: 4px solid #fde68a; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; position: relative; border-radius: 6px; box-sizing: border-box; }
@@ -471,7 +471,7 @@
                 </div>
             </div>
 
-            <!-- Ventana Pokédex Rediseñada Estilo Referencia (Compacta, con contadores a la derecha y vista de estados) -->
+            <!-- Ventana Pokédex Rediseñada Estilo Referencia (Compacta, contadores, sprites normales arriba y iconos grandes abajo) -->
             <div id="pokedex-screen" class="modal-screen" style="z-index: 88;">
                 <div class="pokedex-window">
                     <div style="display: flex; justify-content: space-between; align-items: center; font-weight: bold; margin-bottom: 1px;">
@@ -482,7 +482,7 @@
                     <div class="pokedex-top-card">
                         <div style="display: flex; gap: 4px; align-items: center;">
                             <div style="background: #e2e8f0; border: 2px solid #cbd5e1; border-radius: 3px; width: 55px; height: 55px; display: flex; justify-content: center; align-items: center; position: relative; flex-shrink: 0;">
-                                <img id="pokedex-preview-img" src="" style="width: 44px; height: 44px; image-rendering: pixelated;" alt="Poke">
+                                <img id="pokedex-preview-img" src="" style="width: 46px; height: 46px; image-rendering: pixelated; object-fit: contain;" alt="Poke">
                                 <div id="pokedex-rarity-badge" style="position: absolute; bottom: 0; width: 100%; background: #ef4444; color: white; font-size: 5px; font-weight: bold; text-align: center; border-radius: 0 0 2px 2px;">COMMON</div>
                             </div>
                             <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 1px; overflow: hidden;">
@@ -741,7 +741,12 @@
             sprite.style.backgroundPosition = "0px 0px"; // Puesto 1
         }
 
-        // --- SELECTOR DE ICONOS ROBUSTO PARA LA POKÉDEX ---
+        // --- SELECTORES DE SPRITES Y ICONOS PARA LA POKÉDEX ---
+        function getPokedexNormalSpriteUrl(poke) {
+            let id = poke.id || 1;
+            return poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+        }
+
         function getPokedexIconUrl(poke) {
             let id = poke.id || 1;
             let versions = poke.sprites?.versions || poke.versions || {};
@@ -1413,12 +1418,13 @@
             const defValEl = document.getElementById("stat-def-val");
             const defFillEl = document.getElementById("stat-def-fill");
 
-            let pSprite = getPokedexIconUrl(poke);
+            // Arriba en la tarjeta de detalles se usa el sprite normal
+            let normalSprite = getPokedexNormalSpriteUrl(poke);
 
             if (!isSeen) {
                 // No visto: silueta con icono misterioso / interrogación
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ???`;
-                previewImg.src = pSprite;
+                previewImg.src = normalSprite;
                 previewImg.style.filter = "brightness(0)";
                 rarityBadge.innerText = "???";
                 rarityBadge.style.background = "#666";
@@ -1433,7 +1439,7 @@
             } else if (!isCaught) {
                 // Visto pero no atrapado: imagen con filtro gris y estadísticas ???
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ${poke.name.toUpperCase()}`;
-                previewImg.src = pSprite;
+                previewImg.src = normalSprite;
                 previewImg.style.filter = "grayscale(100%)";
                 rarityBadge.innerText = "SEEN";
                 rarityBadge.style.background = "#64748b";
@@ -1458,7 +1464,7 @@
             } else {
                 // Atrapado: Color completo y estadísticas adaptadas (medias combinadas igual que en el juego)
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ${poke.name.toUpperCase()}`;
-                previewImg.src = pSprite;
+                previewImg.src = normalSprite;
                 previewImg.style.filter = "none";
                 rarityBadge.innerText = "COMMON";
                 rarityBadge.style.background = "#ef4444";
@@ -1499,7 +1505,7 @@
             document.getElementById("pokedex-caught-count").innerText = totalCaughtCount;
             document.getElementById("pokedex-seen-count").innerText = totalSeenCount;
 
-            // Renderizar la rejilla con TODOS los Pokémon (8 columnas)
+            // Renderizar la rejilla con TODOS los Pokémon (8 columnas, iconos más grandes)
             const grid = document.getElementById("pokedex-grid-container");
             grid.innerHTML = "";
 
@@ -1513,14 +1519,13 @@
                 cell.className = `pokedex-grid-cell ${isSelected}`;
                 cell.onclick = () => seleccionarPokemonPokedex(idx);
 
-                let imgStyle = "width: 18px; height: 18px; image-rendering: pixelated;";
+                let imgStyle = "width: 28px; height: 28px; image-rendering: pixelated;";
                 if (!status.isSeen) {
                     imgStyle += " filter: brightness(0);";
                 } else if (!status.isCaught) {
                     imgStyle += " filter: grayscale(100%);";
                 }
 
-                // Respaldo automático por onerror si falla la ruta del icono de generación
                 let fallbackAnimado = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${pId}.gif`;
                 let fallbackNormal = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pId}.png`;
 
@@ -2776,7 +2781,7 @@
                     <div class="summary-table-row"><span>Potencial</span><b>${p.potencial || '15 / 31'}</b></div>
                     <div class="summary-table-row"><span>Poder Oculto</span><b style="color:${colorOculto}; text-shadow:1px 1px 0 #000;">${p.tipoOculto.toUpperCase()}</b></div>
                     <div class="summary-table-row"><span>Amistad</span><b>${p.amistad || '50 / 100'}</b></div>
-                    <div style="font-size:8px; color:#4b5563; margin-top:2px; line-height:1.1;">${p.origen || 'En almacenamiento PC.'}</div>
+                    <div style="font-size:8px; color:#4b5563; margin-top:2px; line-height:1.1;">${p.origen || 'En equipo activo.'}</div>
                 </div>
             `;
 
