@@ -741,20 +741,21 @@
             sprite.style.backgroundPosition = "0px 0px"; // Puesto 1
         }
 
-        // --- SELECTOR DE ICONOS PARA LA POKÉDEX (Generación VII -> Generación VIII -> Gen V Animated -> Default) ---
+        // --- SELECTOR DE ICONOS ROBUSTO PARA LA POKÉDEX ---
         function getPokedexIconUrl(poke) {
+            let id = poke.id || 1;
             let versions = poke.sprites?.versions || poke.versions || {};
-            
-            let iconGen7 = versions['generation-vii']?.icons?.front_default;
-            if (iconGen7) return iconGen7;
 
             let iconGen8 = versions['generation-viii']?.icons?.front_default;
             if (iconGen8) return iconGen8;
 
+            let iconGen7 = versions['generation-vii']?.icons?.front_default;
+            if (iconGen7) return iconGen7;
+
             let iconGen5Anim = versions['generation-v']?.['black-white']?.animated?.front_default;
             if (iconGen5Anim) return iconGen5Anim;
 
-            return poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${poke.id || 1}.png`;
+            return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons/${id}.png`;
         }
 
         // --- SISTEMA DE ESTADOS POKÉDEX (VISTO / ATRAPADO / NO VISTO) ---
@@ -1412,10 +1413,12 @@
             const defValEl = document.getElementById("stat-def-val");
             const defFillEl = document.getElementById("stat-def-fill");
 
+            let pSprite = getPokedexIconUrl(poke);
+
             if (!isSeen) {
                 // No visto: silueta con icono misterioso / interrogación
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ???`;
-                previewImg.src = getPokedexIconUrl(poke);
+                previewImg.src = pSprite;
                 previewImg.style.filter = "brightness(0)";
                 rarityBadge.innerText = "???";
                 rarityBadge.style.background = "#666";
@@ -1430,7 +1433,7 @@
             } else if (!isCaught) {
                 // Visto pero no atrapado: imagen con filtro gris y estadísticas ???
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ${poke.name.toUpperCase()}`;
-                previewImg.src = getPokedexIconUrl(poke);
+                previewImg.src = pSprite;
                 previewImg.style.filter = "grayscale(100%)";
                 rarityBadge.innerText = "SEEN";
                 rarityBadge.style.background = "#64748b";
@@ -1455,7 +1458,7 @@
             } else {
                 // Atrapado: Color completo y estadísticas adaptadas (medias combinadas igual que en el juego)
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ${poke.name.toUpperCase()}`;
-                previewImg.src = getPokedexIconUrl(poke);
+                previewImg.src = pSprite;
                 previewImg.style.filter = "none";
                 rarityBadge.innerText = "COMMON";
                 rarityBadge.style.background = "#ef4444";
@@ -1496,14 +1499,14 @@
             document.getElementById("pokedex-caught-count").innerText = totalCaughtCount;
             document.getElementById("pokedex-seen-count").innerText = totalSeenCount;
 
-            // Renderizar la rejilla con TODOS los Pokémon (8 columnas) llamando a getPokedexIconUrl
+            // Renderizar la rejilla con TODOS los Pokémon (8 columnas)
             const grid = document.getElementById("pokedex-grid-container");
             grid.innerHTML = "";
 
             POKEDEX_GLOBAL.forEach((p, idx) => {
                 let pId = p.id || (idx + 1);
                 let status = getPokedexStatus(pId);
-                let pSprite = getPokedexIconUrl(p);
+                let pSpriteCell = getPokedexIconUrl(p);
                 let isSelected = pokedexSelectedIndex === idx ? 'selected' : '';
 
                 let cell = document.createElement("div");
@@ -1517,9 +1520,13 @@
                     imgStyle += " filter: grayscale(100%);";
                 }
 
+                // Respaldo automático por onerror si falla la ruta del icono de generación
+                let fallbackAnimado = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${pId}.gif`;
+                let fallbackNormal = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pId}.png`;
+
                 cell.innerHTML = `
                     <span class="pokedex-cell-num">${pId.toString().padStart(3, '0')}</span>
-                    <img src="${pSprite}" style="${imgStyle}" alt="P">
+                    <img src="${pSpriteCell}" style="${imgStyle}" alt="P" onerror="if(this.src.includes('generation-viii') || this.src.includes('generation-vii')){this.src='${fallbackAnimado}';}else if(this.src.includes('animated')){this.src='${fallbackNormal}';}">
                 `;
                 grid.appendChild(cell);
             });
@@ -2769,7 +2776,7 @@
                     <div class="summary-table-row"><span>Potencial</span><b>${p.potencial || '15 / 31'}</b></div>
                     <div class="summary-table-row"><span>Poder Oculto</span><b style="color:${colorOculto}; text-shadow:1px 1px 0 #000;">${p.tipoOculto.toUpperCase()}</b></div>
                     <div class="summary-table-row"><span>Amistad</span><b>${p.amistad || '50 / 100'}</b></div>
-                    <div style="font-size:8px; color:#4b5563; margin-top:2px; line-height:1.1;">${p.origen || 'En equipo activo.'}</div>
+                    <div style="font-size:8px; color:#4b5563; margin-top:2px; line-height:1.1;">${p.origen || 'En almacenamiento PC.'}</div>
                 </div>
             `;
 
