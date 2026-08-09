@@ -59,14 +59,14 @@
         .box-container, .modal-window { background-color: #2a2a2a; padding: 15px; border-radius: 8px; border: 2px solid #444; width: 100%; height: 100%; text-align: center; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
         .modal-window { background: linear-gradient(135deg, #38bdf8, #0369a1); border: 4px solid #bae6fd; box-shadow: 0 8px 16px rgba(0,0,0,0.6); }
         
-        /* Estilo específico ventana Pokédex compacta (3 filas y media visibles) */
+        /* Estilo específico ventana Pokédex compacta */
         .pokedex-window { background: #f3f4f6; border: 4px solid #94a3b8; border-radius: 6px; width: 100%; height: 100%; padding: 4px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; color: #111; font-size: 9px; }
         .pokedex-top-card { background: #fff; border: 2px solid #cbd5e1; border-radius: 4px; padding: 4px; display: flex; flex-direction: column; gap: 2px; position: relative; }
         .pokedex-grid-scroll { background: #fff; border: 2px solid #cbd5e1; border-radius: 4px; flex-grow: 1; margin-top: 2px; overflow-y: auto; display: grid; grid-template-columns: repeat(8, 1fr); gap: 1px; padding: 2px; align-content: start; }
-        .pokedex-grid-cell { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; padding: 1px; height: 32px; position: relative; }
+        .pokedex-grid-cell { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; padding: 1px; height: 36px; position: relative; }
         .pokedex-grid-cell.selected { background: #fef08a; border-color: #f59e0b; }
         .pokedex-cell-num { font-size: 6px; color: #64748b; font-weight: bold; }
-        .pokedex-cell-img { width: 28px; height: 28px; image-rendering: pixelated; }
+        .pokedex-cell-img { width: 32px; height: 32px; image-rendering: pixelated; }
 
         /* Estilo específico ventana Bolsa */
         .bag-window { background: linear-gradient(135deg, #d97706, #b45309); border: 4px solid #fde68a; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; position: relative; border-radius: 6px; box-sizing: border-box; }
@@ -471,12 +471,12 @@
                 </div>
             </div>
 
-            <!-- Ventana Pokédex Rediseñada Estilo Referencia (Compacta, contadores, sprites normales arriba y iconos grandes abajo) -->
+            <!-- Ventana Pokédex Rediseñada Estilo Referencia (Cruz grande arriba, sin botón cerrar abajo, sprite normal arriba y iconos grandes abajo) -->
             <div id="pokedex-screen" class="modal-screen" style="z-index: 88;">
                 <div class="pokedex-window">
                     <div style="display: flex; justify-content: space-between; align-items: center; font-weight: bold; margin-bottom: 1px;">
                         <span id="pokedex-header-title">Nº 001 - BULBASAUR</span>
-                        <button onclick="cerrarPokedex()" style="background:none; border:none; font-size:12px; font-weight:bold; cursor:pointer; color:#111;">✖</button>
+                        <button onclick="cerrarPokedex()" style="background:none; border:none; font-size:20px; font-weight:bold; cursor:pointer; color:#111; line-height: 1; padding: 0 2px;">✖</button>
                     </div>
                     
                     <div class="pokedex-top-card">
@@ -512,8 +512,6 @@
                     <div class="pokedex-grid-scroll" id="pokedex-grid-container">
                         <!-- Se llena dinámicamente con TODOS los Pokémon -->
                     </div>
-
-                    <button class="bag-close-btn" onclick="cerrarPokedex()" style="margin-top: 2px; padding: 2px; font-size: 10px;">CERRAR</button>
                 </div>
             </div>
 
@@ -1519,7 +1517,7 @@
                 cell.className = `pokedex-grid-cell ${isSelected}`;
                 cell.onclick = () => seleccionarPokemonPokedex(idx);
 
-                let imgStyle = "width: 28px; height: 28px; image-rendering: pixelated;";
+                let imgStyle = "width: 32px; height: 32px; image-rendering: pixelated;";
                 if (!status.isSeen) {
                     imgStyle += " filter: brightness(0);";
                 } else if (!status.isCaught) {
