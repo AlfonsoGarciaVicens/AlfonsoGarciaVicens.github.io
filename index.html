@@ -61,7 +61,7 @@
         .box-container, .modal-window { background-color: #2a2a2a; padding: 15px; border-radius: 8px; border: 2px solid #444; width: 100%; height: 100%; text-align: center; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
         .modal-window { background: linear-gradient(135deg, #38bdf8, #0369a1); border: none; border-radius: 0; box-shadow: none; width: 100%; height: 100%; }
         
-        /* Estilo específico ventana Pokédex (Ocupa 100% sin bordes) */
+        /* Estilo específico ventana Pokédex */
         .pokedex-window { background: #f3f4f6; border: none; border-radius: 0; width: 100%; height: 100%; padding: 4px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; color: #111; font-size: 9px; }
         .pokedex-top-card { background: #fff; border: 2px solid #cbd5e1; border-radius: 0; padding: 4px; display: flex; flex-direction: column; gap: 2px; position: relative; width: 100%; }
         .pokedex-grid-scroll { background: #fff; border: 2px solid #cbd5e1; border-radius: 0; flex-grow: 1; margin-top: 2px; overflow-y: auto; display: grid; grid-template-columns: repeat(8, 1fr); width: 100%; gap: 1px; padding: 2px; align-content: start; }
@@ -275,7 +275,7 @@
         }
         .anim-slide { animation: slideDown 0.8s ease forwards; }
 
-        /* Ventana de combate adaptada exactamente al espacio interior de la ventanita 320x320 */
+        /* Sprites de combate adaptados con tamaño nativo/por defecto de la API */
         .combat-modal-window { 
             background: linear-gradient(135deg, #1e3a8a, #1d4ed8); 
             border: none;
@@ -302,7 +302,7 @@
         .exp-bar-fill { background-color: #38bdf8 !important; height: 100%; transition: width 0.3s ease; display: block; }
 
         .combat-sprites { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 10px; height: 95px; }
-        .battle-sprite-img { width: 85px; height: 85px; image-rendering: pixelated; object-fit: contain; }
+        .battle-sprite-img { image-rendering: pixelated; }
         
         #player-battle-sprite {
             position: relative;
@@ -473,7 +473,7 @@
                 </div>
             </div>
 
-            <!-- Ventana Pokédex (Pantalla completa, grid ancho, sin botón inferior, cruz grande) -->
+            <!-- Ventana Pokédex (Pantalla completa, grid ancho ocupando todo el ancho, sin botón inferior, cruz grande) -->
             <div id="pokedex-screen" class="modal-screen" style="z-index: 88;">
                 <div class="pokedex-window">
                     <div style="display: flex; justify-content: space-between; align-items: center; font-weight: bold; margin-bottom: 1px;">
@@ -1505,35 +1505,30 @@
             document.getElementById("pokedex-caught-count").innerText = totalCaughtCount;
             document.getElementById("pokedex-seen-count").innerText = totalSeenCount;
 
-            // Renderizar la rejilla con TODOS los Pokémon (8 columnas, ancho completo, iconos ampliados si son gen VII/VIII)
+            // Renderizar la rejilla con TODOS los Pokémon (8 columnas, ancho completo, sprites normales de antes)
             const grid = document.getElementById("pokedex-grid-container");
             grid.innerHTML = "";
 
             POKEDEX_GLOBAL.forEach((p, idx) => {
                 let pId = p.id || (idx + 1);
                 let status = getPokedexStatus(pId);
-                let pSpriteCell = getPokedexIconUrl(p);
+                let pSpriteCell = getPokedexNormalSpriteUrl(p);
                 let isSelected = pokedexSelectedIndex === idx ? 'selected' : '';
 
                 let cell = document.createElement("div");
                 cell.className = `pokedex-grid-cell ${isSelected}`;
                 cell.onclick = () => seleccionarPokemonPokedex(idx);
 
-                let isIconGen = pSpriteCell.includes('generation-vii') || pSpriteCell.includes('generation-viii');
-                let imgClass = isIconGen ? "pokedex-cell-img icon-gen-large" : "pokedex-cell-img";
-                let imgStyle = "image-rendering: pixelated;";
+                let imgStyle = "width: 22px; height: 22px; image-rendering: pixelated;";
                 if (!status.isSeen) {
                     imgStyle += " filter: brightness(0);";
                 } else if (!status.isCaught) {
                     imgStyle += " filter: grayscale(100%);";
                 }
 
-                let fallbackAnimado = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${pId}.gif`;
-                let fallbackNormal = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pId}.png`;
-
                 cell.innerHTML = `
                     <span class="pokedex-cell-num">${pId.toString().padStart(3, '0')}</span>
-                    <img src="${pSpriteCell}" class="${imgClass}" style="${imgStyle}" alt="P" onerror="if(this.src.includes('generation-viii') || this.src.includes('generation-vii')){this.src='${fallbackAnimado}';}else if(this.src.includes('animated')){this.src='${fallbackNormal}';}">
+                    <img src="${pSpriteCell}" class="pokedex-cell-img" style="${imgStyle}" alt="P">
                 `;
                 grid.appendChild(cell);
             });
