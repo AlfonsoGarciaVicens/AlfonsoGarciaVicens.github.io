@@ -38,55 +38,58 @@
         /* Overlays de pantalla completa (Login / Selección Inicial) */
         .screen-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
         
-        /* Menús in-game y Combate: Estrictamente contenidos dentro de la ventanita verde */
+        /* Menús in-game y Combate: Ocupan el 100% de la pantalla sin bordes ni márgenes */
         .modal-screen { 
             position: absolute; 
             top: 0; 
             left: 0; 
-            right: 0;
-            bottom: 0;
-            background-color: rgba(18, 18, 18, 0.95); 
+            width: 320px; 
+            height: 320px; 
+            background-color: #1a1a1a; 
             z-index: 80; 
             display: none; 
             flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            padding: 10px; 
-            border-radius: 6px; 
+            justify-content: space-between; 
+            align-items: stretch; 
+            padding: 0; 
+            margin: 0;
+            border: none;
+            border-radius: 0; 
             box-sizing: border-box;
         }
         
         .box-container, .modal-window { background-color: #2a2a2a; padding: 15px; border-radius: 8px; border: 2px solid #444; width: 100%; height: 100%; text-align: center; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
-        .modal-window { background: linear-gradient(135deg, #38bdf8, #0369a1); border: 4px solid #bae6fd; box-shadow: 0 8px 16px rgba(0,0,0,0.6); }
+        .modal-window { background: linear-gradient(135deg, #38bdf8, #0369a1); border: none; border-radius: 0; box-shadow: none; width: 100%; height: 100%; }
         
-        /* Estilo específico ventana Pokédex compacta (3 filas y media visibles) */
-        .pokedex-window { background: #f3f4f6; border: 4px solid #94a3b8; border-radius: 6px; width: 100%; height: 100%; padding: 4px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; color: #111; font-size: 9px; }
-        .pokedex-top-card { background: #fff; border: 2px solid #cbd5e1; border-radius: 4px; padding: 4px; display: flex; flex-direction: column; gap: 2px; position: relative; }
-        .pokedex-grid-scroll { background: #fff; border: 2px solid #cbd5e1; border-radius: 4px; flex-grow: 1; margin-top: 2px; overflow-y: auto; display: grid; grid-template-columns: repeat(8, 1fr); gap: 1px; padding: 2px; align-content: start; }
-        .pokedex-grid-cell { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; padding: 1px; height: 32px; position: relative; }
+        /* Estilo específico ventana Pokédex (Ocupa 100% sin bordes) */
+        .pokedex-window { background: #f3f4f6; border: none; border-radius: 0; width: 100%; height: 100%; padding: 4px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; color: #111; font-size: 9px; }
+        .pokedex-top-card { background: #fff; border: 2px solid #cbd5e1; border-radius: 0; padding: 4px; display: flex; flex-direction: column; gap: 2px; position: relative; width: 100%; }
+        .pokedex-grid-scroll { background: #fff; border: 2px solid #cbd5e1; border-radius: 0; flex-grow: 1; margin-top: 2px; overflow-y: auto; display: grid; grid-template-columns: repeat(8, 1fr); width: 100%; gap: 1px; padding: 2px; align-content: start; }
+        .pokedex-grid-cell { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; padding: 1px; height: 36px; position: relative; }
         .pokedex-grid-cell.selected { background: #fef08a; border-color: #f59e0b; }
         .pokedex-cell-num { font-size: 6px; color: #64748b; font-weight: bold; }
-        .pokedex-cell-img { width: 20px; height: 20px; image-rendering: pixelated; }
+        .pokedex-cell-img { width: 26px; height: 26px; image-rendering: pixelated; }
 
         /* Estilo específico ventana Bolsa */
-        .bag-window { background: linear-gradient(135deg, #d97706, #b45309); border: 4px solid #fde68a; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; position: relative; border-radius: 6px; box-sizing: border-box; }
-        .bag-tabs { display: flex; justify-content: space-around; background: rgba(0,0,0,0.3); padding: 3px; border-radius: 6px; gap: 2px; }
-        .bag-tab-btn { background: #78350f; border: 2px solid #92400e; border-radius: 4px; padding: 4px; cursor: pointer; font-size: 13px; color: #fff; flex: 1; text-align: center; }
+        .bag-window { background: linear-gradient(135deg, #d97706, #b45309); border: none; border-radius: 0; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-sizing: border-box; }
+        .bag-tabs { display: flex; justify-content: space-around; background: rgba(0,0,0,0.3); padding: 3px; border-radius: 0; gap: 2px; }
+        .bag-tab-btn { background: #78350f; border: 2px solid #92400e; border-radius: 0; padding: 4px; cursor: pointer; font-size: 13px; color: #fff; flex: 1; text-align: center; }
         .bag-tab-btn.active { background: #f59e0b; border-color: #fef3c7; }
         
-        .bag-content-grid { background: #ffffff; border: 3px solid #78350f; border-radius: 6px; flex-grow: 1; padding: 6px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; margin: 4px 0; }
-        .bag-item-row { background: #fef3c7; border: 1px solid #d97706; color: #111; padding: 5px 8px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 11px; font-weight: bold; }
+        .bag-content-grid { background: #ffffff; border: 3px solid #78350f; border-radius: 0; flex-grow: 1; padding: 6px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; margin: 4px 0; }
+        .bag-item-row { background: #fef3c7; border: 1px solid #d97706; color: #111; padding: 5px 8px; border-radius: 0; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 11px; font-weight: bold; }
         .bag-item-row:hover { background: #fde68a; }
         .bag-item-row.selected { background: #f59e0b; color: white; border-color: #b45309; }
 
-        .bag-desc-box { background: #4b5563; border: 3px solid #1f2937; border-radius: 6px; padding: 6px; color: #f3f4f6; font-size: 10px; text-align: left; height: 65px; display: flex; flex-direction: column; justify-content: space-between; }
-        .bag-use-btn { background: #10b981; border: none; color: white; padding: 3px 8px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 10px; align-self: flex-end; }
-        .bag-close-btn { background: #ef4444; border: 2px solid #991b1b; color: white; padding: 5px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 11px; width: 100%; text-align: center; }
+        .bag-desc-box { background: #4b5563; border: 3px solid #1f2937; border-radius: 0; padding: 6px; color: #f3f4f6; font-size: 10px; text-align: left; height: 65px; display: flex; flex-direction: column; justify-content: space-between; }
+        .bag-use-btn { background: #10b981; border: none; color: white; padding: 3px 8px; font-weight: bold; border-radius: 0; cursor: pointer; font-size: 10px; align-self: flex-end; }
+        .bag-close-btn { background: #ef4444; border: 2px solid #991b1b; color: white; padding: 5px; font-weight: bold; border-radius: 0; cursor: pointer; font-size: 11px; width: 100%; text-align: center; }
 
         /* Estilo Ventana Gacha / Tienda */
         .gacha-window { 
             background: linear-gradient(135deg, #9d174d, #831843); 
-            border: 4px solid #fbcfe8; 
+            border: none;
+            border-radius: 0;
             width: 100%; 
             height: 100%; 
             padding: 10px; 
@@ -94,28 +97,27 @@
             flex-direction: column; 
             justify-content: space-between; 
             position: relative; 
-            border-radius: 6px; 
             box-sizing: border-box; 
         }
         .gacha-header-row { display: flex; justify-content: space-between; align-items: center; }
-        .gacha-money-badge { background: rgba(0,0,0,0.5); border: 1px solid #f472b6; padding: 3px 8px; border-radius: 4px; font-size: 11px; color: #fdf2f8; font-weight: bold; }
+        .gacha-money-badge { background: rgba(0,0,0,0.5); border: 1px solid #f472b6; padding: 3px 8px; border-radius: 0; font-size: 11px; color: #fdf2f8; font-weight: bold; }
         .gacha-main-title { font-size: 12px; font-weight: bold; color: #fff; letter-spacing: 1px; text-align: center; flex-grow: 1; text-transform: uppercase; }
         
         .gacha-carousel-container { display: flex; align-items: center; justify-content: space-between; flex-grow: 1; margin: 8px 0; gap: 5px; }
-        .gacha-arrow-btn { background: #475569; border: 2px solid #94a3b8; color: white; font-size: 16px; padding: 10px 6px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .gacha-arrow-btn { background: #475569; border: 2px solid #94a3b8; color: white; font-size: 16px; padding: 10px 6px; border-radius: 0; cursor: pointer; font-weight: bold; }
         .gacha-arrow-btn:hover { background: #64748b; }
 
-        .gacha-display-box { background: rgba(0, 0, 0, 0.3); border: 2px dashed #fbcfe8; border-radius: 8px; flex-grow: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; text-align: center; gap: 8px; }
-        .gacha-item-preview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 24px; background: rgba(255,255,255,0.1); padding: 8px; border-radius: 6px; width: 100%; justify-items: center; align-items: center; }
+        .gacha-display-box { background: rgba(0, 0, 0, 0.3); border: 2px dashed #fbcfe8; border-radius: 0; flex-grow: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; text-align: center; gap: 8px; }
+        .gacha-item-preview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 24px; background: rgba(255,255,255,0.1); padding: 8px; border-radius: 0; width: 100%; justify-items: center; align-items: center; }
         .gacha-desc { font-size: 10px; color: #fbcfe8; min-height: 25px; }
 
-        .gacha-pull-btn { background: #0284c7; border: 3px solid #bae6fd; color: white; padding: 10px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 13px; width: 100%; text-shadow: 1px 1px 1px #000; box-shadow: 0 4px 6px rgba(0,0,0,0.4); }
+        .gacha-pull-btn { background: #0284c7; border: 3px solid #bae6fd; color: white; padding: 10px; font-weight: bold; border-radius: 0; cursor: pointer; font-size: 13px; width: 100%; text-shadow: 1px 1px 1px #000; box-shadow: 0 4px 6px rgba(0,0,0,0.4); }
         .gacha-pull-btn:hover { background: #0ea5e9; }
-        .gacha-close-btn { background: #ef4444; border: 2px solid #991b1b; color: white; padding: 6px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 11px; width: 100%; text-align: center; }
+        .gacha-close-btn { background: #ef4444; border: 2px solid #991b1b; color: white; padding: 6px; font-weight: bold; border-radius: 0; cursor: pointer; font-size: 11px; width: 100%; text-align: center; }
 
         .box-container h2 { margin-bottom: 10px; color: #4CAF50; font-size: 16px; }
         .box-container input { width: 100%; padding: 8px; margin-bottom: 10px; background-color: #1a1a1a; border: 1px solid #555; color: #fff; border-radius: 4px; }
-        .box-container button, .starter-btn, .modal-close-btn { width: 100%; padding: 8px; background-color: #4CAF50; border: none; color: white; font-weight: bold; border-radius: 4px; cursor: pointer; margin-top: 4px; font-size: 11px; }
+        .box-container button, .starter-btn, .modal-close-btn { width: 100%; padding: 8px; background-color: #4CAF50; border: none; color: white; font-weight: bold; border-radius: 0; cursor: pointer; margin-top: 4px; font-size: 11px; }
         .starter-btn, .modal-close-btn { background-color: #2563eb; }
         .starter-grid { display: flex; flex-direction: column; gap: 8px; margin-top: 5px; }
 
@@ -126,34 +128,34 @@
         .menu-icon-btn { background-color: #1e293b; border: 3px solid #64748b; border-radius: 8px; width: 50px; height: 50px; font-size: 22px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
 
         /* Estilo interfaz equipo estilo GBA */
-        .team-window-gba { background: linear-gradient(135deg, #3b82f6, #1d4ed8); border: 3px solid #93c5fd; border-radius: 6px; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
-        .gba-lead-slot { background: #2563eb; border: 2px solid #60a5fa; border-radius: 6px; padding: 6px; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .team-window-gba { background: linear-gradient(135deg, #3b82f6, #1d4ed8); border: none; border-radius: 0; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
+        .gba-lead-slot { background: #2563eb; border: 2px solid #60a5fa; border-radius: 0; padding: 6px; display: flex; align-items: center; gap: 8px; cursor: pointer; }
         .gba-lead-slot.selected-slot { border: 2px solid #f59e0b; box-shadow: 0 0 8px #f59e0b; }
         .gba-party-container { display: flex; flex-direction: column; gap: 4px; overflow-y: auto; flex-grow: 1; margin-top: 5px; }
-        .gba-party-slot { background: #1e40af; border: 2px solid #3b82f6; border-radius: 6px; padding: 5px; display: flex; align-items: center; gap: 8px; cursor: pointer; color: white; font-size: 10px; }
+        .gba-party-slot { background: #1e40af; border: 2px solid #3b82f6; border-radius: 0; padding: 5px; display: flex; align-items: center; gap: 8px; cursor: pointer; color: white; font-size: 10px; }
         .gba-party-slot.selected-slot { border: 2px solid #f59e0b; box-shadow: 0 0 8px #f59e0b; background: #1e3a8a; }
         .gba-slot-info { display: flex; flex-direction: column; flex-grow: 1; }
-        .gba-hp-bar { background: #111; height: 5px; width: 100%; border-radius: 3px; margin-top: 2px; overflow: hidden; border: 1px solid #000; }
+        .gba-hp-bar { background: #111; height: 5px; width: 100%; border-radius: 0; margin-top: 2px; overflow: hidden; border: 1px solid #000; }
         .gba-hp-fill { background: #22c55e; height: 100%; }
 
         /* Estilo PC Rediseñado (Basado en la imagen de referencia GBA) */
-        .pc-window-gba { background: linear-gradient(135deg, #38bdf8, #0284c7); border: 3px solid #bae6fd; border-radius: 6px; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
+        .pc-window-gba { background: linear-gradient(135deg, #38bdf8, #0284c7); border: none; border-radius: 0; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
         .pc-main-layout { display: flex; gap: 6px; flex-grow: 1; overflow: hidden; margin-top: 4px; }
-        .pc-grid-box { background: rgba(0,0,0,0.2); border: 2px solid #0369a1; border-radius: 4px; width: 55%; padding: 4px; display: grid; grid-template-columns: repeat(5, 1fr); grid-auto-rows: 32px; gap: 3px; overflow-y: auto; align-content: start; }
-        .pc-cell { background: #e2e8f0; border: 2px solid #cbd5e1; border-radius: 4px; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; font-size: 16px; }
+        .pc-grid-box { background: rgba(0,0,0,0.2); border: 2px solid #0369a1; border-radius: 0; width: 55%; padding: 4px; display: grid; grid-template-columns: repeat(5, 1fr); grid-auto-rows: 32px; gap: 3px; overflow-y: auto; align-content: start; }
+        .pc-cell { background: #e2e8f0; border: 2px solid #cbd5e1; border-radius: 0; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; font-size: 16px; }
         .pc-cell.selected-pc { border: 2px solid #ef4444; box-shadow: 0 0 6px #ef4444; background: #fef08a; }
-        .pc-preview-box { background: #e2e8f0; border: 2px solid #94a3b8; border-radius: 4px; width: 45%; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; color: #111; font-size: 9px; }
-        .pc-sprite-frame { background: #ffffff; border: 2px solid #cbd5e1; border-radius: 3px; height: 70px; display: flex; justify-content: center; align-items: center; margin-bottom: 4px; }
-        .pc-action-btn { background: #2563eb; border: 2px solid #1d4ed8; color: white; padding: 4px 2px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 9px; text-align: center; text-shadow: 1px 1px 1px #000; width: 100%; margin-bottom: 2px; }
+        .pc-preview-box { background: #e2e8f0; border: 2px solid #94a3b8; border-radius: 0; width: 45%; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; color: #111; font-size: 9px; }
+        .pc-sprite-frame { background: #ffffff; border: 2px solid #cbd5e1; border-radius: 0; height: 70px; display: flex; justify-content: center; align-items: center; margin-bottom: 4px; }
+        .pc-action-btn { background: #2563eb; border: 2px solid #1d4ed8; color: white; padding: 4px 2px; font-weight: bold; border-radius: 0; cursor: pointer; font-size: 9px; text-align: center; text-shadow: 1px 1px 1px #000; width: 100%; margin-bottom: 2px; }
         .pc-action-btn:hover { background: #3b82f6; }
 
         /* Estilo Menú Datos Pokémon (Basado en la referencia GBA) */
-        .summary-window { background: linear-gradient(135deg, #d97706, #b45309); border: 3px solid #fde68a; border-radius: 6px; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
+        .summary-window { background: linear-gradient(135deg, #d97706, #b45309); border: none; border-radius: 0; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
         .summary-content { display: flex; gap: 8px; flex-grow: 1; margin-bottom: 5px; }
-        .summary-left { background: #e5e7eb; border: 2px solid #9ca3af; border-radius: 4px; width: 45%; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; color: #111; }
-        .summary-right { background: #e5e7eb; border: 2px solid #9ca3af; border-radius: 4px; width: 55%; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; color: #111; font-size: 9px; text-align: left; }
+        .summary-left { background: #e5e7eb; border: 2px solid #9ca3af; border-radius: 0; width: 45%; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; color: #111; }
+        .summary-right { background: #e5e7eb; border: 2px solid #9ca3af; border-radius: 0; width: 55%; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; color: #111; font-size: 9px; text-align: left; }
         .summary-table-row { display: flex; justify-content: space-between; border-bottom: 1px solid #d1d5db; padding: 2px 0; }
-        .summary-type-badge { padding: 2px 6px; border-radius: 3px; font-size: 9px; color: white; font-weight: bold; text-align: center; flex: 1; }
+        .summary-type-badge { padding: 2px 6px; border-radius: 0; font-size: 9px; color: white; font-weight: bold; text-align: center; flex: 1; }
 
         .top-bar { display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
         .logout-btn { background-color: #dc2626; color: white; padding: 4px 8px; border-radius: 4px; border: none; font-weight: bold; font-size: 10px; cursor: pointer; }
@@ -276,10 +278,10 @@
         /* Ventana de combate adaptada exactamente al espacio interior de la ventanita 320x320 */
         .combat-modal-window { 
             background: linear-gradient(135deg, #1e3a8a, #1d4ed8); 
-            border: 4px solid #bae6fd; 
-            box-shadow: 0 8px 16px rgba(0,0,0,0.6); 
+            border: none;
+            border-radius: 0;
+            box-shadow: none; 
             padding: 10px; 
-            border-radius: 8px; 
             width: 100%; 
             height: 100%; 
             display: flex; 
@@ -289,14 +291,14 @@
             box-sizing: border-box;
         }
 
-        .combat-enemy-info, .combat-player-info { background-color: rgba(200, 200, 200, 0.9); color: #000; padding: 4px 8px; border-radius: 4px; font-size: 11px; width: 65%; border: 1px solid #333; }
+        .combat-enemy-info, .combat-player-info { background-color: rgba(200, 200, 200, 0.9); color: #000; padding: 4px 8px; border-radius: 0; font-size: 11px; width: 65%; border: 1px solid #333; }
         .combat-enemy-info { align-self: flex-start; }
         .combat-player-info { align-self: flex-end; }
         
-        .hp-bar-bg { background-color: #555; height: 6px; width: 100%; border-radius: 3px; margin-top: 2px; overflow: hidden; }
+        .hp-bar-bg { background-color: #555; height: 6px; width: 100%; border-radius: 0; margin-top: 2px; overflow: hidden; }
         .hp-bar-fill { background-color: #22c55e !important; height: 100%; transition: width 0.3s ease; display: block; }
         
-        .exp-bar-bg { background-color: #1e293b; height: 5px; width: 75%; display: inline-block; vertical-align: middle; border-radius: 3px; overflow: hidden; border: 1px solid #0f172a; }
+        .exp-bar-bg { background-color: #1e293b; height: 5px; width: 75%; display: inline-block; vertical-align: middle; border-radius: 0; overflow: hidden; border: 1px solid #0f172a; }
         .exp-bar-fill { background-color: #38bdf8 !important; height: 100%; transition: width 0.3s ease; display: block; }
 
         .combat-sprites { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 10px; height: 95px; }
@@ -307,18 +309,18 @@
             top: 18px;
         }
 
-        .combat-dialogue { background-color: #222; border: 2px solid #c0c0c0; border-radius: 6px; padding: 8px; font-size: 10px; color: #fff; min-height: 50px; text-align: center; overflow-y: auto; }
+        .combat-dialogue { background-color: #222; border: 2px solid #c0c0c0; border-radius: 0; padding: 8px; font-size: 10px; color: #fff; min-height: 50px; text-align: center; overflow-y: auto; }
 
         .combat-controls-container { display: flex; flex-direction: column; gap: 8px; position: relative; }
         .top-attacks-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .mid-hidden-row { display: flex; justify-content: center; align-items: center; height: 0; z-index: 5; }
         .bottom-actions-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 15px; }
 
-        .btn-attack-type { color: white; border: 2px solid rgba(0,0,0,0.5); padding: 10px; font-weight: bold; border-radius: 4px; cursor: pointer; text-shadow: 1px 1px 1px #000; font-size: 11px; text-transform: uppercase; }
+        .btn-attack-type { color: white; border: 2px solid rgba(0,0,0,0.5); padding: 10px; font-weight: bold; border-radius: 0; cursor: pointer; text-shadow: 1px 1px 1px #000; font-size: 11px; text-transform: uppercase; }
         .btn-hidden-power { width: 55px; height: 55px; border-radius: 50%; border: 3px solid #fff; cursor: pointer; font-weight: bold; font-size: 8px; color: white; text-shadow: 1px 1px 1px #000; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 8px rgba(0,0,0,0.6); position: relative; top: -10px; text-transform: uppercase; text-align: center; }
         
-        .btn-capture { background-color: #eab308; color: black; border: none; padding: 10px; font-weight: bold; border-radius: 4px; cursor: pointer; }
-        .btn-flee { background-color: #ef4444; color: white; border: none; padding: 10px; font-weight: bold; border-radius: 4px; cursor: pointer; }
+        .btn-capture { background-color: #eab308; color: black; border: none; padding: 10px; font-weight: bold; border-radius: 0; cursor: pointer; }
+        .btn-flee { background-color: #ef4444; color: white; border: none; padding: 10px; font-weight: bold; border-radius: 0; cursor: pointer; }
 
         /* --- ANIMACIONES DE COMBATE --- */
         @keyframes idleBounce {
@@ -471,18 +473,18 @@
                 </div>
             </div>
 
-            <!-- Ventana Pokédex Rediseñada Estilo Referencia (Compacta, con contadores a la derecha y vista de estados) -->
+            <!-- Ventana Pokédex (Pantalla completa, grid ancho, sin botón inferior, cruz grande) -->
             <div id="pokedex-screen" class="modal-screen" style="z-index: 88;">
                 <div class="pokedex-window">
                     <div style="display: flex; justify-content: space-between; align-items: center; font-weight: bold; margin-bottom: 1px;">
                         <span id="pokedex-header-title">Nº 001 - BULBASAUR</span>
-                        <button onclick="cerrarPokedex()" style="background:none; border:none; font-size:12px; font-weight:bold; cursor:pointer; color:#111;">✖</button>
+                        <button onclick="cerrarPokedex()" style="background:none; border:none; font-size:20px; font-weight:bold; cursor:pointer; color:#111; line-height: 1; padding: 0 2px;">✖</button>
                     </div>
                     
                     <div class="pokedex-top-card">
                         <div style="display: flex; gap: 4px; align-items: center;">
                             <div style="background: #e2e8f0; border: 2px solid #cbd5e1; border-radius: 3px; width: 55px; height: 55px; display: flex; justify-content: center; align-items: center; position: relative; flex-shrink: 0;">
-                                <img id="pokedex-preview-img" src="" style="width: 44px; height: 44px; image-rendering: pixelated;" alt="Poke">
+                                <img id="pokedex-preview-img" src="" style="width: 46px; height: 46px; image-rendering: pixelated; object-fit: contain;" alt="Poke">
                                 <div id="pokedex-rarity-badge" style="position: absolute; bottom: 0; width: 100%; background: #ef4444; color: white; font-size: 5px; font-weight: bold; text-align: center; border-radius: 0 0 2px 2px;">COMMON</div>
                             </div>
                             <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 1px; overflow: hidden;">
@@ -510,10 +512,8 @@
                     </div>
 
                     <div class="pokedex-grid-scroll" id="pokedex-grid-container">
-                        <!-- Se llena dinámicamente con TODOS los Pokémon -->
+                        <!-- Se llena dinámicamente con TODOS los Pokémon ocupando todo el ancho -->
                     </div>
-
-                    <button class="bag-close-btn" onclick="cerrarPokedex()" style="margin-top: 2px; padding: 2px; font-size: 10px;">CERRAR</button>
                 </div>
             </div>
 
@@ -741,7 +741,12 @@
             sprite.style.backgroundPosition = "0px 0px"; // Puesto 1
         }
 
-        // --- SELECTOR DE ICONOS ROBUSTO PARA LA POKÉDEX ---
+        // --- SELECTORES DE SPRITES Y ICONOS PARA LA POKÉDEX ---
+        function getPokedexNormalSpriteUrl(poke) {
+            let id = poke.id || 1;
+            return poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+        }
+
         function getPokedexIconUrl(poke) {
             let id = poke.id || 1;
             let versions = poke.sprites?.versions || poke.versions || {};
@@ -1413,12 +1418,13 @@
             const defValEl = document.getElementById("stat-def-val");
             const defFillEl = document.getElementById("stat-def-fill");
 
-            let pSprite = getPokedexIconUrl(poke);
+            // Arriba en la tarjeta de detalles se usa el sprite normal
+            let normalSprite = getPokedexNormalSpriteUrl(poke);
 
             if (!isSeen) {
                 // No visto: silueta con icono misterioso / interrogación
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ???`;
-                previewImg.src = pSprite;
+                previewImg.src = normalSprite;
                 previewImg.style.filter = "brightness(0)";
                 rarityBadge.innerText = "???";
                 rarityBadge.style.background = "#666";
@@ -1433,7 +1439,7 @@
             } else if (!isCaught) {
                 // Visto pero no atrapado: imagen con filtro gris y estadísticas ???
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ${poke.name.toUpperCase()}`;
-                previewImg.src = pSprite;
+                previewImg.src = normalSprite;
                 previewImg.style.filter = "grayscale(100%)";
                 rarityBadge.innerText = "SEEN";
                 rarityBadge.style.background = "#64748b";
@@ -1458,7 +1464,7 @@
             } else {
                 // Atrapado: Color completo y estadísticas adaptadas (medias combinadas igual que en el juego)
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ${poke.name.toUpperCase()}`;
-                previewImg.src = pSprite;
+                previewImg.src = normalSprite;
                 previewImg.style.filter = "none";
                 rarityBadge.innerText = "COMMON";
                 rarityBadge.style.background = "#ef4444";
@@ -1499,7 +1505,7 @@
             document.getElementById("pokedex-caught-count").innerText = totalCaughtCount;
             document.getElementById("pokedex-seen-count").innerText = totalSeenCount;
 
-            // Renderizar la rejilla con TODOS los Pokémon (8 columnas)
+            // Renderizar la rejilla con TODOS los Pokémon (8 columnas, ancho completo, iconos ampliados si son gen VII/VIII)
             const grid = document.getElementById("pokedex-grid-container");
             grid.innerHTML = "";
 
@@ -1513,20 +1519,21 @@
                 cell.className = `pokedex-grid-cell ${isSelected}`;
                 cell.onclick = () => seleccionarPokemonPokedex(idx);
 
-                let imgStyle = "width: 18px; height: 18px; image-rendering: pixelated;";
+                let isIconGen = pSpriteCell.includes('generation-vii') || pSpriteCell.includes('generation-viii');
+                let imgClass = isIconGen ? "pokedex-cell-img icon-gen-large" : "pokedex-cell-img";
+                let imgStyle = "image-rendering: pixelated;";
                 if (!status.isSeen) {
                     imgStyle += " filter: brightness(0);";
                 } else if (!status.isCaught) {
                     imgStyle += " filter: grayscale(100%);";
                 }
 
-                // Respaldo automático por onerror si falla la ruta del icono de generación
                 let fallbackAnimado = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${pId}.gif`;
                 let fallbackNormal = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pId}.png`;
 
                 cell.innerHTML = `
                     <span class="pokedex-cell-num">${pId.toString().padStart(3, '0')}</span>
-                    <img src="${pSpriteCell}" style="${imgStyle}" alt="P" onerror="if(this.src.includes('generation-viii') || this.src.includes('generation-vii')){this.src='${fallbackAnimado}';}else if(this.src.includes('animated')){this.src='${fallbackNormal}';}">
+                    <img src="${pSpriteCell}" class="${imgClass}" style="${imgStyle}" alt="P" onerror="if(this.src.includes('generation-viii') || this.src.includes('generation-vii')){this.src='${fallbackAnimado}';}else if(this.src.includes('animated')){this.src='${fallbackNormal}';}">
                 `;
                 grid.appendChild(cell);
             });
@@ -2776,7 +2783,7 @@
                     <div class="summary-table-row"><span>Potencial</span><b>${p.potencial || '15 / 31'}</b></div>
                     <div class="summary-table-row"><span>Poder Oculto</span><b style="color:${colorOculto}; text-shadow:1px 1px 0 #000;">${p.tipoOculto.toUpperCase()}</b></div>
                     <div class="summary-table-row"><span>Amistad</span><b>${p.amistad || '50 / 100'}</b></div>
-                    <div style="font-size:8px; color:#4b5563; margin-top:2px; line-height:1.1;">${p.origen || 'En almacenamiento PC.'}</div>
+                    <div style="font-size:8px; color:#4b5563; margin-top:2px; line-height:1.1;">${p.origen || 'En equipo activo.'}</div>
                 </div>
             `;
 
