@@ -741,6 +741,22 @@
             sprite.style.backgroundPosition = "0px 0px"; // Puesto 1
         }
 
+        // --- SELECTOR DE ICONOS PARA LA POKÉDEX (Generación VII -> Generación VIII -> Gen V Animated -> Default) ---
+        function getPokedexIconUrl(poke) {
+            let versions = poke.sprites?.versions || poke.versions || {};
+            
+            let iconGen7 = versions['generation-vii']?.icons?.front_default;
+            if (iconGen7) return iconGen7;
+
+            let iconGen8 = versions['generation-viii']?.icons?.front_default;
+            if (iconGen8) return iconGen8;
+
+            let iconGen5Anim = versions['generation-v']?.['black-white']?.animated?.front_default;
+            if (iconGen5Anim) return iconGen5Anim;
+
+            return poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${poke.id || 1}.png`;
+        }
+
         // --- SISTEMA DE ESTADOS POKÉDEX (VISTO / ATRAPADO / NO VISTO) ---
         function getPokedexStatus(idDex) {
             const user = localStorage.getItem("pt_current_user") || "default";
@@ -1397,9 +1413,9 @@
             const defFillEl = document.getElementById("stat-def-fill");
 
             if (!isSeen) {
-                // No visto: silueta con icono de interrogación o círculo misterioso
+                // No visto: silueta con icono misterioso / interrogación
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ???`;
-                previewImg.src = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idDex}.png`;
+                previewImg.src = getPokedexIconUrl(poke);
                 previewImg.style.filter = "brightness(0)";
                 rarityBadge.innerText = "???";
                 rarityBadge.style.background = "#666";
@@ -1414,7 +1430,7 @@
             } else if (!isCaught) {
                 // Visto pero no atrapado: imagen con filtro gris y estadísticas ???
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ${poke.name.toUpperCase()}`;
-                previewImg.src = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idDex}.png`;
+                previewImg.src = getPokedexIconUrl(poke);
                 previewImg.style.filter = "grayscale(100%)";
                 rarityBadge.innerText = "SEEN";
                 rarityBadge.style.background = "#64748b";
@@ -1439,7 +1455,7 @@
             } else {
                 // Atrapado: Color completo y estadísticas adaptadas (medias combinadas igual que en el juego)
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ${poke.name.toUpperCase()}`;
-                previewImg.src = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idDex}.png`;
+                previewImg.src = getPokedexIconUrl(poke);
                 previewImg.style.filter = "none";
                 rarityBadge.innerText = "COMMON";
                 rarityBadge.style.background = "#ef4444";
@@ -1480,14 +1496,14 @@
             document.getElementById("pokedex-caught-count").innerText = totalCaughtCount;
             document.getElementById("pokedex-seen-count").innerText = totalSeenCount;
 
-            // Renderizar la rejilla con TODOS los Pokémon (8 columnas)
+            // Renderizar la rejilla con TODOS los Pokémon (8 columnas) llamando a getPokedexIconUrl
             const grid = document.getElementById("pokedex-grid-container");
             grid.innerHTML = "";
 
             POKEDEX_GLOBAL.forEach((p, idx) => {
                 let pId = p.id || (idx + 1);
                 let status = getPokedexStatus(pId);
-                let pSprite = p.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pId}.png`;
+                let pSprite = getPokedexIconUrl(p);
                 let isSelected = pokedexSelectedIndex === idx ? 'selected' : '';
 
                 let cell = document.createElement("div");
@@ -1543,7 +1559,7 @@
                 setTimeout(() => {
                     playGachaSound('score');
                     let currentNum = 1;
-                    let stepTime = 35; // 35ms por número para una animación fluida que no se corta nunca
+                    let stepTime = 35; // 35ms por número para una animación fluida que llega hasta el final sin cortarse
                     
                     content.innerHTML = `
                         <div style="font-size: 11px; color: #94a3b8;">CALCULANDO ESTADÍSTICAS</div>
@@ -1559,7 +1575,7 @@
                         if (currentNum >= score) {
                             clearInterval(counterInterval);
                             
-                            // Una vez alcanzada la puntuación final, pausamos 1.8 segundos para que el jugador la vea y se fije antes de la carta
+                            // Pausa estática de 1.8 segundos con la puntuación final visible para que el jugador se fije
                             setTimeout(() => {
                                 content.innerHTML = `
                                     <div style="font-size: 10px; color: #fef08a; font-weight: bold; animation: pulseGlow 1s infinite;">¡TOCA LA CARTA PARA REVELAR!</div>
@@ -1572,7 +1588,7 @@
                                         <div style="background: rgba(0,0,0,0.5); padding: 4px; border-radius: 4px; width: 100%; font-size: 9px; font-weight: bold;">GIRAR CARTA</div>
                                     </div>
                                 `;
-                            }, 1800); // 1.8 segundos de pausa estática con la puntuación final visible
+                            }, 1800);
                         }
                     }, stepTime);
 
