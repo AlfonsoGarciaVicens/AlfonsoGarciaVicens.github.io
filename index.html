@@ -61,16 +61,118 @@
         .box-container, .modal-window { background-color: #2a2a2a; padding: 15px; border-radius: 8px; border: 2px solid #444; width: 100%; height: 100%; text-align: center; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
         .modal-window { background: linear-gradient(135deg, #38bdf8, #0369a1); border: none; border-radius: 0; box-shadow: none; width: 100%; height: 100%; }
         
-        /* Estilo específico ventana Pokédex */
+        /* Estilo Pokédex */
         .pokedex-window { background: #f3f4f6; border: none; border-radius: 0; width: 100%; height: 100%; padding: 4px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; color: #111; font-size: 9px; }
         .pokedex-top-card { background: #fff; border: 2px solid #cbd5e1; border-radius: 0; padding: 4px; display: flex; flex-direction: column; gap: 2px; position: relative; width: 100%; }
         .pokedex-grid-scroll { background: #fff; border: 2px solid #cbd5e1; border-radius: 0; flex-grow: 1; margin-top: 2px; overflow-y: auto; display: grid; grid-template-columns: repeat(8, 1fr); width: 100%; gap: 1px; padding: 2px; align-content: start; }
         .pokedex-grid-cell { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; padding: 1px; height: 36px; position: relative; }
         .pokedex-grid-cell.selected { background: #fef08a; border-color: #f59e0b; }
         .pokedex-cell-num { font-size: 6px; color: #64748b; font-weight: bold; }
-        .pokedex-cell-img { width: 26px; height: 26px; image-rendering: pixelated; }
+        .pokedex-cell-img { width: 22px; height: 22px; image-rendering: pixelated; }
 
-        /* Estilo específico ventana Bolsa */
+        /* Estilo Ventana PC Rediseñada según Referencia */
+        .pc-window-gba { 
+            background-color: #2d8ab3; 
+            border: none; 
+            border-radius: 0; 
+            width: 100%; 
+            height: 100%; 
+            padding: 4px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            box-sizing: border-box; 
+        }
+        .pc-filter-bar {
+            background: rgba(0, 0, 0, 0.25);
+            padding: 3px 5px;
+            border-radius: 3px;
+        }
+        .pc-main-layout { display: flex; gap: 4px; flex-grow: 1; overflow: hidden; margin-top: 3px; }
+        .pc-grid-box { 
+            background: rgba(0,0,0,0.15); 
+            border: 1px solid #1a6080; 
+            border-radius: 3px; 
+            width: 60%; 
+            padding: 3px; 
+            display: grid; 
+            grid-template-columns: repeat(5, 1fr); 
+            grid-auto-rows: 34px; 
+            gap: 2px; 
+            overflow-y: auto; 
+            overflow-x: hidden; 
+            align-content: start; 
+        }
+        .pc-cell { 
+            background-color: #38bdf8; 
+            border: 1px solid #0284c7; 
+            border-radius: 4px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            cursor: pointer; 
+            position: relative; 
+        }
+        /* Fondo amarillo para Pokémon Shiny en el PC */
+        .pc-cell.shiny-cell { 
+            background-color: #eab308 !important; 
+            border-color: #ca8a04 !important; 
+        }
+        /* Indicador de Selección con 4 esquinas rojas de objetivo */
+        .pc-cell.selected-pc::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                linear-gradient(to right, #ef4444 6px, transparent 6px) 0 0,
+                linear-gradient(to bottom, #ef4444 6px, transparent 6px) 0 0,
+                linear-gradient(to left, #ef4444 6px, transparent 6px) 100% 0,
+                linear-gradient(to bottom, #ef4444 6px, transparent 6px) 100% 0,
+                linear-gradient(to right, #ef4444 6px, transparent 6px) 0 100%,
+                linear-gradient(to top, #ef4444 6px, transparent 6px) 0 100%,
+                linear-gradient(to left, #ef4444 6px, transparent 6px) 100% 100%,
+                linear-gradient(to top, #ef4444 6px, transparent 6px) 100% 100%;
+            background-repeat: no-repeat;
+            background-size: 8px 8px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .pc-preview-box { 
+            background: #2d8ab3; 
+            width: 40%; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            color: #fff; 
+            font-size: 8px; 
+        }
+        .pc-sprite-frame { 
+            background: #a2d2e2; 
+            border: 2px solid #1e5a75; 
+            border-radius: 4px; 
+            height: 75px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            margin-bottom: 4px; 
+        }
+        .pc-action-btn { 
+            background: linear-gradient(135deg, #1d4ed8, #1e3a8a); 
+            border: 2px solid #3b82f6; 
+            color: white; 
+            padding: 4px 2px; 
+            font-weight: bold; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 9px; 
+            text-align: center; 
+            text-shadow: 1px 1px 1px #000; 
+            width: 100%; 
+        }
+        .pc-action-btn:hover { background: #2563eb; }
+
+        /* Estilo Bolsa */
         .bag-window { background: linear-gradient(135deg, #d97706, #b45309); border: none; border-radius: 0; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-sizing: border-box; }
         .bag-tabs { display: flex; justify-content: space-around; background: rgba(0,0,0,0.3); padding: 3px; border-radius: 0; gap: 2px; }
         .bag-tab-btn { background: #78350f; border: 2px solid #92400e; border-radius: 0; padding: 4px; cursor: pointer; font-size: 13px; color: #fff; flex: 1; text-align: center; }
@@ -137,17 +239,6 @@
         .gba-slot-info { display: flex; flex-direction: column; flex-grow: 1; }
         .gba-hp-bar { background: #111; height: 5px; width: 100%; border-radius: 0; margin-top: 2px; overflow: hidden; border: 1px solid #000; }
         .gba-hp-fill { background: #22c55e; height: 100%; }
-
-        /* Estilo PC Rediseñado (Basado en la imagen de referencia GBA) */
-        .pc-window-gba { background: linear-gradient(135deg, #38bdf8, #0284c7); border: none; border-radius: 0; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
-        .pc-main-layout { display: flex; gap: 6px; flex-grow: 1; overflow: hidden; margin-top: 4px; }
-        .pc-grid-box { background: rgba(0,0,0,0.2); border: 2px solid #0369a1; border-radius: 0; width: 55%; padding: 4px; display: grid; grid-template-columns: repeat(5, 1fr); grid-auto-rows: 32px; gap: 3px; overflow-y: auto; align-content: start; }
-        .pc-cell { background: #e2e8f0; border: 2px solid #cbd5e1; border-radius: 0; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; font-size: 16px; }
-        .pc-cell.selected-pc { border: 2px solid #ef4444; box-shadow: 0 0 6px #ef4444; background: #fef08a; }
-        .pc-preview-box { background: #e2e8f0; border: 2px solid #94a3b8; border-radius: 0; width: 45%; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; color: #111; font-size: 9px; }
-        .pc-sprite-frame { background: #ffffff; border: 2px solid #cbd5e1; border-radius: 0; height: 70px; display: flex; justify-content: center; align-items: center; margin-bottom: 4px; }
-        .pc-action-btn { background: #2563eb; border: 2px solid #1d4ed8; color: white; padding: 4px 2px; font-weight: bold; border-radius: 0; cursor: pointer; font-size: 9px; text-align: center; text-shadow: 1px 1px 1px #000; width: 100%; margin-bottom: 2px; }
-        .pc-action-btn:hover { background: #3b82f6; }
 
         /* Estilo Menú Datos Pokémon (Basado en la referencia GBA) */
         .summary-window { background: linear-gradient(135deg, #d97706, #b45309); border: none; border-radius: 0; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
@@ -275,7 +366,7 @@
         }
         .anim-slide { animation: slideDown 0.8s ease forwards; }
 
-        /* Sprites de combate adaptados con tamaño nativo/por defecto de la API */
+        /* Ventana de combate */
         .combat-modal-window { 
             background: linear-gradient(135deg, #1e3a8a, #1d4ed8); 
             border: none;
@@ -473,7 +564,7 @@
                 </div>
             </div>
 
-            <!-- Ventana Pokédex (Pantalla completa, grid ancho ocupando todo el ancho, sin botón inferior, cruz grande) -->
+            <!-- Ventana Pokédex (Sin bordes, ocupando 100%, cruz grande arriba) -->
             <div id="pokedex-screen" class="modal-screen" style="z-index: 88;">
                 <div class="pokedex-window">
                     <div style="display: flex; justify-content: space-between; align-items: center; font-weight: bold; margin-bottom: 1px;">
@@ -512,7 +603,70 @@
                     </div>
 
                     <div class="pokedex-grid-scroll" id="pokedex-grid-container">
-                        <!-- Se llena dinámicamente con TODOS los Pokémon ocupando todo el ancho -->
+                        <!-- Se llena dinámicamente con TODOS los Pokémon -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ventana PC Rediseñada según Referencia (Sin márgenes, filtros arriba, scroll vertical sin límites, shiny amarillo y 4 esquinas rojas) -->
+            <div id="pc-screen" class="modal-screen" style="z-index: 85;">
+                <div class="pc-window-gba">
+                    <!-- Barra de filtros superior -->
+                    <div class="pc-filter-bar">
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 8px; font-weight: bold; color: #fff;">
+                            <select id="pc-filter-type" onchange="renderizarVentanaPC()" style="background:#fff; color:#000; border:1px solid #333; font-size:7px; padding:1px 2px; border-radius:2px; font-weight:bold;">
+                                <option value="all">- NINGUNO -</option>
+                                <option value="normal">NORMAL</option>
+                                <option value="fuego">FUEGO</option>
+                                <option value="agua">AGUA</option>
+                                <option value="planta">PLANTA</option>
+                                <option value="electrico">ELÉCTRICO</option>
+                                <option value="hielo">HIELO</option>
+                                <option value="lucha">LUCHA</option>
+                                <option value="veneno">VENENO</option>
+                                <option value="tierra">TIERRA</option>
+                                <option value="volador">VOLADOR</option>
+                                <option value="psiquico">PSIQUICO</option>
+                                <option value="bicho">BICHO</option>
+                                <option value="roca">ROCA</option>
+                                <option value="fantasma">FANTASMA</option>
+                                <option value="dragon">DRAGÓN</option>
+                                <option value="siniestro">SINIESTRO</option>
+                                <option value="acero">ACERO</option>
+                                <option value="hada">HADA</option>
+                            </select>
+                            <label style="display:flex; align-items:center; gap:2px; cursor:pointer;">LVL <input type="checkbox" id="pc-sort-lvl" onchange="renderizarVentanaPC()"></label>
+                            <label style="display:flex; align-items:center; gap:2px; cursor:pointer;">DEX <input type="checkbox" id="pc-sort-dex" onchange="renderizarVentanaPC()"></label>
+                        </div>
+                        <div style="margin-top: 2px; font-size: 7px; font-weight: bold; color: #fff; display: flex; justify-content: space-between; align-items: center;">
+                            <span>ACTIVAR VENTA MÚLTIPLE</span>
+                            <input type="checkbox" id="pc-multi-sell">
+                        </div>
+                    </div>
+
+                    <!-- Layout Principal PC -->
+                    <div class="pc-main-layout">
+                        <!-- Rejilla de almacenamiento izquierda (Iconos en miniatura, Scroll Vertical) -->
+                        <div class="pc-grid-box" id="pc-grid-container"></div>
+
+                        <!-- Panel derecho de previsualización (Sprite normal a todo color) y acciones -->
+                        <div class="pc-preview-box">
+                            <div>
+                                <div class="pc-sprite-frame" id="pc-preview-sprite-box">
+                                    <span style="font-size:24px;">💻</span>
+                                </div>
+                                <div id="pc-preview-info" style="font-weight:bold; font-size:9px; text-align:left; margin-bottom:2px;">VACÍO</div>
+                                <div style="font-size:7px; color:#1e293b; line-height:1.2; text-align:left;" id="pc-preview-stats">Selecciona un Pokémon</div>
+                            </div>
+                            
+                            <div style="display:flex; flex-direction:column; gap:2px; margin-top: auto;">
+                                <button class="pc-action-btn" onclick="pcAccionDatos()">DATOS</button>
+                                <button class="pc-action-btn" onclick="pcAccionMover()">MOVER</button>
+                                <button class="pc-action-btn" onclick="pcAccionVender()">VENDER</button>
+                                <button class="pc-action-btn" id="pc-btn-fav" onclick="pcAccionFav()">+ FAV</button>
+                                <button class="pc-action-btn" onclick="cerrarPC()" style="background: linear-gradient(135deg, #1d4ed8, #1e3a8a);">CERRAR</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -526,38 +680,6 @@
                     <div id="gba-bottom-buttons" style="display: flex; gap: 5px; margin-top: 6px;">
                         <button class="modal-close-btn" onclick="cerrarEquipo()">CERRAR</button>
                     </div>
-                </div>
-            </div>
-
-            <!-- Ventana de PC Rediseñada (Estilo GBA con rejilla y panel de acciones) -->
-            <div id="pc-screen" class="modal-screen" style="z-index: 85;">
-                <div class="pc-window-gba">
-                    <div class="modal-title" style="border:none; color:#fff;">- PC POKÉMON -</div>
-                    
-                    <div class="pc-main-layout">
-                        <!-- Rejilla de almacenamiento izquierda -->
-                        <div class="pc-grid-box" id="pc-grid-container"></div>
-
-                        <!-- Panel derecho de previsualización y acciones -->
-                        <div class="pc-preview-box">
-                            <div>
-                                <div class="pc-sprite-frame" id="pc-preview-sprite-box">
-                                    <span style="font-size:24px;">💻</span>
-                                </div>
-                                <div id="pc-preview-info" style="font-weight:bold; font-size:10px; text-align:center; margin-bottom:4px;">VACÍO</div>
-                                <div style="font-size:8px; color:#334155; line-height:1.2;" id="pc-preview-stats">Selecciona un Pokémon</div>
-                            </div>
-                            
-                            <div style="display:flex; flex-direction:column; gap:2px;">
-                                <button class="pc-action-btn" onclick="pcAccionDatos()">DATOS</button>
-                                <button class="pc-action-btn" onclick="pcAccionMover()">MOVER</button>
-                                <button class="pc-action-btn" onclick="pcAccionVender()">VENDER</button>
-                                <button class="pc-action-btn" onclick="pcAccionFav()">+ FAV</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button class="modal-close-btn" onclick="cerrarPC()" style="margin-top:6px;">CERRAR</button>
                 </div>
             </div>
 
@@ -741,14 +863,14 @@
             sprite.style.backgroundPosition = "0px 0px"; // Puesto 1
         }
 
-        // --- SELECTORES DE SPRITES Y ICONOS PARA LA POKÉDEX ---
+        // --- SELECTORES DE SPRITES Y ICONOS PARA POKÉDEX Y PC ---
         function getPokedexNormalSpriteUrl(poke) {
-            let id = poke.id || 1;
+            let id = poke.id || poke.idDex || 1;
             return poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
         }
 
         function getPokedexIconUrl(poke) {
-            let id = poke.id || 1;
+            let id = poke.id || poke.idDex || 1;
             let versions = poke.sprites?.versions || poke.versions || {};
 
             let iconGen8 = versions['generation-viii']?.icons?.front_default;
@@ -1375,7 +1497,7 @@
             return subioNivel;
         }
 
-        // --- SISTEMA POKÉDEX ESTILO REFERENCIA (CON ESTADOS VISTO / ATRAPADO / NO VISTO) ---
+        // --- SISTEMA POKÉDEX ESTILO REFERENCIA ---
         let pokedexSelectedIndex = 0;
 
         function abrirPokedex() {
@@ -1418,11 +1540,9 @@
             const defValEl = document.getElementById("stat-def-val");
             const defFillEl = document.getElementById("stat-def-fill");
 
-            // Arriba en la tarjeta de detalles se usa el sprite normal
             let normalSprite = getPokedexNormalSpriteUrl(poke);
 
             if (!isSeen) {
-                // No visto: silueta con icono misterioso / interrogación
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ???`;
                 previewImg.src = normalSprite;
                 previewImg.style.filter = "brightness(0)";
@@ -1437,7 +1557,6 @@
                 defValEl.innerText = "???";
                 defFillEl.style.width = "0%";
             } else if (!isCaught) {
-                // Visto pero no atrapado: imagen con filtro gris y estadísticas ???
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ${poke.name.toUpperCase()}`;
                 previewImg.src = normalSprite;
                 previewImg.style.filter = "grayscale(100%)";
@@ -1462,7 +1581,6 @@
                 defValEl.innerText = "???";
                 defFillEl.style.width = "0%";
             } else {
-                // Atrapado: Color completo y estadísticas adaptadas (medias combinadas igual que en el juego)
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ${poke.name.toUpperCase()}`;
                 previewImg.src = normalSprite;
                 previewImg.style.filter = "none";
@@ -1493,7 +1611,6 @@
                 defFillEl.style.width = Math.min(100, (defVal / 200) * 100) + "%";
             }
 
-            // Contadores totales
             let totalCaughtCount = 0;
             let totalSeenCount = 0;
             POKEDEX_GLOBAL.forEach((p, i) => {
@@ -1505,7 +1622,6 @@
             document.getElementById("pokedex-caught-count").innerText = totalCaughtCount;
             document.getElementById("pokedex-seen-count").innerText = totalSeenCount;
 
-            // Renderizar la rejilla con TODOS los Pokémon (8 columnas, ancho completo, sprites normales de antes)
             const grid = document.getElementById("pokedex-grid-container");
             grid.innerHTML = "";
 
@@ -1532,6 +1648,205 @@
                 `;
                 grid.appendChild(cell);
             });
+        }
+
+        // --- SISTEMA INTERACTIVO DE PC ---
+        function abrirPC() {
+            if (isWalking) return;
+            cerrarMenu();
+            pcIndiceSeleccionado = null;
+            pcModoMover = false;
+            renderizarVentanaPC();
+            document.getElementById("pc-screen").style.display = "flex";
+        }
+
+        function cerrarPC() {
+            document.getElementById("pc-screen").style.display = "none";
+        }
+
+        function seleccionarCeldaPC(index) {
+            if (pcStorage[index] === undefined) return;
+            pcIndiceSeleccionado = index;
+            pcModoMover = false;
+            renderizarVentanaPC();
+        }
+
+        function renderizarVentanaPC() {
+            const gridContainer = document.getElementById("pc-grid-container");
+            const previewSpriteBox = document.getElementById("pc-preview-sprite-box");
+            const previewInfo = document.getElementById("pc-preview-info");
+            const previewStats = document.getElementById("pc-preview-stats");
+            const btnFav = document.getElementById("pc-btn-fav");
+
+            gridContainer.innerHTML = "";
+
+            const filterType = document.getElementById("pc-filter-type") ? document.getElementById("pc-filter-type").value : "all";
+            const sortByLvl = document.getElementById("pc-sort-lvl") ? document.getElementById("pc-sort-lvl").checked : false;
+            const sortByDex = document.getElementById("pc-sort-dex") ? document.getElementById("pc-sort-dex").checked : false;
+
+            let items = pcStorage.map((p, originalIndex) => ({ p, originalIndex }));
+
+            if (filterType !== "all") {
+                items = items.filter(item => {
+                    let t1 = mapType(item.p.tipo1);
+                    let t2 = mapType(item.p.tipo2);
+                    return t1 === filterType || t2 === filterType;
+                });
+            }
+
+            if (sortByLvl) {
+                items.sort((a, b) => b.p.nivel - a.p.nivel);
+            }
+            if (sortByDex) {
+                items.sort((a, b) => (a.p.idDex || 0) - (b.p.idDex || 0));
+            }
+
+            if (items.length === 0) {
+                gridContainer.innerHTML = `<div style="grid-column: span 5; text-align:center; color:#fff; font-size:10px; margin-top:20px;">No hay Pokémon en el PC</div>`;
+            } else {
+                items.forEach(item => {
+                    let p = item.p;
+                    let originalIndex = item.originalIndex;
+                    let isSelected = pcIndiceSeleccionado === originalIndex ? 'selected-pc' : '';
+                    let shinyClass = p.isShiny ? 'shiny-cell' : '';
+
+                    let iconUrl = getPokedexIconUrl(p);
+
+                    let div = document.createElement("div");
+                    div.className = `pc-cell ${shinyClass} ${isSelected}`;
+                    div.onclick = () => seleccionarCeldaPC(originalIndex);
+
+                    let isIconGen = iconUrl.includes('generation-vii') || iconUrl.includes('generation-viii');
+                    let imgClass = isIconGen ? "icon-gen-large" : "";
+
+                    let fallbackAnimado = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${p.idDex || 1}.gif`;
+                    let fallbackNormal = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.idDex || 1}.png`;
+
+                    div.innerHTML = `
+                        <img src="${iconUrl}" class="${imgClass}" style="width:28px; height:28px; image-rendering:pixelated; object-fit:contain;" alt="Icon" onerror="if(this.src.includes('generation-viii') || this.src.includes('generation-vii')){this.src='${fallbackAnimado}';}else if(this.src.includes('animated')){this.src='${fallbackNormal}';}">
+                    `;
+                    gridContainer.appendChild(div);
+                });
+            }
+
+            if (pcIndiceSeleccionado !== null && pcStorage[pcIndiceSeleccionado]) {
+                let p = pcStorage[pcIndiceSeleccionado];
+                let tOcultoMap = mapType(p.tipoOculto);
+                let colorOculto = TYPE_COLORS[tOcultoMap] || "#fff";
+
+                let normalSprite = getPokedexNormalSpriteUrl(p);
+
+                previewSpriteBox.innerHTML = `<img src="${normalSprite}" style="width:58px; height:58px; image-rendering:pixelated; object-fit:contain;" alt="Preview">`;
+                previewInfo.innerHTML = `${p.nombre.toUpperCase()} <span style="color:#1e3a8a;">Lv ${p.nivel}</span>`;
+                previewStats.innerHTML = `
+                    POTENCIAL: <b>${p.potencial || '15 / 31'}</b><br>
+                    PODER OCULTO: <b style="color:${colorOculto}; text-shadow:1px 1px 0 #000;">${p.tipoOculto ? p.tipoOculto.toUpperCase() : 'NINGUNO'}</b>
+                `;
+                if (btnFav) btnFav.innerText = p.favorito ? "- FAV" : "+ FAV";
+            } else {
+                previewSpriteBox.innerHTML = `<span style="font-size:24px;">💻</span>`;
+                previewInfo.innerHTML = `VACÍO`;
+                previewStats.innerHTML = `Selecciona un Pokémon`;
+                if (btnFav) btnFav.innerText = "+ FAV";
+            }
+        }
+
+        function pcAccionDatos() {
+            if (pcIndiceSeleccionado === null || !pcStorage[pcIndiceSeleccionado]) return;
+            let p = pcStorage[pcIndiceSeleccionado];
+            
+            let t1Map = mapType(p.tipo1);
+            let t2Map = mapType(p.tipo2);
+            let tOcultoMap = mapType(p.tipoOculto);
+
+            let colorT1 = TYPE_COLORS[t1Map] || "#777";
+            let colorT2 = t2Map ? (TYPE_COLORS[t2Map] || "#777") : null;
+            let colorOculto = TYPE_COLORS[tOcultoMap] || "#fff";
+
+            let tiposHtml = `<div class="summary-type-badge" style="background:${colorT1};">${p.tipo1.toUpperCase()}</div>`;
+            if (p.tipo2) {
+                tiposHtml += `<div class="summary-type-badge" style="background:${colorT2};">${p.tipo2.toUpperCase()}</div>`;
+            }
+
+            let bodyHTML = `
+                <div class="summary-left">
+                    <div style="font-size:10px; font-weight:bold; color:#374151; width:100%; display:flex; justify-content:space-between;">
+                        <span>Pokédex No.${p.idDex || 25}</span>
+                    </div>
+                    <div style="font-size:11px; font-weight:bold; color:#1f2937; align-self:flex-start;">Lv. ${p.nivel}</div>
+                    <div style="margin: 5px 0;"><img src="${p.sprite_url}" style="width:75px; height:75px; image-rendering:pixelated;" alt="Sprite"></div>
+                    <div style="background:#1f2937; color:#fff; font-size:11px; font-weight:bold; width:100%; padding:4px; border-radius:3px; text-align:center;">${p.nombre.toUpperCase()}</div>
+                    <div style="display:flex; gap:4px; width:100%; margin-top:4px;">${tiposHtml}</div>
+                </div>
+                <div class="summary-right">
+                    <div class="summary-table-row"><span>Trainer ID</span><b>${p.trainerId || '03101'}</b></div>
+                    <div class="summary-table-row"><span>Salud</span><b>${p.hpActual || p.hpMax} PS</b></div>
+                    <div class="summary-table-row"><span>Ataque</span><b>${p.ataque}</b></div>
+                    <div class="summary-table-row"><span>Defensa</span><b>${p.defensa}</b></div>
+                    <div class="summary-table-row"><span>Potencial</span><b>${p.potencial || '15 / 31'}</b></div>
+                    <div class="summary-table-row"><span>Poder Oculto</span><b style="color:${colorOculto}; text-shadow:1px 1px 0 #000;">${p.tipoOculto.toUpperCase()}</b></div>
+                    <div class="summary-table-row"><span>Amistad</span><b>${p.amistad || '50 / 100'}</b></div>
+                    <div style="font-size:8px; color:#4b5563; margin-top:2px; line-height:1.1;">${p.origen || 'En almacenamiento PC.'}</div>
+                </div>
+            `;
+
+            document.getElementById("summary-content-body").innerHTML = bodyHTML;
+            document.getElementById("pc-screen").style.display = "none";
+            document.getElementById("summary-screen").style.display = "flex";
+        }
+
+        function pcAccionMover() {
+            if (pcIndiceSeleccionado === null || !pcStorage[pcIndiceSeleccionado]) return;
+            let pokePC = pcStorage[pcIndiceSeleccionado];
+
+            if (teamPokemon.length < 4) {
+                teamPokemon.push(pokePC);
+                pcStorage.splice(pcIndiceSeleccionado, 1);
+                pcIndiceSeleccionado = null;
+                guardarDatos();
+                actualizarHUD();
+                renderizarVentanaPC();
+                alert("¡Pokémon movido del PC a tu equipo!");
+            } else {
+                let slotDestino = prompt("Tu equipo está lleno (4/4). Introduce la posición del equipo (0, 1, 2 o 3) con la que deseas intercambiar:", "0");
+                if (slotDestino !== null && !isNaN(slotDestino)) {
+                    let idx = parseInt(slotDestino);
+                    if (idx >= 0 && idx < 4) {
+                        let temp = teamPokemon[idx];
+                        teamPokemon[idx] = pokePC;
+                        pcStorage[pcIndiceSeleccionado] = temp;
+                        pcIndiceSeleccionado = null;
+                        guardarDatos();
+                        actualizarHUD();
+                        renderizarVentanaPC();
+                        alert("¡Intercambio realizado con éxito entre el PC y el equipo!");
+                    } else {
+                        alert("Posición inválida.");
+                    }
+                }
+            }
+        }
+
+        function pcAccionVender() {
+            if (pcIndiceSeleccionado === null || !pcStorage[pcIndiceSeleccionado]) return;
+            let p = pcStorage[pcIndiceSeleccionado];
+            if (confirm(`¿Deseas vender a ${p.nombre} por 300 ₱?`)) {
+                pcStorage.splice(pcIndiceSeleccionado, 1);
+                playerMoney += 300;
+                pcIndiceSeleccionado = null;
+                guardarDatos();
+                renderizarVentanaPC();
+                alert("¡Pokémon vendido con éxito!");
+            }
+        }
+
+        function pcAccionFav() {
+            if (pcIndiceSeleccionado === null || !pcStorage[pcIndiceSeleccionado]) return;
+            let p = pcStorage[pcIndiceSeleccionado];
+            p.favorito = !p.favorito;
+            guardarDatos();
+            renderizarVentanaPC();
+            alert(p.favorito ? "¡Marcado como favorito!" : "Quitado de favoritos.");
         }
 
         // --- CINEMÁTICA PACK GACHA ESTRICTAMENTE DENTRO DE LA VENTANITA 320x320 ---
@@ -1568,7 +1883,7 @@
                 setTimeout(() => {
                     playGachaSound('score');
                     let currentNum = 1;
-                    let stepTime = 35; // 35ms por número para una animación fluida que llega hasta el final sin cortarse
+                    let stepTime = 35;
                     
                     content.innerHTML = `
                         <div style="font-size: 11px; color: #94a3b8;">CALCULANDO ESTADÍSTICAS</div>
@@ -1584,7 +1899,6 @@
                         if (currentNum >= score) {
                             clearInterval(counterInterval);
                             
-                            // Pausa estática de 1.8 segundos con la puntuación final visible para que el jugador se fije
                             setTimeout(() => {
                                 content.innerHTML = `
                                     <div style="font-size: 10px; color: #fef08a; font-weight: bold; animation: pulseGlow 1s infinite;">¡TOCA LA CARTA PARA REVELAR!</div>
@@ -1656,12 +1970,11 @@
         function advanceZone() {
             if (isWalking) return;
             isWalking = true;
-            document.getElementById("input-blocker").style.display = "block"; // Bloquea clics
+            document.getElementById("input-blocker").style.display = "block";
 
             let oldZoneIndex = currentZoneIndex;
             let oldZona = zonesConfig[oldZoneIndex];
             
-            // Selección aleatoria sin repetir la zona actual
             if (zonesConfig.length > 1) {
                 let newIndex = currentZoneIndex;
                 while (newIndex === currentZoneIndex) {
@@ -1702,7 +2015,6 @@
             document.getElementById("zone-sprite").innerText = zonaObj.sprite;
             document.getElementById("explore-log").innerHTML = `Caminando hacia ${zonaObj.name}...`;
 
-            // Iniciar animación alternando entre puestos 5, 2 y 8
             iniciarAnimacionCaminar();
 
             track.style.transition = "transform 5s linear";
@@ -1720,7 +2032,6 @@
                 track.style.transition = "none";
                 track.style.transform = "translateX(0px)";
 
-                // Al llegar, se detiene y vuelve al 1º bloque
                 detenerAnimacionParar();
 
                 let curados = 0;
@@ -2457,169 +2768,6 @@
             document.getElementById("menu-screen").style.display = "flex";
         }
         function cerrarMenu() { document.getElementById("menu-screen").style.display = "none"; }
-        
-        // --- SISTEMA DE PC GBA INTERACTIVO ---
-        function abrirPC() {
-            if (isWalking) return;
-            cerrarMenu();
-            pcIndiceSeleccionado = null;
-            pcModoMover = false;
-            renderizarVentanaPC();
-            document.getElementById("pc-screen").style.display = "flex";
-        }
-
-        function cerrarPC() {
-            document.getElementById("pc-screen").style.display = "none";
-        }
-
-        function seleccionarCeldaPC(index) {
-            if (!pcStorage[index]) return;
-            pcIndiceSeleccionado = index;
-            pcModoMover = false;
-            renderizarVentanaPC();
-        }
-
-        function renderizarVentanaPC() {
-            const gridContainer = document.getElementById("pc-grid-container");
-            const previewSpriteBox = document.getElementById("pc-preview-sprite-box");
-            const previewInfo = document.getElementById("pc-preview-info");
-            const previewStats = document.getElementById("pc-preview-stats");
-
-            gridContainer.innerHTML = "";
-
-            for (let i = 0; i < 30; i++) {
-                let p = pcStorage[i];
-                let isSelected = pcIndiceSeleccionado === i ? 'selected-pc' : '';
-                
-                if (p) {
-                    gridContainer.innerHTML += `
-                        <div class="pc-cell ${isSelected}" onclick="seleccionarCeldaPC(${i})">
-                            <img src="${p.sprite_url}" style="width:26px; height:26px; image-rendering:pixelated;" alt="Icon">
-                            ${p.isShiny ? '<span style="position:absolute; top:0; right:1px; font-size:7px;">⭐</span>' : ''}
-                        </div>
-                    `;
-                } else {
-                    gridContainer.innerHTML += `<div class="pc-cell" style="opacity:0.3; cursor:default;"></div>`;
-                }
-            }
-
-            if (pcIndiceSeleccionado !== null && pcStorage[pcIndiceSeleccionado]) {
-                let p = pcStorage[pcIndiceSeleccionado];
-                let t1Map = mapType(p.tipo1);
-                let tOcultoMap = mapType(p.tipoOculto);
-                let colorOculto = TYPE_COLORS[tOcultoMap] || "#fff";
-
-                previewSpriteBox.innerHTML = `<img src="${p.sprite_url}" style="width:60px; height:60px; image-rendering:pixelated;" alt="Preview">`;
-                previewInfo.innerHTML = `${p.nombre.toUpperCase()}`;
-                previewStats.innerHTML = `
-                    POTENCIAL: <b>${p.potencial || '15 / 31'}</b><br>
-                    PODER OCULTO: <b style="color:${colorOculto};">${p.tipoOculto.toUpperCase()}</b><br>
-                    FAVORITO: <b>${p.favorito ? 'SÍ' : 'NO'}</b>
-                `;
-            } else {
-                previewSpriteBox.innerHTML = `<span style="font-size:24px;">💻</span>`;
-                previewInfo.innerHTML = `VACÍO`;
-                previewStats.innerHTML = `Selecciona un Pokémon`;
-            }
-        }
-
-        function pcAccionDatos() {
-            if (pcIndiceSeleccionado === null || !pcStorage[pcIndiceSeleccionado]) return;
-            let p = pcStorage[pcIndiceSeleccionado];
-            
-            let t1Map = mapType(p.tipo1);
-            let t2Map = mapType(p.tipo2);
-            let tOcultoMap = mapType(p.tipoOculto);
-
-            let colorT1 = TYPE_COLORS[t1Map] || "#777";
-            let colorT2 = t2Map ? (TYPE_COLORS[t2Map] || "#777") : null;
-            let colorOculto = TYPE_COLORS[tOcultoMap] || "#fff";
-
-            let tiposHtml = `<div class="summary-type-badge" style="background:${colorT1};">${p.tipo1.toUpperCase()}</div>`;
-            if (p.tipo2) {
-                tiposHtml += `<div class="summary-type-badge" style="background:${colorT2};">${p.tipo2.toUpperCase()}</div>`;
-            }
-
-            let bodyHTML = `
-                <div class="summary-left">
-                    <div style="font-size:10px; font-weight:bold; color:#374151; width:100%; display:flex; justify-content:space-between;">
-                        <span>Pokédex No.${p.idDex || 25}</span>
-                    </div>
-                    <div style="font-size:11px; font-weight:bold; color:#1f2937; align-self:flex-start;">Lv. ${p.nivel}</div>
-                    <div style="margin: 5px 0;"><img src="${p.sprite_url}" style="width:75px; height:75px; image-rendering:pixelated;" alt="Sprite"></div>
-                    <div style="background:#1f2937; color:#fff; font-size:11px; font-weight:bold; width:100%; padding:4px; border-radius:3px; text-align:center;">${p.nombre.toUpperCase()}</div>
-                    <div style="display:flex; gap:4px; width:100%; margin-top:4px;">${tiposHtml}</div>
-                </div>
-                <div class="summary-right">
-                    <div class="summary-table-row"><span>Trainer ID</span><b>${p.trainerId || '03101'}</b></div>
-                    <div class="summary-table-row"><span>Salud</span><b>${p.hpActual || p.hpMax} PS</b></div>
-                    <div class="summary-table-row"><span>Ataque</span><b>${p.ataque}</b></div>
-                    <div class="summary-table-row"><span>Defensa</span><b>${p.defensa}</b></div>
-                    <div class="summary-table-row"><span>Potencial</span><b>${p.potencial || '15 / 31'}</b></div>
-                    <div class="summary-table-row"><span>Poder Oculto</span><b style="color:${colorOculto}; text-shadow:1px 1px 0 #000;">${p.tipoOculto.toUpperCase()}</b></div>
-                    <div class="summary-table-row"><span>Amistad</span><b>${p.amistad || '50 / 100'}</b></div>
-                    <div style="font-size:8px; color:#4b5563; margin-top:2px; line-height:1.1;">${p.origen || 'En almacenamiento PC.'}</div>
-                </div>
-            `;
-
-            document.getElementById("summary-content-body").innerHTML = bodyHTML;
-            document.getElementById("pc-screen").style.display = "none";
-            document.getElementById("summary-screen").style.display = "flex";
-        }
-
-        function pcAccionMover() {
-            if (pcIndiceSeleccionado === null || !pcStorage[pcIndiceSeleccionado]) return;
-            let pokePC = pcStorage[pcIndiceSeleccionado];
-
-            if (teamPokemon.length < 4) {
-                teamPokemon.push(pokePC);
-                pcStorage.splice(pcIndiceSeleccionado, 1);
-                pcIndiceSeleccionado = null;
-                guardarDatos();
-                actualizarHUD();
-                renderizarVentanaPC();
-                alert("¡Pokémon movido del PC a tu equipo!");
-            } else {
-                let slotDestino = prompt("Tu equipo está lleno (4/4). Introduce la posición del equipo (0, 1, 2 o 3) con la que deseas intercambiar:", "0");
-                if (slotDestino !== null && !isNaN(slotDestino)) {
-                    let idx = parseInt(slotDestino);
-                    if (idx >= 0 && idx < 4) {
-                        let temp = teamPokemon[idx];
-                        teamPokemon[idx] = pokePC;
-                        pcStorage[pcIndiceSeleccionado] = temp;
-                        pcIndiceSeleccionado = null;
-                        guardarDatos();
-                        actualizarHUD();
-                        renderizarVentanaPC();
-                        alert("¡Intercambio realizado con éxito entre el PC y el equipo!");
-                    } else {
-                        alert("Posición inválida.");
-                    }
-                }
-            }
-        }
-
-        function pcAccionVender() {
-            if (pcIndiceSeleccionado === null || !pcStorage[pcIndiceSeleccionado]) return;
-            let p = pcStorage[pcIndiceSeleccionado];
-            if (confirm(`¿Deseas vender a ${p.nombre} por 300 ₱?`)) {
-                pcStorage.splice(pcIndiceSeleccionado, 1);
-                playerMoney += 300;
-                pcIndiceSeleccionado = null;
-                guardarDatos();
-                renderizarVentanaPC();
-                alert("¡Pokémon vendido con éxito!");
-            }
-        }
-
-        function pcAccionFav() {
-            if (pcIndiceSeleccionado === null || !pcStorage[pcIndiceSeleccionado]) return;
-            let p = pcStorage[pcIndiceSeleccionado];
-            p.favorito = !p.favorito;
-            guardarDatos();
-            renderizarVentanaPC();
-            alert(p.favorito ? "¡Marcado como favorito!" : "Quitado de favoritos.");
-        }
 
         // --- SISTEMA INTERACTIVO DE EQUIPO ESTILO GBA ---
         function abrirEquipo() {
