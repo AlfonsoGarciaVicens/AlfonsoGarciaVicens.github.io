@@ -86,7 +86,7 @@
   {
     "id": 113,
     "name": "Pilar Celeste",
-    "legendary" "Rayquaza",
+    "legendary": "Rayquaza",
     "sprite": "☁️",
     "bg_image": "img/zones/PilarCeleste.png"
   },
@@ -156,7 +156,7 @@
   {
     "id": 123,
     "name": "Zona Regigigas",
-    "legendary" "Regigigas",
+    "legendary": "Regigigas",
     "sprite": "🤖",
     "bg_image": "img/zones/ZonaRegigigas.png"
   },
