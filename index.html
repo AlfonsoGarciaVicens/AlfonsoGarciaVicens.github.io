@@ -70,7 +70,7 @@
         .pokedex-cell-num { font-size: 6px; color: #64748b; font-weight: bold; }
         .pokedex-cell-img { width: 22px; height: 22px; image-rendering: pixelated; }
 
-        /* Estilo Ventana PC Rediseñada según Referencia */
+        /* Estilo Ventana PC Rediseñada */
         .pc-window-gba { 
             background-color: #2d8ab3; 
             border: none; 
@@ -170,20 +170,20 @@
         }
         .pc-action-btn:hover { background: #2563eb; }
 
-        /* --- ESTILO VENTANA SKINS DE PERSONAJE (Basado en la imagen) --- */
+        /* --- ESTILO VENTANA SKINS DE PERSONAJE --- */
         .skins-window {
             background-color: #525252;
             background-image: repeating-linear-gradient(rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px);
-            border: none;
-            border-radius: 0;
-            width: 100%;
-            height: 100%;
-            padding: 6px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-sizing: border-box;
-            color: #fff;
+            border: none; 
+            border-radius: 0; 
+            width: 100%; 
+            height: 100%; 
+            padding: 6px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            box-sizing: border-box; 
+            color: #fff; 
         }
         .skins-top-header {
             display: flex;
@@ -214,7 +214,7 @@
             flex-grow: 1;
         }
         .skin-name-title {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
             letter-spacing: 1px;
             color: #ffffff;
@@ -385,7 +385,7 @@
         .gba-hp-bar { background: #111; height: 5px; width: 100%; border-radius: 0; margin-top: 2px; overflow: hidden; border: 1px solid #000; }
         .gba-hp-fill { background: #22c55e; height: 100%; }
 
-        /* Estilo Menú Datos Pokémon (Basado en la referencia GBA) */
+        /* Estilo Menú Datos Pokémon */
         .summary-window { background: linear-gradient(135deg, #d97706, #b45309); border: none; border-radius: 0; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
         .summary-content { display: flex; gap: 8px; flex-grow: 1; margin-bottom: 5px; }
         .summary-left { background: #e5e7eb; border: 2px solid #9ca3af; border-radius: 0; width: 45%; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; color: #111; }
@@ -401,11 +401,11 @@
         .energy-bars { color: #4ade80; font-family: monospace; letter-spacing: -1px; font-weight: bold; }
         .menu-btn { background-color: #2196F3; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; }
 
-        /* Ventana cuadrada fija de 320x320 píxeles absolutos */
+        /* Ventana cuadrada fija de 320x320 píxeles */
         .map-viewport { 
             width: 320px; 
             height: 320px; 
-            box-sizing: content-box !important;
+            box-sizing: content-box !important; 
             margin: 0 auto; 
             flex-shrink: 0; 
             background: linear-gradient(135deg, #2e7d32, #1b5e20); 
@@ -413,9 +413,9 @@
             border-radius: 8px; 
             position: relative; 
             overflow: hidden; 
-            background-size: 320px 320px;
-            background-repeat: no-repeat;
-            background-position: center center;
+            background-size: 320px 320px; 
+            background-repeat: no-repeat; 
+            background-position: center center; 
         }
 
         /* Sprite del jugador en el mapa: Tamaño duplicado (64x64) */
@@ -432,7 +432,6 @@
             z-index: 50;
         }
 
-        /* Contenedor interno con dimensiones de 320x320 */
         .map-viewport-inner {
             position: absolute;
             top: 0;
@@ -458,7 +457,7 @@
         .sprite-container { display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 30px; margin-top: 5px; }
         .exploration-log { position: relative; z-index: 2; background-color: rgba(0, 0, 0, 0.85); border: 1px solid #555; border-radius: 6px; padding: 10px; width: 100%; min-height: 70px; font-size: 11px; color: #d4d4d4; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-        /* --- CINEMÁTICA GACHA PACK (FUT STYLE) --- */
+        /* --- CINEMÁTICA GACHA PACK --- */
         #gacha-pack-overlay {
             position: absolute;
             top: 0;
@@ -511,7 +510,7 @@
         }
         .anim-slide { animation: slideDown 0.8s ease forwards; }
 
-        /* Ventana de combate */
+        /* Ventana de combate y sprites pegados a la base inferior */
         .combat-modal-window { 
             background: linear-gradient(135deg, #1e3a8a, #1d4ed8); 
             border: none; 
@@ -537,12 +536,24 @@
         .exp-bar-bg { background-color: #1e293b; height: 5px; width: 75%; display: inline-block; vertical-align: middle; border-radius: 0; overflow: hidden; border: 1px solid #0f172a; }
         .exp-bar-fill { background-color: #38bdf8 !important; height: 100%; transition: width 0.3s ease; display: block; }
 
-        .combat-sprites { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 10px; height: 95px; }
-        .battle-sprite-img { image-rendering: pixelated; }
+        /* Contenedor de sprites alineado perfectamente abajo */
+        .combat-sprites { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-end; 
+            padding: 0 10px; 
+            height: 95px; 
+        }
+        .battle-sprite-img { 
+            image-rendering: pixelated; 
+            display: block;
+        }
         
+        /* Sprite del jugador en combate pegado abajo */
         #player-battle-sprite {
             position: relative;
-            top: 18px;
+            align-self: flex-end;
+            margin-bottom: 0px;
         }
 
         .combat-dialogue { background-color: #222; border: 2px solid #c0c0c0; border-radius: 0; padding: 8px; font-size: 10px; color: #fff; min-height: 50px; text-align: center; overflow-y: auto; }
@@ -658,7 +669,7 @@
             </div>
         </div>
 
-        <!-- Ventanita Cuadrada 320x320 (.map-viewport) Contenedor Principal de Vista y Menús -->
+        <!-- Ventanita Cuadrada 320x320 (.map-viewport) -->
         <div class="map-viewport" id="map-viewport">
             <!-- Pista deslizante lateral (640px ancho) -->
             <div id="map-track" style="position: absolute; top: 0; left: 0; width: 640px; height: 320px; display: flex; transform: translateX(0px); z-index: 1;">
@@ -669,7 +680,7 @@
             <!-- Sprite del Jugador Overworld (64x64, top: 240px, left: 160px) -->
             <div id="player-sprite"></div>
 
-            <!-- Pantalla Cinemática Gacha Pack (FUT Style) -->
+            <!-- Pantalla Cinemática Gacha Pack -->
             <div id="gacha-pack-overlay">
                 <div id="gacha-pack-content" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; width:100%; height:100%;"></div>
             </div>
@@ -707,7 +718,7 @@
                 </div>
             </div>
 
-            <!-- Ventana Skins de Personaje (Basada en la imagen de referencia) -->
+            <!-- Ventana Skins de Personaje -->
             <div id="skins-screen" class="modal-screen" style="z-index: 88;">
                 <div class="skins-window">
                     <div class="skins-top-header">
@@ -715,15 +726,13 @@
                             <img id="skin-preview-art" class="skin-art-img" src="" alt="Skin Art">
                         </div>
                         <div class="skin-info-box">
-                            <div id="skin-preview-title" class="skin-name-title">SNOWBOARDER</div>
+                            <div id="skin-preview-title" class="skin-name-title">ENTRENADOR</div>
                             <button id="skin-activate-btn" class="skin-activate-btn" onclick="activarSkinSeleccionada()">ACTIVAR</button>
                         </div>
                         <button onclick="cerrarSkins()" style="position: absolute; top: 0; right: 0; background: none; border: none; font-size: 20px; font-weight: bold; cursor: pointer; color: #fff; line-height: 1;">✖</button>
                     </div>
 
-                    <div class="skins-grid-container" id="skins-grid-container">
-                        <!-- Se llena dinámicamente con las cajitas de skins -->
-                    </div>
+                    <div class="skins-grid-container" id="skins-grid-container"></div>
                 </div>
             </div>
 
@@ -1057,47 +1066,53 @@
         let specialZonesConfig = [...DEFAULT_SPECIAL_ZONES];
 
         // --- CATÁLOGO DE SKINS DE PERSONAJE ---
-        const SKINS_DATABASE = [
+        let SKINS_DATABASE = [
             {
                 id: 'default',
-                name: 'ENTRENADOR',
+                name: 'Entrenador',
                 art_image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/trainers/1.png',
                 sheet_image: 'img/player_sheet.png'
             },
             {
                 id: 'snowboarder',
-                name: 'SNOWBOARDER',
+                name: 'Snowboarder',
                 art_image: 'https://play.pokemonshowdown.com/sprites/trainers/snowboarder.png',
                 sheet_image: 'img/player_sheet.png'
             },
             {
                 id: 'acetrainer',
-                name: 'ENTRENADOR GUAY',
+                name: 'Entrenador Guay',
                 art_image: 'https://play.pokemonshowdown.com/sprites/trainers/acetrainer-gen4dp.png',
                 sheet_image: 'img/player_sheet.png'
             },
             {
                 id: 'hiker',
-                name: 'MONTAÑERO',
+                name: 'Montañero',
                 art_image: 'https://play.pokemonshowdown.com/sprites/trainers/hiker-gen4.png',
                 sheet_image: 'img/player_sheet.png'
             },
             {
                 id: 'blackbelt',
-                name: 'KARATEKA',
+                name: 'Karateka',
                 art_image: 'https://play.pokemonshowdown.com/sprites/trainers/blackbelt-gen4dp.png',
                 sheet_image: 'img/player_sheet.png'
             },
             {
                 id: 'swimmer',
-                name: 'NADADOR',
+                name: 'Nadador',
                 art_image: 'https://play.pokemonshowdown.com/sprites/trainers/swimmer-gen4dp.png',
                 sheet_image: 'img/player_sheet.png'
             },
             {
                 id: 'scientist',
-                name: 'CIENTÍFICO',
+                name: 'Científico',
                 art_image: 'https://play.pokemonshowdown.com/sprites/trainers/scientist-gen4dp.png',
+                sheet_image: 'img/player_sheet.png'
+            },
+            {
+                id: 'rocket',
+                name: 'Recluta Rocket',
+                art_image: 'https://play.pokemonshowdown.com/sprites/trainers/teamrocket.png',
                 sheet_image: 'img/player_sheet.png'
             }
         ];
@@ -1146,9 +1161,9 @@
             if (playerAnimInterval) clearInterval(playerAnimInterval);
             aplicarSkinAlJugador();
             const walkFrames = [
-                "-64px -64px",   // Puesto 5
-                "-64px 0px",     // Puesto 2
-                "-64px -128px"   // Puesto 8
+                "-64px -64px",
+                "-64px 0px",
+                "-64px -128px"
             ];
             playerAnimInterval = setInterval(() => {
                 walkStep = (walkStep + 1) % walkFrames.length;
@@ -1161,11 +1176,12 @@
             if (!sprite) return;
             if (playerAnimInterval) { clearInterval(playerAnimInterval); playerAnimInterval = null; }
             aplicarSkinAlJugador();
-            sprite.style.backgroundPosition = "0px 0px"; // Puesto 1
+            sprite.style.backgroundPosition = "0px 0px";
         }
 
-        // --- SISTEMA DE CACHÉ Y RESOLUCIÓN INTELIGENTE DE SPRITES ---
+        // --- SISTEMA DE CACHÉ Y RESOLUCIÓN DE SPRITES (Back Gen 4 con fallbacks) ---
         const SPRITE_URL_CACHE = new Map();
+        const BACK_SPRITE_URL_CACHE = new Map();
         const ICON_URL_CACHE = new Map();
 
         function getPokedexNormalSpriteUrl(poke) {
@@ -1174,6 +1190,28 @@
 
             let url = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
             SPRITE_URL_CACHE.set(id, url);
+            return url;
+        }
+
+        function getPokemonBackSpriteUrl(poke) {
+            let id = poke.id || poke.idDex || 1;
+            let isShiny = poke.isShiny ? true : false;
+            let cacheKey = `${id}_${isShiny ? 'shiny' : 'norm'}`;
+            if (BACK_SPRITE_URL_CACHE.has(cacheKey)) return BACK_SPRITE_URL_CACHE.get(cacheKey);
+
+            let url;
+            // Para Gen 1-4 (ID <= 493), usa el sprite de espalda de 4ª Generación (Diamond/Pearl)
+            if (id <= 493) {
+                url = isShiny 
+                    ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/back/shiny/${id}.png`
+                    : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/back/${id}.png`;
+            } else {
+                url = isShiny
+                    ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${id}.png`
+                    : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${id}.png`;
+            }
+
+            BACK_SPRITE_URL_CACHE.set(cacheKey, url);
             return url;
         }
 
@@ -1207,10 +1245,12 @@
                 img1.src = getPokedexNormalSpriteUrl(p);
                 let img2 = new Image();
                 img2.src = getPokedexIconUrl(p);
+                let img3 = new Image();
+                img3.src = getPokemonBackSpriteUrl(p);
             });
         }
 
-        // --- SISTEMA DE ESTADOS POKÉDEX (VISTO / ATRAPADO / NO VISTO) ---
+        // --- SISTEMA DE ESTADOS POKÉDEX ---
         function getPokedexStatus(idDex) {
             const user = localStorage.getItem("pt_current_user") || "default";
             const prefix = `pt_${user}_`;
@@ -1258,7 +1298,6 @@
             }
         }
 
-        // Variables para la gestión interactiva de equipo y PC
         let indicePokemonSeleccionado = null;
         let modoMoverEquipo = false;
         let pcIndiceSeleccionado = null;
@@ -1296,7 +1335,6 @@
         let pestanaActivaBolsa = 'potions';
         let objetoSeleccionadoBolsa = null;
 
-        // --- CATÁLOGO COMPLETO DE OBJETOS PARA EL MENÚ DEV ---
         const ALL_DEV_ITEMS = [
             { id: 'ancient_map', name: 'Mapa Antiguo', cat: 'others', desc: 'Un mapa ancestral que te guía hacia el territorio de un Pokémon Legendario en tu próxima exploración.' },
             { id: 'potion', name: 'Poción', cat: 'potions', desc: 'Cura un 20% de PS a un Pokémon.' },
@@ -1326,7 +1364,6 @@
             { id: 'rare_candy', name: 'Caramelo Raro', cat: 'others', desc: 'Caramelo misterioso que estimula el crecimiento.' }
         ];
 
-        // --- CONFIGURACIÓN DE GACHAS (Tipos y Test Shiny) ---
         const typeGachaConfig = [
             { type: 'normal', name: 'Normal', icon: '⚪' },
             { type: 'fire', name: 'Fuego', icon: '🔥' },
@@ -1356,6 +1393,14 @@
                 desc: 'Reclamable 1 vez al día. Obtén entre 500 y 5.000 Poké-dólares gratis.',
                 cost: 0,
                 type: 'daily'
+            },
+            {
+                id: 'character_skins',
+                title: 'GACHA DE PERSONAJES',
+                icons: ['👤', '👕', '✨'],
+                desc: '¡Obtén un nuevo aspecto de entrenador aleatorio sin duplicados!',
+                cost: 2500,
+                type: 'character_skin'
             },
             {
                 id: 'items',
@@ -1602,7 +1647,7 @@
             let t2 = pokeData.types[1] || null;
 
             let frontUrl = isShiny ? (pokeData.shiny_sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${idDex}.png`) : (pokeData.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idDex}.png`);
-            let backUrl = isShiny ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${idDex}.png` : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${idDex}.png`;
+            let backUrl = getPokemonBackSpriteUrl({ idDex: idDex, isShiny: isShiny });
 
             marcarVisto(idDex);
 
@@ -1650,6 +1695,13 @@
                 specialZonesConfig = await resSpec.json();
             } catch (e) {
                 specialZonesConfig = [...DEFAULT_SPECIAL_ZONES];
+            }
+
+            try {
+                const resSkins = await fetch('data/skins.json?t=' + Date.now());
+                SKINS_DATABASE = await resSkins.json();
+            } catch (e) {
+                console.warn("Usando catálogo de skins por defecto.");
             }
 
             try {
@@ -2402,7 +2454,7 @@
             }
         }
 
-        // --- CINEMÁTICA PACK GACHA ESTRICTAMENTE DENTRO DE LA VENTANITA 320x320 ---
+        // --- CINEMÁTICA PACK GACHA POKÉMON ---
         function abrirCinematicaGacha(nuevoPoke) {
             const overlay = document.getElementById("gacha-pack-overlay");
             const content = document.getElementById("gacha-pack-content");
@@ -2515,12 +2567,46 @@
             precargarSpritesEquipoYPC();
         }
 
+        // --- CINEMÁTICA PACK GACHA DE PERSONAJES ---
+        function abrirCinematicaSkin(skinObj) {
+            const overlay = document.getElementById("gacha-pack-overlay");
+            const content = document.getElementById("gacha-pack-content");
+            overlay.style.display = "flex";
+
+            playGachaSound('happy_melody');
+            content.innerHTML = `
+                <div style="font-size: 11px; color: #a855f7; font-weight: bold;">¡NUEVA SKIN DESBLOQUEADA!</div>
+                <div class="fut-card anim-slide" style="cursor: default; width: 145px; height: 200px; padding: 6px; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);">
+                    <div style="font-size: 9px; font-weight: bold; width: 100%; text-align: center;">
+                        <span>👕 NUEVO ASPECTO</span>
+                    </div>
+                    <div style="margin: 4px 0; height: 85px; display: flex; align-items: center; justify-content: center;">
+                        <img src="${skinObj.art_image}" style="max-height: 80px; max-width: 100%; image-rendering: pixelated; object-fit: contain;" alt="Skin Art">
+                    </div>
+                    <div style="font-size: 10px; font-weight: bold; background: rgba(0,0,0,0.6); width: 100%; padding: 4px; border-radius: 3px; color: #fff;">
+                        ${skinObj.name.toUpperCase()}
+                    </div>
+                </div>
+                <div style="display: flex; gap: 4px; width: 100%; justify-content: center; margin-top: 4px;">
+                    <button class="gacha-pull-btn" style="background:#3b82f6; width: 110px; padding: 6px; font-size: 10px;" onclick="equiparSkinDirecto('${skinObj.id}')">EQUIPAR</button>
+                    <button class="gacha-pull-btn" style="background:#10b981; width: 110px; padding: 6px; font-size: 10px;" onclick="cerrarCinematicaGacha()">CONTINUAR</button>
+                </div>
+            `;
+        }
+
+        function equiparSkinDirecto(skinId) {
+            equippedSkinId = skinId;
+            guardarDatos();
+            aplicarSkinAlJugador();
+            cerrarCinematicaGacha();
+        }
+
         function cerrarCinematicaGacha() {
             document.getElementById("gacha-pack-overlay").style.display = "none";
             actualizarUIGacha();
         }
 
-        // --- AVANZAR DE ZONA: ZONA ALEATORIA SIN REPETIR Y ANIMACIÓN DE CAMINAR ---
+        // --- AVANZAR DE ZONA ---
         function advanceZone() {
             if (isWalking) return;
             isWalking = true;
@@ -2529,7 +2615,6 @@
             let oldZona = isSpecialZone && currentSpecialZone ? currentSpecialZone : (zonesConfig[currentZoneIndex] || { name: "Zona Anterior", sprite: "🏡", bg_image: "" });
             let zonaObj = null;
 
-            // Si se usó el Mapa Antiguo, la siguiente zona a la que se avanza es legendaria
             if (mapaAntiguoActivado) {
                 let pool = specialZonesConfig.length > 0 ? specialZonesConfig : DEFAULT_SPECIAL_ZONES;
                 currentSpecialZone = pool[Math.floor(Math.random() * pool.length)];
@@ -2670,7 +2755,6 @@
 
             let viewport = document.getElementById("map-viewport");
 
-            // Si estamos en una zona legendaria
             if (isSpecialZone && currentSpecialZone) {
                 if (currentSpecialZone.bg_image) {
                     viewport.style.backgroundImage = `url('${currentSpecialZone.bg_image}')`;
@@ -2897,7 +2981,7 @@
                     pullBtn.style.backgroundColor = "#10b981";
                 }
             } else {
-                pullBtn.innerText = `TIRAR (${maquina.cost} ₱)`;
+                pullBtn.innerText = `TIRAR (${maquina.cost.toLocaleString()} ₱)`;
                 pullBtn.style.backgroundColor = "#0284c7";
             }
         }
@@ -2918,6 +3002,30 @@
                 guardarDatos();
                 actualizarUIGacha();
                 alert(`🎁 ¡Bonus diario reclamado! Has ganado ${premioDinero} ₱.`);
+                return;
+            }
+
+            // Gacha de skins: comprobar si ya posee todas las skins antes de cobrar
+            if (maquina.type === 'character_skin') {
+                let poolDisponibles = SKINS_DATABASE.filter(s => !userSkins.includes(s.id));
+                if (poolDisponibles.length === 0) {
+                    alert("¡Ya has desbloqueado todas las skins disponibles en el juego!");
+                    return;
+                }
+
+                if (playerMoney < maquina.cost) {
+                    alert("¡No tienes suficiente dinero (₱) para realizar esta tirada!");
+                    return;
+                }
+
+                playerMoney -= maquina.cost;
+
+                // Todas las skins tienen la misma probabilidad (sin rarezas)
+                let skinElegida = poolDisponibles[Math.floor(Math.random() * poolDisponibles.length)];
+                userSkins.push(skinElegida.id);
+                guardarDatos();
+                actualizarUIGacha();
+                abrirCinematicaSkin(skinElegida);
                 return;
             }
 
@@ -3068,7 +3176,18 @@
             let pSpriteImg = document.getElementById("player-battle-sprite");
             let eSpriteImg = document.getElementById("enemy-battle-sprite");
 
-            pSpriteImg.src = lider.back_sprite_url || (lider.sprite_url ? lider.sprite_url.replace('/pokemon/', '/pokemon/back/') : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/25.png");
+            // Gestión inteligente de sprites traseros con fallback a front si falta en PokeAPI
+            pSpriteImg.onerror = function() {
+                this.onerror = function() {
+                    this.onerror = null;
+                    this.src = lider.sprite_url;
+                };
+                this.src = lider.isShiny 
+                    ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${lider.idDex || 1}.png`
+                    : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${lider.idDex || 1}.png`;
+            };
+
+            pSpriteImg.src = getPokemonBackSpriteUrl(lider);
             eSpriteImg.src = currentEnemy.sprite_url || "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png";
 
             actualizarBarrasHP();
@@ -3129,7 +3248,17 @@
             let pSpriteImg = document.getElementById("player-battle-sprite");
             let eSpriteImg = document.getElementById("enemy-battle-sprite");
 
-            pSpriteImg.src = lider.back_sprite_url || (lider.sprite_url ? lider.sprite_url.replace('/pokemon/', '/pokemon/back/') : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/25.png");
+            pSpriteImg.onerror = function() {
+                this.onerror = function() {
+                    this.onerror = null;
+                    this.src = lider.sprite_url;
+                };
+                this.src = lider.isShiny 
+                    ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${lider.idDex || 1}.png`
+                    : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${lider.idDex || 1}.png`;
+            };
+
+            pSpriteImg.src = getPokemonBackSpriteUrl(lider);
             eSpriteImg.src = currentEnemy.sprite_url || "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png";
 
             actualizarBarrasHP();
