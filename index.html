@@ -896,6 +896,8 @@
         let specialZonesConfig = [];
 
         let currentZoneIndex = 0;
+        let isSpecialZone = false;
+        let currentSpecialZone = null;
         let teamPokemon = []; 
         let pcStorage = [];   
         let currentEnemy = null;
@@ -1402,7 +1404,10 @@
                 const resSpec = await fetch('data/special_zones.json');
                 specialZonesConfig = await resSpec.json();
             } catch (e) {
-                specialZonesConfig = [];
+                specialZonesConfig = [
+                    { id: 101, name: "Laboratorio", legendary: "Mewtwo", sprite: "🧬", bg_image: "img/zones/Ruta1.png" },
+                    { id: 112, name: "Pilar Celeste", legendary: "Rayquaza", sprite: "☁️", bg_image: "img/zones/Ruta1.png" }
+                ];
             }
 
             try {
@@ -1536,8 +1541,8 @@
         }
 
         function actualizarFondoZonaInicial() {
-            if (zonesConfig.length > 0) {
-                let zonaObj = zonesConfig[currentZoneIndex] || zonesConfig[0];
+            let zonaObj = isSpecialZone && currentSpecialZone ? currentSpecialZone : (zonesConfig[currentZoneIndex] || zonesConfig[0]);
+            if (zonaObj) {
                 document.getElementById("current-zone-name").innerText = zonaObj.name;
                 document.getElementById("zone-sprite").innerText = zonaObj.sprite || "🏡";
                 
@@ -1746,23 +1751,28 @@
             POKEDEX_GLOBAL.forEach((p, idx) => {
                 let pId = p.id || (idx + 1);
                 let status = getPokedexStatus(pId);
-                let pSpriteCell = getPokedexNormalSpriteUrl(p);
+                let pSpriteCell = getPokedexIconUrl(p);
                 let isSelected = pokedexSelectedIndex === idx ? 'selected' : '';
 
                 let cell = document.createElement("div");
                 cell.className = `pokedex-grid-cell ${isSelected}`;
                 cell.onclick = () => seleccionarPokemonPokedex(idx);
 
-                let imgStyle = "width: 22px; height: 22px; image-rendering: pixelated;";
+                let isIconGen = pSpriteCell.includes('generation-vii') || pSpriteCell.includes('generation-viii');
+                let imgClass = isIconGen ? "pokedex-cell-img icon-gen-large" : "pokedex-cell-img";
+                let imgStyle = "image-rendering: pixelated;";
                 if (!status.isSeen) {
                     imgStyle += " filter: brightness(0);";
                 } else if (!status.isCaught) {
                     imgStyle += " filter: grayscale(100%);";
                 }
 
+                let fallbackAnimado = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${pId}.gif`;
+                let fallbackNormal = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pId}.png`;
+
                 cell.innerHTML = `
                     <span class="pokedex-cell-num">${pId.toString().padStart(3, '0')}</span>
-                    <img src="${pSpriteCell}" class="pokedex-cell-img" style="${imgStyle}" alt="P">
+                    <img src="${pSpriteCell}" class="${imgClass}" style="${imgStyle}" alt="P" onerror="if(this.src.includes('generation-viii') || this.src.includes('generation-vii')){this.src='${fallbackAnimado}';}else if(this.src.includes('animated')){this.src='${fallbackNormal}';}">
                 `;
                 grid.appendChild(cell);
             });
@@ -2178,21 +2188,34 @@
             isWalking = true;
             document.getElementById("input-blocker").style.display = "block";
 
-            let oldZoneIndex = currentZoneIndex;
-            let oldZona = zonesConfig[oldZoneIndex];
-            
-            if (zonesConfig.length > 1) {
-                let newIndex = currentZoneIndex;
-                while (newIndex === currentZoneIndex) {
-                    newIndex = Math.floor(Math.random() * zonesConfig.length);
-                }
-                currentZoneIndex = newIndex;
+            let oldZona = isSpecialZone && currentSpecialZone ? currentSpecialZone : (zonesConfig[currentZoneIndex] || { name: "Zona Anterior", sprite: "🏡", bg_image: "" });
+            let zonaObj = null;
+
+            // Si se usó el Mapa Antiguo, la siguiente zona a la que se avanza es legendaria
+            if (mapaAntiguoActivado) {
+                let pool = specialZonesConfig.length > 0 ? specialZonesConfig : [
+                    { id: 101, name: "Laboratorio", legendary: "Mewtwo", sprite: "🧬", bg_image: "img/zones/Ruta1.png" },
+                    { id: 112, name: "Pilar Celeste", legendary: "Rayquaza", sprite: "☁️", bg_image: "img/zones/Ruta1.png" }
+                ];
+                currentSpecialZone = pool[Math.floor(Math.random() * pool.length)];
+                isSpecialZone = true;
+                mapaAntiguoActivado = false;
+                zonaObj = currentSpecialZone;
             } else {
-                currentZoneIndex = 0;
+                isSpecialZone = false;
+                currentSpecialZone = null;
+                if (zonesConfig.length > 1) {
+                    let newIndex = currentZoneIndex;
+                    while (newIndex === currentZoneIndex) {
+                        newIndex = Math.floor(Math.random() * zonesConfig.length);
+                    }
+                    currentZoneIndex = newIndex;
+                } else {
+                    currentZoneIndex = 0;
+                }
+                zonaObj = zonesConfig[currentZoneIndex] || { name: "Ruta 01", sprite: "🏡", bg_image: "" };
             }
 
-            let zonaObj = zonesConfig[currentZoneIndex];
-            
             let panel1 = document.getElementById("map-panel-1");
             let panel2 = document.getElementById("map-panel-2");
             let track = document.getElementById("map-track");
@@ -2222,7 +2245,9 @@
 
             document.getElementById("current-zone-name").innerText = zonaObj.name;
             document.getElementById("zone-sprite").innerText = zonaObj.sprite || "🏡";
-            document.getElementById("explore-log").innerHTML = `Caminando hacia ${zonaObj.name}...`;
+            document.getElementById("explore-log").innerHTML = isSpecialZone 
+                ? `🗺️ ¡Siguiendo el Mapa Antiguo hacia ${zonaObj.name}...`
+                : `Caminando hacia ${zonaObj.name}...`;
 
             iniciarAnimacionCaminar();
 
@@ -2253,7 +2278,10 @@
                     }
                 });
                 
-                let logMsg = `Has llegado a ${zonaObj.name}.`;
+                let logMsg = isSpecialZone 
+                    ? `✨ ¡Has llegado a ${zonaObj.name}! Se siente una presencia legendaria ancestral.`
+                    : `Has llegado a ${zonaObj.name}.`;
+
                 if (curados > 0) logMsg += `<br><span style="color:#4CAF50;">¡El equipo recuperó un 5% de PS por el paseo!</span>`;
                 
                 document.getElementById("explore-log").innerHTML = logMsg;
@@ -2305,20 +2333,14 @@
             if (teamPokemon.length === 0) return alert("¡Elige un inicial!");
             if (zonaExplorada) return;
 
-            // --- LÓGICA MAPA ANTIGUO (ZONAS LEGENDARIAS) ---
-            if (mapaAntiguoActivado) {
-                let poolZonas = specialZonesConfig.length > 0 ? specialZonesConfig : [
-                    { name: "Laboratorio", legendary: "Mewtwo", sprite: "🧬", bg_image: "img/zones/Ruta1.png" }
-                ];
-                const zonaElegida = poolZonas[Math.floor(Math.random() * poolZonas.length)];
-                
-                let viewport = document.getElementById("map-viewport");
-                if (zonaElegida.bg_image) {
-                    viewport.style.backgroundImage = `url('${zonaElegida.bg_image}')`;
-                }
+            let viewport = document.getElementById("map-viewport");
 
-                iniciarCombateLegendario(zonaElegida);
-                mapaAntiguoActivado = false;
+            // Si estamos en una zona legendaria (llegamos tras avanzar con mapa antiguo)
+            if (isSpecialZone && currentSpecialZone) {
+                if (currentSpecialZone.bg_image) {
+                    viewport.style.backgroundImage = `url('${currentSpecialZone.bg_image}')`;
+                }
+                iniciarCombateLegendario(currentSpecialZone);
                 zonaExplorada = true;
                 document.getElementById("btn-explore-main").disabled = false;
                 return;
@@ -2337,7 +2359,6 @@
             }
 
             let zonaObj = zonesConfig[currentZoneIndex] || { bg_image: "", bg_image_event: "" };
-            let viewport = document.getElementById("map-viewport");
             const r = Math.random();
 
             if (r < 0.3) {
@@ -2453,7 +2474,7 @@
 
             if (objetoSeleccionadoBolsa.id === 'ancient_map') {
                 mapaAntiguoActivado = true;
-                alert("🗺️ ¡Has activado el Mapa Antiguo! Tu próxima exploración te llevará a una zona legendaria.");
+                alert("🗺️ ¡Has activado el Mapa Antiguo! Al pulsar AVANZAR, viajarás a una zona legendaria.");
                 objetoSeleccionadoBolsa.count--;
                 if (objetoSeleccionadoBolsa.count <= 0) {
                     playerInventory['others'] = playerInventory['others'].filter(i => i.id !== 'ancient_map');
