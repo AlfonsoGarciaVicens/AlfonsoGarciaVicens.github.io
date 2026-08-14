@@ -1,0 +1,58 @@
+[
+  {
+    "id": "default",
+    "name": "Entrenador",
+    "rarity": "common",
+    "art_image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/trainers/1.png",
+    "sheet_image": "img/player_sheet.png"
+  },
+  {
+    "id": "snowboarder",
+    "name": "Snowboarder",
+    "rarity": "rare",
+    "art_image": "https://play.pokemonshowdown.com/sprites/trainers/snowboarder.png",
+    "sheet_image": "img/skins/sheets/snowboarder_sheet.png"
+  },
+  {
+    "id": "acetrainer",
+    "name": "Entrenador Guay",
+    "rarity": "epic",
+    "art_image": "https://play.pokemonshowdown.com/sprites/trainers/acetrainer-gen4dp.png",
+    "sheet_image": "img/skins/sheets/acetrainer_sheet.png"
+  },
+  {
+    "id": "hiker",
+    "name": "Montañero",
+    "rarity": "common",
+    "art_image": "https://play.pokemonshowdown.com/sprites/trainers/hiker-gen4.png",
+    "sheet_image": "img/skins/sheets/hiker_sheet.png"
+  },
+  {
+    "id": "blackbelt",
+    "name": "Karateka",
+    "rarity": "rare",
+    "art_image": "https://play.pokemonshowdown.com/sprites/trainers/blackbelt-gen4dp.png",
+    "sheet_image": "img/skins/sheets/blackbelt_sheet.png"
+  },
+  {
+    "id": "swimmer",
+    "name": "Nadador",
+    "rarity": "common",
+    "art_image": "https://play.pokemonshowdown.com/sprites/trainers/swimmer-gen4dp.png",
+    "sheet_image": "img/skins/sheets/swimmer_sheet.png"
+  },
+  {
+    "id": "scientist",
+    "name": "Científico",
+    "rarity": "rare",
+    "art_image": "https://play.pokemonshowdown.com/sprites/trainers/scientist-gen4dp.png",
+    "sheet_image": "img/skins/sheets/scientist_sheet.png"
+  },
+  {
+    "id": "rocket",
+    "name": "Recluta Rocket",
+    "rarity": "legendary",
+    "art_image": "https://play.pokemonshowdown.com/sprites/trainers/teamrocket.png",
+    "sheet_image": "img/skins/sheets/rocket_sheet.png"
+  }
+]
