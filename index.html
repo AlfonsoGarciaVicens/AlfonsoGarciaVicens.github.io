@@ -282,7 +282,7 @@
             height: 64px;
             background-image: url('img/player_sheet.png');
             background-size: 192px 256px;
-            background-position: -128px -64px; /* Posición 6 inicial al iniciar sesión */
+            background-position: -128px -64px;
             image-rendering: pixelated;
             z-index: 50;
         }
@@ -366,7 +366,7 @@
         }
         .anim-slide { animation: slideDown 0.8s ease forwards; }
 
-        /* Ventana de combate */
+        /* Ventana de combate adaptada con sprites nativos sin dimensiones fijas forzadas */
         .combat-modal-window { 
             background: linear-gradient(135deg, #1e3a8a, #1d4ed8); 
             border: none;
@@ -564,7 +564,7 @@
                 </div>
             </div>
 
-            <!-- Ventana Pokédex (Sin bordes, ocupando 100%, cruz grande arriba) -->
+            <!-- Ventana Pokédex (Sin bordes, ocupando 100%, cruz grande arriba, sin botón inferior) -->
             <div id="pokedex-screen" class="modal-screen" style="z-index: 88;">
                 <div class="pokedex-window">
                     <div style="display: flex; justify-content: space-between; align-items: center; font-weight: bold; margin-bottom: 1px;">
@@ -817,6 +817,7 @@
 
         let POKEDEX_GLOBAL = [];
         let zonesConfig = [];
+        let specialZonesConfig = [];
 
         let currentZoneIndex = 0;
         let teamPokemon = []; 
@@ -828,6 +829,7 @@
         let playerMoney = 2000;
         let lastDailyClaim = 0;
         let isWalking = false;
+        let mapaAntiguoActivado = false;
 
         // Variables de animación del personaje overworld
         let playerAnimInterval = null;
@@ -961,6 +963,7 @@
                 { id: 'mystery_egg', name: 'Huevo Misterioso', count: 1, desc: 'Un huevo Pokémon que eclosionará tras explorar suficientes zonas.' }
             ],
             others: [
+                { id: 'ancient_map', name: 'Mapa Antiguo', count: 1, desc: 'Un mapa ancestral que te guía hacia el territorio de un Pokémon Legendario en tu próxima exploración.' },
                 { id: 'repel', name: 'Repelente', count: 5, desc: 'Evita encuentros débiles temporalmente.' }
             ]
         };
@@ -1290,6 +1293,13 @@
             }
 
             try {
+                const resSpec = await fetch('data/special_zones.json');
+                specialZonesConfig = await resSpec.json();
+            } catch (e) {
+                specialZonesConfig = [];
+            }
+
+            try {
                 const currentUser = localStorage.getItem("pt_current_user");
                 if (currentUser) {
                     document.getElementById("login-screen").style.display = "none";
@@ -1422,11 +1432,12 @@
             if (zonesConfig.length > 0) {
                 let zonaObj = zonesConfig[currentZoneIndex] || zonesConfig[0];
                 document.getElementById("current-zone-name").innerText = zonaObj.name;
-                document.getElementById("zone-sprite").innerText = zonaObj.sprite;
+                document.getElementById("zone-sprite").innerText = zonaObj.sprite || "🏡";
                 
                 let viewport = document.getElementById("map-viewport");
-                if (zonaObj.bg_image) {
-                    viewport.style.backgroundImage = `url('${zonaObj.bg_image}')`;
+                let bgUrl = zonaObj.bg_image_event || zonaObj.bg_image;
+                if (bgUrl) {
+                    viewport.style.backgroundImage = `url('${bgUrl}')`;
                 } else {
                     viewport.style.backgroundImage = "";
                 }
@@ -1628,29 +1639,34 @@
             POKEDEX_GLOBAL.forEach((p, idx) => {
                 let pId = p.id || (idx + 1);
                 let status = getPokedexStatus(pId);
-                let pSpriteCell = getPokedexNormalSpriteUrl(p);
+                let pSpriteCell = getPokedexIconUrl(p);
                 let isSelected = pokedexSelectedIndex === idx ? 'selected' : '';
 
                 let cell = document.createElement("div");
                 cell.className = `pokedex-grid-cell ${isSelected}`;
                 cell.onclick = () => seleccionarPokemonPokedex(idx);
 
-                let imgStyle = "width: 22px; height: 22px; image-rendering: pixelated;";
+                let isIconGen = pSpriteCell.includes('generation-vii') || pSpriteCell.includes('generation-viii');
+                let imgClass = isIconGen ? "pokedex-cell-img icon-gen-large" : "pokedex-cell-img";
+                let imgStyle = "image-rendering: pixelated;";
                 if (!status.isSeen) {
                     imgStyle += " filter: brightness(0);";
                 } else if (!status.isCaught) {
                     imgStyle += " filter: grayscale(100%);";
                 }
 
+                let fallbackAnimado = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${pId}.gif`;
+                let fallbackNormal = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pId}.png`;
+
                 cell.innerHTML = `
                     <span class="pokedex-cell-num">${pId.toString().padStart(3, '0')}</span>
-                    <img src="${pSpriteCell}" class="pokedex-cell-img" style="${imgStyle}" alt="P">
+                    <img src="${pSpriteCell}" class="${imgClass}" style="${imgStyle}" alt="P" onerror="if(this.src.includes('generation-viii') || this.src.includes('generation-vii')){this.src='${fallbackAnimado}';}else if(this.src.includes('animated')){this.src='${fallbackNormal}';}">
                 `;
                 grid.appendChild(cell);
             });
         }
 
-        // --- SISTEMA INTERACTIVO DE PC ---
+        // --- SISTEMA INTERACTIVO DE PC (Referencia Exacta) ---
         function abrirPC() {
             if (isWalking) return;
             cerrarMenu();
@@ -1966,7 +1982,7 @@
             actualizarUIGacha();
         }
 
-        // --- AVANZAR DE ZONA: ZONA ALEATORIA SIN REPETIR Y ANIMACIÓN DE CAMINAR (PUESTO 5 -> 2 -> 8) ---
+        // --- AVANZAR DE ZONA: ZONA ALEATORIA SIN REPETIR Y ANIMACIÓN DE CAMINAR ---
         function advanceZone() {
             if (isWalking) return;
             isWalking = true;
@@ -1994,14 +2010,17 @@
 
             viewport.style.backgroundImage = "none";
 
-            if (oldZona.bg_image) {
-                panel1.style.backgroundImage = `url('${oldZona.bg_image}')`;
+            let oldBg = oldZona.bg_image_event || oldZona.bg_image;
+            let newBg = zonaObj.bg_image_event || zonaObj.bg_image;
+
+            if (oldBg) {
+                panel1.style.backgroundImage = `url('${oldBg}')`;
             } else {
                 panel1.style.backgroundImage = "linear-gradient(135deg, #2e7d32, #1b5e20)";
             }
 
-            if (zonaObj.bg_image) {
-                panel2.style.backgroundImage = `url('${zonaObj.bg_image}')`;
+            if (newBg) {
+                panel2.style.backgroundImage = `url('${newBg}')`;
             } else {
                 panel2.style.backgroundImage = "linear-gradient(135deg, #2e7d32, #1b5e20)";
             }
@@ -2012,7 +2031,7 @@
             void track.offsetWidth;
 
             document.getElementById("current-zone-name").innerText = zonaObj.name;
-            document.getElementById("zone-sprite").innerText = zonaObj.sprite;
+            document.getElementById("zone-sprite").innerText = zonaObj.sprite || "🏡";
             document.getElementById("explore-log").innerHTML = `Caminando hacia ${zonaObj.name}...`;
 
             iniciarAnimacionCaminar();
@@ -2021,8 +2040,8 @@
             track.style.transform = "translateX(-320px)";
 
             setTimeout(() => {
-                if (zonaObj.bg_image) {
-                    viewport.style.backgroundImage = `url('${zonaObj.bg_image}')`;
+                if (newBg) {
+                    viewport.style.backgroundImage = `url('${newBg}')`;
                 } else {
                     viewport.style.backgroundImage = "";
                 }
@@ -2091,10 +2110,29 @@
             return enemyPoke;
         }
 
-        function exploreZone() {
+        async function exploreZone() {
             if (isWalking) return;
             if (teamPokemon.length === 0) return alert("¡Elige un inicial!");
             if (zonaExplorada) return;
+
+            // --- LÓGICA MAPA ANTIGUO (ZONAS LEGENDARIAS) ---
+            if (mapaAntiguoActivado) {
+                let poolZonas = specialZonesConfig.length > 0 ? specialZonesConfig : [
+                    { name: "Laboratorio", legendary: "Mewtwo", sprite: "🧬", bg_image: "img/zones/Ruta1.png" }
+                ];
+                const zonaElegida = poolZonas[Math.floor(Math.random() * poolZonas.length)];
+                
+                let viewport = document.getElementById("map-viewport");
+                if (zonaElegida.bg_image) {
+                    viewport.style.backgroundImage = `url('${zonaElegida.bg_image}')`;
+                }
+
+                iniciarCombateLegendario(zonaElegida);
+                mapaAntiguoActivado = false;
+                zonaExplorada = true;
+                document.getElementById("btn-explore-main").disabled = false;
+                return;
+            }
 
             if (!esUsuarioFonso()) {
                 calcularEnergiaOffline();
@@ -2108,11 +2146,22 @@
                 actualizarHUDEnergia();
             }
 
+            let zonaObj = zonesConfig[currentZoneIndex] || { bg_image: "", bg_image_event: "" };
+            let viewport = document.getElementById("map-viewport");
             const r = Math.random();
+
             if (r < 0.3) {
+                // Evento Objeto -> Imagen de evento (con personajes/Pokémon)
+                let bgUrl = zonaObj.bg_image_event || zonaObj.bg_image;
+                if (bgUrl) viewport.style.backgroundImage = `url('${bgUrl}')`;
+                
                 agregarObjetoAleatorioInventario();
                 document.getElementById("explore-log").innerHTML = `📦 ¡Has encontrado un objeto y se ha guardado en tu Bolsa!`;
             } else if (r < 0.5) {
+                // Evento Cura -> Imagen de evento
+                let bgUrl = zonaObj.bg_image_event || zonaObj.bg_image;
+                if (bgUrl) viewport.style.backgroundImage = `url('${bgUrl}')`;
+
                 let lider = teamPokemon[0];
                 if (!lider.hpMax) lider.hpMax = 50;
                 lider.hpActual = Math.min(lider.hpMax, lider.hpActual + Math.floor(lider.hpMax * 0.5));
@@ -2120,6 +2169,8 @@
                 actualizarHUD();
                 document.getElementById("explore-log").innerHTML = `🏥 ¡Encontraste una poción natural! Recuperas 50% de PS.`;
             } else {
+                // Evento Combate -> Imagen limpia de combate
+                if (zonaObj.bg_image) viewport.style.backgroundImage = `url('${zonaObj.bg_image}')`;
                 iniciarCombate(r < 0.8 ? 'wild' : 'trainer');
             }
             zonaExplorada = true;
@@ -2194,7 +2245,7 @@
             document.getElementById("bag-item-desc").innerText = item.desc;
 
             let btnUsar = document.getElementById("bag-use-action-btn");
-            if (['potions', 'proteins', 'energy', 'mts'].includes(pestanaActivaBolsa)) {
+            if (['potions', 'proteins', 'energy', 'mts', 'others'].includes(pestanaActivaBolsa)) {
                 btnUsar.style.display = "block";
             } else {
                 btnUsar.style.display = "none";
@@ -2205,8 +2256,21 @@
             if (!objetoSeleccionadoBolsa || objetoSeleccionadoBolsa.count <= 0) return;
 
             let lider = teamPokemon[0];
-            if (!lider && pestanaActivaBolsa !== 'energy') {
+            if (!lider && pestanaActivaBolsa !== 'energy' && objetoSeleccionadoBolsa.id !== 'ancient_map') {
                 alert("¡No tienes ningún Pokémon en el equipo para usar esto!");
+                return;
+            }
+
+            if (objetoSeleccionadoBolsa.id === 'ancient_map') {
+                mapaAntiguoActivado = true;
+                alert("🗺️ ¡Has activado el Mapa Antiguo! Tu próxima exploración te llevará a una zona legendaria.");
+                objetoSeleccionadoBolsa.count--;
+                if (objetoSeleccionadoBolsa.count <= 0) {
+                    playerInventory['others'] = playerInventory['others'].filter(i => i.id !== 'ancient_map');
+                }
+                guardarDatos();
+                renderizarItemsBolsa();
+                cerrarBolsa();
                 return;
             }
 
@@ -2535,6 +2599,67 @@
                 <div class="bottom-actions-row">
                     ${tipo === 'wild' ? `<button class="btn-capture" onclick="ejecutarTurnoCombate('capturar')">CAPTURAR</button>` : ``}
                     <button class="btn-flee" style="${tipo === 'trainer' ? 'grid-column: span 2;' : ''}" onclick="cerrarCombate('¡Huiste del combate!')">HUIR</button>
+                </div>
+            `;
+            document.getElementById("combat-buttons-container").innerHTML = botones;
+        }
+
+        function iniciarCombateLegendario(zona) {
+            let lider = teamPokemon[0];
+            if (!lider.hpMax || lider.hpMax <= 0) lider.hpMax = 50;
+            if (lider.hpActual === undefined || lider.hpActual < 0) lider.hpActual = lider.hpMax;
+
+            let legendarioNombre = zona.legendary || "Mewtwo";
+            let pokeData = POKEDEX_GLOBAL.find(p => p.name.toLowerCase() === legendarioNombre.toLowerCase()) || POKEDEX_GLOBAL[0];
+
+            currentEnemy = generarDatosPokemonBase(pokeData, 50, false);
+            currentEnemy.tipoCombate = 'wild';
+            combatEnCurso = false;
+
+            document.getElementById("player-initiative-bubble").style.display = "none";
+            document.getElementById("enemy-initiative-bubble").style.display = "none";
+
+            document.getElementById("current-zone-name").innerText = zona.name;
+            document.getElementById("zone-sprite").innerText = zona.sprite || "✨";
+            document.getElementById("combat-dialogue-text").innerHTML = `¡El legendario ${currentEnemy.nombre} desciende de las sombras en ${zona.name}!`;
+
+            document.getElementById("map-content-inner").style.display = "none";
+            document.getElementById("explore-log").style.display = "none";
+            document.getElementById("combat-viewport-screen").style.display = "flex";
+
+            document.getElementById("normal-controls-view").style.display = "none";
+            document.getElementById("combat-controls-view").style.display = "flex";
+
+            document.getElementById("enemy-name-lvl").innerText = `${currentEnemy.nombre.toUpperCase()} Lv.50`;
+            document.getElementById("player-battle-name").innerText = `${lider.nombre.toUpperCase()} Lv.${lider.nivel}`;
+            
+            let pSpriteImg = document.getElementById("player-battle-sprite");
+            let eSpriteImg = document.getElementById("enemy-battle-sprite");
+
+            pSpriteImg.src = lider.back_sprite_url || (lider.sprite_url ? lider.sprite_url.replace('/pokemon/', '/pokemon/back/') : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/25.png");
+            eSpriteImg.src = currentEnemy.sprite_url || "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png";
+
+            actualizarBarrasHP();
+
+            let t1Map = mapType(lider.tipo1);
+            let t2Map = mapType(lider.tipo2);
+            let tOcultoMap = mapType(lider.tipoOculto);
+
+            let c1 = TYPE_COLORS[t1Map] || "#777";
+            let c2 = TYPE_COLORS[t2Map] || TYPE_COLORS["normal"];
+            let cOculto = TYPE_COLORS[tOcultoMap] || "#fff";
+
+            let botones = `
+                <div class="top-attacks-row">
+                    <button class="btn-attack-type" style="background-color: ${c1};" onclick="ejecutarTurnoCombate('atacar', '${t1Map}')">${lider.tipo1}</button>
+                    <button class="btn-attack-type" style="background-color: ${c2};" onclick="ejecutarTurnoCombate('atacar', '${t2Map}')">${lider.tipo2 || 'normal'}</button>
+                </div>
+                <div class="mid-hidden-row">
+                    <button class="btn-hidden-power" style="background-color: ${cOculto};" onclick="ejecutarTurnoCombate('atacar', '${tOcultoMap}')" title="Poder Oculto">${lider.tipoOculto}</button>
+                </div>
+                <div class="bottom-actions-row">
+                    <button class="btn-capture" onclick="ejecutarTurnoCombate('capturar')">CAPTURAR</button>
+                    <button class="btn-flee" onclick="cerrarCombate('¡Huiste del combate!')">HUIR</button>
                 </div>
             `;
             document.getElementById("combat-buttons-container").innerHTML = botones;
