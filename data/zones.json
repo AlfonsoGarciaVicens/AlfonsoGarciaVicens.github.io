@@ -1,50 +1,458 @@
 [
   {
     "id": 1,
-    "name": "Pueblo Inicial (Zona 1)",
-    "sprite": "🏡",
-    "bg_image": "img/zones/ClaroOrientacion.png",
+    "name": "Ruta 01",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
     "types": ["normal", "flying"],
     "special_encounters": []
   },
   {
     "id": 2,
-    "name": "Ruta 01",
+    "name": "Ruta 02",
     "sprite": "",
     "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying", "electric"],
-    "special_encounters": []
-  },
-  {
-    "id": 2,
-    "name": "Ruta 03",
-    "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying", "electric"],
+    "types": ["normal", "flying"],
     "special_encounters": []
   },
   {
     "id": 3,
-    "name": "Ruta 02",
+    "name": "Ruta 03",
     "sprite": "",
-    "bg_image": "img/zones/Ruta02.png",
-    "types": ["normal", "flying", "electric"],
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
     "special_encounters": []
   },
   {
     "id": 4,
-    "name": "Ruta 2 - Camino de Piedra",
-    "sprite": "⛰️",
+    "name": "Ruta 04",
+    "sprite": "",
     "bg_image": "img/zones/Ruta1.png",
-    "types": ["rock", "ground"],
+    "types": ["normal", "flying"],
     "special_encounters": []
   },
   {
     "id": 5,
-    "name": "Ciudad Vetusta (Zona 5)",
+    "name": "Ruta 05",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": ["Raikou"]
+  },
+  {
+    "id": 6,
+    "name": "Ruta 06",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 7,
+    "name": "Ruta 101",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 8,
+    "name": "Páramo",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": ["Tapu bulu"]
+  },
+  {
+    "id": 9,
+    "name": "Central electrica",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": ["Zapdos"]
+  },
+  {
+    "id": 10,
+    "name": "Camino de bicis",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 11,
+    "name": "Zona de cultivo",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 12,
+    "name": "Huerto de bayas",
+    "sprite": "🌿",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 13,
+    "name": "Claro arboreo",
+    "sprite": "🌿",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 14,
+    "name": "Campo de flores",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": ["Tapu lele"]
+  },
+  {
+    "id": 15,
+    "name": "Bosque floral",
+    "sprite": "🌿",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 16,
+    "name": "Bosque fungi",
+    "sprite": "🌿",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 17,
+    "name": "Pantano",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 18,
+    "name": "Mansion PKMN",
     "sprite": "🏙️",
     "bg_image": "img/zones/Ruta1.png",
-    "types": ["water", "psychic"],
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 19,
+    "name": "Zona safari",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 20,
+    "name": "Almacén abandonado",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 21,
+    "name": "Cementerio",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 22,
+    "name": "Torre pokemon",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 23,
+    "name": "Monte pirico",
+    "sprite": "⛰️",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 24,
+    "name": "Monte plateado",
+    "sprite": "⛰️",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 25,
+    "name": "Cueva meteoro",
+    "sprite": "⛰️",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 26,
+    "name": "Montaña pilar",
+    "sprite": "⛰️",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 27,
+    "name": "Templo del desierto",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": ["Tapu koko"]
+  },
+  {
+    "id": 28,
+    "name": "Ruinas antiguas",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 29,
+    "name": "Senda desolada",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 30,
+    "name": "Montaña ignea",
+    "sprite": "⛰️",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": ["Moltres"]
+  },
+  {
+    "id": 31,
+    "name": "Monte ascuas",
+    "sprite": "⛰️",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": ["Entei"]
+  },
+  {
+    "id": 32,
+    "name": "Senda ignea",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 33,
+    "name": "Aguas termales",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 34,
+    "name": "Cabo terracota",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 35,
+    "name": "Cueva del hermitaño",
+    "sprite": "⛰️",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 36,
+    "name": "Isla remolino",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 37,
+    "name": "Faro",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": ["Suicune"]
+  },
+  {
+    "id": 38,
+    "name": "Estanque sereno",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": ["Manaphy"]
+  },
+  {
+    "id": 39,
+    "name": "Monte mizo",
+    "sprite": "⛰️",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": ["Phione"]
+  },
+  {
+    "id": 40,
+    "name": "Playa solitaria",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": ["Articuno"]
+  },
+  {
+    "id": 41,
+    "name": "Monte helado",
+    "sprite": "⛰️",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 42,
+    "name": "Pista de patinaje",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 43,
+    "name": "Refugio helado",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 44,
+    "name": "Cueva copito",
+    "sprite": "⛰️",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 45,
+    "name": "Monte avalancha",
+    "sprite": "⛰️",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": ["Tornadus"]
+  },
+  {
+    "id": 46,
+    "name": "Ruta 07",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": ["Landorus"]
+  },
+  {
+    "id": 47,
+    "name": "Ruta 08",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": ["Thundurus"]
+  },
+  {
+    "id": 48,
+    "name": "Ruta 09",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": ["Genesect"]
+  },
+  {
+    "id": 49,
+    "name": "Abismo",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 50,
+    "name": "Cascadas Mellizas",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": ["Buzzwole"]
+  },
+  {
+    "id": 51,
+    "name": "Bosque Cometa",
+    "sprite": "🌿",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 52,
+    "name": "Centro Abandonado",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 53,
+    "name": "Jardín Calma",
+    "sprite": "🌿",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": ["Diancie"]
+  },
+  {
+    "id": 54,
+    "name": "Gruta Diamantita",
+    "sprite": "⛰️",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 55,
+    "name": "Cueva Secreta",
+    "sprite": "⛰️",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": []
+  },
+  {
+    "id": 56,
+    "name": "Desierto Cactus",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
+    "special_encounters": ["Tapu fini"]
+  },
+  {
+    "id": 57,
+    "name": "Entrada Secreta",
+    "sprite": "",
+    "bg_image": "img/zones/Ruta1.png",
+    "types": ["normal", "flying"],
     "special_encounters": []
   }
 ]
