@@ -172,6 +172,49 @@
         }
         .pc-action-btn:hover { background: #2563eb; }
 
+        /* Estilo Ventana Menú Desarrollador (Dev) */
+        .dev-window { 
+            background: linear-gradient(135deg, #1e293b, #0f172a); 
+            border: none; 
+            border-radius: 0; 
+            width: 100%; 
+            height: 100%; 
+            padding: 8px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            box-sizing: border-box; 
+            color: #fff;
+        }
+        .dev-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #334155;
+            padding: 6px;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .dev-grid-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+        }
+        .dev-btn {
+            background: #334155;
+            border: 1px solid #64748b;
+            color: #fff;
+            padding: 6px 2px;
+            font-size: 8px;
+            font-weight: bold;
+            border-radius: 3px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .dev-btn:hover { background: #475569; }
+        .dev-btn-green { background: #15803d; border-color: #22c55e; }
+        .dev-btn-green:hover { background: #16a34a; }
+
         /* Estilo Bolsa */
         .bag-window { background: linear-gradient(135deg, #d97706, #b45309); border: none; border-radius: 0; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-sizing: border-box; }
         .bag-tabs { display: flex; justify-content: space-around; background: rgba(0,0,0,0.3); padding: 3px; border-radius: 0; gap: 2px; }
@@ -564,7 +607,7 @@
                 </div>
             </div>
 
-            <!-- Ventana Pokédex (Sin bordes, ocupando 100%, cruz grande arriba, sin botón inferior) -->
+            <!-- Ventana Pokédex (Sin bordes, ocupando 100%, cruz grande arriba) -->
             <div id="pokedex-screen" class="modal-screen" style="z-index: 88;">
                 <div class="pokedex-window">
                     <div style="display: flex; justify-content: space-between; align-items: center; font-weight: bold; margin-bottom: 1px;">
@@ -668,6 +711,39 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Ventana Menú Desarrollador (Dev) Integrada con Desplegable de Objetos -->
+            <div id="dev-screen" class="modal-screen" style="z-index: 95;">
+                <div class="dev-window">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #475569; padding-bottom: 2px;">
+                        <span style="font-weight: bold; font-size: 11px; color: #38bdf8;">🛠️ MENÚ DEV / TESTEO</span>
+                        <button onclick="cerrarDevMenu()" style="background:none; border:none; font-size:18px; font-weight:bold; cursor:pointer; color:#fff; line-height: 1;">✖</button>
+                    </div>
+
+                    <!-- Sección Añadir Objetos -->
+                    <div class="dev-section">
+                        <div style="font-size: 9px; font-weight: bold; color: #facc15;">📦 AÑADIR OBJETOS AL INVENTARIO</div>
+                        <div style="display: flex; gap: 4px; align-items: center;">
+                            <select id="dev-item-select" style="flex-grow: 1; background: #0f172a; color: #fff; border: 1px solid #475569; font-size: 8px; padding: 4px; border-radius: 3px; font-weight: bold;"></select>
+                            <input type="number" id="dev-item-qty" value="1" min="1" max="99" style="width: 42px; background: #0f172a; color: #fff; border: 1px solid #475569; font-size: 9px; padding: 3px; text-align: center; border-radius: 3px; font-weight: bold;">
+                        </div>
+                        <button class="dev-btn dev-btn-green" onclick="devAgregarObjetoSeleccionado()">➕ AÑADIR AL INVENTARIO</button>
+                    </div>
+
+                    <!-- Sección Cheats Rápidos -->
+                    <div class="dev-section">
+                        <div style="font-size: 9px; font-weight: bold; color: #38bdf8;">⚡ ACCIONES RÁPIDAS</div>
+                        <div class="dev-grid-actions">
+                            <button class="dev-btn" onclick="devAccionRapida('money')">💰 +50.000 ₱</button>
+                            <button class="dev-btn" onclick="devAccionRapida('heal')">🏥 Curar Equipo</button>
+                            <button class="dev-btn" onclick="devAccionRapida('energy')">⚡ Energía 100%</button>
+                            <button class="dev-btn" onclick="devAccionRapida('shiny')">✨ Test Shiny</button>
+                        </div>
+                    </div>
+
+                    <button class="dev-btn" onclick="cerrarDevMenu()" style="background: #dc2626; border-color: #991b1b; padding: 6px;">CERRAR MENÚ DEV</button>
                 </div>
             </div>
 
@@ -972,6 +1048,36 @@
 
         let pestanaActivaBolsa = 'potions';
         let objetoSeleccionadoBolsa = null;
+
+        // --- CATÁLOGO COMPLETO DE OBJETOS PARA EL MENÚ DEV ---
+        const ALL_DEV_ITEMS = [
+            { id: 'ancient_map', name: 'Mapa Antiguo', cat: 'others', desc: 'Un mapa ancestral que te guía hacia el territorio de un Pokémon Legendario en tu próxima exploración.' },
+            { id: 'potion', name: 'Poción', cat: 'potions', desc: 'Cura un 20% de PS a un Pokémon.' },
+            { id: 'super_potion', name: 'Superpoción', cat: 'potions', desc: 'Cura un 50% de PS a un Pokémon.' },
+            { id: 'hyper_potion', name: 'Hiperpoción', cat: 'potions', desc: 'Cura un 75% de PS a un Pokémon.' },
+            { id: 'energy_drink', name: 'Bebida Energética', cat: 'energy', desc: 'Restaura 5 puntos de energía al instante.' },
+            { id: 'energy_juice', name: 'Zumo Energía', cat: 'energy', desc: 'Restaura 10 puntos de energía al instante.' },
+            { id: 'energy_cookie', name: 'Galleta Energía', cat: 'energy', desc: 'Restaura 3 puntos de energía al instante.' },
+            { id: 'protein', name: 'Proteína', cat: 'proteins', desc: 'Aumenta permanentemente el ataque de un Pokémon (+3).' },
+            { id: 'max_protein', name: 'Proteína Máxima', cat: 'proteins', desc: 'Aumenta drásticamente el ataque de un Pokémon (+8).' },
+            { id: 'mini_protein', name: 'Proteína Mini', cat: 'proteins', desc: 'Aumenta levemente el ataque de un Pokémon (+1).' },
+            { id: 'mt_hidden', name: 'MT Poder Oculto', cat: 'mts', desc: 'Permite cambiar aleatoriamente el tipo del Poder Oculto de tu Pokémon líder.' },
+            { id: 'stardust', name: 'Polvoestelar', cat: 'wallet', desc: 'Objeto valioso que se puede vender por dinero.' },
+            { id: 'pearl', name: 'Perla', cat: 'wallet', desc: 'Objeto valioso que se puede vender por dinero.' },
+            { id: 'nugget', name: 'Pepita', cat: 'wallet', desc: 'Pepita de oro puro muy valiosa.' },
+            { id: 'mystery_egg', name: 'Huevo Misterioso', cat: 'eggs', desc: 'Un huevo Pokémon que eclosionará tras explorar suficientes zonas.' },
+            { id: 'rare_egg', name: 'Huevo Raro', cat: 'eggs', desc: 'Un huevo Pokémon especial y curioso.' },
+            { id: 'mystic_egg', name: 'Huevo Místico', cat: 'eggs', desc: 'Un huevo Pokémon imbuido en energía mística.' },
+            { id: 'shiny_egg', name: 'Huevo Brillante', cat: 'eggs', desc: 'Huevo Pokémon singular con destellos brillantes.' },
+            { id: 'egg', name: 'Huevo', cat: 'eggs', desc: 'Un huevo Pokémon estándar.' },
+            { id: 'egg_incense', name: 'Incienso Huevo', cat: 'others', desc: 'Incienso aromático para la incubación.' },
+            { id: 'repel', name: 'Repelente', cat: 'others', desc: 'Evita encuentros débiles temporalmente.' },
+            { id: 'honey', name: 'Miel', cat: 'others', desc: 'Dulce miel que atrae Pokémon salvajes.' },
+            { id: 'binoculars', name: 'Prismáticos', cat: 'others', desc: 'Ayuda a divisar mejores rutas.' },
+            { id: 'briefcase', name: 'Maletín', cat: 'others', desc: 'Contiene suministros valiosos variados.' },
+            { id: 'friendship_berry', name: 'Baya Amistad', cat: 'others', desc: 'Baya especial para fortalecer vínculos.' },
+            { id: 'rare_candy', name: 'Caramelo Raro', cat: 'others', desc: 'Caramelo misterioso que estimula el crecimiento.' }
+        ];
 
         // --- CONFIGURACIÓN DE GACHAS (Tipos y Test Shiny) ---
         const typeGachaConfig = [
@@ -1374,6 +1480,7 @@
             document.getElementById("gacha-screen").style.display = "none";
             document.getElementById("pokedex-screen").style.display = "none";
             document.getElementById("starter-screen").style.display = "none";
+            document.getElementById("dev-screen").style.display = "none";
             
             document.getElementById("username-input").value = "";
             document.getElementById("password-input").value = "";
@@ -1639,28 +1746,23 @@
             POKEDEX_GLOBAL.forEach((p, idx) => {
                 let pId = p.id || (idx + 1);
                 let status = getPokedexStatus(pId);
-                let pSpriteCell = getPokedexIconUrl(p);
+                let pSpriteCell = getPokedexNormalSpriteUrl(p);
                 let isSelected = pokedexSelectedIndex === idx ? 'selected' : '';
 
                 let cell = document.createElement("div");
                 cell.className = `pokedex-grid-cell ${isSelected}`;
                 cell.onclick = () => seleccionarPokemonPokedex(idx);
 
-                let isIconGen = pSpriteCell.includes('generation-vii') || pSpriteCell.includes('generation-viii');
-                let imgClass = isIconGen ? "pokedex-cell-img icon-gen-large" : "pokedex-cell-img";
-                let imgStyle = "image-rendering: pixelated;";
+                let imgStyle = "width: 22px; height: 22px; image-rendering: pixelated;";
                 if (!status.isSeen) {
                     imgStyle += " filter: brightness(0);";
                 } else if (!status.isCaught) {
                     imgStyle += " filter: grayscale(100%);";
                 }
 
-                let fallbackAnimado = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${pId}.gif`;
-                let fallbackNormal = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pId}.png`;
-
                 cell.innerHTML = `
                     <span class="pokedex-cell-num">${pId.toString().padStart(3, '0')}</span>
-                    <img src="${pSpriteCell}" class="${imgClass}" style="${imgStyle}" alt="P" onerror="if(this.src.includes('generation-viii') || this.src.includes('generation-vii')){this.src='${fallbackAnimado}';}else if(this.src.includes('animated')){this.src='${fallbackNormal}';}">
+                    <img src="${pSpriteCell}" class="pokedex-cell-img" style="${imgStyle}" alt="P">
                 `;
                 grid.appendChild(cell);
             });
@@ -1863,6 +1965,94 @@
             guardarDatos();
             renderizarVentanaPC();
             alert(p.favorito ? "¡Marcado como favorito!" : "Quitado de favoritos.");
+        }
+
+        // --- SISTEMA DEL MENÚ DEV (TESTEO Y AÑADIR OBJETOS) ---
+        function abrirDevMenu() {
+            if (isWalking) return;
+            cerrarMenu();
+            poblarDesplegableDevItems();
+            document.getElementById("dev-screen").style.display = "flex";
+        }
+
+        function cerrarDevMenu() {
+            document.getElementById("dev-screen").style.display = "none";
+        }
+
+        function poblarDesplegableDevItems() {
+            const sel = document.getElementById("dev-item-select");
+            if (!sel || sel.options.length > 0) return;
+            ALL_DEV_ITEMS.forEach(it => {
+                const opt = document.createElement("option");
+                opt.value = it.id;
+                opt.innerText = `${it.name} (${it.cat.toUpperCase()})`;
+                sel.appendChild(opt);
+            });
+        }
+
+        function devAgregarObjetoSeleccionado() {
+            const sel = document.getElementById("dev-item-select");
+            const qtyInput = document.getElementById("dev-item-qty");
+            const itemId = sel.value;
+            const qty = Math.max(1, parseInt(qtyInput.value) || 1);
+
+            const itemDef = ALL_DEV_ITEMS.find(x => x.id === itemId);
+            if (!itemDef) return;
+
+            if (!playerInventory[itemDef.cat]) {
+                playerInventory[itemDef.cat] = [];
+            }
+
+            const itemExistente = playerInventory[itemDef.cat].find(x => x.id === itemId);
+            if (itemExistente) {
+                itemExistente.count += qty;
+            } else {
+                playerInventory[itemDef.cat].push({
+                    id: itemDef.id,
+                    name: itemDef.name,
+                    count: qty,
+                    desc: itemDef.desc
+                });
+            }
+
+            guardarDatos();
+            alert(`📦 ¡Añadido con éxito: ${itemDef.name} x${qty}!`);
+        }
+
+        function devAccionRapida(tipo) {
+            if (tipo === 'money') {
+                playerMoney += 50000;
+                guardarDatos();
+                alert("💰 ¡Se han añadido 50.000 ₱ a tu cartera!");
+            } else if (tipo === 'heal') {
+                if (teamPokemon.length === 0) {
+                    alert("No tienes ningún Pokémon en el equipo.");
+                    return;
+                }
+                teamPokemon.forEach(p => {
+                    if (!p.hpMax) p.hpMax = 50;
+                    p.hpActual = p.hpMax;
+                });
+                guardarDatos();
+                actualizarHUD();
+                alert("🏥 ¡Todo tu equipo ha sido curado al 100%!");
+            } else if (tipo === 'energy') {
+                energiaActual = energiaMax;
+                guardarDatos();
+                actualizarHUDEnergia();
+                alert("⚡ ¡Energía recargada por completo al 100%!");
+            } else if (tipo === 'shiny') {
+                if (POKEDEX_GLOBAL.length === 0) {
+                    alert("La Pokédex aún se está cargando.");
+                    return;
+                }
+                cerrarDevMenu();
+                let randomEntry = POKEDEX_GLOBAL[Math.floor(Math.random() * POKEDEX_GLOBAL.length)];
+                let shinyPoke = generarDatosPokemonBase(randomEntry, 5, true);
+                shinyPoke.origen = "Generado por Menú Dev (Test Shiny).";
+                abrirCinematicaGacha(shinyPoke);
+                actualizarHUD();
+            }
         }
 
         // --- CINEMÁTICA PACK GACHA ESTRICTAMENTE DENTRO DE LA VENTANITA 320x320 ---
@@ -2484,56 +2674,6 @@
 
             guardarDatos();
             actualizarUIGacha();
-        }
-
-        // --- MENÚ DEV (CHEATS) ---
-        function abrirDevMenu() {
-            if (isWalking) return;
-            let opcion = prompt(
-                "--- MENÚ DEV (TESTEO) ---\n" +
-                "1. Añadir 50.000 ₱\n" +
-                "2. Curar Equipo al 100%\n" +
-                "3. Recargar Energía al Máximo\n" +
-                "4. Generar Pokémon Shiny de Prueba\n\n" +
-                "Introduce el número de opción:"
-            );
-
-            if (opcion === "1") {
-                playerMoney += 50000;
-                guardarDatos();
-                alert("💰 ¡Se han añadido 50.000 ₱ a tu cartera!");
-            } 
-            else if (opcion === "2") {
-                if (teamPokemon.length === 0) {
-                    alert("No tienes ningún Pokémon en el equipo.");
-                    return;
-                }
-                teamPokemon.forEach(p => {
-                    if (!p.hpMax) p.hpMax = 50;
-                    p.hpActual = p.hpMax;
-                });
-                guardarDatos();
-                actualizarHUD();
-                alert("🏥 ¡Todo tu equipo ha sido curado al máximo!");
-            } 
-            else if (opcion === "3") {
-                energiaActual = energiaMax;
-                guardarDatos();
-                actualizarHUDEnergia();
-                alert("⚡ ¡Energía recargada por completo!");
-            } 
-            else if (opcion === "4") {
-                if (POKEDEX_GLOBAL.length === 0) {
-                    alert("La Pokédex aún se está cargando, espera un segundo.");
-                    return;
-                }
-                let randomEntry = POKEDEX_GLOBAL[Math.floor(Math.random() * POKEDEX_GLOBAL.length)];
-                let shinyPoke = generarDatosPokemonBase(randomEntry, 5, true);
-                shinyPoke.origen = "Generado por Menú Dev (Test Shiny).";
-
-                abrirCinematicaGacha(shinyPoke);
-                actualizarHUD();
-            }
         }
 
         function iniciarCombate(tipo) {
