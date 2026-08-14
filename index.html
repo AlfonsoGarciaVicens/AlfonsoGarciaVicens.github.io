@@ -184,7 +184,7 @@
             flex-direction: column; 
             justify-content: space-between; 
             box-sizing: border-box; 
-            color: #fff;
+            color: #fff; 
         }
         .dev-section {
             background: rgba(255, 255, 255, 0.05);
@@ -422,7 +422,7 @@
             flex-direction: column; 
             justify-content: space-between; 
             position: relative;
-            box-sizing: border-box;
+            box-sizing: border-box; 
         }
 
         .combat-enemy-info, .combat-player-info { background-color: rgba(200, 200, 200, 0.9); color: #000; padding: 4px 8px; border-radius: 0; font-size: 11px; width: 65%; border: 1px solid #333; }
@@ -893,7 +893,53 @@
 
         let POKEDEX_GLOBAL = [];
         let zonesConfig = [];
-        let specialZonesConfig = [];
+        
+        // --- RESPALDO COMPLETO DE LAS 41 ZONAS LEGENDARIAS (Garantiza que siempre estén disponibles) ---
+        const DEFAULT_SPECIAL_ZONES = [
+            { "id": 101, "name": "Laboratorio", "legendary": "Mewtwo", "sprite": "🧬", "bg_image": "img/zones/Laboratorio.png" },
+            { "id": 102, "name": "Jardín Supremo", "legendary": "Mew", "sprite": "🌸", "bg_image": "img/zones/JardinSupremo.png" },
+            { "id": 103, "name": "Isla Remolino", "legendary": "Lugia", "sprite": "🌊", "bg_image": "img/zones/IslaRemolino.png" },
+            { "id": 104, "name": "Torre Campana", "legendary": "Ho-Oh", "sprite": "🔔", "bg_image": "img/zones/TorreCampana.png" },
+            { "id": 105, "name": "Santuario del bosque", "legendary": "Celebi", "sprite": "🌿", "bg_image": "img/zones/SantuarioDelBosque.png" },
+            { "id": 106, "name": "Ruinas del Desierto", "legendary": "Regirock", "sprite": "🪨", "bg_image": "img/zones/RuinasDelDesierto.png" },
+            { "id": 107, "name": "Zona Regice", "legendary": "Regice", "sprite": "❄️", "bg_image": "img/zones/ZonaRegice.png" },
+            { "id": 108, "name": "Zona Registeel", "legendary": "Registeel", "sprite": "⚙️", "bg_image": "img/zones/ZonaRegisteel.png" },
+            { "id": 109, "name": "Isla del Sur", "legendary": "Latias", "sprite": "🏝️", "bg_image": "img/zones/IslaDelSur.png" },
+            { "id": 110, "name": "Isla del Sur", "legendary": "Latios", "sprite": "🏝️", "bg_image": "img/zones/IslaDelSur.png" },
+            { "id": 111, "name": "Caverna Ancestral", "legendary": "Kyogre", "sprite": "🌊", "bg_image": "img/zones/CavernaAncestral.png" },
+            { "id": 112, "name": "Cima Volcanica", "legendary": "Groudon", "sprite": "🔥", "bg_image": "img/zones/CimaVolcanica.png" },
+            { "id": 113, "name": "Pilar Celeste", "legendary": "Rayquaza", "sprite": "☁️", "bg_image": "img/zones/PilarCeleste.png" },
+            { "id": 114, "name": "Centro espacial", "legendary": "Jirachi", "sprite": "🚀", "bg_image": "img/zones/CentroEspacial.png" },
+            { "id": 115, "name": "Isla Origen", "legendary": "Deoxys", "sprite": "✨", "bg_image": "img/zones/IslaOrigen.png" },
+            { "id": 116, "name": "Caverna Agudeza", "legendary": "Uxie", "sprite": "❄️", "bg_image": "img/zones/CavernaAgudeza.png" },
+            { "id": 117, "name": "Caverna Veraz", "legendary": "Mesprit", "sprite": "💎", "bg_image": "img/zones/CavernaVeraz.png" },
+            { "id": 118, "name": "Caverna Valor", "legendary": "Azelf", "sprite": "🔥", "bg_image": "img/zones/CavernaValor.png" },
+            { "id": 119, "name": "Columna Lanza", "legendary": "Dialga", "sprite": "⛰️", "bg_image": "img/zones/ColumnaLanza.png" },
+            { "id": 120, "name": "Columna Lanza", "legendary": "Palkia", "sprite": "⛰️", "bg_image": "img/zones/ColumnaLanza.png" },
+            { "id": 121, "name": "Columna Lanza", "legendary": "Giratina", "sprite": "⛰️", "bg_image": "img/zones/ColumnaLanza.png" },
+            { "id": 122, "name": "Montaña Dura", "legendary": "Heatran", "sprite": "🌋", "bg_image": "img/zones/MontanaDura.png" },
+            { "id": 123, "name": "Zona Regigigas", "legendary": "Regigigas", "sprite": "🤖", "bg_image": "img/zones/ZonaRegigigas.png" },
+            { "id": 124, "name": "Isla Plenilunio", "legendary": "Cresselia", "sprite": "🌙", "bg_image": "img/zones/IslaPlenilunio.png" },
+            { "id": 125, "name": "Isla Lunanueva", "legendary": "Darkrai", "sprite": "🌑", "bg_image": "img/zones/IslaLunanueva.png" },
+            { "id": 126, "name": "Zona Shaymin", "legendary": "Shaymin", "sprite": "🌻", "bg_image": "img/zones/ZonaShaymin.png" },
+            { "id": 127, "name": "Columna Lanza", "legendary": "Arceus", "sprite": "⛰️", "bg_image": "img/zones/ColumnaLanza.png" },
+            { "id": 128, "name": "Isla Libertad", "legendary": "Victini", "sprite": "🗽", "bg_image": "img/zones/IslaLibertad.png" },
+            { "id": 129, "name": "Claro Orientación", "legendary": "Cobalion", "sprite": "🌀", "bg_image": "img/zones/ClaroOrientacion.png" },
+            { "id": 130, "name": "Claro de Pruebas", "legendary": "Terrakion", "sprite": "⚔️", "bg_image": "img/zones/ClaroDePruebas.png" },
+            { "id": 131, "name": "Claro Filosofia", "legendary": "Virizion", "sprite": "📜", "bg_image": "img/zones/ClaroFilosofia.png" },
+            { "id": 132, "name": "Castillo Yang", "legendary": "Reshiram", "sprite": "🏯", "bg_image": "img/zones/CastilloYang.png" },
+            { "id": 133, "name": "Castillo Ying", "legendary": "Zekrom", "sprite": "🏯", "bg_image": "img/zones/CastilloYing.png" },
+            { "id": 134, "name": "Castillo Wuji", "legendary": "Kyurem", "sprite": "🏯", "bg_image": "img/zones/CastilloWuji.png" },
+            { "id": 135, "name": "Claro Místico", "legendary": "Keldeo", "sprite": "✨", "bg_image": "img/zones/ClaroMistico.png" },
+            { "id": 136, "name": "Prado Melodía", "legendary": "Meloetta", "sprite": "🎵", "bg_image": "img/zones/PradoMelodia.png" },
+            { "id": 137, "name": "Zona Xerneas", "legendary": "Xerneas", "sprite": "🦌", "bg_image": "img/zones/ZonaXerneas.png" },
+            { "id": 138, "name": "Zona Yveltal", "legendary": "Yveltal", "sprite": "🦅", "bg_image": "img/zones/ZonaYveltal.png" },
+            { "id": 139, "name": "Zona Zygarde", "legendary": "Zygarde", "sprite": "🐍", "bg_image": "img/zones/ZonaZygarde.png" },
+            { "id": 140, "name": "Zona Hoopa", "legendary": "Hoopa", "sprite": "🔮", "bg_image": "img/zones/ZonaHoopa.png" },
+            { "id": 141, "name": "Zona Volcanion", "legendary": "Volcanion", "sprite": "🌋", "bg_image": "img/zones/ZonaVolcanion.png" }
+        ];
+
+        let specialZonesConfig = [...DEFAULT_SPECIAL_ZONES];
 
         let currentZoneIndex = 0;
         let isSpecialZone = false;
@@ -971,7 +1017,6 @@
             } else if (iconGen7) {
                 url = iconGen7;
             } else if (id > 898) {
-                // Gen 9 en adelante: No existen iconos en gen-viii/icons (evita 404 y el recuadro con '?')
                 url = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
             } else {
                 url = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons/${id}.png`;
@@ -1413,10 +1458,10 @@
 
         window.onload = async function() {
             try {
-                const resPoke = await fetch('data/pokemon.json');
+                const resPoke = await fetch('data/pokemon.json?t=' + Date.now());
                 POKEDEX_GLOBAL = await resPoke.json();
 
-                const resZones = await fetch('data/zones.json');
+                const resZones = await fetch('data/zones.json?t=' + Date.now());
                 zonesConfig = await resZones.json();
             } catch (error) {
                 console.error("Error al cargar los archivos JSON:", error);
@@ -1426,13 +1471,10 @@
             }
 
             try {
-                const resSpec = await fetch('data/special_zones.json');
+                const resSpec = await fetch('data/special_zones.json?t=' + Date.now());
                 specialZonesConfig = await resSpec.json();
             } catch (e) {
-                specialZonesConfig = [
-                    { id: 101, name: "Laboratorio", legendary: "Mewtwo", sprite: "🧬", bg_image: "img/zones/Ruta1.png" },
-                    { id: 112, name: "Pilar Celeste", legendary: "Rayquaza", sprite: "☁️", bg_image: "img/zones/Ruta1.png" }
-                ];
+                specialZonesConfig = [...DEFAULT_SPECIAL_ZONES];
             }
 
             try {
@@ -1808,13 +1850,12 @@
             document.getElementById("pokedex-caught-count").innerText = totalCaughtCount;
             document.getElementById("pokedex-seen-count").innerText = totalSeenCount;
 
-            // Actualizar clase de selección sin destruir el DOM
             document.querySelectorAll('.pokedex-grid-cell').forEach((cell, idx) => {
                 cell.classList.toggle('selected', idx === pokedexSelectedIndex);
             });
         }
 
-        // --- SISTEMA INTERACTIVO DE PC (Sin recargas destructivas) ---
+        // --- SISTEMA INTERACTIVO DE PC ---
         function abrirPC() {
             if (isWalking) return;
             cerrarMenu();
@@ -1841,7 +1882,6 @@
             const previewStats = document.getElementById("pc-preview-stats");
             const btnFav = document.getElementById("pc-btn-fav");
 
-            // Marcar la celda seleccionada en el DOM sin reconstruir todo
             document.querySelectorAll('.pc-cell').forEach(c => {
                 let cIdx = parseInt(c.getAttribute('data-original-index'));
                 c.classList.toggle('selected-pc', cIdx === pcIndiceSeleccionado);
@@ -2238,10 +2278,7 @@
 
             // Si se usó el Mapa Antiguo, la siguiente zona a la que se avanza es legendaria
             if (mapaAntiguoActivado) {
-                let pool = specialZonesConfig.length > 0 ? specialZonesConfig : [
-                    { id: 101, name: "Laboratorio", legendary: "Mewtwo", sprite: "🧬", bg_image: "img/zones/Ruta1.png" },
-                    { id: 112, name: "Pilar Celeste", legendary: "Rayquaza", sprite: "☁️", bg_image: "img/zones/Ruta1.png" }
-                ];
+                let pool = specialZonesConfig.length > 0 ? specialZonesConfig : DEFAULT_SPECIAL_ZONES;
                 currentSpecialZone = pool[Math.floor(Math.random() * pool.length)];
                 isSpecialZone = true;
                 mapaAntiguoActivado = false;
