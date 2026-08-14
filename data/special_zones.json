@@ -2,287 +2,287 @@
   {
     "id": 101,
     "name": "Laboratorio",
-    "legendary": null,
+    "legendary": "Mewtwo",
     "sprite": "🧬",
     "bg_image": "img/zones/Laboratorio.png"
   },
   {
     "id": 102,
     "name": "Jardín Supremo",
-    "legendary": null,
+    "legendary": "Mew",
     "sprite": "🌸",
     "bg_image": "img/zones/JardinSupremo.png"
   },
   {
     "id": 103,
     "name": "Isla Remolino",
-    "legendary": null,
+    "legendary": "Lugia",
     "sprite": "🌊",
     "bg_image": "img/zones/IslaRemolino.png"
   },
   {
     "id": 104,
     "name": "Torre Campana",
-    "legendary": null,
+    "legendary": "Ho-Oh",
     "sprite": "🔔",
     "bg_image": "img/zones/TorreCampana.png"
   },
   {
     "id": 105,
     "name": "Santuario del bosque",
-    "legendary": null,
+    "legendary": "Celebi",
     "sprite": "🌿",
     "bg_image": "img/zones/SantuarioDelBosque.png"
   },
   {
     "id": 106,
     "name": "Ruinas del Desierto",
-    "legendary": null,
+    "legendary": "Regirock",
     "sprite": "🪨",
     "bg_image": "img/zones/RuinasDelDesierto.png"
   },
   {
     "id": 107,
     "name": "Zona Regice",
-    "legendary": null,
+    "legendary": "Regice",
     "sprite": "❄️",
     "bg_image": "img/zones/ZonaRegice.png"
   },
   {
     "id": 108,
     "name": "Zona Registeel",
-    "legendary": null,
+    "legendary": "Registeel",
     "sprite": "⚙️",
     "bg_image": "img/zones/ZonaRegisteel.png"
   },
   {
     "id": 109,
     "name": "Isla del Sur",
-    "legendary": null,
+    "legendary": "Latias",
     "sprite": "🏝️",
     "bg_image": "img/zones/IslaDelSur.png"
   },
   {
     "id": 110,
     "name": "Isla del Sur",
-    "legendary": null,
+    "legendary": "Latios",
     "sprite": "🏝️",
     "bg_image": "img/zones/IslaDelSur.png"
   },
   {
     "id": 111,
     "name": "Caverna Ancestral",
-    "legendary": null,
+    "legendary": "Kyogre",
     "sprite": "🌊",
     "bg_image": "img/zones/CavernaAncestral.png"
   },
   {
     "id": 112,
     "name": "Cima Volcanica",
-    "legendary": null,
+    "legendary": "Groudon",
     "sprite": "🔥",
     "bg_image": "img/zones/CimaVolcanica.png"
   },
   {
     "id": 113,
     "name": "Pilar Celeste",
-    "legendary": null,
+    "legendary" "Rayquaza",
     "sprite": "☁️",
     "bg_image": "img/zones/PilarCeleste.png"
   },
   {
     "id": 114,
     "name": "Centro espacial",
-    "legendary": null,
+    "legendary": "Jirachi",
     "sprite": "🚀",
     "bg_image": "img/zones/CentroEspacial.png"
   },
   {
     "id": 115,
     "name": "Isla Origen",
-    "legendary": null,
+    "legendary": "Deoxys",
     "sprite": "✨",
     "bg_image": "img/zones/IslaOrigen.png"
   },
   {
     "id": 116,
     "name": "Caverna Agudeza",
-    "legendary": null,
+    "legendary": "Uxie",
     "sprite": "❄️",
     "bg_image": "img/zones/CavernaAgudeza.png"
   },
   {
     "id": 117,
     "name": "Caverna Veraz",
-    "legendary": null,
+    "legendary": "Mesprit",
     "sprite": "💎",
     "bg_image": "img/zones/CavernaVeraz.png"
   },
   {
     "id": 118,
     "name": "Caverna Valor",
-    "legendary": null,
+    "legendary": "Azelf",
     "sprite": "🔥",
     "bg_image": "img/zones/CavernaValor.png"
   },
   {
     "id": 119,
     "name": "Columna Lanza",
-    "legendary": null,
+    "legendary": "Dialga",
     "sprite": "⛰️",
     "bg_image": "img/zones/ColumnaLanza.png"
   },
   {
     "id": 120,
     "name": "Columna Lanza",
-    "legendary": null,
+    "legendary": "Palkia",
     "sprite": "⛰️",
     "bg_image": "img/zones/ColumnaLanza.png"
   },
   {
     "id": 121,
     "name": "Columna Lanza",
-    "legendary": null,
+    "legendary": "Giratina",
     "sprite": "⛰️",
     "bg_image": "img/zones/ColumnaLanza.png"
   },
   {
     "id": 122,
     "name": "Montaña Dura",
-    "legendary": null,
+    "legendary": "Heatran",
     "sprite": "🌋",
     "bg_image": "img/zones/MontanaDura.png"
   },
   {
     "id": 123,
     "name": "Zona Regigigas",
-    "legendary": null,
+    "legendary" "Regigigas",
     "sprite": "🤖",
     "bg_image": "img/zones/ZonaRegigigas.png"
   },
   {
     "id": 124,
     "name": "Isla Plenilunio",
-    "legendary": null,
+    "legendary": "Cresselia",
     "sprite": "🌙",
     "bg_image": "img/zones/IslaPlenilunio.png"
   },
   {
     "id": 125,
     "name": "Isla Lunanueva",
-    "legendary": null,
+    "legendary": "Darkrai",
     "sprite": "🌑",
     "bg_image": "img/zones/IslaLunanueva.png"
   },
   {
     "id": 126,
     "name": "Zona Shaymin",
-    "legendary": null,
+    "legendary": "Shaymin",
     "sprite": "🌻",
     "bg_image": "img/zones/ZonaShaymin.png"
   },
   {
     "id": 127,
     "name": "Columna Lanza",
-    "legendary": null,
+    "legendary": "Arceus",
     "sprite": "⛰️",
     "bg_image": "img/zones/ColumnaLanza.png"
   },
   {
     "id": 128,
     "name": "Isla Libertad",
-    "legendary": null,
+    "legendary": "Victini",
     "sprite": "🗽",
     "bg_image": "img/zones/IslaLibertad.png"
   },
   {
     "id": 129,
     "name": "Claro Orientación",
-    "legendary": null,
+    "legendary": "Cobalion",
     "sprite": "🌀",
     "bg_image": "img/zones/ClaroOrientacion.png"
   },
   {
     "id": 130,
     "name": "Claro de Pruebas",
-    "legendary": null,
+    "legendary": "Terrakion",
     "sprite": "⚔️",
     "bg_image": "img/zones/ClaroDePruebas.png"
   },
   {
     "id": 131,
     "name": "Claro Filosofia",
-    "legendary": null,
+    "legendary": "Virizion",
     "sprite": "📜",
     "bg_image": "img/zones/ClaroFilosofia.png"
   },
   {
     "id": 132,
     "name": "Castillo Yang",
-    "legendary": null,
+    "legendary": "Reshiram",
     "sprite": "🏯",
     "bg_image": "img/zones/CastilloYang.png"
   },
   {
     "id": 133,
     "name": "Castillo Ying",
-    "legendary": null,
+    "legendary": "Zekrom",
     "sprite": "🏯",
     "bg_image": "img/zones/CastilloYing.png"
   },
   {
     "id": 134,
     "name": "Castillo Wuji",
-    "legendary": null,
+    "legendary": "Kyurem",
     "sprite": "🏯",
     "bg_image": "img/zones/CastilloWuji.png"
   },
   {
     "id": 135,
     "name": "Claro Místico",
-    "legendary": null,
+    "legendary": "Keldeo",
     "sprite": "✨",
     "bg_image": "img/zones/ClaroMistico.png"
   },
   {
     "id": 136,
     "name": "Prado Melodía",
-    "legendary": null,
+    "legendary": "Meloetta",
     "sprite": "🎵",
     "bg_image": "img/zones/PradoMelodia.png"
   },
   {
     "id": 137,
     "name": "Zona Xerneas",
-    "legendary": null,
+    "legendary": "Xerneas",
     "sprite": "🦌",
     "bg_image": "img/zones/ZonaXerneas.png"
   },
   {
     "id": 138,
     "name": "Zona Yveltal",
-    "legendary": null,
+    "legendary": "Yveltal",
     "sprite": "🦅",
     "bg_image": "img/zones/ZonaYveltal.png"
   },
   {
     "id": 139,
     "name": "Zona Zygarde",
-    "legendary": null,
+    "legendary": "Zygarde",
     "sprite": "🐍",
     "bg_image": "img/zones/ZonaZygarde.png"
   },
   {
     "id": 140,
     "name": "Zona Hoopa",
-    "legendary": null,
+    "legendary": "Hoopa",
     "sprite": "🔮",
     "bg_image": "img/zones/ZonaHoopa.png"
   },
   {
     "id": 141,
     "name": "Zona Volcanion",
-    "legendary": null,
+    "legendary": "Volcanion",
     "sprite": "🌋",
     "bg_image": "img/zones/ZonaVolcanion.png"
   }
