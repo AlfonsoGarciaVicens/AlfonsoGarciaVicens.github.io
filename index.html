@@ -409,7 +409,7 @@
         }
         .anim-slide { animation: slideDown 0.8s ease forwards; }
 
-        /* Ventana de combate adaptada con sprites nativos sin dimensiones fijas forzadas */
+        /* Ventana de combate */
         .combat-modal-window { 
             background: linear-gradient(135deg, #1e3a8a, #1d4ed8); 
             border: none;
@@ -943,26 +943,51 @@
             sprite.style.backgroundPosition = "0px 0px"; // Puesto 1
         }
 
-        // --- SELECTORES DE SPRITES Y ICONOS PARA POKÉDEX Y PC ---
+        // --- SISTEMA DE CACHÉ Y RESOLUCIÓN INTELIGENTE DE SPRITES (Sin 404 ni recargas) ---
+        const SPRITE_URL_CACHE = new Map();
+        const ICON_URL_CACHE = new Map();
+
         function getPokedexNormalSpriteUrl(poke) {
             let id = poke.id || poke.idDex || 1;
-            return poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+            if (SPRITE_URL_CACHE.has(id)) return SPRITE_URL_CACHE.get(id);
+
+            let url = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+            SPRITE_URL_CACHE.set(id, url);
+            return url;
         }
 
         function getPokedexIconUrl(poke) {
             let id = poke.id || poke.idDex || 1;
+            if (ICON_URL_CACHE.has(id)) return ICON_URL_CACHE.get(id);
+
+            let url;
             let versions = poke.sprites?.versions || poke.versions || {};
 
             let iconGen8 = versions['generation-viii']?.icons?.front_default;
-            if (iconGen8) return iconGen8;
-
             let iconGen7 = versions['generation-vii']?.icons?.front_default;
-            if (iconGen7) return iconGen7;
 
-            let iconGen5Anim = versions['generation-v']?.['black-white']?.animated?.front_default;
-            if (iconGen5Anim) return iconGen5Anim;
+            if (iconGen8) {
+                url = iconGen8;
+            } else if (iconGen7) {
+                url = iconGen7;
+            } else if (id > 898) {
+                // Gen 9 en adelante: No existen iconos en gen-viii/icons (evita 404 y el recuadro con '?')
+                url = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+            } else {
+                url = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons/${id}.png`;
+            }
 
-            return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons/${id}.png`;
+            ICON_URL_CACHE.set(id, url);
+            return url;
+        }
+
+        function precargarSpritesEquipoYPC() {
+            [...teamPokemon, ...pcStorage].forEach(p => {
+                let img1 = new Image();
+                img1.src = getPokedexNormalSpriteUrl(p);
+                let img2 = new Image();
+                img2.src = getPokedexIconUrl(p);
+            });
         }
 
         // --- SISTEMA DE ESTADOS POKÉDEX (VISTO / ATRAPADO / NO VISTO) ---
@@ -1533,6 +1558,7 @@
             if (teamPokemon.length > 0) {
                 actualizarHUD();
                 actualizarFondoZonaInicial();
+                precargarSpritesEquipoYPC();
             } else {
                 document.getElementById("starter-screen").style.display = "flex";
             }
@@ -1585,6 +1611,7 @@
             document.getElementById("starter-screen").style.display = "none";
             actualizarHUD();
             actualizarFondoZonaInicial();
+            precargarSpritesEquipoYPC();
             reiniciarPosicionSesion();
         }
 
@@ -1620,8 +1647,9 @@
             return subioNivel;
         }
 
-        // --- SISTEMA POKÉDEX ESTILO REFERENCIA ---
+        // --- SISTEMA POKÉDEX (Actualización reactiva sin destruir el DOM) ---
         let pokedexSelectedIndex = 0;
+        let pokedexGridConstruido = false;
 
         function abrirPokedex() {
             if (isWalking) return;
@@ -1630,8 +1658,12 @@
                 alert("La Pokédex aún no está cargada.");
                 return;
             }
+            if (!pokedexGridConstruido) {
+                construirPokedexGrid();
+                pokedexGridConstruido = true;
+            }
             pokedexSelectedIndex = 0;
-            renderizarPokedex();
+            actualizarDetallePokedex();
             document.getElementById("pokedex-screen").style.display = "flex";
         }
 
@@ -1641,10 +1673,41 @@
 
         function seleccionarPokemonPokedex(index) {
             pokedexSelectedIndex = index;
-            renderizarPokedex();
+            actualizarDetallePokedex();
         }
 
-        function renderizarPokedex() {
+        function construirPokedexGrid() {
+            const grid = document.getElementById("pokedex-grid-container");
+            grid.innerHTML = "";
+
+            POKEDEX_GLOBAL.forEach((p, idx) => {
+                let pId = p.id || (idx + 1);
+                let status = getPokedexStatus(pId);
+                let pSpriteCell = getPokedexIconUrl(p);
+
+                let cell = document.createElement("div");
+                cell.className = `pokedex-grid-cell ${idx === 0 ? 'selected' : ''}`;
+                cell.id = `dex-cell-${idx}`;
+                cell.onclick = () => seleccionarPokemonPokedex(idx);
+
+                let isIconGen = pSpriteCell.includes('generation-vii') || pSpriteCell.includes('generation-viii');
+                let imgClass = isIconGen ? "pokedex-cell-img icon-gen-large" : "pokedex-cell-img";
+                let imgStyle = "image-rendering: pixelated;";
+                if (!status.isSeen) {
+                    imgStyle += " filter: brightness(0);";
+                } else if (!status.isCaught) {
+                    imgStyle += " filter: grayscale(100%);";
+                }
+
+                cell.innerHTML = `
+                    <span class="pokedex-cell-num">${pId.toString().padStart(3, '0')}</span>
+                    <img src="${pSpriteCell}" class="${imgClass}" style="${imgStyle}" alt="P">
+                `;
+                grid.appendChild(cell);
+            });
+        }
+
+        function actualizarDetallePokedex() {
             if (POKEDEX_GLOBAL.length === 0) return;
             let poke = POKEDEX_GLOBAL[pokedexSelectedIndex] || POKEDEX_GLOBAL[0];
             let idDex = poke.id || (pokedexSelectedIndex + 1);
@@ -1745,40 +1808,13 @@
             document.getElementById("pokedex-caught-count").innerText = totalCaughtCount;
             document.getElementById("pokedex-seen-count").innerText = totalSeenCount;
 
-            const grid = document.getElementById("pokedex-grid-container");
-            grid.innerHTML = "";
-
-            POKEDEX_GLOBAL.forEach((p, idx) => {
-                let pId = p.id || (idx + 1);
-                let status = getPokedexStatus(pId);
-                let pSpriteCell = getPokedexIconUrl(p);
-                let isSelected = pokedexSelectedIndex === idx ? 'selected' : '';
-
-                let cell = document.createElement("div");
-                cell.className = `pokedex-grid-cell ${isSelected}`;
-                cell.onclick = () => seleccionarPokemonPokedex(idx);
-
-                let isIconGen = pSpriteCell.includes('generation-vii') || pSpriteCell.includes('generation-viii');
-                let imgClass = isIconGen ? "pokedex-cell-img icon-gen-large" : "pokedex-cell-img";
-                let imgStyle = "image-rendering: pixelated;";
-                if (!status.isSeen) {
-                    imgStyle += " filter: brightness(0);";
-                } else if (!status.isCaught) {
-                    imgStyle += " filter: grayscale(100%);";
-                }
-
-                let fallbackAnimado = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${pId}.gif`;
-                let fallbackNormal = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pId}.png`;
-
-                cell.innerHTML = `
-                    <span class="pokedex-cell-num">${pId.toString().padStart(3, '0')}</span>
-                    <img src="${pSpriteCell}" class="${imgClass}" style="${imgStyle}" alt="P" onerror="if(this.src.includes('generation-viii') || this.src.includes('generation-vii')){this.src='${fallbackAnimado}';}else if(this.src.includes('animated')){this.src='${fallbackNormal}';}">
-                `;
-                grid.appendChild(cell);
+            // Actualizar clase de selección sin destruir el DOM
+            document.querySelectorAll('.pokedex-grid-cell').forEach((cell, idx) => {
+                cell.classList.toggle('selected', idx === pokedexSelectedIndex);
             });
         }
 
-        // --- SISTEMA INTERACTIVO DE PC (Referencia Exacta) ---
+        // --- SISTEMA INTERACTIVO DE PC (Sin recargas destructivas) ---
         function abrirPC() {
             if (isWalking) return;
             cerrarMenu();
@@ -1796,16 +1832,45 @@
             if (pcStorage[index] === undefined) return;
             pcIndiceSeleccionado = index;
             pcModoMover = false;
-            renderizarVentanaPC();
+            actualizarDetallePC();
         }
 
-        function renderizarVentanaPC() {
-            const gridContainer = document.getElementById("pc-grid-container");
+        function actualizarDetallePC() {
             const previewSpriteBox = document.getElementById("pc-preview-sprite-box");
             const previewInfo = document.getElementById("pc-preview-info");
             const previewStats = document.getElementById("pc-preview-stats");
             const btnFav = document.getElementById("pc-btn-fav");
 
+            // Marcar la celda seleccionada en el DOM sin reconstruir todo
+            document.querySelectorAll('.pc-cell').forEach(c => {
+                let cIdx = parseInt(c.getAttribute('data-original-index'));
+                c.classList.toggle('selected-pc', cIdx === pcIndiceSeleccionado);
+            });
+
+            if (pcIndiceSeleccionado !== null && pcStorage[pcIndiceSeleccionado]) {
+                let p = pcStorage[pcIndiceSeleccionado];
+                let tOcultoMap = mapType(p.tipoOculto);
+                let colorOculto = TYPE_COLORS[tOcultoMap] || "#fff";
+
+                let normalSprite = getPokedexNormalSpriteUrl(p);
+
+                previewSpriteBox.innerHTML = `<img src="${normalSprite}" style="width:58px; height:58px; image-rendering:pixelated; object-fit:contain;" alt="Preview">`;
+                previewInfo.innerHTML = `${p.nombre.toUpperCase()} <span style="color:#1e3a8a;">Lv ${p.nivel}</span>`;
+                previewStats.innerHTML = `
+                    POTENCIAL: <b>${p.potencial || '15 / 31'}</b><br>
+                    PODER OCULTO: <b style="color:${colorOculto}; text-shadow:1px 1px 0 #000;">${p.tipoOculto ? p.tipoOculto.toUpperCase() : 'NINGUNO'}</b>
+                `;
+                if (btnFav) btnFav.innerText = p.favorito ? "- FAV" : "+ FAV";
+            } else {
+                previewSpriteBox.innerHTML = `<span style="font-size:24px;">💻</span>`;
+                previewInfo.innerHTML = `VACÍO`;
+                previewStats.innerHTML = `Selecciona un Pokémon`;
+                if (btnFav) btnFav.innerText = "+ FAV";
+            }
+        }
+
+        function renderizarVentanaPC() {
+            const gridContainer = document.getElementById("pc-grid-container");
             gridContainer.innerHTML = "";
 
             const filterType = document.getElementById("pc-filter-type") ? document.getElementById("pc-filter-type").value : "all";
@@ -1842,41 +1907,20 @@
 
                     let div = document.createElement("div");
                     div.className = `pc-cell ${shinyClass} ${isSelected}`;
+                    div.setAttribute('data-original-index', originalIndex);
                     div.onclick = () => seleccionarCeldaPC(originalIndex);
 
                     let isIconGen = iconUrl.includes('generation-vii') || iconUrl.includes('generation-viii');
                     let imgClass = isIconGen ? "icon-gen-large" : "";
 
-                    let fallbackAnimado = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${p.idDex || 1}.gif`;
-                    let fallbackNormal = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.idDex || 1}.png`;
-
                     div.innerHTML = `
-                        <img src="${iconUrl}" class="${imgClass}" style="width:28px; height:28px; image-rendering:pixelated; object-fit:contain;" alt="Icon" onerror="if(this.src.includes('generation-viii') || this.src.includes('generation-vii')){this.src='${fallbackAnimado}';}else if(this.src.includes('animated')){this.src='${fallbackNormal}';}">
+                        <img src="${iconUrl}" class="${imgClass}" style="width:28px; height:28px; image-rendering:pixelated; object-fit:contain;" alt="Icon">
                     `;
                     gridContainer.appendChild(div);
                 });
             }
 
-            if (pcIndiceSeleccionado !== null && pcStorage[pcIndiceSeleccionado]) {
-                let p = pcStorage[pcIndiceSeleccionado];
-                let tOcultoMap = mapType(p.tipoOculto);
-                let colorOculto = TYPE_COLORS[tOcultoMap] || "#fff";
-
-                let normalSprite = getPokedexNormalSpriteUrl(p);
-
-                previewSpriteBox.innerHTML = `<img src="${normalSprite}" style="width:58px; height:58px; image-rendering:pixelated; object-fit:contain;" alt="Preview">`;
-                previewInfo.innerHTML = `${p.nombre.toUpperCase()} <span style="color:#1e3a8a;">Lv ${p.nivel}</span>`;
-                previewStats.innerHTML = `
-                    POTENCIAL: <b>${p.potencial || '15 / 31'}</b><br>
-                    PODER OCULTO: <b style="color:${colorOculto}; text-shadow:1px 1px 0 #000;">${p.tipoOculto ? p.tipoOculto.toUpperCase() : 'NINGUNO'}</b>
-                `;
-                if (btnFav) btnFav.innerText = p.favorito ? "- FAV" : "+ FAV";
-            } else {
-                previewSpriteBox.innerHTML = `<span style="font-size:24px;">💻</span>`;
-                previewInfo.innerHTML = `VACÍO`;
-                previewStats.innerHTML = `Selecciona un Pokémon`;
-                if (btnFav) btnFav.innerText = "+ FAV";
-            }
+            actualizarDetallePC();
         }
 
         function pcAccionDatos() {
@@ -1973,7 +2017,7 @@
             let p = pcStorage[pcIndiceSeleccionado];
             p.favorito = !p.favorito;
             guardarDatos();
-            renderizarVentanaPC();
+            actualizarDetallePC();
             alert(p.favorito ? "¡Marcado como favorito!" : "Quitado de favoritos.");
         }
 
@@ -2175,6 +2219,7 @@
             }
             guardarDatos();
             actualizarHUD();
+            precargarSpritesEquipoYPC();
         }
 
         function cerrarCinematicaGacha() {
