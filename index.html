@@ -35,10 +35,10 @@
             background: transparent;
         }
 
-        /* Overlays de pantalla completa (Login / Selección Inicial) */
+        /* Overlays de pantalla completa */
         .screen-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
         
-        /* Menús in-game y Combate: Ocupan el 100% de la pantalla sin bordes ni márgenes */
+        /* Menús in-game y Combate */
         .modal-screen { 
             position: absolute; 
             top: 0; 
@@ -70,7 +70,7 @@
         .pokedex-cell-num { font-size: 6px; color: #64748b; font-weight: bold; }
         .pokedex-cell-img { width: 22px; height: 22px; image-rendering: pixelated; }
 
-        /* Estilo Ventana PC Rediseñada */
+        /* Estilo Ventana PC */
         .pc-window-gba { 
             background-color: #2d8ab3; 
             border: none; 
@@ -170,7 +170,7 @@
         }
         .pc-action-btn:hover { background: #2563eb; }
 
-        /* --- ESTILO VENTANA SKINS DE PERSONAJE --- */
+        /* Estilo Ventana Skins */
         .skins-window {
             background-color: #525252;
             background-image: repeating-linear-gradient(rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px);
@@ -274,7 +274,7 @@
             font-weight: bold;
         }
 
-        /* Estilo Ventana Menú Desarrollador (Dev) */
+        /* Estilo Ventana Menú Desarrollador */
         .dev-window { 
             background: linear-gradient(135deg, #1e293b, #0f172a); 
             border: none; 
@@ -332,35 +332,170 @@
         .bag-use-btn { background: #10b981; border: none; color: white; padding: 3px 8px; font-weight: bold; border-radius: 0; cursor: pointer; font-size: 10px; align-self: flex-end; }
         .bag-close-btn { background: #ef4444; border: 2px solid #991b1b; color: white; padding: 5px; font-weight: bold; border-radius: 0; cursor: pointer; font-size: 11px; width: 100%; text-align: center; }
 
-        /* Estilo Ventana Gacha / Tienda */
+        /* --- NUEVO REDISEÑO MODERNO UI GACHA (BANNER CARD) --- */
         .gacha-window { 
-            background: linear-gradient(135deg, #9d174d, #831843); 
+            background: radial-gradient(circle at center, #1e1e38 0%, #0d0d1a 100%); 
             border: none; 
             border-radius: 0; 
             width: 100%; 
             height: 100%; 
-            padding: 10px; 
+            padding: 8px; 
             display: flex; 
             flex-direction: column; 
             justify-content: space-between; 
             position: relative; 
             box-sizing: border-box; 
+            overflow: hidden;
         }
-        .gacha-header-row { display: flex; justify-content: space-between; align-items: center; }
-        .gacha-money-badge { background: rgba(0,0,0,0.5); border: 1px solid #f472b6; padding: 3px 8px; border-radius: 0; font-size: 11px; color: #fdf2f8; font-weight: bold; }
-        .gacha-main-title { font-size: 12px; font-weight: bold; color: #fff; letter-spacing: 1px; text-align: center; flex-grow: 1; text-transform: uppercase; }
-        
-        .gacha-carousel-container { display: flex; align-items: center; justify-content: space-between; flex-grow: 1; margin: 8px 0; gap: 5px; }
-        .gacha-arrow-btn { background: #475569; border: 2px solid #94a3b8; color: white; font-size: 16px; padding: 10px 6px; border-radius: 0; cursor: pointer; font-weight: bold; }
-        .gacha-arrow-btn:hover { background: #64748b; }
+        .gacha-top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #334155;
+            padding-bottom: 4px;
+        }
+        .gacha-money-badge { 
+            background: linear-gradient(135deg, #1e293b, #0f172a); 
+            border: 1.5px solid #fbbf24; 
+            padding: 2px 8px; 
+            border-radius: 12px; 
+            font-size: 10px; 
+            color: #fef08a; 
+            font-weight: bold; 
+            box-shadow: 0 0 6px rgba(251, 191, 36, 0.3);
+        }
+        .gacha-banner-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-grow: 1;
+            margin: 6px 0;
+            gap: 4px;
+            position: relative;
+        }
+        .gacha-arrow-btn { 
+            background: rgba(15, 23, 42, 0.85); 
+            border: 1.5px solid #475569; 
+            color: #fff; 
+            font-size: 15px; 
+            width: 26px;
+            height: 60px;
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+        .gacha-arrow-btn:hover { background: #334155; border-color: #94a3b8; }
 
-        .gacha-display-box { background: rgba(0, 0, 0, 0.3); border: 2px dashed #fbcfe8; border-radius: 0; flex-grow: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; text-align: center; gap: 8px; }
-        .gacha-item-preview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 24px; background: rgba(255,255,255,0.1); padding: 8px; border-radius: 0; width: 100%; justify-items: center; align-items: center; }
-        .gacha-desc { font-size: 10px; color: #fbcfe8; min-height: 25px; }
-
-        .gacha-pull-btn { background: #0284c7; border: 3px solid #bae6fd; color: white; padding: 10px; font-weight: bold; border-radius: 0; cursor: pointer; font-size: 13px; width: 100%; text-shadow: 1px 1px 1px #000; box-shadow: 0 4px 6px rgba(0,0,0,0.4); }
-        .gacha-pull-btn:hover { background: #0ea5e9; }
-        .gacha-close-btn { background: #ef4444; border: 2px solid #991b1b; color: white; padding: 6px; font-weight: bold; border-radius: 0; cursor: pointer; font-size: 11px; width: 100%; text-align: center; }
+        .gacha-card-banner {
+            flex-grow: 1;
+            height: 195px;
+            border-radius: 8px;
+            border: 2px solid #38bdf8;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.6), inset 0 0 15px rgba(255,255,255,0.1);
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 8px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        .gacha-card-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .gacha-banner-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 2;
+        }
+        .gacha-tag-badge {
+            font-size: 8px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #fff;
+        }
+        .gacha-center-preview {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            margin: auto 0;
+        }
+        .gacha-hero-sprite {
+            width: 68px;
+            height: 68px;
+            object-fit: contain;
+            image-rendering: pixelated;
+            filter: drop-shadow(0 6px 8px rgba(0,0,0,0.7));
+        }
+        .gacha-card-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: #ffffff;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px #000;
+            margin-top: 2px;
+        }
+        .gacha-desc-text {
+            font-size: 8px;
+            color: #cbd5e1;
+            line-height: 1.2;
+            z-index: 2;
+            min-height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+        }
+        .gacha-bottom-controls {
+            display: flex;
+            gap: 4px;
+            z-index: 2;
+        }
+        .gacha-pull-btn { 
+            background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%); 
+            border: 2px solid #7dd3fc; 
+            color: white; 
+            padding: 7px 4px; 
+            font-weight: bold; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 11px; 
+            flex-grow: 1;
+            text-shadow: 1px 1px 2px #000; 
+            box-shadow: 0 3px 6px rgba(0,0,0,0.5); 
+            text-transform: uppercase;
+        }
+        .gacha-pull-btn:hover { filter: brightness(1.1); }
+        .gacha-close-btn { 
+            background: #dc2626; 
+            border: 2px solid #f87171; 
+            color: white; 
+            padding: 7px 10px; 
+            font-weight: bold; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 11px; 
+            text-align: center; 
+        }
 
         .box-container h2 { margin-bottom: 10px; color: #4CAF50; font-size: 16px; }
         .box-container input { width: 100%; padding: 8px; margin-bottom: 10px; background-color: #1a1a1a; border: 1px solid #555; color: #fff; border-radius: 4px; }
@@ -374,7 +509,7 @@
         .menu-row { display: flex; gap: 12px; justify-content: center; }
         .menu-icon-btn { background-color: #1e293b; border: 3px solid #64748b; border-radius: 8px; width: 50px; height: 50px; font-size: 22px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
 
-        /* Estilo interfaz equipo estilo GBA */
+        /* Estilo equipo GBA */
         .team-window-gba { background: linear-gradient(135deg, #3b82f6, #1d4ed8); border: none; border-radius: 0; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
         .gba-lead-slot { background: #2563eb; border: 2px solid #60a5fa; border-radius: 0; padding: 6px; display: flex; align-items: center; gap: 8px; cursor: pointer; }
         .gba-lead-slot.selected-slot { border: 2px solid #f59e0b; box-shadow: 0 0 8px #f59e0b; }
@@ -401,7 +536,7 @@
         .energy-bars { color: #4ade80; font-family: monospace; letter-spacing: -1px; font-weight: bold; }
         .menu-btn { background-color: #2196F3; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; }
 
-        /* Ventana cuadrada fija de 320x320 píxeles */
+        /* Ventana cuadrada 320x320 */
         .map-viewport { 
             width: 320px; 
             height: 320px; 
@@ -418,7 +553,6 @@
             background-position: center center; 
         }
 
-        /* Sprite del jugador en el mapa: Tamaño duplicado (64x64) */
         #player-sprite {
             position: absolute;
             left: 160px;
@@ -451,13 +585,12 @@
             pointer-events: auto;
         }
 
-        .map-background { display: none; }
         .map-content { position: relative; z-index: 2; text-align: center; width: 100%; }
         .zone-title { background-color: rgba(0, 0, 0, 0.7); padding: 8px 15px; border-radius: 4px; font-size: 14px; border: 1px solid #555; margin-bottom: 5px; display: inline-block; }
         .sprite-container { display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 30px; margin-top: 5px; }
         .exploration-log { position: relative; z-index: 2; background-color: rgba(0, 0, 0, 0.85); border: 1px solid #555; border-radius: 6px; padding: 10px; width: 100%; min-height: 70px; font-size: 11px; color: #d4d4d4; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-        /* --- CINEMÁTICA GACHA PACK --- */
+        /* Cinemática Gacha */
         #gacha-pack-overlay {
             position: absolute;
             top: 0;
@@ -510,7 +643,7 @@
         }
         .anim-slide { animation: slideDown 0.8s ease forwards; }
 
-        /* Ventana de combate y sprites pegados a la base inferior */
+        /* Combate */
         .combat-modal-window { 
             background: linear-gradient(135deg, #1e3a8a, #1d4ed8); 
             border: none; 
@@ -536,7 +669,6 @@
         .exp-bar-bg { background-color: #1e293b; height: 5px; width: 75%; display: inline-block; vertical-align: middle; border-radius: 0; overflow: hidden; border: 1px solid #0f172a; }
         .exp-bar-fill { background-color: #38bdf8 !important; height: 100%; transition: width 0.3s ease; display: block; }
 
-        /* Contenedor de sprites alineado perfectamente abajo */
         .combat-sprites { 
             display: flex; 
             justify-content: space-between; 
@@ -549,7 +681,6 @@
             display: block;
         }
         
-        /* Sprite del jugador en combate pegado abajo */
         #player-battle-sprite {
             position: relative;
             align-self: flex-end;
@@ -569,7 +700,6 @@
         .btn-capture { background-color: #eab308; color: black; border: none; padding: 10px; font-weight: bold; border-radius: 0; cursor: pointer; }
         .btn-flee { background-color: #ef4444; color: white; border: none; padding: 10px; font-weight: bold; border-radius: 0; cursor: pointer; }
 
-        /* --- ANIMACIONES DE COMBATE --- */
         @keyframes idleBounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-5px); }
@@ -671,21 +801,17 @@
 
         <!-- Ventanita Cuadrada 320x320 (.map-viewport) -->
         <div class="map-viewport" id="map-viewport">
-            <!-- Pista deslizante lateral (640px ancho) -->
             <div id="map-track" style="position: absolute; top: 0; left: 0; width: 640px; height: 320px; display: flex; transform: translateX(0px); z-index: 1;">
                 <div id="map-panel-1" style="width: 320px; height: 320px; background-size: 320px 320px; background-repeat: no-repeat; background-position: center center;"></div>
                 <div id="map-panel-2" style="width: 320px; height: 320px; background-size: 320px 320px; background-repeat: no-repeat; background-position: center center;"></div>
             </div>
 
-            <!-- Sprite del Jugador Overworld (64x64, top: 240px, left: 160px) -->
             <div id="player-sprite"></div>
 
-            <!-- Pantalla Cinemática Gacha Pack -->
             <div id="gacha-pack-overlay">
                 <div id="gacha-pack-content" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; width:100%; height:100%;"></div>
             </div>
 
-            <!-- Contenedor interno -->
             <div class="map-viewport-inner">
                 <div class="map-content" id="map-content-inner">
                     <div class="zone-title" id="current-zone-name">Pueblo Inicial (Zona 1)</div>
@@ -698,7 +824,7 @@
                 <div class="exploration-log" id="explore-log">¡Bienvenido a Pokémon Trails! Explora o avanza.</div>
             </div>
 
-            <!-- Menús In-game -->
+            <!-- Menú Principal -->
             <div id="menu-screen" class="modal-screen" style="z-index: 85;">
                 <div class="modal-window">
                     <div class="modal-title">- MENÚ PRINCIPAL -</div>
@@ -718,7 +844,7 @@
                 </div>
             </div>
 
-            <!-- Ventana Skins de Personaje -->
+            <!-- Ventana Skins -->
             <div id="skins-screen" class="modal-screen" style="z-index: 88;">
                 <div class="skins-window">
                     <div class="skins-top-header">
@@ -836,7 +962,7 @@
                 </div>
             </div>
 
-            <!-- Ventana Menú Desarrollador (Dev) -->
+            <!-- Ventana Menú Dev -->
             <div id="dev-screen" class="modal-screen" style="z-index: 95;">
                 <div class="dev-window">
                     <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #475569; padding-bottom: 2px;">
@@ -844,7 +970,6 @@
                         <button onclick="cerrarDevMenu()" style="background:none; border:none; font-size:18px; font-weight:bold; cursor:pointer; color:#fff; line-height: 1;">✖</button>
                     </div>
 
-                    <!-- Sección Añadir Objetos -->
                     <div class="dev-section">
                         <div style="font-size: 9px; font-weight: bold; color: #facc15;">📦 AÑADIR OBJETOS AL INVENTARIO</div>
                         <div style="display: flex; gap: 4px; align-items: center;">
@@ -854,7 +979,6 @@
                         <button class="dev-btn dev-btn-green" onclick="devAgregarObjetoSeleccionado()">➕ AÑADIR AL INVENTARIO</button>
                     </div>
 
-                    <!-- Sección Cheats Rápidos -->
                     <div class="dev-section">
                         <div style="font-size: 9px; font-weight: bold; color: #38bdf8;">⚡ ACCIONES RÁPIDAS</div>
                         <div class="dev-grid-actions">
@@ -870,7 +994,7 @@
                 </div>
             </div>
 
-            <!-- Ventana de Equipo -->
+            <!-- Ventana Equipo -->
             <div id="team-screen" class="modal-screen" style="z-index: 85;">
                 <div class="team-window-gba">
                     <div class="modal-title" style="border:none; color:#fff;">- EQUIPO POKÉMON -</div>
@@ -882,7 +1006,7 @@
                 </div>
             </div>
 
-            <!-- Ventana de Datos -->
+            <!-- Ventana Datos Pokémon -->
             <div id="summary-screen" class="modal-screen" style="z-index: 90;">
                 <div class="summary-window">
                     <div class="modal-title" style="border:none; color:#fff;">- DATOS DEL POKÉMON -</div>
@@ -915,32 +1039,47 @@
                 </div>
             </div>
 
-            <!-- Ventana Gacha -->
+            <!-- NUEVA VENTANA REDISEÑADA DEL GACHA -->
             <div id="gacha-screen" class="modal-screen" style="z-index: 85;">
                 <div class="gacha-window">
-                    <div class="gacha-header-row">
+                    <div class="gacha-top-bar">
                         <div class="gacha-money-badge" id="gacha-money-display">2.000 ₱</div>
-                        <div class="gacha-main-title" id="gacha-title">BONUS DIARIO</div>
-                        <div style="width: 50px;"></div>
+                        <span style="font-size: 10px; font-weight: bold; color: #94a3b8;" id="gacha-counter-index">1 / 23</span>
                     </div>
 
-                    <div class="gacha-carousel-container">
+                    <div class="gacha-banner-container">
                         <button class="gacha-arrow-btn" onclick="cambiarGacha(-1)">&#10094;</button>
-                        <div class="gacha-display-box">
-                            <div class="gacha-item-preview-grid" id="gacha-preview-icons">
-                                <span>🎁</span><span>✨</span><span>💰</span>
+                        
+                        <div class="gacha-card-banner" id="gacha-card-banner">
+                            <div class="gacha-banner-header">
+                                <span class="gacha-tag-badge" id="gacha-tag-badge" style="background:#ec4899;">ESPECIAL</span>
+                                <span id="gacha-banner-stars" style="font-size: 9px; color: #facc15;">⭐⭐⭐⭐⭐</span>
                             </div>
-                            <div class="gacha-desc" id="gacha-desc">Reclamable 1 vez al día. Obtén entre 500 y 5.000 Poké-dólares gratis.</div>
+
+                            <div class="gacha-center-preview">
+                                <div id="gacha-preview-render-box" style="height:70px; display:flex; align-items:center; justify-content:center;">
+                                    <span style="font-size: 40px;" id="gacha-preview-simple-icon">🎁</span>
+                                    <img id="gacha-preview-main-img" class="gacha-hero-sprite" style="display:none;" src="" alt="Hero">
+                                </div>
+                                <div class="gacha-card-title" id="gacha-title">BONUS DIARIO</div>
+                            </div>
+
+                            <div class="gacha-desc-text" id="gacha-desc">
+                                Reclamable 1 vez al día. Obtén entre 500 y 5.000 Poké-dólares gratis.
+                            </div>
                         </div>
+
                         <button class="gacha-arrow-btn" onclick="cambiarGacha(1)">&#10095;</button>
                     </div>
 
-                    <button class="gacha-pull-btn" id="gacha-pull-btn" onclick="realizarTiradaGacha()">RECLAMAR GRATIS</button>
-                    <button class="gacha-close-btn" onclick="cerrarGacha()">CERRAR</button>
+                    <div class="gacha-bottom-controls">
+                        <button class="gacha-pull-btn" id="gacha-pull-btn" onclick="realizarTiradaGacha()">RECLAMAR GRATIS</button>
+                        <button class="gacha-close-btn" onclick="cerrarGacha()">✖</button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Vista de Combate -->
+            <!-- Vista Combate -->
             <div id="combat-viewport-screen" class="modal-screen" style="z-index: 90;">
                 <div class="combat-modal-window">
                     <div id="enemy-initiative-bubble" class="initiative-bubble" style="top: 35px; left: 40px;">--</div>
@@ -972,7 +1111,7 @@
             </div>
         </div>
 
-        <!-- Contenedor inferior -->
+        <!-- Panel Inferior -->
         <div id="bottom-panel-wrapper">
             <div id="normal-controls-view" style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
                 <div class="action-buttons" id="exploration-action-buttons">
@@ -998,7 +1137,7 @@
     </div>
 
     <script>
-        // --- CONFIGURACIÓN DE MÚSICA DE FONDO (BGM) ---
+        // --- CONFIGURACIÓN DE MÚSICA DE FONDO ---
         const bgm = new Audio('audio/route1.mp3');
         bgm.loop = true;
         bgm.volume = 0.4;
@@ -1018,7 +1157,6 @@
         let POKEDEX_GLOBAL = [];
         let zonesConfig = [];
         
-        // --- RESPALDO COMPLETO DE LAS 41 ZONAS LEGENDARIAS ---
         const DEFAULT_SPECIAL_ZONES = [
             { "id": 101, "name": "Laboratorio", "legendary": "Mewtwo", "sprite": "🧬", "bg_image": "img/zones/Laboratorio.png" },
             { "id": 102, "name": "Jardín Supremo", "legendary": "Mew", "sprite": "🌸", "bg_image": "img/zones/JardinSupremo.png" },
@@ -1065,56 +1203,15 @@
 
         let specialZonesConfig = [...DEFAULT_SPECIAL_ZONES];
 
-        // --- CATÁLOGO DE SKINS DE PERSONAJE ---
         let SKINS_DATABASE = [
-            {
-                id: 'default',
-                name: 'Entrenador',
-                art_image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/trainers/1.png',
-                sheet_image: 'img/player_sheet.png'
-            },
-            {
-                id: 'snowboarder',
-                name: 'Snowboarder',
-                art_image: 'https://play.pokemonshowdown.com/sprites/trainers/snowboarder.png',
-                sheet_image: 'img/player_sheet.png'
-            },
-            {
-                id: 'acetrainer',
-                name: 'Entrenador Guay',
-                art_image: 'https://play.pokemonshowdown.com/sprites/trainers/acetrainer-gen4dp.png',
-                sheet_image: 'img/player_sheet.png'
-            },
-            {
-                id: 'hiker',
-                name: 'Montañero',
-                art_image: 'https://play.pokemonshowdown.com/sprites/trainers/hiker-gen4.png',
-                sheet_image: 'img/player_sheet.png'
-            },
-            {
-                id: 'blackbelt',
-                name: 'Karateka',
-                art_image: 'https://play.pokemonshowdown.com/sprites/trainers/blackbelt-gen4dp.png',
-                sheet_image: 'img/player_sheet.png'
-            },
-            {
-                id: 'swimmer',
-                name: 'Nadador',
-                art_image: 'https://play.pokemonshowdown.com/sprites/trainers/swimmer-gen4dp.png',
-                sheet_image: 'img/player_sheet.png'
-            },
-            {
-                id: 'scientist',
-                name: 'Científico',
-                art_image: 'https://play.pokemonshowdown.com/sprites/trainers/scientist-gen4dp.png',
-                sheet_image: 'img/player_sheet.png'
-            },
-            {
-                id: 'rocket',
-                name: 'Recluta Rocket',
-                art_image: 'https://play.pokemonshowdown.com/sprites/trainers/teamrocket.png',
-                sheet_image: 'img/player_sheet.png'
-            }
+            { id: 'default', name: 'Entrenador', art_image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/trainers/1.png', sheet_image: 'img/player_sheet.png' },
+            { id: 'snowboarder', name: 'Snowboarder', art_image: 'https://play.pokemonshowdown.com/sprites/trainers/snowboarder.png', sheet_image: 'img/player_sheet.png' },
+            { id: 'acetrainer', name: 'Entrenador Guay', art_image: 'https://play.pokemonshowdown.com/sprites/trainers/acetrainer-gen4dp.png', sheet_image: 'img/player_sheet.png' },
+            { id: 'hiker', name: 'Montañero', art_image: 'https://play.pokemonshowdown.com/sprites/trainers/hiker-gen4.png', sheet_image: 'img/player_sheet.png' },
+            { id: 'blackbelt', name: 'Karateka', art_image: 'https://play.pokemonshowdown.com/sprites/trainers/blackbelt-gen4dp.png', sheet_image: 'img/player_sheet.png' },
+            { id: 'swimmer', name: 'Nadador', art_image: 'https://play.pokemonshowdown.com/sprites/trainers/swimmer-gen4dp.png', sheet_image: 'img/player_sheet.png' },
+            { id: 'scientist', name: 'Científico', art_image: 'https://play.pokemonshowdown.com/sprites/trainers/scientist-gen4dp.png', sheet_image: 'img/player_sheet.png' },
+            { id: 'rocket', name: 'Recluta Rocket', art_image: 'https://play.pokemonshowdown.com/sprites/trainers/teamrocket.png', sheet_image: 'img/player_sheet.png' }
         ];
 
         let userSkins = ['default'];
@@ -1135,7 +1232,6 @@
         let isWalking = false;
         let mapaAntiguoActivado = false;
 
-        // Variables de animación del personaje overworld
         let playerAnimInterval = null;
         let walkStep = 0;
 
@@ -1160,11 +1256,7 @@
             walkStep = 0;
             if (playerAnimInterval) clearInterval(playerAnimInterval);
             aplicarSkinAlJugador();
-            const walkFrames = [
-                "-64px -64px",
-                "-64px 0px",
-                "-64px -128px"
-            ];
+            const walkFrames = ["-64px -64px", "-64px 0px", "-64px -128px"];
             playerAnimInterval = setInterval(() => {
                 walkStep = (walkStep + 1) % walkFrames.length;
                 sprite.style.backgroundPosition = walkFrames[walkStep];
@@ -1179,7 +1271,6 @@
             sprite.style.backgroundPosition = "0px 0px";
         }
 
-        // --- SISTEMA DE CACHÉ Y RESOLUCIÓN DE SPRITES (Back Gen 4 con fallbacks) ---
         const SPRITE_URL_CACHE = new Map();
         const BACK_SPRITE_URL_CACHE = new Map();
         const ICON_URL_CACHE = new Map();
@@ -1187,7 +1278,6 @@
         function getPokedexNormalSpriteUrl(poke) {
             let id = poke.id || poke.idDex || 1;
             if (SPRITE_URL_CACHE.has(id)) return SPRITE_URL_CACHE.get(id);
-
             let url = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
             SPRITE_URL_CACHE.set(id, url);
             return url;
@@ -1220,19 +1310,13 @@
 
             let url;
             let versions = poke.sprites?.versions || poke.versions || {};
-
             let iconGen8 = versions['generation-viii']?.icons?.front_default;
             let iconGen7 = versions['generation-vii']?.icons?.front_default;
 
-            if (iconGen8) {
-                url = iconGen8;
-            } else if (iconGen7) {
-                url = iconGen7;
-            } else if (id > 898) {
-                url = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
-            } else {
-                url = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons/${id}.png`;
-            }
+            if (iconGen8) url = iconGen8;
+            else if (iconGen7) url = iconGen7;
+            else if (id > 898) url = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+            else url = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons/${id}.png`;
 
             ICON_URL_CACHE.set(id, url);
             return url;
@@ -1240,16 +1324,12 @@
 
         function precargarSpritesEquipoYPC() {
             [...teamPokemon, ...pcStorage].forEach(p => {
-                let img1 = new Image();
-                img1.src = getPokedexNormalSpriteUrl(p);
-                let img2 = new Image();
-                img2.src = getPokedexIconUrl(p);
-                let img3 = new Image();
-                img3.src = getPokemonBackSpriteUrl(p);
+                let img1 = new Image(); img1.src = getPokedexNormalSpriteUrl(p);
+                let img2 = new Image(); img2.src = getPokedexIconUrl(p);
+                let img3 = new Image(); img3.src = getPokemonBackSpriteUrl(p);
             });
         }
 
-        // --- SISTEMA DE ESTADOS POKÉDEX ---
         function getPokedexStatus(idDex) {
             const user = localStorage.getItem("pt_current_user") || "default";
             const prefix = `pt_${user}_`;
@@ -1264,10 +1344,7 @@
                 localStorage.setItem(prefix + "pokedex_seen", JSON.stringify(seenList));
             }
 
-            const isCaught = caughtList.includes(idDex) || inTeamOrPC;
-            const isSeen = seenList.includes(idDex) || isCaught;
-
-            return { isCaught, isSeen };
+            return { isCaught: caughtList.includes(idDex) || inTeamOrPC, isSeen: seenList.includes(idDex) || caughtList.includes(idDex) || inTeamOrPC };
         }
 
         function marcarVisto(idDex) {
@@ -1330,7 +1407,6 @@
         };
 
         let playerInventory = JSON.parse(JSON.stringify(defaultInventory));
-
         let pestanaActivaBolsa = 'potions';
         let objetoSeleccionadoBolsa = null;
 
@@ -1364,78 +1440,109 @@
         ];
 
         const typeGachaConfig = [
-            { type: 'normal', name: 'Normal', icon: '⚪' },
-            { type: 'fire', name: 'Fuego', icon: '🔥' },
-            { type: 'water', name: 'Agua', icon: '💧' },
-            { type: 'grass', name: 'Planta', icon: '🌿' },
-            { type: 'electric', name: 'Eléctrico', icon: '⚡' },
-            { type: 'ice', name: 'Hielo', icon: '❄️' },
-            { type: 'fighting', name: 'Lucha', icon: '🥊' },
-            { type: 'poison', name: 'Veneno', icon: '☠️' },
-            { type: 'ground', name: 'Tierra', icon: '🌍' },
-            { type: 'flying', name: 'Volador', icon: '🦅' },
-            { type: 'psychic', name: 'Psíquico', icon: '🔮' },
-            { type: 'bug', name: 'Bicho', icon: '🐛' },
-            { type: 'rock', name: 'Roca', icon: '🪨' },
-            { type: 'ghost', name: 'Fantasma', icon: '👻' },
-            { type: 'dragon', name: 'Dragón', icon: '🐉' },
-            { type: 'dark', name: 'Siniestro', icon: '🌑' },
-            { type: 'steel', name: 'Acero', icon: '⚙️' },
-            { type: 'fairy', name: 'Hada', icon: '🌸' }
+            { type: 'normal', name: 'Normal', icon: '⚪', repId: 19, color: '#A8A77A' }, // Rattata
+            { type: 'fire', name: 'Fuego', icon: '🔥', repId: 4, color: '#EE8130' },   // Charmander
+            { type: 'water', name: 'Agua', icon: '💧', repId: 7, color: '#6390F0' },   // Squirtle
+            { type: 'grass', name: 'Planta', icon: '🌿', repId: 1, color: '#7AC74C' },  // Bulbasaur
+            { type: 'electric', name: 'Eléctrico', icon: '⚡', repId: 25, color: '#F7D02C' }, // Pikachu
+            { type: 'ice', name: 'Hielo', icon: '❄️', repId: 131, color: '#96D9D6' }, // Lapras
+            { type: 'fighting', name: 'Lucha', icon: '🥊', repId: 66, color: '#C22E28' }, // Machop
+            { type: 'poison', name: 'Veneno', icon: '☠️', repId: 23, color: '#A33EA1' }, // Ekans
+            { type: 'ground', name: 'Tierra', icon: '🌍', repId: 27, color: '#E2BF65' }, // Sandshrew
+            { type: 'flying', name: 'Volador', icon: '🦅', repId: 16, color: '#A98FF3' }, // Pidgey
+            { type: 'psychic', name: 'Psíquico', icon: '🔮', repId: 63, color: '#F95587' }, // Abra
+            { type: 'bug', name: 'Bicho', icon: '🐛', repId: 10, color: '#A6B91A' }, // Caterpie
+            { type: 'rock', name: 'Roca', icon: '🪨', repId: 74, color: '#B6A136' }, // Geodude
+            { type: 'ghost', name: 'Fantasma', icon: '👻', repId: 92, color: '#735797' }, // Gastly
+            { type: 'dragon', name: 'Dragón', icon: '🐉', repId: 147, color: '#6F35FC' }, // Dratini
+            { type: 'dark', name: 'Siniestro', icon: '🌑', repId: 228, color: '#705898' }, // Houndour
+            { type: 'steel', name: 'Acero', icon: '⚙️', repId: 81, color: '#B7B7CE' }, // Magnemite
+            { type: 'fairy', name: 'Hada', icon: '🌸', repId: 35, color: '#D685AD' } // Clefairy
         ];
 
         let gachaMachines = [
             {
                 id: 'daily',
                 title: 'BONUS DIARIO',
-                icons: ['🎁', '✨', '💰'],
-                desc: 'Reclamable 1 vez al día. Obtén entre 500 y 5.000 Poké-dólares gratis.',
+                tag: 'DIARIO',
+                tagColor: '#10b981',
+                bgGradient: 'linear-gradient(135deg, #065f46 0%, #064e3b 100%)',
+                borderColor: '#34d399',
+                icon: '🎁',
+                desc: 'Reclamable 1 vez al día. ¡Obtén entre 500 y 5.000 Poké-dólares gratis!',
                 cost: 0,
-                type: 'daily'
+                type: 'daily',
+                stars: '⭐⭐⭐⭐'
             },
             {
                 id: 'character_skins',
-                title: 'GACHA DE PERSONAJES',
-                icons: ['👤', '👕', '✨'],
-                desc: '¡Obtén un nuevo aspecto de entrenador aleatorio sin duplicados! (2.500 ₱)',
+                title: 'GACHA ENTRENADORES',
+                tag: 'SKINS',
+                tagColor: '#a855f7',
+                bgGradient: 'linear-gradient(135deg, #581c87 0%, #3b0764 100%)',
+                borderColor: '#c084fc',
+                artImg: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/trainers/1.png',
+                desc: '¡Desbloquea aspectos visuales exclusivos de entrenador sin duplicados!',
                 cost: 2500,
-                type: 'character_skin'
+                type: 'character_skin',
+                stars: '⭐⭐⭐⭐⭐'
             },
             {
                 id: 'items',
-                title: 'CAJA DE OBJETOS',
-                icons: ['📦', '🧪', '💊'],
-                desc: 'Consigue 1 objeto aleatorio basado en la tabla de rarezas oficial.',
+                title: 'BAÚL DE OBJETOS',
+                tag: 'ITEMS',
+                tagColor: '#f59e0b',
+                bgGradient: 'linear-gradient(135deg, #78350f 0%, #451a03 100%)',
+                borderColor: '#fbbf24',
+                icon: '📦',
+                desc: 'Consigue objetos de mejora, bayas, pociones o huevos Pokémon misteriosos.',
                 cost: 400,
-                type: 'item'
+                type: 'item',
+                stars: '⭐⭐⭐'
             },
             {
                 id: 'hidden_power',
                 title: 'DISCO PODER OCULTO',
-                icons: ['💿', '✨', '⚡'],
-                desc: 'Consigue 1 CD de MT de Poder Oculto para personalizar los tipos de tus Pokémon.',
+                tag: 'MT DISK',
+                tagColor: '#06b6d4',
+                bgGradient: 'linear-gradient(135deg, #155e75 0%, #083344 100%)',
+                borderColor: '#22d3ee',
+                icon: '💿',
+                desc: 'Adquiere discos de Poder Oculto para redefinir el potencial de tu líder.',
                 cost: 600,
-                type: 'mt'
+                type: 'mt',
+                stars: '⭐⭐⭐⭐'
             },
             {
                 id: 'shiny_test',
-                title: 'GACHA SHINY (TEST)',
-                icons: ['🌟', '✨', '💎'],
-                desc: '¡Garantiza 100% de probabilidad de obtener un Pokémon Shiny para pruebas!',
+                title: 'GACHA SHINY VIP',
+                tag: 'TEST VIP',
+                tagColor: '#ec4899',
+                bgGradient: 'linear-gradient(135deg, #831843 0%, #500724 100%)',
+                borderColor: '#f472b6',
+                spriteId: 6, // Charizard shiny preview
+                isShinyPreview: true,
+                desc: '¡Tirada con probabilidad 100% de obtener un Pokémon Shiny garantizado!',
                 cost: 2000,
-                type: 'shiny_test'
+                type: 'shiny_test',
+                stars: '⭐⭐⭐⭐⭐'
             }
         ];
 
         typeGachaConfig.forEach(tc => {
             gachaMachines.push({
                 id: 'pokemon_' + tc.type,
-                title: `GACHA POKÉMON (${tc.name.toUpperCase()})`,
-                icons: [tc.icon, '🐾', '🌟'],
-                desc: `Obtén una 1ª evolución Pokémon de tipo ${tc.name} aleatoria.`,
+                title: `GACHA ${tc.name.toUpperCase()}`,
+                tag: `TIPO ${tc.name.toUpperCase()}`,
+                tagColor: tc.color,
+                bgGradient: `linear-gradient(135deg, ${tc.color}33 0%, #0f172a 100%)`,
+                borderColor: tc.color,
+                spriteId: tc.repId,
+                desc: `Consigue una 1ª evolución Pokémon salvaje del tipo elemental ${tc.name}.`,
                 cost: 800,
                 type: 'pokemon',
-                targetType: tc.type
+                targetType: tc.type,
+                stars: '⭐⭐⭐⭐'
             });
         });
 
@@ -1683,10 +1790,8 @@
                 const resZones = await fetch('data/zones.json?t=' + Date.now());
                 zonesConfig = await resZones.json();
             } catch (error) {
-                console.error("Error al cargar los archivos JSON:", error);
-                zonesConfig = [
-                    { name: "Pueblo Inicial (Zona 1)", sprite: "🏡", bg_image: "", types: ["normal", "flying"] }
-                ];
+                console.error("Error al cargar JSON:", error);
+                zonesConfig = [{ name: "Pueblo Inicial (Zona 1)", sprite: "🏡", bg_image: "", types: ["normal", "flying"] }];
             }
 
             try {
@@ -1699,9 +1804,7 @@
             try {
                 const resSkins = await fetch('data/skins.json?t=' + Date.now());
                 SKINS_DATABASE = await resSkins.json();
-            } catch (e) {
-                console.warn("Usando catálogo de skins por defecto.");
-            }
+            } catch (e) {}
 
             try {
                 const currentUser = localStorage.getItem("pt_current_user");
@@ -1808,11 +1911,8 @@
             lastDailyClaim = parseInt(localStorage.getItem(prefix + "last_daily") ?? "0");
 
             let savedInv = localStorage.getItem(prefix + "inventory");
-            if (savedInv) {
-                playerInventory = JSON.parse(savedInv);
-            } else {
-                playerInventory = JSON.parse(JSON.stringify(defaultInventory));
-            }
+            if (savedInv) playerInventory = JSON.parse(savedInv);
+            else playerInventory = JSON.parse(JSON.stringify(defaultInventory));
 
             teamPokemon.forEach(p => {
                 if (!p.hpMax || p.hpMax <= 0) p.hpMax = 50;
@@ -1847,14 +1947,9 @@
             if (zonaObj) {
                 document.getElementById("current-zone-name").innerText = zonaObj.name;
                 document.getElementById("zone-sprite").innerText = zonaObj.sprite || "🏡";
-                
                 let viewport = document.getElementById("map-viewport");
                 let bgUrl = zonaObj.bg_image_event || zonaObj.bg_image;
-                if (bgUrl) {
-                    viewport.style.backgroundImage = `url('${bgUrl}')`;
-                } else {
-                    viewport.style.backgroundImage = "";
-                }
+                viewport.style.backgroundImage = bgUrl ? `url('${bgUrl}')` : "";
             }
         }
 
@@ -1878,12 +1973,10 @@
 
         function chooseStarter(name, statsBase, t1, t2) {
             let pokeFound = POKEDEX_GLOBAL.find(x => x.name.toLowerCase() === name.toLowerCase()) || { id: name === 'Bulbasaur' ? 1 : (name === 'Charmander' ? 4 : 7), name: name, stats: statsBase, types: [t1, t2].filter(Boolean) };
-            
             let starter = generarDatosPokemonBase(pokeFound, 5);
             starter.origen = "Elegido del Prof. Oak al nivel 5.";
 
             marcarAtrapado(starter.idDex);
-
             teamPokemon = [starter];
             guardarDatos();
             document.getElementById("starter-screen").style.display = "none";
@@ -1925,7 +2018,7 @@
             return subioNivel;
         }
 
-        // --- SISTEMA DE SKINS DE PERSONAJE ---
+        // --- SISTEMA DE SKINS ---
         function abrirSkins() {
             if (isWalking) return;
             cerrarMenu();
@@ -1933,16 +2026,8 @@
             renderizarVentanaSkins();
             document.getElementById("skins-screen").style.display = "flex";
         }
-
-        function cerrarSkins() {
-            document.getElementById("skins-screen").style.display = "none";
-        }
-
-        function seleccionarSkin(skinId) {
-            skinPreviewSelectedId = skinId;
-            renderizarVentanaSkins();
-        }
-
+        function cerrarSkins() { document.getElementById("skins-screen").style.display = "none"; }
+        function seleccionarSkin(skinId) { skinPreviewSelectedId = skinId; renderizarVentanaSkins(); }
         function activarSkinSeleccionada() {
             if (!userSkins.includes(skinPreviewSelectedId)) return;
             equippedSkinId = skinPreviewSelectedId;
@@ -1958,7 +2043,6 @@
             const grid = document.getElementById("skins-grid-container");
 
             const currentSelectedSkin = SKINS_DATABASE.find(s => s.id === skinPreviewSelectedId) || SKINS_DATABASE[0];
-
             previewArt.src = currentSelectedSkin.art_image;
             previewTitle.innerText = currentSelectedSkin.name.toUpperCase();
 
@@ -1981,10 +2065,7 @@
                 const cell = document.createElement("div");
                 cell.className = `skin-box-cell ${isSelected} ${isEquipped}`;
                 cell.onclick = () => seleccionarSkin(skinId);
-
-                cell.innerHTML = `
-                    <div style="width: 32px; height: 32px; background-image: url('${sObj.sheet_image}'); background-size: 96px 128px; background-position: -32px 0px; image-rendering: pixelated;"></div>
-                `;
+                cell.innerHTML = `<div style="width: 32px; height: 32px; background-image: url('${sObj.sheet_image}'); background-size: 96px 128px; background-position: -32px 0px; image-rendering: pixelated;"></div>`;
                 grid.appendChild(cell);
             });
         }
@@ -1996,27 +2077,14 @@
         function abrirPokedex() {
             if (isWalking) return;
             cerrarMenu();
-            if (POKEDEX_GLOBAL.length === 0) {
-                alert("La Pokédex aún no está cargada.");
-                return;
-            }
-            if (!pokedexGridConstruido) {
-                construirPokedexGrid();
-                pokedexGridConstruido = true;
-            }
+            if (POKEDEX_GLOBAL.length === 0) return alert("La Pokédex aún no está cargada.");
+            if (!pokedexGridConstruido) { construirPokedexGrid(); pokedexGridConstruido = true; }
             pokedexSelectedIndex = 0;
             actualizarDetallePokedex();
             document.getElementById("pokedex-screen").style.display = "flex";
         }
-
-        function cerrarPokedex() {
-            document.getElementById("pokedex-screen").style.display = "none";
-        }
-
-        function seleccionarPokemonPokedex(index) {
-            pokedexSelectedIndex = index;
-            actualizarDetallePokedex();
-        }
+        function cerrarPokedex() { document.getElementById("pokedex-screen").style.display = "none"; }
+        function seleccionarPokemonPokedex(index) { pokedexSelectedIndex = index; actualizarDetallePokedex(); }
 
         function construirPokedexGrid() {
             const grid = document.getElementById("pokedex-grid-container");
@@ -2035,11 +2103,8 @@
                 let isIconGen = pSpriteCell.includes('generation-vii') || pSpriteCell.includes('generation-viii');
                 let imgClass = isIconGen ? "pokedex-cell-img icon-gen-large" : "pokedex-cell-img";
                 let imgStyle = "image-rendering: pixelated;";
-                if (!status.isSeen) {
-                    imgStyle += " filter: brightness(0);";
-                } else if (!status.isCaught) {
-                    imgStyle += " filter: grayscale(100%);";
-                }
+                if (!status.isSeen) imgStyle += " filter: brightness(0);";
+                else if (!status.isCaught) imgStyle += " filter: grayscale(100%);";
 
                 cell.innerHTML = `
                     <span class="pokedex-cell-num">${pId.toString().padStart(3, '0')}</span>
@@ -2053,7 +2118,6 @@
             if (POKEDEX_GLOBAL.length === 0) return;
             let poke = POKEDEX_GLOBAL[pokedexSelectedIndex] || POKEDEX_GLOBAL[0];
             let idDex = poke.id || (pokedexSelectedIndex + 1);
-            
             const { isCaught, isSeen } = getPokedexStatus(idDex);
 
             const headerTitle = document.getElementById("pokedex-header-title");
@@ -2078,12 +2142,9 @@
                 rarityBadge.style.background = "#666";
                 typesContainer.innerHTML = `<span style="background:#666; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">???</span>`;
                 evolutionText.innerText = `- UNKNOWN -`;
-                hpValEl.innerText = "???";
-                hpFillEl.style.width = "0%";
-                atkValEl.innerText = "???";
-                atkFillEl.style.width = "0%";
-                defValEl.innerText = "???";
-                defFillEl.style.width = "0%";
+                hpValEl.innerText = "???"; hpFillEl.style.width = "0%";
+                atkValEl.innerText = "???"; atkFillEl.style.width = "0%";
+                defValEl.innerText = "???"; defFillEl.style.width = "0%";
             } else if (!isCaught) {
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ${poke.name.toUpperCase()}`;
                 previewImg.src = normalSprite;
@@ -2102,12 +2163,9 @@
                 typesContainer.innerHTML = tiposHtml;
                 evolutionText.innerText = poke.evolves_from && poke.evolves_from !== "None" ? `- EVOLVES FROM ${poke.evolves_from.toUpperCase()} -` : `- FIRST STAGE -`;
 
-                hpValEl.innerText = "???";
-                hpFillEl.style.width = "0%";
-                atkValEl.innerText = "???";
-                atkFillEl.style.width = "0%";
-                defValEl.innerText = "???";
-                defFillEl.style.width = "0%";
+                hpValEl.innerText = "???"; hpFillEl.style.width = "0%";
+                atkValEl.innerText = "???"; atkFillEl.style.width = "0%";
+                defValEl.innerText = "???"; defFillEl.style.width = "0%";
             } else {
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ${poke.name.toUpperCase()}`;
                 previewImg.src = normalSprite;
@@ -2131,12 +2189,9 @@
                 let atkVal = Math.floor(((stats.attack || 49) + (stats.special_attack || 49)) / 2);
                 let defVal = Math.floor(((stats.defense || 49) + (stats.special_defense || 49)) / 2);
 
-                hpValEl.innerText = hpVal;
-                hpFillEl.style.width = Math.min(100, (hpVal / 200) * 100) + "%";
-                atkValEl.innerText = atkVal;
-                atkFillEl.style.width = Math.min(100, (atkVal / 200) * 100) + "%";
-                defValEl.innerText = defVal;
-                defFillEl.style.width = Math.min(100, (defVal / 200) * 100) + "%";
+                hpValEl.innerText = hpVal; hpFillEl.style.width = Math.min(100, (hpVal / 200) * 100) + "%";
+                atkValEl.innerText = atkVal; atkFillEl.style.width = Math.min(100, (atkVal / 200) * 100) + "%";
+                defValEl.innerText = defVal; defFillEl.style.width = Math.min(100, (defVal / 200) * 100) + "%";
             }
 
             let totalCaughtCount = 0;
@@ -2155,7 +2210,7 @@
             });
         }
 
-        // --- SISTEMA INTERACTIVO DE PC ---
+        // --- SISTEMA PC ---
         function abrirPC() {
             if (isWalking) return;
             cerrarMenu();
@@ -2164,11 +2219,7 @@
             renderizarVentanaPC();
             document.getElementById("pc-screen").style.display = "flex";
         }
-
-        function cerrarPC() {
-            document.getElementById("pc-screen").style.display = "none";
-        }
-
+        function cerrarPC() { document.getElementById("pc-screen").style.display = "none"; }
         function seleccionarCeldaPC(index) {
             if (pcStorage[index] === undefined) return;
             pcIndiceSeleccionado = index;
@@ -2191,7 +2242,6 @@
                 let p = pcStorage[pcIndiceSeleccionado];
                 let tOcultoMap = mapType(p.tipoOculto);
                 let colorOculto = TYPE_COLORS[tOcultoMap] || "#fff";
-
                 let normalSprite = getPokedexNormalSpriteUrl(p);
 
                 previewSpriteBox.innerHTML = `<img src="${normalSprite}" style="width:58px; height:58px; image-rendering:pixelated; object-fit:contain;" alt="Preview">`;
@@ -2227,12 +2277,8 @@
                 });
             }
 
-            if (sortByLvl) {
-                items.sort((a, b) => b.p.nivel - a.p.nivel);
-            }
-            if (sortByDex) {
-                items.sort((a, b) => (a.p.idDex || 0) - (b.p.idDex || 0));
-            }
+            if (sortByLvl) items.sort((a, b) => b.p.nivel - a.p.nivel);
+            if (sortByDex) items.sort((a, b) => (a.p.idDex || 0) - (b.p.idDex || 0));
 
             if (items.length === 0) {
                 gridContainer.innerHTML = `<div style="grid-column: span 5; text-align:center; color:#fff; font-size:10px; margin-top:20px;">No hay Pokémon en el PC</div>`;
@@ -2242,7 +2288,6 @@
                     let originalIndex = item.originalIndex;
                     let isSelected = pcIndiceSeleccionado === originalIndex ? 'selected-pc' : '';
                     let shinyClass = p.isShiny ? 'shiny-cell' : '';
-
                     let iconUrl = getPokedexIconUrl(p);
 
                     let div = document.createElement("div");
@@ -2253,13 +2298,10 @@
                     let isIconGen = iconUrl.includes('generation-vii') || iconUrl.includes('generation-viii');
                     let imgClass = isIconGen ? "icon-gen-large" : "";
 
-                    div.innerHTML = `
-                        <img src="${iconUrl}" class="${imgClass}" style="width:28px; height:28px; image-rendering:pixelated; object-fit:contain;" alt="Icon">
-                    `;
+                    div.innerHTML = `<img src="${iconUrl}" class="${imgClass}" style="width:28px; height:28px; image-rendering:pixelated; object-fit:contain;" alt="Icon">`;
                     gridContainer.appendChild(div);
                 });
             }
-
             actualizarDetallePC();
         }
 
@@ -2276,9 +2318,7 @@
             let colorOculto = TYPE_COLORS[tOcultoMap] || "#fff";
 
             let tiposHtml = `<div class="summary-type-badge" style="background:${colorT1};">${p.tipo1.toUpperCase()}</div>`;
-            if (p.tipo2) {
-                tiposHtml += `<div class="summary-type-badge" style="background:${colorT2};">${p.tipo2.toUpperCase()}</div>`;
-            }
+            if (p.tipo2) tiposHtml += `<div class="summary-type-badge" style="background:${colorT2};">${p.tipo2.toUpperCase()}</div>`;
 
             let bodyHTML = `
                 <div class="summary-left">
@@ -2361,17 +2401,14 @@
             alert(p.favorito ? "¡Marcado como favorito!" : "Quitado de favoritos.");
         }
 
-        // --- SISTEMA DEL MENÚ DEV ---
+        // --- SISTEMA MENÚ DEV ---
         function abrirDevMenu() {
             if (isWalking) return;
             cerrarMenu();
             poblarDesplegableDevItems();
             document.getElementById("dev-screen").style.display = "flex";
         }
-
-        function cerrarDevMenu() {
-            document.getElementById("dev-screen").style.display = "none";
-        }
+        function cerrarDevMenu() { document.getElementById("dev-screen").style.display = "none"; }
 
         function poblarDesplegableDevItems() {
             const sel = document.getElementById("dev-item-select");
@@ -2393,20 +2430,13 @@
             const itemDef = ALL_DEV_ITEMS.find(x => x.id === itemId);
             if (!itemDef) return;
 
-            if (!playerInventory[itemDef.cat]) {
-                playerInventory[itemDef.cat] = [];
-            }
+            if (!playerInventory[itemDef.cat]) playerInventory[itemDef.cat] = [];
 
             const itemExistente = playerInventory[itemDef.cat].find(x => x.id === itemId);
             if (itemExistente) {
                 itemExistente.count += qty;
             } else {
-                playerInventory[itemDef.cat].push({
-                    id: itemDef.id,
-                    name: itemDef.name,
-                    count: qty,
-                    desc: itemDef.desc
-                });
+                playerInventory[itemDef.cat].push({ id: itemDef.id, name: itemDef.name, count: qty, desc: itemDef.desc });
             }
 
             guardarDatos();
@@ -2419,14 +2449,8 @@
                 guardarDatos();
                 alert("💰 ¡Se han añadido 50.000 ₱ a tu cartera!");
             } else if (tipo === 'heal') {
-                if (teamPokemon.length === 0) {
-                    alert("No tienes ningún Pokémon en el equipo.");
-                    return;
-                }
-                teamPokemon.forEach(p => {
-                    if (!p.hpMax) p.hpMax = 50;
-                    p.hpActual = p.hpMax;
-                });
+                if (teamPokemon.length === 0) return alert("No tienes ningún Pokémon en el equipo.");
+                teamPokemon.forEach(p => { if (!p.hpMax) p.hpMax = 50; p.hpActual = p.hpMax; });
                 guardarDatos();
                 actualizarHUD();
                 alert("🏥 ¡Todo tu equipo ha sido curado al 100%!");
@@ -2436,10 +2460,7 @@
                 actualizarHUDEnergia();
                 alert("⚡ ¡Energía recargada por completo al 100%!");
             } else if (tipo === 'shiny') {
-                if (POKEDEX_GLOBAL.length === 0) {
-                    alert("La Pokédex aún se está cargando.");
-                    return;
-                }
+                if (POKEDEX_GLOBAL.length === 0) return alert("La Pokédex aún se está cargando.");
                 cerrarDevMenu();
                 let randomEntry = POKEDEX_GLOBAL[Math.floor(Math.random() * POKEDEX_GLOBAL.length)];
                 let shinyPoke = generarDatosPokemonBase(randomEntry, 5, true);
@@ -2453,7 +2474,7 @@
             }
         }
 
-        // --- CINEMÁTICA PACK GACHA POKÉMON ---
+        // --- CINEMÁTICAS GACHA ---
         function abrirCinematicaGacha(nuevoPoke) {
             const overlay = document.getElementById("gacha-pack-overlay");
             const content = document.getElementById("gacha-pack-content");
@@ -2556,17 +2577,14 @@
 
             marcarAtrapado(nuevoPoke.idDex);
 
-            if (teamPokemon.length < 4) {
-                teamPokemon.push(nuevoPoke);
-            } else {
-                pcStorage.push(nuevoPoke);
-            }
+            if (teamPokemon.length < 4) teamPokemon.push(nuevoPoke);
+            else pcStorage.push(nuevoPoke);
+            
             guardarDatos();
             actualizarHUD();
             precargarSpritesEquipoYPC();
         }
 
-        // --- CINEMÁTICA PACK GACHA DE PERSONAJES ---
         function abrirCinematicaSkin(skinObj) {
             const overlay = document.getElementById("gacha-pack-overlay");
             const content = document.getElementById("gacha-pack-content");
@@ -2605,7 +2623,7 @@
             actualizarUIGacha();
         }
 
-        // --- AVANZAR DE ZONA (Con soporte Mapa Antiguo al pulsar Avanzar) ---
+        // --- AVANZAR DE ZONA ---
         function advanceZone() {
             if (isWalking) return;
             isWalking = true;
@@ -2645,21 +2663,11 @@
             let oldBg = oldZona.bg_image_event || oldZona.bg_image;
             let newBg = zonaObj.bg_image_event || zonaObj.bg_image;
 
-            if (oldBg) {
-                panel1.style.backgroundImage = `url('${oldBg}')`;
-            } else {
-                panel1.style.backgroundImage = "linear-gradient(135deg, #2e7d32, #1b5e20)";
-            }
-
-            if (newBg) {
-                panel2.style.backgroundImage = `url('${newBg}')`;
-            } else {
-                panel2.style.backgroundImage = "linear-gradient(135deg, #2e7d32, #1b5e20)";
-            }
+            panel1.style.backgroundImage = oldBg ? `url('${oldBg}')` : "linear-gradient(135deg, #2e7d32, #1b5e20)";
+            panel2.style.backgroundImage = newBg ? `url('${newBg}')` : "linear-gradient(135deg, #2e7d32, #1b5e20)";
 
             track.style.transition = "none";
             track.style.transform = "translateX(0px)";
-            
             void track.offsetWidth;
 
             document.getElementById("current-zone-name").innerText = zonaObj.name;
@@ -2674,12 +2682,7 @@
             track.style.transform = "translateX(-320px)";
 
             setTimeout(() => {
-                if (newBg) {
-                    viewport.style.backgroundImage = `url('${newBg}')`;
-                } else {
-                    viewport.style.backgroundImage = "";
-                }
-
+                viewport.style.backgroundImage = newBg ? `url('${newBg}')` : "";
                 panel1.style.backgroundImage = "";
                 panel2.style.backgroundImage = "";
                 track.style.transition = "none";
@@ -2709,7 +2712,6 @@
                 
                 zonaExplorada = false;
                 document.getElementById("btn-explore-main").disabled = false;
-                
                 isWalking = false;
                 document.getElementById("input-blocker").style.display = "none";
             }, 5000);
@@ -2732,9 +2734,7 @@
                     let typeName = typeof t === 'string' ? t : (t.name || t.type?.name || '');
                     return zonaObj.types.includes(typeName.toLowerCase());
                 });
-                let cumpleBst = bst <= maxBstPermitido;
-
-                return coincideTipo && cumpleBst;
+                return coincideTipo && (bst <= maxBstPermitido);
             });
 
             if (permitidos.length === 0) {
@@ -2755,9 +2755,7 @@
             let viewport = document.getElementById("map-viewport");
 
             if (isSpecialZone && currentSpecialZone) {
-                if (currentSpecialZone.bg_image) {
-                    viewport.style.backgroundImage = `url('${currentSpecialZone.bg_image}')`;
-                }
+                if (currentSpecialZone.bg_image) viewport.style.backgroundImage = `url('${currentSpecialZone.bg_image}')`;
                 iniciarCombateLegendario(currentSpecialZone);
                 zonaExplorada = true;
                 document.getElementById("btn-explore-main").disabled = false;
@@ -2766,10 +2764,7 @@
 
             if (!esUsuarioFonso()) {
                 calcularEnergiaOffline();
-                if (energiaActual < 1) {
-                    alert("¡No tienes suficiente energía para explorar! Espera a que se recargue.");
-                    return;
-                }
+                if (energiaActual < 1) return alert("¡No tienes suficiente energía para explorar! Espera a que se recargue.");
                 if (energiaActual === energiaMax) ultimoTimestamp = Date.now();
                 energiaActual--;
                 guardarDatos();
@@ -2782,13 +2777,11 @@
             if (r < 0.3) {
                 let bgUrl = zonaObj.bg_image_event || zonaObj.bg_image;
                 if (bgUrl) viewport.style.backgroundImage = `url('${bgUrl}')`;
-                
                 agregarObjetoAleatorioInventario();
                 document.getElementById("explore-log").innerHTML = `📦 ¡Has encontrado un objeto y se ha guardado en tu Bolsa!`;
             } else if (r < 0.5) {
                 let bgUrl = zonaObj.bg_image_event || zonaObj.bg_image;
                 if (bgUrl) viewport.style.backgroundImage = `url('${bgUrl}')`;
-
                 let lider = teamPokemon[0];
                 if (!lider.hpMax) lider.hpMax = 50;
                 lider.hpActual = Math.min(lider.hpMax, lider.hpActual + Math.floor(lider.hpMax * 0.5));
@@ -2812,11 +2805,8 @@
             let elegido = posibles[Math.floor(Math.random() * posibles.length)];
             let listaCat = playerInventory[elegido.cat];
             let existente = listaCat.find(i => i.id === elegido.id);
-            if (existente) {
-                existente.count++;
-            } else {
-                listaCat.push({ id: elegido.id, name: elegido.name, count: 1, desc: elegido.desc });
-            }
+            if (existente) existente.count++;
+            else listaCat.push({ id: elegido.id, name: elegido.name, count: 1, desc: elegido.desc });
             guardarDatos();
         }
 
@@ -2825,15 +2815,11 @@
             document.getElementById("bag-screen").style.display = "flex";
             cambiarPestanaBolsa('potions');
         }
-
-        function cerrarBolsa() {
-            document.getElementById("bag-screen").style.display = "none";
-        }
+        function cerrarBolsa() { document.getElementById("bag-screen").style.display = "none"; }
 
         function cambiarPestanaBolsa(categoria) {
             pestanaActivaBolsa = categoria;
             objetoSeleccionadoBolsa = null;
-
             let botones = document.querySelectorAll(".bag-tab-btn");
             botones.forEach(btn => btn.classList.remove('active'));
             event && event.currentTarget && event.currentTarget.classList.add('active');
@@ -2869,13 +2855,8 @@
 
             objetoSeleccionadoBolsa = item;
             document.getElementById("bag-item-desc").innerText = item.desc;
-
             let btnUsar = document.getElementById("bag-use-action-btn");
-            if (['potions', 'proteins', 'energy', 'mts', 'others'].includes(pestanaActivaBolsa)) {
-                btnUsar.style.display = "block";
-            } else {
-                btnUsar.style.display = "none";
-            }
+            btnUsar.style.display = ['potions', 'proteins', 'energy', 'mts', 'others'].includes(pestanaActivaBolsa) ? "block" : "none";
         }
 
         function usarObjetoSeleccionado() {
@@ -2883,8 +2864,7 @@
 
             let lider = teamPokemon[0];
             if (!lider && pestanaActivaBolsa !== 'energy' && objetoSeleccionadoBolsa.id !== 'ancient_map') {
-                alert("¡No tienes ningún Pokémon en el equipo para usar esto!");
-                return;
+                return alert("¡No tienes ningún Pokémon en el equipo para usar esto!");
             }
 
             if (objetoSeleccionadoBolsa.id === 'ancient_map') {
@@ -2902,10 +2882,7 @@
 
             if (pestanaActivaBolsa === 'potions') {
                 if (!lider.hpMax) lider.hpMax = 50;
-                if (lider.hpActual >= lider.hpMax) {
-                    alert("¡Tu Pokémon ya tiene los PS al máximo!");
-                    return;
-                }
+                if (lider.hpActual >= lider.hpMax) return alert("¡Tu Pokémon ya tiene los PS al máximo!");
                 let curacion = Math.floor(lider.hpMax * (objetoSeleccionadoBolsa.id === 'hyper_potion' ? 0.75 : (objetoSeleccionadoBolsa.id === 'super_potion' ? 0.5 : 0.2)));
                 lider.hpActual = Math.min(lider.hpMax, lider.hpActual + curacion);
                 alert(`¡Usaste ${objetoSeleccionadoBolsa.name}! Recuperó ${curacion} PS.`);
@@ -2940,7 +2917,7 @@
             actualizarHUD();
         }
 
-        // --- SISTEMA DE GACHA ---
+        // --- SISTEMA DEL GACHA ACTUALIZADO ---
         function abrirGacha() {
             if (isWalking) return;
             cerrarMenu();
@@ -2960,13 +2937,39 @@
 
         function actualizarUIGacha() {
             let maquina = gachaMachines[currentGachaIndex];
+            
             document.getElementById("gacha-title").innerText = maquina.title;
             document.getElementById("gacha-money-display").innerText = `${playerMoney.toLocaleString()} ₱`;
             document.getElementById("gacha-desc").innerText = maquina.desc;
+            document.getElementById("gacha-counter-index").innerText = `${currentGachaIndex + 1} / ${gachaMachines.length}`;
+            document.getElementById("gacha-banner-stars").innerText = maquina.stars || '⭐⭐⭐⭐';
 
-            let iconsHtml = "";
-            maquina.icons.forEach(ic => { iconsHtml += `<span>${ic}</span>`; });
-            document.getElementById("gacha-preview-icons").innerHTML = iconsHtml;
+            // Estilos del Banner Card
+            const bannerCard = document.getElementById("gacha-card-banner");
+            const tagBadge = document.getElementById("gacha-tag-badge");
+            const previewSimple = document.getElementById("gacha-preview-simple-icon");
+            const previewImg = document.getElementById("gacha-preview-main-img");
+
+            tagBadge.innerText = maquina.tag;
+            tagBadge.style.backgroundColor = maquina.tagColor || '#38bdf8';
+            bannerCard.style.background = maquina.bgGradient;
+            bannerCard.style.borderColor = maquina.borderColor || '#38bdf8';
+
+            if (maquina.artImg) {
+                previewSimple.style.display = "none";
+                previewImg.style.display = "block";
+                previewImg.src = maquina.artImg;
+            } else if (maquina.spriteId) {
+                previewSimple.style.display = "none";
+                previewImg.style.display = "block";
+                previewImg.src = maquina.isShinyPreview 
+                    ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${maquina.spriteId}.png`
+                    : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${maquina.spriteId}.png`;
+            } else {
+                previewImg.style.display = "none";
+                previewSimple.style.display = "block";
+                previewSimple.innerText = maquina.icon || '🎁';
+            }
 
             let pullBtn = document.getElementById("gacha-pull-btn");
             if (maquina.type === 'daily') {
@@ -2974,14 +2977,17 @@
                 let unDiaMs = 24 * 60 * 60 * 1000;
                 if (ahora - lastDailyClaim < unDiaMs) {
                     pullBtn.innerText = "YA RECLAMADO HOY";
-                    pullBtn.style.backgroundColor = "#64748b";
+                    pullBtn.style.background = "#475569";
+                    pullBtn.style.borderColor = "#64748b";
                 } else {
                     pullBtn.innerText = "RECLAMAR GRATIS";
-                    pullBtn.style.backgroundColor = "#10b981";
+                    pullBtn.style.background = "linear-gradient(180deg, #10b981 0%, #047857 100%)";
+                    pullBtn.style.borderColor = "#6ee7b7";
                 }
             } else {
                 pullBtn.innerText = `TIRAR (${maquina.cost.toLocaleString()} ₱)`;
-                pullBtn.style.backgroundColor = "#0284c7";
+                pullBtn.style.background = "linear-gradient(180deg, #0284c7 0%, #0369a1 100%)";
+                pullBtn.style.borderColor = "#7dd3fc";
             }
         }
 
@@ -3133,13 +3139,13 @@
             actualizarUIGacha();
         }
 
+        // --- SISTEMA COMBATE ---
         function iniciarCombate(tipo) {
             let lider = teamPokemon[0];
             if (!lider.hpMax || lider.hpMax <= 0) lider.hpMax = 50;
             if (lider.hpActual === undefined || lider.hpActual < 0) lider.hpActual = lider.hpMax;
 
             const nivel = calcularNivelEnemigo();
-            
             currentEnemy = explorarGenerarPokemon(nivel);
             if (!currentEnemy.hpMax) currentEnemy.hpMax = 50;
             if (currentEnemy.hpActual === undefined) currentEnemy.hpActual = currentEnemy.hpMax;
@@ -3173,10 +3179,7 @@
             let eSpriteImg = document.getElementById("enemy-battle-sprite");
 
             pSpriteImg.onerror = function() {
-                this.onerror = function() {
-                    this.onerror = null;
-                    this.src = lider.sprite_url;
-                };
+                this.onerror = function() { this.onerror = null; this.src = lider.sprite_url; };
                 this.src = lider.isShiny 
                     ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${lider.idDex || 1}.png`
                     : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${lider.idDex || 1}.png`;
@@ -3244,10 +3247,7 @@
             let eSpriteImg = document.getElementById("enemy-battle-sprite");
 
             pSpriteImg.onerror = function() {
-                this.onerror = function() {
-                    this.onerror = null;
-                    this.src = lider.sprite_url;
-                };
+                this.onerror = function() { this.onerror = null; this.src = lider.sprite_url; };
                 this.src = lider.isShiny 
                     ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${lider.idDex || 1}.png`
                     : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${lider.idDex || 1}.png`;
@@ -3309,13 +3309,10 @@
             let tiposDef = [mapType(defensor.tipo1), mapType(defensor.tipo2)];
             let multiplicador = getEffectiveness(tipoAtaque, tiposDef);
             
-            if (multiplicador === 0) {
-                return { daño: 0, multi: multiplicador };
-            }
+            if (multiplicador === 0) return { daño: 0, multi: multiplicador };
 
             let dañoBase = Math.max(1, atacante.ataque - defensor.defensa + Math.floor(Math.random() * 5));
             let dañoFinal = Math.max(1, Math.floor(dañoBase * multiplicador));
-            
             return { daño: dañoFinal, multi: multiplicador };
         }
 
@@ -3404,7 +3401,6 @@
                 await sleep(500);
 
                 let playerFirst = initJ >= initE;
-
                 let resJ = calcularDaño(lider, currentEnemy, tipoAtaqueSeleccionado);
                 let tiposEnemigoDisponibles = [currentEnemy.tipo1, currentEnemy.tipo2, currentEnemy.tipoOculto].filter(Boolean).map(mapType);
                 let tipoEnemigo = tiposEnemigoDisponibles[Math.floor(Math.random() * tiposEnemigoDisponibles.length)];
@@ -3497,9 +3493,7 @@
             document.getElementById("combat-controls-view").style.display = "none";
             document.getElementById("normal-controls-view").style.display = "flex";
 
-            if (msg) {
-                document.getElementById("explore-log").innerHTML = msg;
-            }
+            if (msg) document.getElementById("explore-log").innerHTML = msg;
             combatEnCurso = false;
             guardarDatos(); 
             actualizarHUD(); 
@@ -3511,7 +3505,7 @@
         }
         function cerrarMenu() { document.getElementById("menu-screen").style.display = "none"; }
 
-        // --- SISTEMA INTERACTIVO DE EQUIPO ESTILO GBA ---
+        // --- SISTEMA INTERACTIVO DE EQUIPO ---
         function abrirEquipo() {
             if (isWalking) return;
             indicePokemonSeleccionado = null;
@@ -3519,10 +3513,7 @@
             renderizarVentanaEquipo();
             document.getElementById("team-screen").style.display = "flex";
         }
-
-        function cerrarEquipo() {
-            document.getElementById("team-screen").style.display = "none";
-        }
+        function cerrarEquipo() { document.getElementById("team-screen").style.display = "none"; }
 
         function seleccionarSlotEquipo(index) {
             if (!teamPokemon[index]) return;
@@ -3612,9 +3603,7 @@
 
             if (indicePokemonSeleccionado !== null) {
                 if (modoMoverEquipo) {
-                    bottomButtons.innerHTML = `
-                        <button class="modal-close-btn" style="background:#f59e0b;" onclick="cancelarMoverEquipo()">CANCELAR</button>
-                    `;
+                    bottomButtons.innerHTML = `<button class="modal-close-btn" style="background:#f59e0b;" onclick="cancelarMoverEquipo()">CANCELAR</button>`;
                     document.querySelector('.team-window-gba .modal-title').innerText = "- SELECCIONA DESTINO -";
                 } else {
                     bottomButtons.innerHTML = `
@@ -3626,9 +3615,7 @@
                     document.querySelector('.team-window-gba .modal-title').innerText = `- ${pokeSel.nombre.toUpperCase()} -`;
                 }
             } else {
-                bottomButtons.innerHTML = `
-                    <button class="modal-close-btn" onclick="cerrarEquipo()">CERRAR</button>
-                `;
+                bottomButtons.innerHTML = `<button class="modal-close-btn" onclick="cerrarEquipo()">CERRAR</button>`;
                 document.querySelector('.team-window-gba .modal-title').innerText = "- EQUIPO POKÉMON -";
             }
         }
@@ -3646,9 +3633,7 @@
             let colorOculto = TYPE_COLORS[tOcultoMap] || "#fff";
 
             let tiposHtml = `<div class="summary-type-badge" style="background:${colorT1};">${p.tipo1.toUpperCase()}</div>`;
-            if (p.tipo2) {
-                tiposHtml += `<div class="summary-type-badge" style="background:${colorT2};">${p.tipo2.toUpperCase()}</div>`;
-            }
+            if (p.tipo2) tiposHtml += `<div class="summary-type-badge" style="background:${colorT2};">${p.tipo2.toUpperCase()}</div>`;
 
             let bodyHTML = `
                 <div class="summary-left">
@@ -3691,17 +3676,8 @@
             modoMoverEquipo = true;
             renderizarVentanaEquipo();
         }
-
-        function cancelarMoverEquipo() {
-            modoMoverEquipo = false;
-            renderizarVentanaEquipo();
-        }
-
-        function cancelarSeleccionEquipo() {
-            indicePokemonSeleccionado = null;
-            modoMoverEquipo = false;
-            renderizarVentanaEquipo();
-        }
+        function cancelarMoverEquipo() { modoMoverEquipo = false; renderizarVentanaEquipo(); }
+        function cancelarSeleccionEquipo() { indicePokemonSeleccionado = null; modoMoverEquipo = false; renderizarVentanaEquipo(); }
     </script>
 </body>
 </html>
