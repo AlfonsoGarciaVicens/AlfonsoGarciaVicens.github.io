@@ -23,114 +23,375 @@
             box-shadow: 0 0 20px rgba(0,0,0,0.8); 
         }
 
-        #input-blocker { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 200; display: none; background: transparent; }
+        /* Escudo invisible para bloquear clics durante la animación */
+        #input-blocker {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 200;
+            display: none;
+            background: transparent;
+        }
+
+        /* Overlays de pantalla completa (Login / Selección Inicial) */
         .screen-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
         
+        /* Menús in-game y Combate: Ocupan el 100% de la pantalla sin bordes ni márgenes */
         .modal-screen { 
-            position: absolute; top: 0; left: 0; width: 320px; height: 320px; background-color: #1a1a1a; 
-            z-index: 80; display: none; flex-direction: column; justify-content: space-between; align-items: stretch; padding: 0; margin: 0; border: none; border-radius: 0; box-sizing: border-box;
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 320px; 
+            height: 320px; 
+            background-color: #1a1a1a; 
+            z-index: 80; 
+            display: none; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            align-items: stretch; 
+            padding: 0; 
+            margin: 0;
+            border: none;
+            border-radius: 0; 
+            box-sizing: border-box;
         }
         
         .box-container, .modal-window { background-color: #2a2a2a; padding: 15px; border-radius: 8px; border: 2px solid #444; width: 100%; height: 100%; text-align: center; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
         .modal-window { background: linear-gradient(135deg, #38bdf8, #0369a1); border: none; border-radius: 0; box-shadow: none; width: 100%; height: 100%; }
         
-        /* Pokédex */
-        .pokedex-window { background: #f3f4f6; width: 100%; height: 100%; padding: 4px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; color: #111; font-size: 9px; }
-        .pokedex-top-card { background: #fff; border: 2px solid #cbd5e1; padding: 4px; display: flex; flex-direction: column; gap: 2px; width: 100%; }
-        .pokedex-grid-scroll { background: #fff; border: 2px solid #cbd5e1; flex-grow: 1; margin-top: 2px; overflow-y: auto; display: grid; grid-template-columns: repeat(8, 1fr); width: 100%; gap: 1px; padding: 2px; align-content: start; }
-        .pokedex-grid-cell { background: #f8fafc; border: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; padding: 1px; height: 36px; position: relative; }
+        /* Estilo Pokédex */
+        .pokedex-window { background: #f3f4f6; border: none; border-radius: 0; width: 100%; height: 100%; padding: 4px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; color: #111; font-size: 9px; }
+        .pokedex-top-card { background: #fff; border: 2px solid #cbd5e1; border-radius: 0; padding: 4px; display: flex; flex-direction: column; gap: 2px; position: relative; width: 100%; }
+        .pokedex-grid-scroll { background: #fff; border: 2px solid #cbd5e1; border-radius: 0; flex-grow: 1; margin-top: 2px; overflow-y: auto; display: grid; grid-template-columns: repeat(8, 1fr); width: 100%; gap: 1px; padding: 2px; align-content: start; }
+        .pokedex-grid-cell { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; padding: 1px; height: 36px; position: relative; }
         .pokedex-grid-cell.selected { background: #fef08a; border-color: #f59e0b; }
         .pokedex-cell-num { font-size: 6px; color: #64748b; font-weight: bold; }
         .pokedex-cell-img { width: 22px; height: 22px; image-rendering: pixelated; }
 
-        /* PC */
-        .pc-window-gba { background-color: #2d8ab3; width: 100%; height: 100%; padding: 4px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
-        .pc-filter-bar { background: rgba(0, 0, 0, 0.25); padding: 3px 5px; border-radius: 3px; }
-        .pc-main-layout { display: flex; gap: 4px; flex-grow: 1; overflow: hidden; margin-top: 3px; }
-        .pc-grid-box { background: rgba(0,0,0,0.15); border: 1px solid #1a6080; border-radius: 3px; width: 60%; padding: 3px; display: grid; grid-template-columns: repeat(5, 1fr); grid-auto-rows: 34px; gap: 2px; overflow-y: auto; align-content: start; }
-        .pc-cell { background-color: #38bdf8; border: 1px solid #0284c7; border-radius: 4px; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; }
-        .pc-cell.shiny-cell { background-color: #eab308 !important; border-color: #ca8a04 !important; }
-        .pc-cell.selected-pc::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(to right, #ef4444 6px, transparent 6px) 0 0, linear-gradient(to bottom, #ef4444 6px, transparent 6px) 0 0, linear-gradient(to left, #ef4444 6px, transparent 6px) 100% 0, linear-gradient(to bottom, #ef4444 6px, transparent 6px) 100% 0, linear-gradient(to right, #ef4444 6px, transparent 6px) 0 100%, linear-gradient(to top, #ef4444 6px, transparent 6px) 0 100%, linear-gradient(to left, #ef4444 6px, transparent 6px) 100% 100%, linear-gradient(to top, #ef4444 6px, transparent 6px) 100% 100%;
-            background-repeat: no-repeat; background-size: 8px 8px; pointer-events: none; z-index: 10;
+        /* Estilo Ventana PC Rediseñada */
+        .pc-window-gba { 
+            background-color: #2d8ab3; 
+            border: none; 
+            border-radius: 0; 
+            width: 100%; 
+            height: 100%; 
+            padding: 4px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            box-sizing: border-box; 
         }
-        .pc-preview-box { background: #2d8ab3; width: 40%; display: flex; flex-direction: column; justify-content: space-between; color: #fff; font-size: 8px; }
-        .pc-sprite-frame { background: #a2d2e2; border: 2px solid #1e5a75; border-radius: 4px; height: 75px; display: flex; justify-content: center; align-items: center; margin-bottom: 4px; }
-        .pc-action-btn { background: linear-gradient(135deg, #1d4ed8, #1e3a8a); border: 2px solid #3b82f6; color: white; padding: 4px 2px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 9px; text-align: center; width: 100%; }
+        .pc-filter-bar {
+            background: rgba(0, 0, 0, 0.25);
+            padding: 3px 5px;
+            border-radius: 3px;
+        }
+        .pc-main-layout { display: flex; gap: 4px; flex-grow: 1; overflow: hidden; margin-top: 3px; }
+        .pc-grid-box { 
+            background: rgba(0,0,0,0.15); 
+            border: 1px solid #1a6080; 
+            border-radius: 3px; 
+            width: 60%; 
+            padding: 3px; 
+            display: grid; 
+            grid-template-columns: repeat(5, 1fr); 
+            grid-auto-rows: 34px; 
+            gap: 2px; 
+            overflow-y: auto; 
+            overflow-x: hidden; 
+            align-content: start; 
+        }
+        .pc-cell { 
+            background-color: #38bdf8; 
+            border: 1px solid #0284c7; 
+            border-radius: 4px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            cursor: pointer; 
+            position: relative; 
+        }
+        .pc-cell.shiny-cell { 
+            background-color: #eab308 !important; 
+            border-color: #ca8a04 !important; 
+        }
+        .pc-cell.selected-pc::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                linear-gradient(to right, #ef4444 6px, transparent 6px) 0 0,
+                linear-gradient(to bottom, #ef4444 6px, transparent 6px) 0 0,
+                linear-gradient(to left, #ef4444 6px, transparent 6px) 100% 0,
+                linear-gradient(to bottom, #ef4444 6px, transparent 6px) 100% 0,
+                linear-gradient(to right, #ef4444 6px, transparent 6px) 0 100%,
+                linear-gradient(to top, #ef4444 6px, transparent 6px) 0 100%,
+                linear-gradient(to left, #ef4444 6px, transparent 6px) 100% 100%,
+                linear-gradient(to top, #ef4444 6px, transparent 6px) 100% 100%;
+            background-repeat: no-repeat;
+            background-size: 8px 8px;
+            pointer-events: none;
+            z-index: 10;
+        }
 
-        /* Skins */
-        .skins-window { background-color: #525252; background-image: repeating-linear-gradient(rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px); width: 100%; height: 100%; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; color: #fff; }
-        .skins-top-header { display: flex; gap: 8px; align-items: center; padding-bottom: 6px; border-bottom: 2px solid #9ca3af; position: relative; }
-        .skin-art-box { width: 70px; height: 70px; display: flex; justify-content: center; align-items: center; flex-shrink: 0; }
-        .skin-art-img { max-width: 100%; max-height: 100%; object-fit: contain; image-rendering: pixelated; }
-        .skin-info-box { display: flex; flex-direction: column; gap: 6px; flex-grow: 1; }
-        .skin-name-title { font-size: 12px; font-weight: bold; letter-spacing: 1px; color: #ffffff; text-shadow: 1px 1px 2px #000; }
-        .skin-activate-btn { background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%); border: 2px solid #93c5fd; color: #ffffff; font-weight: bold; font-size: 11px; padding: 4px 12px; border-radius: 4px; cursor: pointer; width: fit-content; text-transform: uppercase; }
-        .skin-activate-btn.active-in-use { background: linear-gradient(180deg, #10b981 0%, #047857 100%); border-color: #6ee7b7; cursor: default; }
-        .skins-grid-container { flex-grow: 1; margin-top: 6px; display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 60px; gap: 6px; overflow-y: auto; align-content: start; padding: 2px; }
-        .skin-box-cell { background: #737373; border: 2px solid #404040; border-radius: 4px; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; }
-        .skin-box-cell.selected-skin { border: 2px solid #facc15; background: #858585; box-shadow: 0 0 6px #facc15; }
-        .skin-box-cell.equipped-skin::after { content: '✔'; position: absolute; top: 2px; right: 3px; font-size: 8px; color: #4ade80; font-weight: bold; }
+        .pc-preview-box { 
+            background: #2d8ab3; 
+            width: 40%; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            color: #fff; 
+            font-size: 8px; 
+        }
+        .pc-sprite-frame { 
+            background: #a2d2e2; 
+            border: 2px solid #1e5a75; 
+            border-radius: 4px; 
+            height: 75px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            margin-bottom: 4px; 
+        }
+        .pc-action-btn { 
+            background: linear-gradient(135deg, #1d4ed8, #1e3a8a); 
+            border: 2px solid #3b82f6; 
+            color: white; 
+            padding: 4px 2px; 
+            font-weight: bold; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 9px; 
+            text-align: center; 
+            text-shadow: 1px 1px 1px #000; 
+            width: 100%; 
+        }
+        .pc-action-btn:hover { background: #2563eb; }
 
-        /* Dev Menu */
-        .dev-window { background: linear-gradient(135deg, #1e293b, #0f172a); width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; color: #fff; }
-        .dev-section { background: rgba(255, 255, 255, 0.05); border: 1px solid #334155; padding: 6px; border-radius: 4px; display: flex; flex-direction: column; gap: 4px; }
-        .dev-grid-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
-        .dev-btn { background: #334155; border: 1px solid #64748b; color: #fff; padding: 6px 2px; font-size: 8px; font-weight: bold; border-radius: 3px; cursor: pointer; text-align: center; }
+        /* --- ESTILO VENTANA SKINS DE PERSONAJE --- */
+        .skins-window {
+            background-color: #525252;
+            background-image: repeating-linear-gradient(rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px);
+            border: none; 
+            border-radius: 0; 
+            width: 100%; 
+            height: 100%; 
+            padding: 6px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            box-sizing: border-box; 
+            color: #fff; 
+        }
+        .skins-top-header {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #9ca3af;
+            position: relative;
+        }
+        .skin-art-box {
+            width: 70px;
+            height: 70px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .skin-art-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            image-rendering: pixelated;
+        }
+        .skin-info-box {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-grow: 1;
+        }
+        .skin-name-title {
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #ffffff;
+            text-shadow: 1px 1px 2px #000;
+        }
+        .skin-activate-btn {
+            background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%);
+            border: 2px solid #93c5fd;
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 11px;
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: fit-content;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            text-transform: uppercase;
+        }
+        .skin-activate-btn.active-in-use {
+            background: linear-gradient(180deg, #10b981 0%, #047857 100%);
+            border-color: #6ee7b7;
+            cursor: default;
+        }
+        .skins-grid-container {
+            flex-grow: 1;
+            margin-top: 6px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: 60px;
+            gap: 6px;
+            overflow-y: auto;
+            align-content: start;
+            padding: 2px;
+        }
+        .skin-box-cell {
+            background: #737373;
+            border: 2px solid #404040;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+        }
+        .skin-box-cell.selected-skin {
+            border: 2px solid #facc15;
+            background: #858585;
+            box-shadow: 0 0 6px #facc15;
+        }
+        .skin-box-cell.equipped-skin::after {
+            content: '✔';
+            position: absolute;
+            top: 2px;
+            right: 3px;
+            font-size: 8px;
+            color: #4ade80;
+            font-weight: bold;
+        }
+
+        /* Estilo Ventana Menú Desarrollador (Dev) */
+        .dev-window { 
+            background: linear-gradient(135deg, #1e293b, #0f172a); 
+            border: none; 
+            border-radius: 0; 
+            width: 100%; 
+            height: 100%; 
+            padding: 8px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            box-sizing: border-box; 
+            color: #fff; 
+        }
+        .dev-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #334155;
+            padding: 6px;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .dev-grid-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+        }
+        .dev-btn {
+            background: #334155;
+            border: 1px solid #64748b;
+            color: #fff;
+            padding: 6px 2px;
+            font-size: 8px;
+            font-weight: bold;
+            border-radius: 3px;
+            cursor: pointer;
+            text-align: center;
+        }
         .dev-btn:hover { background: #475569; }
         .dev-btn-green { background: #15803d; border-color: #22c55e; }
+        .dev-btn-green:hover { background: #16a34a; }
 
-        /* Bolsa y Gacha */
-        .bag-window { background: linear-gradient(135deg, #d97706, #b45309); width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-sizing: border-box; }
-        .bag-tabs { display: flex; justify-content: space-around; background: rgba(0,0,0,0.3); padding: 3px; gap: 2px; }
-        .bag-tab-btn { background: #78350f; border: 2px solid #92400e; padding: 4px; cursor: pointer; font-size: 13px; color: #fff; flex: 1; text-align: center; }
+        /* Estilo Bolsa */
+        .bag-window { background: linear-gradient(135deg, #d97706, #b45309); border: none; border-radius: 0; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-sizing: border-box; }
+        .bag-tabs { display: flex; justify-content: space-around; background: rgba(0,0,0,0.3); padding: 3px; border-radius: 0; gap: 2px; }
+        .bag-tab-btn { background: #78350f; border: 2px solid #92400e; border-radius: 0; padding: 4px; cursor: pointer; font-size: 13px; color: #fff; flex: 1; text-align: center; }
         .bag-tab-btn.active { background: #f59e0b; border-color: #fef3c7; }
-        .bag-content-grid { background: #ffffff; border: 3px solid #78350f; flex-grow: 1; padding: 6px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; margin: 4px 0; }
-        .bag-item-row { background: #fef3c7; border: 1px solid #d97706; color: #111; padding: 5px 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 11px; font-weight: bold; }
+        
+        .bag-content-grid { background: #ffffff; border: 3px solid #78350f; border-radius: 0; flex-grow: 1; padding: 6px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; margin: 4px 0; }
+        .bag-item-row { background: #fef3c7; border: 1px solid #d97706; color: #111; padding: 5px 8px; border-radius: 0; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 11px; font-weight: bold; }
+        .bag-item-row:hover { background: #fde68a; }
         .bag-item-row.selected { background: #f59e0b; color: white; border-color: #b45309; }
-        .bag-desc-box { background: #4b5563; border: 3px solid #1f2937; padding: 6px; color: #f3f4f6; font-size: 10px; text-align: left; height: 65px; display: flex; flex-direction: column; justify-content: space-between; }
-        .bag-use-btn { background: #10b981; border: none; color: white; padding: 3px 8px; font-weight: bold; cursor: pointer; font-size: 10px; align-self: flex-end; }
-        .bag-close-btn { background: #ef4444; border: 2px solid #991b1b; color: white; padding: 5px; font-weight: bold; cursor: pointer; font-size: 11px; width: 100%; text-align: center; }
 
-        .gacha-window { background: linear-gradient(135deg, #9d174d, #831843); width: 100%; height: 100%; padding: 10px; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-sizing: border-box; }
+        .bag-desc-box { background: #4b5563; border: 3px solid #1f2937; border-radius: 0; padding: 6px; color: #f3f4f6; font-size: 10px; text-align: left; height: 65px; display: flex; flex-direction: column; justify-content: space-between; }
+        .bag-use-btn { background: #10b981; border: none; color: white; padding: 3px 8px; font-weight: bold; border-radius: 0; cursor: pointer; font-size: 10px; align-self: flex-end; }
+        .bag-close-btn { background: #ef4444; border: 2px solid #991b1b; color: white; padding: 5px; font-weight: bold; border-radius: 0; cursor: pointer; font-size: 11px; width: 100%; text-align: center; }
+
+        /* Estilo Ventana Gacha / Tienda */
+        .gacha-window { 
+            background: linear-gradient(135deg, #9d174d, #831843); 
+            border: none; 
+            border-radius: 0; 
+            width: 100%; 
+            height: 100%; 
+            padding: 10px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            position: relative; 
+            box-sizing: border-box; 
+        }
         .gacha-header-row { display: flex; justify-content: space-between; align-items: center; }
-        .gacha-money-badge { background: rgba(0,0,0,0.5); border: 1px solid #f472b6; padding: 3px 8px; font-size: 11px; color: #fdf2f8; font-weight: bold; }
+        .gacha-money-badge { background: rgba(0,0,0,0.5); border: 1px solid #f472b6; padding: 3px 8px; border-radius: 0; font-size: 11px; color: #fdf2f8; font-weight: bold; }
         .gacha-main-title { font-size: 12px; font-weight: bold; color: #fff; letter-spacing: 1px; text-align: center; flex-grow: 1; text-transform: uppercase; }
+        
         .gacha-carousel-container { display: flex; align-items: center; justify-content: space-between; flex-grow: 1; margin: 8px 0; gap: 5px; }
-        .gacha-arrow-btn { background: #475569; border: 2px solid #94a3b8; color: white; font-size: 16px; padding: 10px 6px; cursor: pointer; font-weight: bold; }
-        .gacha-display-box { background: rgba(0, 0, 0, 0.3); border: 2px dashed #fbcfe8; flex-grow: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; text-align: center; gap: 8px; }
-        .gacha-item-preview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 24px; background: rgba(255,255,255,0.1); padding: 8px; width: 100%; justify-items: center; align-items: center; }
+        .gacha-arrow-btn { background: #475569; border: 2px solid #94a3b8; color: white; font-size: 16px; padding: 10px 6px; border-radius: 0; cursor: pointer; font-weight: bold; }
+        .gacha-arrow-btn:hover { background: #64748b; }
+
+        .gacha-display-box { background: rgba(0, 0, 0, 0.3); border: 2px dashed #fbcfe8; border-radius: 0; flex-grow: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; text-align: center; gap: 8px; }
+        .gacha-item-preview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 24px; background: rgba(255,255,255,0.1); padding: 8px; border-radius: 0; width: 100%; justify-items: center; align-items: center; }
         .gacha-desc { font-size: 10px; color: #fbcfe8; min-height: 25px; }
-        .gacha-pull-btn { background: #0284c7; border: 3px solid #bae6fd; color: white; padding: 10px; font-weight: bold; cursor: pointer; font-size: 13px; width: 100%; text-shadow: 1px 1px 1px #000; box-shadow: 0 4px 6px rgba(0,0,0,0.4); }
-        .gacha-close-btn { background: #ef4444; border: 2px solid #991b1b; color: white; padding: 6px; font-weight: bold; cursor: pointer; font-size: 11px; width: 100%; text-align: center; }
+
+        .gacha-pull-btn { background: #0284c7; border: 3px solid #bae6fd; color: white; padding: 10px; font-weight: bold; border-radius: 0; cursor: pointer; font-size: 13px; width: 100%; text-shadow: 1px 1px 1px #000; box-shadow: 0 4px 6px rgba(0,0,0,0.4); }
+        .gacha-pull-btn:hover { background: #0ea5e9; }
+        .gacha-close-btn { background: #ef4444; border: 2px solid #991b1b; color: white; padding: 6px; font-weight: bold; border-radius: 0; cursor: pointer; font-size: 11px; width: 100%; text-align: center; }
 
         .box-container h2 { margin-bottom: 10px; color: #4CAF50; font-size: 16px; }
         .box-container input { width: 100%; padding: 8px; margin-bottom: 10px; background-color: #1a1a1a; border: 1px solid #555; color: #fff; border-radius: 4px; }
-        .box-container button, .starter-btn, .modal-close-btn { width: 100%; padding: 8px; background-color: #4CAF50; border: none; color: white; font-weight: bold; cursor: pointer; margin-top: 4px; font-size: 11px; }
+        .box-container button, .starter-btn, .modal-close-btn { width: 100%; padding: 8px; background-color: #4CAF50; border: none; color: white; font-weight: bold; border-radius: 0; cursor: pointer; margin-top: 4px; font-size: 11px; }
         .starter-btn, .modal-close-btn { background-color: #2563eb; }
         .starter-grid { display: flex; flex-direction: column; gap: 8px; margin-top: 5px; }
+
         .modal-title { text-align: center; font-size: 12px; font-weight: bold; color: #fff; border-bottom: 2px solid #bae6fd; padding-bottom: 2px; margin-bottom: 2px; letter-spacing: 1px; }
+
         .menu-grid-container { display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: center; flex-grow: 1; }
         .menu-row { display: flex; gap: 12px; justify-content: center; }
         .menu-icon-btn { background-color: #1e293b; border: 3px solid #64748b; border-radius: 8px; width: 50px; height: 50px; font-size: 22px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
 
-        .team-window-gba { background: linear-gradient(135deg, #3b82f6, #1d4ed8); width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
-        .gba-lead-slot { background: #2563eb; border: 2px solid #60a5fa; padding: 6px; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        /* Estilo interfaz equipo estilo GBA */
+        .team-window-gba { background: linear-gradient(135deg, #3b82f6, #1d4ed8); border: none; border-radius: 0; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
+        .gba-lead-slot { background: #2563eb; border: 2px solid #60a5fa; border-radius: 0; padding: 6px; display: flex; align-items: center; gap: 8px; cursor: pointer; }
         .gba-lead-slot.selected-slot { border: 2px solid #f59e0b; box-shadow: 0 0 8px #f59e0b; }
         .gba-party-container { display: flex; flex-direction: column; gap: 4px; overflow-y: auto; flex-grow: 1; margin-top: 5px; }
-        .gba-party-slot { background: #1e40af; border: 2px solid #3b82f6; padding: 5px; display: flex; align-items: center; gap: 8px; cursor: pointer; color: white; font-size: 10px; }
+        .gba-party-slot { background: #1e40af; border: 2px solid #3b82f6; border-radius: 0; padding: 5px; display: flex; align-items: center; gap: 8px; cursor: pointer; color: white; font-size: 10px; }
         .gba-party-slot.selected-slot { border: 2px solid #f59e0b; box-shadow: 0 0 8px #f59e0b; background: #1e3a8a; }
         .gba-slot-info { display: flex; flex-direction: column; flex-grow: 1; }
-        .gba-hp-bar { background: #111; height: 5px; width: 100%; margin-top: 2px; overflow: hidden; border: 1px solid #000; }
+        .gba-hp-bar { background: #111; height: 5px; width: 100%; border-radius: 0; margin-top: 2px; overflow: hidden; border: 1px solid #000; }
         .gba-hp-fill { background: #22c55e; height: 100%; }
 
-        .summary-window { background: linear-gradient(135deg, #d97706, #b45309); width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
+        /* Estilo Menú Datos Pokémon */
+        .summary-window { background: linear-gradient(135deg, #d97706, #b45309); border: none; border-radius: 0; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
         .summary-content { display: flex; gap: 8px; flex-grow: 1; margin-bottom: 5px; }
-        .summary-left { background: #e5e7eb; border: 2px solid #9ca3af; width: 45%; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; color: #111; }
-        .summary-right { background: #e5e7eb; border: 2px solid #9ca3af; width: 55%; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; color: #111; font-size: 9px; text-align: left; }
+        .summary-left { background: #e5e7eb; border: 2px solid #9ca3af; border-radius: 0; width: 45%; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; color: #111; }
+        .summary-right { background: #e5e7eb; border: 2px solid #9ca3af; border-radius: 0; width: 55%; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; color: #111; font-size: 9px; text-align: left; }
         .summary-table-row { display: flex; justify-content: space-between; border-bottom: 1px solid #d1d5db; padding: 2px 0; }
-        .summary-type-badge { padding: 2px 6px; font-size: 9px; color: white; font-weight: bold; text-align: center; flex: 1; }
+        .summary-type-badge { padding: 2px 6px; border-radius: 0; font-size: 9px; color: white; font-weight: bold; text-align: center; flex: 1; }
 
         .top-bar { display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
         .logout-btn { background-color: #dc2626; color: white; padding: 4px 8px; border-radius: 4px; border: none; font-weight: bold; font-size: 10px; cursor: pointer; }
@@ -140,25 +401,57 @@
         .energy-bars { color: #4ade80; font-family: monospace; letter-spacing: -1px; font-weight: bold; }
         .menu-btn { background-color: #2196F3; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; }
 
-        /* Visor de mapa */
+        /* Ventana cuadrada fija de 320x320 píxeles */
         .map-viewport { 
-            width: 320px; height: 320px; box-sizing: content-box !important; margin: 0 auto; flex-shrink: 0; 
-            background: linear-gradient(135deg, #2e7d32, #1b5e20); border: 4px solid #333; border-radius: 8px; 
-            position: relative; overflow: hidden; background-size: 320px 320px; background-repeat: no-repeat; background-position: center center; 
+            width: 320px; 
+            height: 320px; 
+            box-sizing: content-box !important; 
+            margin: 0 auto; 
+            flex-shrink: 0; 
+            background: linear-gradient(135deg, #2e7d32, #1b5e20); 
+            border: 4px solid #333; 
+            border-radius: 8px; 
+            position: relative; 
+            overflow: hidden; 
+            background-size: 320px 320px; 
+            background-repeat: no-repeat; 
+            background-position: center center; 
         }
 
+        /* Sprite del jugador en el mapa: Tamaño duplicado (64x64) */
         #player-sprite {
-            position: absolute; left: 160px; top: 240px; width: 64px; height: 64px;
-            background-image: url('img/player_sheet.png'); background-size: 192px 256px; background-position: -128px -64px;
-            image-rendering: pixelated; z-index: 50;
+            position: absolute;
+            left: 160px;
+            top: 240px;
+            width: 64px;
+            height: 64px;
+            background-image: url('img/player_sheet.png');
+            background-size: 192px 256px;
+            background-position: -128px -64px;
+            image-rendering: pixelated;
+            z-index: 50;
         }
 
         .map-viewport-inner {
-            position: absolute; top: 0; left: 0; width: 320px; height: 320px; padding: 15px; box-sizing: border-box;
-            display: flex; flex-direction: column; justify-content: space-between; align-items: center; z-index: 10; pointer-events: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 320px;
+            height: 320px;
+            padding: 15px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            pointer-events: none;
         }
-        .map-viewport-inner * { pointer-events: auto; }
+        .map-viewport-inner * {
+            pointer-events: auto;
+        }
 
+        .map-background { display: none; }
         .map-content { position: relative; z-index: 2; text-align: center; width: 100%; }
         .zone-title { background-color: rgba(0, 0, 0, 0.7); padding: 8px 15px; border-radius: 4px; font-size: 14px; border: 1px solid #555; margin-bottom: 5px; display: inline-block; }
         .sprite-container { display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 30px; margin-top: 5px; }
@@ -166,93 +459,104 @@
 
         /* --- CINEMÁTICA GACHA PACK --- */
         #gacha-pack-overlay {
-            position: absolute; top: 0; left: 0; width: 320px; height: 320px;
-            background: radial-gradient(circle, #1e293b 0%, #0f172a 100%); z-index: 95; display: none;
-            flex-direction: column; justify-content: center; align-items: center; padding: 12px; box-sizing: border-box; text-align: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 320px;
+            height: 320px;
+            background: radial-gradient(circle, #1e293b 0%, #0f172a 100%);
+            z-index: 95;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+            box-sizing: border-box;
+            text-align: center;
         }
+
         .fut-card {
-            width: 150px; height: 220px; background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
-            border: 3px solid #fef3c7; border-radius: 10px; box-shadow: 0 6px 15px rgba(251, 191, 36, 0.5);
-            display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 10px; position: relative; cursor: pointer; transition: transform 0.3s ease;
+            width: 150px;
+            height: 220px;
+            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            border: 3px solid #fef3c7;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(251, 191, 36, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
         }
-        .fut-card.shiny-card { background: linear-gradient(135deg, #38bdf8 0%, #9333ea 50%, #ec4899 100%); border: 3px solid #fbcfe8; box-shadow: 0 0 20px rgba(236, 72, 153, 0.9); }
+        .fut-card.shiny-card {
+            background: linear-gradient(135deg, #38bdf8 0%, #9333ea 50%, #ec4899 100%);
+            border: 3px solid #fbcfe8;
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.9);
+        }
         .fut-card:hover { transform: scale(1.05); }
 
-        @keyframes pulseGlow { 0%, 100% { opacity: 0.7; transform: scale(1); } 50% { opacity: 1; transform: scale(1.06); } }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.06); }
+        }
         .anim-pulse { animation: pulseGlow 1.4s infinite ease-in-out; }
-        @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
         .anim-slide { animation: slideDown 0.8s ease forwards; }
 
-        /* ========================================================== */
-        /* --- ESTILO DE COMBATE ESTILO HGSS (GEN 4 DS) --- */
-        /* ========================================================== */
+        /* Ventana de combate y sprites pegados a la base inferior */
         .combat-modal-window { 
             background: linear-gradient(135deg, #1e3a8a, #1d4ed8); 
-            border: none; border-radius: 0; box-shadow: none; padding: 8px; 
-            width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; 
-            position: relative; box-sizing: border-box; overflow: hidden;
+            border: none; 
+            border-radius: 0; 
+            box-shadow: none; 
+            padding: 10px; 
+            width: 100%; 
+            height: 100%; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            position: relative; 
+            box-sizing: border-box; 
         }
 
-        /* Plataformas de combate HGSS */
-        .combat-platforms-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 200px; pointer-events: none; z-index: 1;
-        }
-        .platform-enemy {
-            position: absolute; top: 35px; right: 35px; width: 90px; height: 26px;
-            background: rgba(180, 180, 180, 0.55); border-radius: 50%; border: 1px solid rgba(255,255,255,0.7);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-        }
-        .platform-player {
-            position: absolute; bottom: 35px; left: 25px; width: 130px; height: 34px;
-            background: rgba(180, 180, 180, 0.55); border-radius: 50%; border: 1px solid rgba(255,255,255,0.7);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.5);
-        }
-
-        /* Cajas de Estado HGSS (Diseño angular con barras de PS) */
-        .hgss-status-box {
-            position: absolute; background: linear-gradient(180deg, #f8fafc 0%, #cbd5e1 100%);
-            border: 2px solid #475569; border-radius: 6px 0 6px 0; padding: 4px 8px; color: #0f172a;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.4); z-index: 5; width: 155px; font-size: 9px; font-weight: bold;
-        }
-        .hgss-enemy-box { top: 8px; left: 8px; border-radius: 0 6px 0 6px; }
-        .hgss-player-box { bottom: 62px; right: 8px; }
-
-        .hgss-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
-        .hgss-name { font-size: 10px; font-weight: 900; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .hgss-lvl { font-size: 8px; color: #475569; }
+        .combat-enemy-info, .combat-player-info { background-color: rgba(200, 200, 200, 0.9); color: #000; padding: 4px 8px; border-radius: 0; font-size: 11px; width: 65%; border: 1px solid #333; }
+        .combat-enemy-info { align-self: flex-start; }
+        .combat-player-info { align-self: flex-end; }
         
-        .hgss-hp-container { display: flex; align-items: center; gap: 3px; margin-top: 1px; }
-        .hgss-hp-label { font-size: 7px; color: #ca8a04; font-weight: 900; font-style: italic; }
-        .hgss-hp-track { background: #334155; height: 5px; flex-grow: 1; border-radius: 2px; overflow: hidden; border: 1px solid #1e293b; }
-        .hgss-hp-fill { background: #22c55e; height: 100%; transition: width 0.3s ease; display: block; }
-        .hgss-hp-text { font-size: 8px; text-align: right; color: #0f172a; margin-top: 1px; font-family: monospace; }
-
-        /* Contenedor de Sprites en Combate */
-        .combat-sprites { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 10px; height: 190px; position: relative; z-index: 2; pointer-events: none; }
-        .battle-sprite-img { image-rendering: pixelated; display: block; pointer-events: auto; }
+        .hp-bar-bg { background-color: #555; height: 6px; width: 100%; border-radius: 0; margin-top: 2px; overflow: hidden; }
+        .hp-bar-fill { background-color: #22c55e !important; height: 100%; transition: width 0.3s ease; display: block; }
         
+        .exp-bar-bg { background-color: #1e293b; height: 5px; width: 75%; display: inline-block; vertical-align: middle; border-radius: 0; overflow: hidden; border: 1px solid #0f172a; }
+        .exp-bar-fill { background-color: #38bdf8 !important; height: 100%; transition: width 0.3s ease; display: block; }
+
+        /* Contenedor de sprites alineado perfectamente abajo */
+        .combat-sprites { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-end; 
+            padding: 0 10px; 
+            height: 95px; 
+        }
+        .battle-sprite-img { 
+            image-rendering: pixelated; 
+            display: block;
+        }
+        
+        /* Sprite del jugador en combate pegado abajo */
         #player-battle-sprite {
             position: relative;
             align-self: flex-end;
             margin-bottom: 0px;
-            max-height: 110px;
-            object-fit: contain;
-        }
-        #enemy-battle-sprite {
-            position: relative;
-            align-self: flex-start;
-            margin-top: 15px;
-            max-height: 95px;
-            object-fit: contain;
         }
 
-        /* Caja de Diálogo Retro HGSS */
-        .hgss-dialogue-box {
-            position: relative; z-index: 10; background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
-            border: 3px solid #1e293b; border-radius: 4px; padding: 6px 10px; color: #0f172a;
-            font-size: 10px; font-weight: bold; min-height: 48px; max-height: 55px; text-align: left;
-            box-shadow: inset 0 0 0 2px #cbd5e1, 0 4px 6px rgba(0,0,0,0.4); overflow-y: auto; display: flex; align-items: center;
-        }
+        .combat-dialogue { background-color: #222; border: 2px solid #c0c0c0; border-radius: 0; padding: 8px; font-size: 10px; color: #fff; min-height: 50px; text-align: center; overflow-y: auto; }
 
         .combat-controls-container { display: flex; flex-direction: column; gap: 8px; position: relative; }
         .top-attacks-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -265,20 +569,51 @@
         .btn-capture { background-color: #eab308; color: black; border: none; padding: 10px; font-weight: bold; border-radius: 0; cursor: pointer; }
         .btn-flee { background-color: #ef4444; color: white; border: none; padding: 10px; font-weight: bold; border-radius: 0; cursor: pointer; }
 
-        /* Animaciones */
-        @keyframes idleBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+        /* --- ANIMACIONES DE COMBATE --- */
+        @keyframes idleBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
         .idle-anim { animation: idleBounce 1.5s ease-in-out infinite; display: inline-block; }
 
-        @keyframes strikeForwardPlayer { 0% { transform: translate(0, 0); } 30% { transform: translate(-10px, 5px); } 50% { transform: translate(25px, -15px); } 100% { transform: translate(0, 0); } }
-        @keyframes strikeForwardEnemy { 0% { transform: translate(0, 0); } 30% { transform: translate(10px, -5px); } 50% { transform: translate(-25px, 15px); } 100% { transform: translate(0, 0); } }
+        @keyframes strikeForwardPlayer {
+            0% { transform: translate(0, 0); }
+            30% { transform: translate(-10px, 5px); }
+            50% { transform: translate(25px, -15px); }
+            100% { transform: translate(0, 0); }
+        }
+        @keyframes strikeForwardEnemy {
+            0% { transform: translate(0, 0); }
+            30% { transform: translate(10px, -5px); }
+            50% { transform: translate(-25px, 15px); }
+            100% { transform: translate(0, 0); }
+        }
         .strike-player { animation: strikeForwardPlayer 0.35s ease; }
         .strike-enemy { animation: strikeForwardEnemy 0.35s ease; }
 
         .initiative-bubble {
-            position: absolute; background: #ffffff; color: #000000; border: 2px solid #333; border-radius: 4px; padding: 2px 8px; font-size: 11px; font-weight: bold; z-index: 95; box-shadow: 0 4px 6px rgba(0,0,0,0.4); display: none;
+            position: absolute;
+            background: #ffffff;
+            color: #000000;
+            border: 2px solid #333;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: bold;
+            z-index: 95;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+            display: none;
         }
 
-        #bottom-panel-wrapper { width: 100%; height: 105px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: space-between; }
+        #bottom-panel-wrapper {
+            width: 100%;
+            height: 105px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
         .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .btn-action { padding: 14px; border: none; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer; text-align: center; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
         .btn-explore { background-color: #424242; }
@@ -295,7 +630,7 @@
 <body>
 
     <div id="game-container">
-        <!-- Escudo invisible -->
+        <!-- Escudo invisible para bloquear clics durante la animación -->
         <div id="input-blocker"></div>
 
         <!-- Login -->
@@ -334,19 +669,23 @@
             </div>
         </div>
 
-        <!-- Visor de mapa (320x320) -->
+        <!-- Ventanita Cuadrada 320x320 (.map-viewport) -->
         <div class="map-viewport" id="map-viewport">
+            <!-- Pista deslizante lateral (640px ancho) -->
             <div id="map-track" style="position: absolute; top: 0; left: 0; width: 640px; height: 320px; display: flex; transform: translateX(0px); z-index: 1;">
                 <div id="map-panel-1" style="width: 320px; height: 320px; background-size: 320px 320px; background-repeat: no-repeat; background-position: center center;"></div>
                 <div id="map-panel-2" style="width: 320px; height: 320px; background-size: 320px 320px; background-repeat: no-repeat; background-position: center center;"></div>
             </div>
 
+            <!-- Sprite del Jugador Overworld (64x64, top: 240px, left: 160px) -->
             <div id="player-sprite"></div>
 
+            <!-- Pantalla Cinemática Gacha Pack -->
             <div id="gacha-pack-overlay">
                 <div id="gacha-pack-content" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; width:100%; height:100%;"></div>
             </div>
 
+            <!-- Contenedor interno -->
             <div class="map-viewport-inner">
                 <div class="map-content" id="map-content-inner">
                     <div class="zone-title" id="current-zone-name">Pueblo Inicial (Zona 1)</div>
@@ -355,10 +694,11 @@
                     </div>
                     <p style="font-size: 11px; margin-top: 3px; color: #ccc;" id="hud-pokemon-info">Sin Pokémon</p>
                 </div>
+                
                 <div class="exploration-log" id="explore-log">¡Bienvenido a Pokémon Trails! Explora o avanza.</div>
             </div>
 
-            <!-- Menú In-game -->
+            <!-- Menús In-game -->
             <div id="menu-screen" class="modal-screen" style="z-index: 85;">
                 <div class="modal-window">
                     <div class="modal-title">- MENÚ PRINCIPAL -</div>
@@ -378,7 +718,7 @@
                 </div>
             </div>
 
-            <!-- Ventana Skins -->
+            <!-- Ventana Skins de Personaje -->
             <div id="skins-screen" class="modal-screen" style="z-index: 88;">
                 <div class="skins-window">
                     <div class="skins-top-header">
@@ -391,6 +731,7 @@
                         </div>
                         <button onclick="cerrarSkins()" style="position: absolute; top: 0; right: 0; background: none; border: none; font-size: 20px; font-weight: bold; cursor: pointer; color: #fff; line-height: 1;">✖</button>
                     </div>
+
                     <div class="skins-grid-container" id="skins-grid-container"></div>
                 </div>
             </div>
@@ -402,11 +743,12 @@
                         <span id="pokedex-header-title">Nº 001 - BULBASAUR</span>
                         <button onclick="cerrarPokedex()" style="background:none; border:none; font-size:20px; font-weight:bold; cursor:pointer; color:#111; line-height: 1; padding: 0 2px;">✖</button>
                     </div>
+                    
                     <div class="pokedex-top-card">
                         <div style="display: flex; gap: 4px; align-items: center;">
                             <div style="background: #e2e8f0; border: 2px solid #cbd5e1; border-radius: 3px; width: 55px; height: 55px; display: flex; justify-content: center; align-items: center; position: relative; flex-shrink: 0;">
                                 <img id="pokedex-preview-img" src="" style="width: 46px; height: 46px; image-rendering: pixelated; object-fit: contain;" alt="Poke">
-                                <div id="pokedex-rarity-badge" style="position: absolute; bottom: 0; width: 100%; background: #ef4444; color: white; font-size: 5px; font-weight: bold; text-align: center;">COMMON</div>
+                                <div id="pokedex-rarity-badge" style="position: absolute; bottom: 0; width: 100%; background: #ef4444; color: white; font-size: 5px; font-weight: bold; text-align: center; border-radius: 0 0 2px 2px;">COMMON</div>
                             </div>
                             <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 1px; overflow: hidden;">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -419,15 +761,19 @@
                                 <div id="pokedex-evolution-text" style="font-size: 6px; color: #4b5563; font-style: italic;">- FIRST STAGE -</div>
                             </div>
                         </div>
+                        
                         <div style="display: flex; flex-direction: column; gap: 1px; margin-top: 1px;">
                             <div style="display: flex; justify-content: space-between; font-size: 6px; font-weight: bold;"><span>SALUD</span><span id="stat-hp-val">45</span></div>
                             <div class="hp-bar-bg" style="height: 3px;"><div id="stat-hp-fill" class="hp-bar-fill" style="width: 50%;"></div></div>
+                            
                             <div style="display: flex; justify-content: space-between; font-size: 6px; font-weight: bold;"><span>ATAQUE</span><span id="stat-atk-val">49</span></div>
                             <div class="hp-bar-bg" style="height: 3px;"><div id="stat-atk-fill" class="hp-bar-fill" style="background-color: #38bdf8 !important; width: 50%;"></div></div>
+                            
                             <div style="display: flex; justify-content: space-between; font-size: 6px; font-weight: bold;"><span>DEFENSA</span><span id="stat-def-val">49</span></div>
                             <div class="hp-bar-bg" style="height: 3px;"><div id="stat-def-fill" class="hp-bar-fill" style="background-color: #eab308 !important; width: 50%;"></div></div>
                         </div>
                     </div>
+
                     <div class="pokedex-grid-scroll" id="pokedex-grid-container"></div>
                 </div>
             </div>
@@ -466,6 +812,7 @@
                             <input type="checkbox" id="pc-multi-sell">
                         </div>
                     </div>
+
                     <div class="pc-main-layout">
                         <div class="pc-grid-box" id="pc-grid-container"></div>
                         <div class="pc-preview-box">
@@ -476,6 +823,7 @@
                                 <div id="pc-preview-info" style="font-weight:bold; font-size:9px; text-align:left; margin-bottom:2px;">VACÍO</div>
                                 <div style="font-size:7px; color:#1e293b; line-height:1.2; text-align:left;" id="pc-preview-stats">Selecciona un Pokémon</div>
                             </div>
+                            
                             <div style="display:flex; flex-direction:column; gap:2px; margin-top: auto;">
                                 <button class="pc-action-btn" onclick="pcAccionDatos()">DATOS</button>
                                 <button class="pc-action-btn" onclick="pcAccionMover()">MOVER</button>
@@ -488,13 +836,15 @@
                 </div>
             </div>
 
-            <!-- Menú Dev -->
+            <!-- Ventana Menú Desarrollador (Dev) -->
             <div id="dev-screen" class="modal-screen" style="z-index: 95;">
                 <div class="dev-window">
                     <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #475569; padding-bottom: 2px;">
                         <span style="font-weight: bold; font-size: 11px; color: #38bdf8;">🛠️ MENÚ DEV / TESTEO</span>
                         <button onclick="cerrarDevMenu()" style="background:none; border:none; font-size:18px; font-weight:bold; cursor:pointer; color:#fff; line-height: 1;">✖</button>
                     </div>
+
+                    <!-- Sección Añadir Objetos -->
                     <div class="dev-section">
                         <div style="font-size: 9px; font-weight: bold; color: #facc15;">📦 AÑADIR OBJETOS AL INVENTARIO</div>
                         <div style="display: flex; gap: 4px; align-items: center;">
@@ -503,6 +853,8 @@
                         </div>
                         <button class="dev-btn dev-btn-green" onclick="devAgregarObjetoSeleccionado()">➕ AÑADIR AL INVENTARIO</button>
                     </div>
+
+                    <!-- Sección Cheats Rápidos -->
                     <div class="dev-section">
                         <div style="font-size: 9px; font-weight: bold; color: #38bdf8;">⚡ ACCIONES RÁPIDAS</div>
                         <div class="dev-grid-actions">
@@ -513,11 +865,12 @@
                             <button class="dev-btn" style="grid-column: span 2; background: #7c3aed; border-color: #a78bfa;" onclick="devAccionRapida('unlock_skins')">👕 Desbloquear Todas las Skins</button>
                         </div>
                     </div>
+
                     <button class="dev-btn" onclick="cerrarDevMenu()" style="background: #dc2626; border-color: #991b1b; padding: 6px;">CERRAR MENÚ DEV</button>
                 </div>
             </div>
 
-            <!-- Ventana Equipo -->
+            <!-- Ventana de Equipo -->
             <div id="team-screen" class="modal-screen" style="z-index: 85;">
                 <div class="team-window-gba">
                     <div class="modal-title" style="border:none; color:#fff;">- EQUIPO POKÉMON -</div>
@@ -529,7 +882,7 @@
                 </div>
             </div>
 
-            <!-- Ventana Datos -->
+            <!-- Ventana de Datos -->
             <div id="summary-screen" class="modal-screen" style="z-index: 90;">
                 <div class="summary-window">
                     <div class="modal-title" style="border:none; color:#fff;">- DATOS DEL POKÉMON -</div>
@@ -550,11 +903,14 @@
                         <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('eggs')" title="Huevos">🥚</button>
                         <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('others')" title="Otros">📦</button>
                     </div>
+                    
                     <div class="bag-content-grid" id="bag-items-container"></div>
+
                     <div class="bag-desc-box">
                         <span id="bag-item-desc">Selecciona un objeto para ver su descripción.</span>
                         <button id="bag-use-action-btn" class="bag-use-btn" style="display:none;" onclick="usarObjetoSeleccionado()">USAR</button>
                     </div>
+
                     <button class="bag-close-btn" onclick="cerrarBolsa()">CERRAR</button>
                 </div>
             </div>
@@ -567,6 +923,7 @@
                         <div class="gacha-main-title" id="gacha-title">BONUS DIARIO</div>
                         <div style="width: 50px;"></div>
                     </div>
+
                     <div class="gacha-carousel-container">
                         <button class="gacha-arrow-btn" onclick="cambiarGacha(-1)">&#10094;</button>
                         <div class="gacha-display-box">
@@ -577,64 +934,40 @@
                         </div>
                         <button class="gacha-arrow-btn" onclick="cambiarGacha(1)">&#10095;</button>
                     </div>
+
                     <button class="gacha-pull-btn" id="gacha-pull-btn" onclick="realizarTiradaGacha()">RECLAMAR GRATIS</button>
                     <button class="gacha-close-btn" onclick="cerrarGacha()">CERRAR</button>
                 </div>
             </div>
 
-            <!-- ========================================================== -->
-            <!-- === VISTA DE COMBATE ESTILO HGSS (GEN 4 DS) ============= -->
-            <!-- ========================================================== -->
+            <!-- Vista de Combate -->
             <div id="combat-viewport-screen" class="modal-screen" style="z-index: 90;">
                 <div class="combat-modal-window">
-                    <div id="enemy-initiative-bubble" class="initiative-bubble" style="top: 45px; left: 40px;">--</div>
+                    <div id="enemy-initiative-bubble" class="initiative-bubble" style="top: 35px; left: 40px;">--</div>
                     
-                    <!-- Plataformas de Combate (Fondo visual) -->
-                    <div class="combat-platforms-layer">
-                        <div class="platform-enemy"></div>
-                        <div class="platform-player"></div>
-                    </div>
-
-                    <!-- Caja de Estado Enemigo (Superior Izquierda) -->
-                    <div class="hgss-status-box hgss-enemy-box">
-                        <div class="hgss-top-row">
-                            <span id="enemy-name-lvl" class="hgss-name">ROTOM Lv.80</span>
-                        </div>
-                        <div class="hgss-hp-container">
-                            <span class="hgss-hp-label">PS</span>
-                            <div class="hgss-hp-track">
-                                <div id="enemy-hp-fill" class="hgss-hp-fill" style="width: 100%;"></div>
-                            </div>
-                        </div>
+                    <div class="combat-enemy-info">
+                        <div id="enemy-name-lvl">ENEMIGO Lv.7</div>
+                        <div class="hp-bar-bg"><div id="enemy-hp-fill" class="hp-bar-fill" style="width: 100%;"></div></div>
                     </div>
                     
-                    <!-- Sprites de Combate -->
                     <div class="combat-sprites">
                         <img id="player-battle-sprite" class="battle-sprite-img idle-anim" src="" alt="Player Back">
                         <img id="enemy-battle-sprite" class="battle-sprite-img idle-anim" src="" alt="Enemy Front">
                     </div>
                     
-                    <div id="player-initiative-bubble" class="initiative-bubble" style="bottom: 75px; right: 40px;">--</div>
+                    <div id="player-initiative-bubble" class="initiative-bubble" style="bottom: 70px; right: 40px;">--</div>
 
-                    <!-- Caja de Estado Jugador (Inferior Derecha) -->
-                    <div class="hgss-status-box hgss-player-box">
-                        <div class="hgss-top-row">
-                            <span id="player-battle-name" class="hgss-name">ZYGARDE Lv.100</span>
-                        </div>
-                        <div class="hgss-hp-container">
-                            <span class="hgss-hp-label">PS</span>
-                            <div class="hgss-hp-track">
-                                <div id="player-hp-fill" class="hgss-hp-fill" style="width: 100%;"></div>
-                            </div>
-                        </div>
-                        <div id="player-battle-hp-text" class="hgss-hp-text">513/513</div>
-                        <div style="font-size: 7px; margin-top: 1px; color: #334155;">
+                    <div class="combat-player-info">
+                        <div id="enemy-name-lvl-dummy" style="display:none;"></div>
+                        <div id="player-battle-name">JUGADOR Lv.5</div>
+                        <div class="hp-bar-bg"><div id="player-hp-fill" class="hp-bar-fill" style="width: 100%;"></div></div>
+                        <div style="font-size: 9px; margin-top: 2px;">
                             EXP: <div class="exp-bar-bg"><div id="player-exp-fill" class="exp-bar-fill" style="width: 0%;"></div></div>
                         </div>
+                        <div style="font-size: 9px; text-align: right;" id="player-battle-hp-text">--/-- PS</div>
                     </div>
 
-                    <!-- Caja de Diálogo Retro HGSS -->
-                    <div class="hgss-dialogue-box" id="combat-dialogue-text">¡Comienza el enfrentamiento!</div>
+                    <div class="combat-dialogue" id="combat-dialogue-text">¡Comienza el enfrentamiento!</div>
                 </div>
             </div>
         </div>
@@ -685,6 +1018,7 @@
         let POKEDEX_GLOBAL = [];
         let zonesConfig = [];
         
+        // --- RESPALDO COMPLETO DE LAS 41 ZONAS LEGENDARIAS ---
         const DEFAULT_SPECIAL_ZONES = [
             { "id": 101, "name": "Laboratorio", "legendary": "Mewtwo", "sprite": "🧬", "bg_image": "img/zones/Laboratorio.png" },
             { "id": 102, "name": "Jardín Supremo", "legendary": "Mew", "sprite": "🌸", "bg_image": "img/zones/JardinSupremo.png" },
@@ -731,15 +1065,56 @@
 
         let specialZonesConfig = [...DEFAULT_SPECIAL_ZONES];
 
+        // --- CATÁLOGO DE SKINS DE PERSONAJE ---
         let SKINS_DATABASE = [
-            { id: 'default', name: 'Entrenador', art_image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/trainers/1.png', sheet_image: 'img/player_sheet.png' },
-            { id: 'snowboarder', name: 'Snowboarder', art_image: 'https://play.pokemonshowdown.com/sprites/trainers/snowboarder.png', sheet_image: 'img/player_sheet.png' },
-            { id: 'acetrainer', name: 'Entrenador Guay', art_image: 'https://play.pokemonshowdown.com/sprites/trainers/acetrainer-gen4dp.png', sheet_image: 'img/player_sheet.png' },
-            { id: 'hiker', name: 'Montañero', art_image: 'https://play.pokemonshowdown.com/sprites/trainers/hiker-gen4.png', sheet_image: 'img/player_sheet.png' },
-            { id: 'blackbelt', name: 'Karateka', art_image: 'https://play.pokemonshowdown.com/sprites/trainers/blackbelt-gen4dp.png', sheet_image: 'img/player_sheet.png' },
-            { id: 'swimmer', name: 'Nadador', art_image: 'https://play.pokemonshowdown.com/sprites/trainers/swimmer-gen4dp.png', sheet_image: 'img/player_sheet.png' },
-            { id: 'scientist', name: 'Científico', art_image: 'https://play.pokemonshowdown.com/sprites/trainers/scientist-gen4dp.png', sheet_image: 'img/player_sheet.png' },
-            { id: 'rocket', name: 'Recluta Rocket', art_image: 'https://play.pokemonshowdown.com/sprites/trainers/teamrocket.png', sheet_image: 'img/player_sheet.png' }
+            {
+                id: 'default',
+                name: 'Entrenador',
+                art_image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/trainers/1.png',
+                sheet_image: 'img/player_sheet.png'
+            },
+            {
+                id: 'snowboarder',
+                name: 'Snowboarder',
+                art_image: 'https://play.pokemonshowdown.com/sprites/trainers/snowboarder.png',
+                sheet_image: 'img/player_sheet.png'
+            },
+            {
+                id: 'acetrainer',
+                name: 'Entrenador Guay',
+                art_image: 'https://play.pokemonshowdown.com/sprites/trainers/acetrainer-gen4dp.png',
+                sheet_image: 'img/player_sheet.png'
+            },
+            {
+                id: 'hiker',
+                name: 'Montañero',
+                art_image: 'https://play.pokemonshowdown.com/sprites/trainers/hiker-gen4.png',
+                sheet_image: 'img/player_sheet.png'
+            },
+            {
+                id: 'blackbelt',
+                name: 'Karateka',
+                art_image: 'https://play.pokemonshowdown.com/sprites/trainers/blackbelt-gen4dp.png',
+                sheet_image: 'img/player_sheet.png'
+            },
+            {
+                id: 'swimmer',
+                name: 'Nadador',
+                art_image: 'https://play.pokemonshowdown.com/sprites/trainers/swimmer-gen4dp.png',
+                sheet_image: 'img/player_sheet.png'
+            },
+            {
+                id: 'scientist',
+                name: 'Científico',
+                art_image: 'https://play.pokemonshowdown.com/sprites/trainers/scientist-gen4dp.png',
+                sheet_image: 'img/player_sheet.png'
+            },
+            {
+                id: 'rocket',
+                name: 'Recluta Rocket',
+                art_image: 'https://play.pokemonshowdown.com/sprites/trainers/teamrocket.png',
+                sheet_image: 'img/player_sheet.png'
+            }
         ];
 
         let userSkins = ['default'];
@@ -760,6 +1135,7 @@
         let isWalking = false;
         let mapaAntiguoActivado = false;
 
+        // Variables de animación del personaje overworld
         let playerAnimInterval = null;
         let walkStep = 0;
 
@@ -784,7 +1160,11 @@
             walkStep = 0;
             if (playerAnimInterval) clearInterval(playerAnimInterval);
             aplicarSkinAlJugador();
-            const walkFrames = ["-64px -64px", "-64px 0px", "-64px -128px"];
+            const walkFrames = [
+                "-64px -64px",
+                "-64px 0px",
+                "-64px -128px"
+            ];
             playerAnimInterval = setInterval(() => {
                 walkStep = (walkStep + 1) % walkFrames.length;
                 sprite.style.backgroundPosition = walkFrames[walkStep];
@@ -799,6 +1179,7 @@
             sprite.style.backgroundPosition = "0px 0px";
         }
 
+        // --- SISTEMA DE CACHÉ Y RESOLUCIÓN DE SPRITES (Back Gen 4 con fallbacks) ---
         const SPRITE_URL_CACHE = new Map();
         const BACK_SPRITE_URL_CACHE = new Map();
         const ICON_URL_CACHE = new Map();
@@ -806,12 +1187,12 @@
         function getPokedexNormalSpriteUrl(poke) {
             let id = poke.id || poke.idDex || 1;
             if (SPRITE_URL_CACHE.has(id)) return SPRITE_URL_CACHE.get(id);
+
             let url = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
             SPRITE_URL_CACHE.set(id, url);
             return url;
         }
 
-        // Sistema inteligente: Gen 1 a 4 usa back de Diamante/Perla, luego estándar o frontal de fallback
         function getPokemonBackSpriteUrl(poke) {
             let id = poke.id || poke.idDex || 1;
             let isShiny = poke.isShiny ? true : false;
@@ -839,6 +1220,7 @@
 
             let url;
             let versions = poke.sprites?.versions || poke.versions || {};
+
             let iconGen8 = versions['generation-viii']?.icons?.front_default;
             let iconGen7 = versions['generation-vii']?.icons?.front_default;
 
@@ -858,12 +1240,16 @@
 
         function precargarSpritesEquipoYPC() {
             [...teamPokemon, ...pcStorage].forEach(p => {
-                let img1 = new Image(); img1.src = getPokedexNormalSpriteUrl(p);
-                let img2 = new Image(); img2.src = getPokedexIconUrl(p);
-                let img3 = new Image(); img3.src = getPokemonBackSpriteUrl(p);
+                let img1 = new Image();
+                img1.src = getPokedexNormalSpriteUrl(p);
+                let img2 = new Image();
+                img2.src = getPokedexIconUrl(p);
+                let img3 = new Image();
+                img3.src = getPokemonBackSpriteUrl(p);
             });
         }
 
+        // --- SISTEMA DE ESTADOS POKÉDEX ---
         function getPokedexStatus(idDex) {
             const user = localStorage.getItem("pt_current_user") || "default";
             const prefix = `pt_${user}_`;
@@ -914,6 +1300,7 @@
         let indicePokemonSeleccionado = null;
         let modoMoverEquipo = false;
         let pcIndiceSeleccionado = null;
+        let pcModoMover = false;
 
         const defaultInventory = {
             potions: [
@@ -943,6 +1330,7 @@
         };
 
         let playerInventory = JSON.parse(JSON.stringify(defaultInventory));
+
         let pestanaActivaBolsa = 'potions';
         let objetoSeleccionadoBolsa = null;
 
@@ -976,23 +1364,67 @@
         ];
 
         const typeGachaConfig = [
-            { type: 'normal', name: 'Normal', icon: '⚪' }, { type: 'fire', name: 'Fuego', icon: '🔥' },
-            { type: 'water', name: 'Agua', icon: '💧' }, { type: 'grass', name: 'Planta', icon: '🌿' },
-            { type: 'electric', name: 'Eléctrico', icon: '⚡' }, { type: 'ice', name: 'Hielo', icon: '❄️' },
-            { type: 'fighting', name: 'Lucha', icon: '🥊' }, { type: 'poison', name: 'Veneno', icon: '☠️' },
-            { type: 'ground', name: 'Tierra', icon: '🌍' }, { type: 'flying', name: 'Volador', icon: '🦅' },
-            { type: 'psychic', name: 'Psíquico', icon: '🔮' }, { type: 'bug', name: 'Bicho', icon: '🐛' },
-            { type: 'rock', name: 'Roca', icon: '🪨' }, { type: 'ghost', name: 'Fantasma', icon: '👻' },
-            { type: 'dragon', name: 'Dragón', icon: '🐉' }, { type: 'dark', name: 'Siniestro', icon: '🌑' },
-            { type: 'steel', name: 'Acero', icon: '⚙️' }, { type: 'fairy', name: 'Hada', icon: '🌸' }
+            { type: 'normal', name: 'Normal', icon: '⚪' },
+            { type: 'fire', name: 'Fuego', icon: '🔥' },
+            { type: 'water', name: 'Agua', icon: '💧' },
+            { type: 'grass', name: 'Planta', icon: '🌿' },
+            { type: 'electric', name: 'Eléctrico', icon: '⚡' },
+            { type: 'ice', name: 'Hielo', icon: '❄️' },
+            { type: 'fighting', name: 'Lucha', icon: '🥊' },
+            { type: 'poison', name: 'Veneno', icon: '☠️' },
+            { type: 'ground', name: 'Tierra', icon: '🌍' },
+            { type: 'flying', name: 'Volador', icon: '🦅' },
+            { type: 'psychic', name: 'Psíquico', icon: '🔮' },
+            { type: 'bug', name: 'Bicho', icon: '🐛' },
+            { type: 'rock', name: 'Roca', icon: '🪨' },
+            { type: 'ghost', name: 'Fantasma', icon: '👻' },
+            { type: 'dragon', name: 'Dragón', icon: '🐉' },
+            { type: 'dark', name: 'Siniestro', icon: '🌑' },
+            { type: 'steel', name: 'Acero', icon: '⚙️' },
+            { type: 'fairy', name: 'Hada', icon: '🌸' }
         ];
 
         let gachaMachines = [
-            { id: 'daily', title: 'BONUS DIARIO', icons: ['🎁', '✨', '💰'], desc: 'Reclamable 1 vez al día. Obtén entre 500 y 5.000 Poké-dólares gratis.', cost: 0, type: 'daily' },
-            { id: 'character_skins', title: 'GACHA DE PERSONAJES', icons: ['👤', '👕', '✨'], desc: '¡Obtén un nuevo aspecto de entrenador aleatorio sin duplicados! (2.500 ₱)', cost: 2500, type: 'character_skin' },
-            { id: 'items', title: 'CAJA DE OBJETOS', icons: ['📦', '🧪', '💊'], desc: 'Consigue 1 objeto aleatorio basado en la tabla de rarezas oficial.', cost: 400, type: 'item' },
-            { id: 'hidden_power', title: 'DISCO PODER OCULTO', icons: ['💿', '✨', '⚡'], desc: 'Consigue 1 CD de MT de Poder Oculto para personalizar los tipos de tus Pokémon.', cost: 600, type: 'mt' },
-            { id: 'shiny_test', title: 'GACHA SHINY (TEST)', icons: ['🌟', '✨', '💎'], desc: '¡Garantiza 100% de probabilidad de obtener un Pokémon Shiny para pruebas!', cost: 2000, type: 'shiny_test' }
+            {
+                id: 'daily',
+                title: 'BONUS DIARIO',
+                icons: ['🎁', '✨', '💰'],
+                desc: 'Reclamable 1 vez al día. Obtén entre 500 y 5.000 Poké-dólares gratis.',
+                cost: 0,
+                type: 'daily'
+            },
+            {
+                id: 'character_skins',
+                title: 'GACHA DE PERSONAJES',
+                icons: ['👤', '👕', '✨'],
+                desc: '¡Obtén un nuevo aspecto de entrenador aleatorio sin duplicados! (2.500 ₱)',
+                cost: 2500,
+                type: 'character_skin'
+            },
+            {
+                id: 'items',
+                title: 'CAJA DE OBJETOS',
+                icons: ['📦', '🧪', '💊'],
+                desc: 'Consigue 1 objeto aleatorio basado en la tabla de rarezas oficial.',
+                cost: 400,
+                type: 'item'
+            },
+            {
+                id: 'hidden_power',
+                title: 'DISCO PODER OCULTO',
+                icons: ['💿', '✨', '⚡'],
+                desc: 'Consigue 1 CD de MT de Poder Oculto para personalizar los tipos de tus Pokémon.',
+                cost: 600,
+                type: 'mt'
+            },
+            {
+                id: 'shiny_test',
+                title: 'GACHA SHINY (TEST)',
+                icons: ['🌟', '✨', '💎'],
+                desc: '¡Garantiza 100% de probabilidad de obtener un Pokémon Shiny para pruebas!',
+                cost: 2000,
+                type: 'shiny_test'
+            }
         ];
 
         typeGachaConfig.forEach(tc => {
@@ -1008,6 +1440,7 @@
         });
 
         let currentGachaIndex = 0;
+
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
         function playGachaSound(toneType) {
@@ -1015,30 +1448,45 @@
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
-                osc.connect(gain); gain.connect(ctx.destination);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
                 if (toneType === 'gen') {
-                    osc.type = 'sawtooth'; osc.frequency.setValueAtTime(130, ctx.currentTime);
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(130, ctx.currentTime);
                     osc.frequency.exponentialRampToValueAtTime(260, ctx.currentTime + 0.8);
-                    gain.gain.setValueAtTime(0.12, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.8);
-                    osc.start(); osc.stop(ctx.currentTime + 0.8);
+                    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.8);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.8);
                 } else if (toneType === 'type') {
-                    osc.type = 'triangle'; osc.frequency.setValueAtTime(392, ctx.currentTime);
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(392, ctx.currentTime);
                     osc.frequency.setValueAtTime(587, ctx.currentTime + 0.3);
-                    gain.gain.setValueAtTime(0.1, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
-                    osc.start(); osc.stop(ctx.currentTime + 0.6);
+                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.6);
                 } else if (toneType === 'score') {
-                    osc.type = 'sine'; osc.frequency.setValueAtTime(700, ctx.currentTime);
-                    gain.gain.setValueAtTime(0.03, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
-                    osc.start(); osc.stop(ctx.currentTime + 0.08);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(700, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.03, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.08);
                 } else if (toneType === 'happy_melody') {
                     const notes = [523.25, 659.25, 783.99, 1046.50];
                     notes.forEach((freq, idx) => {
-                        let o = ctx.createOscillator(); let g = ctx.createGain();
-                        o.type = 'sine'; o.frequency.setValueAtTime(freq, ctx.currentTime + (idx * 0.15));
+                        let o = ctx.createOscillator();
+                        let g = ctx.createGain();
+                        o.type = 'sine';
+                        o.frequency.setValueAtTime(freq, ctx.currentTime + (idx * 0.15));
                         g.gain.setValueAtTime(0.1, ctx.currentTime + (idx * 0.15));
                         g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + (idx * 0.15) + 0.5);
-                        o.connect(g); g.connect(ctx.destination);
-                        o.start(ctx.currentTime + (idx * 0.15)); o.stop(ctx.currentTime + (idx * 0.15) + 0.5);
+                        o.connect(g);
+                        g.connect(ctx.destination);
+                        o.start(ctx.currentTime + (idx * 0.15));
+                        o.stop(ctx.currentTime + (idx * 0.15) + 0.5);
                     });
                 }
             } catch(e) {}
@@ -1047,7 +1495,7 @@
         const typeMap = {
             "normal": "normal", "fire": "fuego", "water": "agua", "grass": "planta",
             "electric": "electrico", "ice": "hielo", "fighting": "lucha", "poison": "veneno",
-            "ground": "tierra", "flying": "volador", "psychic": "psiquico", "bug": "bicho",
+            "ground": "tierra", "flying": "volador", "psiquico": "psiquico", "bug": "bicho",
             "rock": "roca", "ghost": "fantasma", "dragon": "dragon", "dark": "siniestro",
             "steel": "acero", "fairy": "hada"
         };
@@ -1072,7 +1520,10 @@
         }
 
         function calcularEnergiaOffline() {
-            if (esUsuarioFonso()) { energiaActual = energiaMax; return; }
+            if (esUsuarioFonso()) {
+                energiaActual = energiaMax;
+                return;
+            }
             if (energiaActual < energiaMax) {
                 const ahora = Date.now();
                 const transcurrido = ahora - ultimoTimestamp;
@@ -1095,6 +1546,7 @@
                 document.getElementById("energy-timer").innerText = "(ENERGÍA INFINITA)";
                 return;
             }
+
             calcularEnergiaOffline();
             let barraVisual = "█".repeat(energiaActual) + "░".repeat(energiaMax - energiaActual);
             document.getElementById("energy-bars").innerText = barraVisual;
@@ -1164,7 +1616,8 @@
             if (!stats) return 50;
             let bst = (stats.hp || 0) + (stats.attack || 0) + (stats.defense || 0) + 
                       (stats.special_attack || 0) + (stats.special_defense || 0) + (stats.speed || 0);
-            let minBst = 180; let maxBst = 720; 
+            let minBst = 180; 
+            let maxBst = 720; 
             let score = Math.round(((bst - minBst) / (maxBst - minBst)) * 99) + 1;
             return Math.min(100, Math.max(1, score));
         }
@@ -1226,10 +1679,14 @@
             try {
                 const resPoke = await fetch('data/pokemon.json?t=' + Date.now());
                 POKEDEX_GLOBAL = await resPoke.json();
+
                 const resZones = await fetch('data/zones.json?t=' + Date.now());
                 zonesConfig = await resZones.json();
             } catch (error) {
-                zonesConfig = [{ name: "Pueblo Inicial (Zona 1)", sprite: "🏡", bg_image: "", types: ["normal", "flying"] }];
+                console.error("Error al cargar los archivos JSON:", error);
+                zonesConfig = [
+                    { name: "Pueblo Inicial (Zona 1)", sprite: "🏡", bg_image: "", types: ["normal", "flying"] }
+                ];
             }
 
             try {
@@ -1242,7 +1699,9 @@
             try {
                 const resSkins = await fetch('data/skins.json?t=' + Date.now());
                 SKINS_DATABASE = await resSkins.json();
-            } catch (e) {}
+            } catch (e) {
+                console.warn("Usando catálogo de skins por defecto.");
+            }
 
             try {
                 const currentUser = localStorage.getItem("pt_current_user");
@@ -1285,9 +1744,14 @@
                 document.getElementById("login-screen").style.display = "none";
                 document.getElementById("btn-username-display").innerText = user.toUpperCase();
                 
-                teamPokemon = []; pcStorage = [];
-                userSkins = ['default']; equippedSkinId = 'default';
-                playerMoney = 2000; lastDailyClaim = 0; playerMedals = 0; energiaActual = 20;
+                teamPokemon = [];
+                pcStorage = [];
+                userSkins = ['default'];
+                equippedSkinId = 'default';
+                playerMoney = 2000;
+                lastDailyClaim = 0;
+                playerMedals = 0;
+                energiaActual = 20;
                 playerInventory = JSON.parse(JSON.stringify(defaultInventory));
 
                 document.getElementById("starter-screen").style.display = "flex";
@@ -1299,9 +1763,14 @@
             guardarDatos();
             localStorage.removeItem("pt_current_user");
             
-            teamPokemon = []; pcStorage = [];
-            userSkins = ['default']; equippedSkinId = 'default';
-            playerMoney = 2000; lastDailyClaim = 0; playerMedals = 0; energiaActual = 20;
+            teamPokemon = [];
+            pcStorage = [];
+            userSkins = ['default'];
+            equippedSkinId = 'default';
+            playerMoney = 2000;
+            lastDailyClaim = 0;
+            playerMedals = 0;
+            energiaActual = 20;
             playerInventory = JSON.parse(JSON.stringify(defaultInventory));
 
             cerrarCombate("");
@@ -1456,7 +1925,7 @@
             return subioNivel;
         }
 
-        // --- SISTEMA DE SKINS ---
+        // --- SISTEMA DE SKINS DE PERSONAJE ---
         function abrirSkins() {
             if (isWalking) return;
             cerrarMenu();
@@ -1520,26 +1989,39 @@
             });
         }
 
-        // --- POKÉDEX ---
+        // --- SISTEMA POKÉDEX ---
         let pokedexSelectedIndex = 0;
         let pokedexGridConstruido = false;
 
         function abrirPokedex() {
             if (isWalking) return;
             cerrarMenu();
-            if (POKEDEX_GLOBAL.length === 0) { alert("La Pokédex aún no está cargada."); return; }
-            if (!pokedexGridConstruido) { construirPokedexGrid(); pokedexGridConstruido = true; }
+            if (POKEDEX_GLOBAL.length === 0) {
+                alert("La Pokédex aún no está cargada.");
+                return;
+            }
+            if (!pokedexGridConstruido) {
+                construirPokedexGrid();
+                pokedexGridConstruido = true;
+            }
             pokedexSelectedIndex = 0;
             actualizarDetallePokedex();
             document.getElementById("pokedex-screen").style.display = "flex";
         }
 
-        function cerrarPokedex() { document.getElementById("pokedex-screen").style.display = "none"; }
-        function seleccionarPokemonPokedex(index) { pokedexSelectedIndex = index; actualizarDetallePokedex(); }
+        function cerrarPokedex() {
+            document.getElementById("pokedex-screen").style.display = "none";
+        }
+
+        function seleccionarPokemonPokedex(index) {
+            pokedexSelectedIndex = index;
+            actualizarDetallePokedex();
+        }
 
         function construirPokedexGrid() {
             const grid = document.getElementById("pokedex-grid-container");
             grid.innerHTML = "";
+
             POKEDEX_GLOBAL.forEach((p, idx) => {
                 let pId = p.id || (idx + 1);
                 let status = getPokedexStatus(pId);
@@ -1547,15 +2029,21 @@
 
                 let cell = document.createElement("div");
                 cell.className = `pokedex-grid-cell ${idx === 0 ? 'selected' : ''}`;
+                cell.id = `dex-cell-${idx}`;
                 cell.onclick = () => seleccionarPokemonPokedex(idx);
 
+                let isIconGen = pSpriteCell.includes('generation-vii') || pSpriteCell.includes('generation-viii');
+                let imgClass = isIconGen ? "pokedex-cell-img icon-gen-large" : "pokedex-cell-img";
                 let imgStyle = "image-rendering: pixelated;";
-                if (!status.isSeen) imgStyle += " filter: brightness(0);";
-                else if (!status.isCaught) imgStyle += " filter: grayscale(100%);";
+                if (!status.isSeen) {
+                    imgStyle += " filter: brightness(0);";
+                } else if (!status.isCaught) {
+                    imgStyle += " filter: grayscale(100%);";
+                }
 
                 cell.innerHTML = `
                     <span class="pokedex-cell-num">${pId.toString().padStart(3, '0')}</span>
-                    <img src="${pSpriteCell}" class="pokedex-cell-img" style="${imgStyle}" alt="P">
+                    <img src="${pSpriteCell}" class="${imgClass}" style="${imgStyle}" alt="P">
                 `;
                 grid.appendChild(cell);
             });
@@ -1565,6 +2053,7 @@
             if (POKEDEX_GLOBAL.length === 0) return;
             let poke = POKEDEX_GLOBAL[pokedexSelectedIndex] || POKEDEX_GLOBAL[0];
             let idDex = poke.id || (pokedexSelectedIndex + 1);
+            
             const { isCaught, isSeen } = getPokedexStatus(idDex);
 
             const headerTitle = document.getElementById("pokedex-header-title");
@@ -1583,34 +2072,57 @@
 
             if (!isSeen) {
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ???`;
-                previewImg.src = normalSprite; previewImg.style.filter = "brightness(0)";
-                rarityBadge.innerText = "???"; rarityBadge.style.background = "#666";
-                typesContainer.innerHTML = `<span style="background:#666; padding:1px 4px; font-size:6px; color:#fff; font-weight:bold;">???</span>`;
+                previewImg.src = normalSprite;
+                previewImg.style.filter = "brightness(0)";
+                rarityBadge.innerText = "???";
+                rarityBadge.style.background = "#666";
+                typesContainer.innerHTML = `<span style="background:#666; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">???</span>`;
                 evolutionText.innerText = `- UNKNOWN -`;
-                hpValEl.innerText = "???"; hpFillEl.style.width = "0%";
-                atkValEl.innerText = "???"; atkFillEl.style.width = "0%";
-                defValEl.innerText = "???"; defFillEl.style.width = "0%";
+                hpValEl.innerText = "???";
+                hpFillEl.style.width = "0%";
+                atkValEl.innerText = "???";
+                atkFillEl.style.width = "0%";
+                defValEl.innerText = "???";
+                defFillEl.style.width = "0%";
             } else if (!isCaught) {
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ${poke.name.toUpperCase()}`;
-                previewImg.src = normalSprite; previewImg.style.filter = "grayscale(100%)";
-                rarityBadge.innerText = "SEEN"; rarityBadge.style.background = "#64748b";
-                let t1 = poke.types[0] || "normal"; let t2 = poke.types[1] || null;
+                previewImg.src = normalSprite;
+                previewImg.style.filter = "grayscale(100%)";
+                rarityBadge.innerText = "SEEN";
+                rarityBadge.style.background = "#64748b";
+
+                let t1 = poke.types[0] || "normal";
+                let t2 = poke.types[1] || null;
                 let c1 = TYPE_COLORS[mapType(t1)] || "#777";
-                let tiposHtml = `<span style="background:${c1}; padding:1px 4px; font-size:6px; color:#fff; font-weight:bold;">${t1.toUpperCase()}</span>`;
-                if (t2) { let c2 = TYPE_COLORS[mapType(t2)] || "#777"; tiposHtml += ` <span style="background:${c2}; padding:1px 4px; font-size:6px; color:#fff; font-weight:bold;">${t2.toUpperCase()}</span>`; }
+                let tiposHtml = `<span style="background:${c1}; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">${t1.toUpperCase()}</span>`;
+                if (t2) {
+                    let c2 = TYPE_COLORS[mapType(t2)] || "#777";
+                    tiposHtml += ` <span style="background:${c2}; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">${t2.toUpperCase()}</span>`;
+                }
                 typesContainer.innerHTML = tiposHtml;
                 evolutionText.innerText = poke.evolves_from && poke.evolves_from !== "None" ? `- EVOLVES FROM ${poke.evolves_from.toUpperCase()} -` : `- FIRST STAGE -`;
-                hpValEl.innerText = "???"; hpFillEl.style.width = "0%";
-                atkValEl.innerText = "???"; atkFillEl.style.width = "0%";
-                defValEl.innerText = "???"; defFillEl.style.width = "0%";
+
+                hpValEl.innerText = "???";
+                hpFillEl.style.width = "0%";
+                atkValEl.innerText = "???";
+                atkFillEl.style.width = "0%";
+                defValEl.innerText = "???";
+                defFillEl.style.width = "0%";
             } else {
                 headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ${poke.name.toUpperCase()}`;
-                previewImg.src = normalSprite; previewImg.style.filter = "none";
-                rarityBadge.innerText = "COMMON"; rarityBadge.style.background = "#ef4444";
-                let t1 = poke.types[0] || "normal"; let t2 = poke.types[1] || null;
+                previewImg.src = normalSprite;
+                previewImg.style.filter = "none";
+                rarityBadge.innerText = "COMMON";
+                rarityBadge.style.background = "#ef4444";
+
+                let t1 = poke.types[0] || "normal";
+                let t2 = poke.types[1] || null;
                 let c1 = TYPE_COLORS[mapType(t1)] || "#777";
-                let tiposHtml = `<span style="background:${c1}; padding:1px 4px; font-size:6px; color:#fff; font-weight:bold;">${t1.toUpperCase()}</span>`;
-                if (t2) { let c2 = TYPE_COLORS[mapType(t2)] || "#777"; tiposHtml += ` <span style="background:${c2}; padding:1px 4px; font-size:6px; color:#fff; font-weight:bold;">${t2.toUpperCase()}</span>`; }
+                let tiposHtml = `<span style="background:${c1}; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">${t1.toUpperCase()}</span>`;
+                if (t2) {
+                    let c2 = TYPE_COLORS[mapType(t2)] || "#777";
+                    tiposHtml += ` <span style="background:${c2}; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">${t2.toUpperCase()}</span>`;
+                }
                 typesContainer.innerHTML = tiposHtml;
                 evolutionText.innerText = poke.evolves_from && poke.evolves_from !== "None" ? `- EVOLVES FROM ${poke.evolves_from.toUpperCase()} -` : `- FIRST STAGE -`;
 
@@ -1619,15 +2131,21 @@
                 let atkVal = Math.floor(((stats.attack || 49) + (stats.special_attack || 49)) / 2);
                 let defVal = Math.floor(((stats.defense || 49) + (stats.special_defense || 49)) / 2);
 
-                hpValEl.innerText = hpVal; hpFillEl.style.width = Math.min(100, (hpVal / 200) * 100) + "%";
-                atkValEl.innerText = atkVal; atkFillEl.style.width = Math.min(100, (atkVal / 200) * 100) + "%";
-                defValEl.innerText = defVal; defFillEl.style.width = Math.min(100, (defVal / 200) * 100) + "%";
+                hpValEl.innerText = hpVal;
+                hpFillEl.style.width = Math.min(100, (hpVal / 200) * 100) + "%";
+                atkValEl.innerText = atkVal;
+                atkFillEl.style.width = Math.min(100, (atkVal / 200) * 100) + "%";
+                defValEl.innerText = defVal;
+                defFillEl.style.width = Math.min(100, (defVal / 200) * 100) + "%";
             }
 
-            let totalCaughtCount = 0; let totalSeenCount = 0;
+            let totalCaughtCount = 0;
+            let totalSeenCount = 0;
             POKEDEX_GLOBAL.forEach((p, i) => {
-                let pId = p.id || (i + 1); let status = getPokedexStatus(pId);
-                if (status.isCaught) totalCaughtCount++; if (status.isSeen) totalSeenCount++;
+                let pId = p.id || (i + 1);
+                let status = getPokedexStatus(pId);
+                if (status.isCaught) totalCaughtCount++;
+                if (status.isSeen) totalSeenCount++;
             });
             document.getElementById("pokedex-caught-count").innerText = totalCaughtCount;
             document.getElementById("pokedex-seen-count").innerText = totalSeenCount;
@@ -1637,19 +2155,24 @@
             });
         }
 
-        // --- PC ---
+        // --- SISTEMA INTERACTIVO DE PC ---
         function abrirPC() {
             if (isWalking) return;
             cerrarMenu();
             pcIndiceSeleccionado = null;
+            pcModoMover = false;
             renderizarVentanaPC();
             document.getElementById("pc-screen").style.display = "flex";
         }
-        function cerrarPC() { document.getElementById("pc-screen").style.display = "none"; }
+
+        function cerrarPC() {
+            document.getElementById("pc-screen").style.display = "none";
+        }
 
         function seleccionarCeldaPC(index) {
             if (pcStorage[index] === undefined) return;
             pcIndiceSeleccionado = index;
+            pcModoMover = false;
             actualizarDetallePC();
         }
 
@@ -1668,11 +2191,15 @@
                 let p = pcStorage[pcIndiceSeleccionado];
                 let tOcultoMap = mapType(p.tipoOculto);
                 let colorOculto = TYPE_COLORS[tOcultoMap] || "#fff";
+
                 let normalSprite = getPokedexNormalSpriteUrl(p);
 
                 previewSpriteBox.innerHTML = `<img src="${normalSprite}" style="width:58px; height:58px; image-rendering:pixelated; object-fit:contain;" alt="Preview">`;
                 previewInfo.innerHTML = `${p.nombre.toUpperCase()} <span style="color:#1e3a8a;">Lv ${p.nivel}</span>`;
-                previewStats.innerHTML = `POTENCIAL: <b>${p.potencial || '15 / 31'}</b><br>PODER OCULTO: <b style="color:${colorOculto};">${p.tipoOculto ? p.tipoOculto.toUpperCase() : 'NINGUNO'}</b>`;
+                previewStats.innerHTML = `
+                    POTENCIAL: <b>${p.potencial || '15 / 31'}</b><br>
+                    PODER OCULTO: <b style="color:${colorOculto}; text-shadow:1px 1px 0 #000;">${p.tipoOculto ? p.tipoOculto.toUpperCase() : 'NINGUNO'}</b>
+                `;
                 if (btnFav) btnFav.innerText = p.favorito ? "- FAV" : "+ FAV";
             } else {
                 previewSpriteBox.innerHTML = `<span style="font-size:24px;">💻</span>`;
@@ -1691,19 +2218,31 @@
             const sortByDex = document.getElementById("pc-sort-dex") ? document.getElementById("pc-sort-dex").checked : false;
 
             let items = pcStorage.map((p, originalIndex) => ({ p, originalIndex }));
+
             if (filterType !== "all") {
-                items = items.filter(item => mapType(item.p.tipo1) === filterType || mapType(item.p.tipo2) === filterType);
+                items = items.filter(item => {
+                    let t1 = mapType(item.p.tipo1);
+                    let t2 = mapType(item.p.tipo2);
+                    return t1 === filterType || t2 === filterType;
+                });
             }
-            if (sortByLvl) items.sort((a, b) => b.p.nivel - a.p.nivel);
-            if (sortByDex) items.sort((a, b) => (a.p.idDex || 0) - (b.p.idDex || 0));
+
+            if (sortByLvl) {
+                items.sort((a, b) => b.p.nivel - a.p.nivel);
+            }
+            if (sortByDex) {
+                items.sort((a, b) => (a.p.idDex || 0) - (b.p.idDex || 0));
+            }
 
             if (items.length === 0) {
                 gridContainer.innerHTML = `<div style="grid-column: span 5; text-align:center; color:#fff; font-size:10px; margin-top:20px;">No hay Pokémon en el PC</div>`;
             } else {
                 items.forEach(item => {
-                    let p = item.p; let originalIndex = item.originalIndex;
+                    let p = item.p;
+                    let originalIndex = item.originalIndex;
                     let isSelected = pcIndiceSeleccionado === originalIndex ? 'selected-pc' : '';
                     let shinyClass = p.isShiny ? 'shiny-cell' : '';
+
                     let iconUrl = getPokedexIconUrl(p);
 
                     let div = document.createElement("div");
@@ -1711,29 +2250,44 @@
                     div.setAttribute('data-original-index', originalIndex);
                     div.onclick = () => seleccionarCeldaPC(originalIndex);
 
-                    div.innerHTML = `<img src="${iconUrl}" style="width:28px; height:28px; image-rendering:pixelated; object-fit:contain;" alt="Icon">`;
+                    let isIconGen = iconUrl.includes('generation-vii') || iconUrl.includes('generation-viii');
+                    let imgClass = isIconGen ? "icon-gen-large" : "";
+
+                    div.innerHTML = `
+                        <img src="${iconUrl}" class="${imgClass}" style="width:28px; height:28px; image-rendering:pixelated; object-fit:contain;" alt="Icon">
+                    `;
                     gridContainer.appendChild(div);
                 });
             }
+
             actualizarDetallePC();
         }
 
         function pcAccionDatos() {
             if (pcIndiceSeleccionado === null || !pcStorage[pcIndiceSeleccionado]) return;
             let p = pcStorage[pcIndiceSeleccionado];
-            let t1Map = mapType(p.tipo1); let t2Map = mapType(p.tipo2); let tOcultoMap = mapType(p.tipoOculto);
-            let colorT1 = TYPE_COLORS[t1Map] || "#777"; let colorT2 = t2Map ? (TYPE_COLORS[t2Map] || "#777") : null;
+            
+            let t1Map = mapType(p.tipo1);
+            let t2Map = mapType(p.tipo2);
+            let tOcultoMap = mapType(p.tipoOculto);
+
+            let colorT1 = TYPE_COLORS[t1Map] || "#777";
+            let colorT2 = t2Map ? (TYPE_COLORS[t2Map] || "#777") : null;
             let colorOculto = TYPE_COLORS[tOcultoMap] || "#fff";
 
             let tiposHtml = `<div class="summary-type-badge" style="background:${colorT1};">${p.tipo1.toUpperCase()}</div>`;
-            if (p.tipo2) tiposHtml += `<div class="summary-type-badge" style="background:${colorT2};">${p.tipo2.toUpperCase()}</div>`;
+            if (p.tipo2) {
+                tiposHtml += `<div class="summary-type-badge" style="background:${colorT2};">${p.tipo2.toUpperCase()}</div>`;
+            }
 
             let bodyHTML = `
                 <div class="summary-left">
-                    <div style="font-size:10px; font-weight:bold; color:#374151; width:100%; display:flex; justify-content:space-between;"><span>Pokédex No.${p.idDex || 25}</span></div>
+                    <div style="font-size:10px; font-weight:bold; color:#374151; width:100%; display:flex; justify-content:space-between;">
+                        <span>Pokédex No.${p.idDex || 25}</span>
+                    </div>
                     <div style="font-size:11px; font-weight:bold; color:#1f2937; align-self:flex-start;">Lv. ${p.nivel}</div>
                     <div style="margin: 5px 0;"><img src="${p.sprite_url}" style="width:75px; height:75px; image-rendering:pixelated;" alt="Sprite"></div>
-                    <div style="background:#1f2937; color:#fff; font-size:11px; font-weight:bold; width:100%; padding:4px; text-align:center;">${p.nombre.toUpperCase()}</div>
+                    <div style="background:#1f2937; color:#fff; font-size:11px; font-weight:bold; width:100%; padding:4px; border-radius:3px; text-align:center;">${p.nombre.toUpperCase()}</div>
                     <div style="display:flex; gap:4px; width:100%; margin-top:4px;">${tiposHtml}</div>
                 </div>
                 <div class="summary-right">
@@ -1742,11 +2296,12 @@
                     <div class="summary-table-row"><span>Ataque</span><b>${p.ataque}</b></div>
                     <div class="summary-table-row"><span>Defensa</span><b>${p.defensa}</b></div>
                     <div class="summary-table-row"><span>Potencial</span><b>${p.potencial || '15 / 31'}</b></div>
-                    <div class="summary-table-row"><span>Poder Oculto</span><b style="color:${colorOculto};">${p.tipoOculto.toUpperCase()}</b></div>
+                    <div class="summary-table-row"><span>Poder Oculto</span><b style="color:${colorOculto}; text-shadow:1px 1px 0 #000;">${p.tipoOculto.toUpperCase()}</b></div>
                     <div class="summary-table-row"><span>Amistad</span><b>${p.amistad || '50 / 100'}</b></div>
-                    <div style="font-size:8px; color:#4b5563; margin-top:2px;">${p.origen || 'En PC.'}</div>
+                    <div style="font-size:8px; color:#4b5563; margin-top:2px; line-height:1.1;">${p.origen || 'En almacenamiento PC.'}</div>
                 </div>
             `;
+
             document.getElementById("summary-content-body").innerHTML = bodyHTML;
             document.getElementById("pc-screen").style.display = "none";
             document.getElementById("summary-screen").style.display = "flex";
@@ -1755,19 +2310,31 @@
         function pcAccionMover() {
             if (pcIndiceSeleccionado === null || !pcStorage[pcIndiceSeleccionado]) return;
             let pokePC = pcStorage[pcIndiceSeleccionado];
+
             if (teamPokemon.length < 4) {
-                teamPokemon.push(pokePC); pcStorage.splice(pcIndiceSeleccionado, 1);
-                pcIndiceSeleccionado = null; guardarDatos(); actualizarHUD(); renderizarVentanaPC();
+                teamPokemon.push(pokePC);
+                pcStorage.splice(pcIndiceSeleccionado, 1);
+                pcIndiceSeleccionado = null;
+                guardarDatos();
+                actualizarHUD();
+                renderizarVentanaPC();
                 alert("¡Pokémon movido del PC a tu equipo!");
             } else {
                 let slotDestino = prompt("Tu equipo está lleno (4/4). Introduce la posición del equipo (0, 1, 2 o 3) con la que deseas intercambiar:", "0");
                 if (slotDestino !== null && !isNaN(slotDestino)) {
                     let idx = parseInt(slotDestino);
                     if (idx >= 0 && idx < 4) {
-                        let temp = teamPokemon[idx]; teamPokemon[idx] = pokePC; pcStorage[pcIndiceSeleccionado] = temp;
-                        pcIndiceSeleccionado = null; guardarDatos(); actualizarHUD(); renderizarVentanaPC();
-                        alert("¡Intercambio realizado con éxito!");
-                    } else alert("Posición inválida.");
+                        let temp = teamPokemon[idx];
+                        teamPokemon[idx] = pokePC;
+                        pcStorage[pcIndiceSeleccionado] = temp;
+                        pcIndiceSeleccionado = null;
+                        guardarDatos();
+                        actualizarHUD();
+                        renderizarVentanaPC();
+                        alert("¡Intercambio realizado con éxito entre el PC y el equipo!");
+                    } else {
+                        alert("Posición inválida.");
+                    }
                 }
             }
         }
@@ -1776,8 +2343,11 @@
             if (pcIndiceSeleccionado === null || !pcStorage[pcIndiceSeleccionado]) return;
             let p = pcStorage[pcIndiceSeleccionado];
             if (confirm(`¿Deseas vender a ${p.nombre} por 300 ₱?`)) {
-                pcStorage.splice(pcIndiceSeleccionado, 1); playerMoney += 300;
-                pcIndiceSeleccionado = null; guardarDatos(); renderizarVentanaPC();
+                pcStorage.splice(pcIndiceSeleccionado, 1);
+                playerMoney += 300;
+                pcIndiceSeleccionado = null;
+                guardarDatos();
+                renderizarVentanaPC();
                 alert("¡Pokémon vendido con éxito!");
             }
         }
@@ -1785,23 +2355,31 @@
         function pcAccionFav() {
             if (pcIndiceSeleccionado === null || !pcStorage[pcIndiceSeleccionado]) return;
             let p = pcStorage[pcIndiceSeleccionado];
-            p.favorito = !p.favorito; guardarDatos(); actualizarDetallePC();
+            p.favorito = !p.favorito;
+            guardarDatos();
+            actualizarDetallePC();
             alert(p.favorito ? "¡Marcado como favorito!" : "Quitado de favoritos.");
         }
 
-        // --- MENÚ DEV ---
+        // --- SISTEMA DEL MENÚ DEV ---
         function abrirDevMenu() {
-            if (isWalking) return; cerrarMenu(); poblarDesplegableDevItems();
+            if (isWalking) return;
+            cerrarMenu();
+            poblarDesplegableDevItems();
             document.getElementById("dev-screen").style.display = "flex";
         }
-        function cerrarDevMenu() { document.getElementById("dev-screen").style.display = "none"; }
+
+        function cerrarDevMenu() {
+            document.getElementById("dev-screen").style.display = "none";
+        }
 
         function poblarDesplegableDevItems() {
             const sel = document.getElementById("dev-item-select");
             if (!sel || sel.options.length > 0) return;
             ALL_DEV_ITEMS.forEach(it => {
                 const opt = document.createElement("option");
-                opt.value = it.id; opt.innerText = `${it.name} (${it.cat.toUpperCase()})`;
+                opt.value = it.id;
+                opt.innerText = `${it.name} (${it.cat.toUpperCase()})`;
                 sel.appendChild(opt);
             });
         }
@@ -1809,39 +2387,73 @@
         function devAgregarObjetoSeleccionado() {
             const sel = document.getElementById("dev-item-select");
             const qtyInput = document.getElementById("dev-item-qty");
-            const itemId = sel.value; const qty = Math.max(1, parseInt(qtyInput.value) || 1);
+            const itemId = sel.value;
+            const qty = Math.max(1, parseInt(qtyInput.value) || 1);
+
             const itemDef = ALL_DEV_ITEMS.find(x => x.id === itemId);
             if (!itemDef) return;
 
-            if (!playerInventory[itemDef.cat]) playerInventory[itemDef.cat] = [];
-            let existente = playerInventory[itemDef.cat].find(x => x.id === itemId);
-            if (existente) existente.count += qty;
-            else playerInventory[itemDef.cat].push({ id: itemDef.id, name: itemDef.name, count: qty, desc: itemDef.desc });
+            if (!playerInventory[itemDef.cat]) {
+                playerInventory[itemDef.cat] = [];
+            }
 
-            guardarDatos(); alert(`📦 ¡Añadido con éxito: ${itemDef.name} x${qty}!`);
+            const itemExistente = playerInventory[itemDef.cat].find(x => x.id === itemId);
+            if (itemExistente) {
+                itemExistente.count += qty;
+            } else {
+                playerInventory[itemDef.cat].push({
+                    id: itemDef.id,
+                    name: itemDef.name,
+                    count: qty,
+                    desc: itemDef.desc
+                });
+            }
+
+            guardarDatos();
+            alert(`📦 ¡Añadido con éxito: ${itemDef.name} x${qty}!`);
         }
 
         function devAccionRapida(tipo) {
             if (tipo === 'money') {
-                playerMoney += 50000; guardarDatos(); alert("💰 ¡+50.000 ₱ añadidos!");
+                playerMoney += 50000;
+                guardarDatos();
+                alert("💰 ¡Se han añadido 50.000 ₱ a tu cartera!");
             } else if (tipo === 'heal') {
-                if (teamPokemon.length === 0) return alert("Sin equipo.");
-                teamPokemon.forEach(p => { if (!p.hpMax) p.hpMax = 50; p.hpActual = p.hpMax; });
-                guardarDatos(); actualizarHUD(); alert("🏥 ¡Equipo curado al 100%!");
+                if (teamPokemon.length === 0) {
+                    alert("No tienes ningún Pokémon en el equipo.");
+                    return;
+                }
+                teamPokemon.forEach(p => {
+                    if (!p.hpMax) p.hpMax = 50;
+                    p.hpActual = p.hpMax;
+                });
+                guardarDatos();
+                actualizarHUD();
+                alert("🏥 ¡Todo tu equipo ha sido curado al 100%!");
             } else if (tipo === 'energy') {
-                energiaActual = energiaMax; guardarDatos(); actualizarHUDEnergia(); alert("⚡ ¡Energía al 100%!");
+                energiaActual = energiaMax;
+                guardarDatos();
+                actualizarHUDEnergia();
+                alert("⚡ ¡Energía recargada por completo al 100%!");
             } else if (tipo === 'shiny') {
-                if (POKEDEX_GLOBAL.length === 0) return alert("Cargando...");
+                if (POKEDEX_GLOBAL.length === 0) {
+                    alert("La Pokédex aún se está cargando.");
+                    return;
+                }
                 cerrarDevMenu();
                 let randomEntry = POKEDEX_GLOBAL[Math.floor(Math.random() * POKEDEX_GLOBAL.length)];
                 let shinyPoke = generarDatosPokemonBase(randomEntry, 5, true);
-                abrirCinematicaGacha(shinyPoke); actualizarHUD();
+                shinyPoke.origen = "Generado por Menú Dev (Test Shiny).";
+                abrirCinematicaGacha(shinyPoke);
+                actualizarHUD();
             } else if (tipo === 'unlock_skins') {
-                userSkins = SKINS_DATABASE.map(s => s.id); guardarDatos(); alert("👕 ¡Todas las skins desbloqueadas!");
+                userSkins = SKINS_DATABASE.map(s => s.id);
+                guardarDatos();
+                alert("👕 ¡Todas las skins han sido desbloqueadas en tu inventario!");
             }
         }
 
-        // --- GACHA POKÉMON ---
+        // --- CINEMÁTICA PACK GACHA POKÉMON ---
         function abrirCinematicaGacha(nuevoPoke) {
             const overlay = document.getElementById("gacha-pack-overlay");
             const content = document.getElementById("gacha-pack-content");
@@ -1849,19 +2461,23 @@
 
             let genTexto = obtenerGeneracion(nuevoPoke.idDex);
             let score = calcularPuntuacionPokemon(nuevoPoke.stats);
-            let t1Map = mapType(nuevoPoke.tipo1); let t2Map = mapType(nuevoPoke.tipo2);
-            let colorT1 = TYPE_COLORS[t1Map] || "#777"; let colorT2 = t2Map ? (TYPE_COLORS[t2Map] || "#777") : null;
+            let t1Map = mapType(nuevoPoke.tipo1);
+            let t2Map = mapType(nuevoPoke.tipo2);
+            let colorT1 = TYPE_COLORS[t1Map] || "#777";
+            let colorT2 = t2Map ? (TYPE_COLORS[t2Map] || "#777") : null;
 
             playGachaSound('gen');
             content.innerHTML = `
                 <div style="font-size: 11px; color: #94a3b8; letter-spacing: 1px;">ABRIENDO SOBRE GACHA...</div>
-                <div class="anim-slide" style="font-size: 15px; font-weight: bold; color: #f59e0b; margin-top: 10px;">${genTexto}</div>
+                <div class="anim-slide" style="font-size: 15px; font-weight: bold; color: #f59e0b; margin-top: 10px; text-shadow: 0 0 10px rgba(245,158,11,0.6);">${genTexto}</div>
             `;
 
             setTimeout(() => {
                 playGachaSound('type');
-                let tiposHtml = `<span style="background:${colorT1}; padding:3px 10px; font-weight:bold; font-size:10px; color:#fff;">${nuevoPoke.tipo1.toUpperCase()}</span>`;
-                if (nuevoPoke.tipo2) tiposHtml += ` <span style="background:${colorT2}; padding:3px 10px; font-weight:bold; font-size:10px; color:#fff;">${nuevoPoke.tipo2.toUpperCase()}</span>`;
+                let tiposHtml = `<span style="background:${colorT1}; padding:3px 10px; border-radius:3px; font-weight:bold; font-size:10px; color:#fff;">${nuevoPoke.tipo1.toUpperCase()}</span>`;
+                if (nuevoPoke.tipo2) {
+                    tiposHtml += ` <span style="background:${colorT2}; padding:3px 10px; border-radius:3px; font-weight:bold; font-size:10px; color:#fff;">${nuevoPoke.tipo2.toUpperCase()}</span>`;
+                }
 
                 content.innerHTML = `
                     <div style="font-size: 11px; color: #94a3b8;">IDENTIFICANDO TIPO...</div>
@@ -1871,31 +2487,40 @@
                 setTimeout(() => {
                     playGachaSound('score');
                     let currentNum = 1;
+                    let stepTime = 35;
+                    
                     content.innerHTML = `
                         <div style="font-size: 11px; color: #94a3b8;">CALCULANDO ESTADÍSTICAS</div>
-                        <div class="anim-pulse" id="gacha-score-counter" style="font-size: 38px; font-weight: bold; color: #38bdf8; margin-top: 5px;">1</div>
+                        <div class="anim-pulse" id="gacha-score-counter" style="font-size: 38px; font-weight: bold; color: #38bdf8; margin-top: 5px; text-shadow: 0 0 12px rgba(56,189,248,0.8);">1</div>
                     `;
+
                     let counterInterval = setInterval(() => {
-                        currentNum++; playGachaSound('score');
+                        currentNum++;
+                        playGachaSound('score');
                         const counterEl = document.getElementById("gacha-score-counter");
                         if (counterEl) counterEl.innerText = currentNum;
+
                         if (currentNum >= score) {
                             clearInterval(counterInterval);
+                            
                             setTimeout(() => {
                                 content.innerHTML = `
-                                    <div style="font-size: 10px; color: #fef08a; font-weight: bold;">¡TOCA LA CARTA PARA REVELAR!</div>
+                                    <div style="font-size: 10px; color: #fef08a; font-weight: bold; animation: pulseGlow 1s infinite;">¡TOCA LA CARTA PARA REVELAR!</div>
                                     <div class="fut-card ${nuevoPoke.isShiny ? 'shiny-card' : ''}" onclick="revelarSpriteGacha('${encodeURIComponent(JSON.stringify(nuevoPoke))}', ${score})">
                                         <div style="font-size: 9px; font-weight: bold; width: 100%; display: flex; justify-content: space-between;">
-                                            <span>⭐ ${score}</span><span>${nuevoPoke.isShiny ? 'SHINY ✨' : 'NORMAL'}</span>
+                                            <span>⭐ ${score}</span>
+                                            <span>${nuevoPoke.isShiny ? 'SHINY ✨' : 'NORMAL'}</span>
                                         </div>
                                         <div style="font-size: 40px; margin: 15px 0;" class="anim-pulse">🎴</div>
-                                        <div style="background: rgba(0,0,0,0.5); padding: 4px; width: 100%; font-size: 9px; font-weight: bold;">GIRAR CARTA</div>
+                                        <div style="background: rgba(0,0,0,0.5); padding: 4px; border-radius: 4px; width: 100%; font-size: 9px; font-weight: bold;">GIRAR CARTA</div>
                                     </div>
                                 `;
                             }, 1800);
                         }
-                    }, 35);
+                    }, stepTime);
+
                 }, 2200);
+
             }, 2200);
         }
 
@@ -1903,29 +2528,45 @@
             playGachaSound('happy_melody');
             let nuevoPoke = JSON.parse(decodeURIComponent(pokeJsonStr));
             const content = document.getElementById("gacha-pack-content");
-            let t1Map = mapType(nuevoPoke.tipo1); let t2Map = mapType(nuevoPoke.tipo2);
-            let colorT1 = TYPE_COLORS[t1Map] || "#777"; let colorT2 = t2Map ? (TYPE_COLORS[t2Map] || "#777") : null;
-            let tiposHtml = `<span style="background:${colorT1}; padding:2px 6px; font-size:8px; color:#fff;">${nuevoPoke.tipo1.toUpperCase()}</span>`;
-            if (nuevoPoke.tipo2) tiposHtml += ` <span style="background:${colorT2}; padding:2px 6px; font-size:8px; color:#fff;">${nuevoPoke.tipo2.toUpperCase()}</span>`;
+
+            let t1Map = mapType(nuevoPoke.tipo1);
+            let t2Map = mapType(nuevoPoke.tipo2);
+            let colorT1 = TYPE_COLORS[t1Map] || "#777";
+            let colorT2 = t2Map ? (TYPE_COLORS[t2Map] || "#777") : null;
+            let tiposHtml = `<span style="background:${colorT1}; padding:2px 6px; border-radius:3px; font-size:8px; color:#fff;">${nuevoPoke.tipo1.toUpperCase()}</span>`;
+            if (nuevoPoke.tipo2) tiposHtml += ` <span style="background:${colorT2}; padding:2px 6px; border-radius:3px; font-size:8px; color:#fff;">${nuevoPoke.tipo2.toUpperCase()}</span>`;
 
             content.innerHTML = `
                 <div style="font-size: 11px; color: #4ade80; font-weight: bold;">¡NUEVO POKÉMON OBTENIDO!</div>
                 <div class="fut-card ${nuevoPoke.isShiny ? 'shiny-card' : ''} anim-slide" style="cursor: default; width: 140px; height: 190px; padding: 6px;">
                     <div style="font-size: 9px; font-weight: bold; width: 100%; display: flex; justify-content: space-between;">
-                        <span>⭐ ${score}</span><span>Lv.${nuevoPoke.nivel}</span>
+                        <span>⭐ ${score}</span>
+                        <span>Lv.${nuevoPoke.nivel}</span>
                     </div>
-                    <div style="margin: 2px 0;"><img src="${nuevoPoke.sprite_url}" style="width: 70px; height: 70px; image-rendering: pixelated;" alt="Sprite"></div>
-                    <div style="font-size: 10px; font-weight: bold; background: rgba(0,0,0,0.6); width: 100%; padding: 3px; color: #fff;">${nuevoPoke.nombre.toUpperCase()}</div>
+                    <div style="margin: 2px 0;">
+                        <img src="${nuevoPoke.sprite_url}" style="width: 70px; height: 70px; image-rendering: pixelated;" alt="Sprite">
+                    </div>
+                    <div style="font-size: 10px; font-weight: bold; background: rgba(0,0,0,0.6); width: 100%; padding: 3px; border-radius: 3px; color: #fff;">
+                        ${nuevoPoke.nombre.toUpperCase()}
+                    </div>
                     <div style="display:flex; gap:3px; margin-top:1px;">${tiposHtml}</div>
                 </div>
                 <button class="gacha-pull-btn" style="background:#10b981; margin-top: 4px; width: 160px; padding: 6px; font-size: 11px;" onclick="cerrarCinematicaGacha()">CONTINUAR</button>
             `;
+
             marcarAtrapado(nuevoPoke.idDex);
-            if (teamPokemon.length < 4) teamPokemon.push(nuevoPoke); else pcStorage.push(nuevoPoke);
-            guardarDatos(); actualizarHUD(); precargarSpritesEquipoYPC();
+
+            if (teamPokemon.length < 4) {
+                teamPokemon.push(nuevoPoke);
+            } else {
+                pcStorage.push(nuevoPoke);
+            }
+            guardarDatos();
+            actualizarHUD();
+            precargarSpritesEquipoYPC();
         }
 
-        // --- GACHA DE PERSONAJES (Sin duplicados, igual probabilidad, 2.500 ₱) ---
+        // --- CINEMÁTICA PACK GACHA DE PERSONAJES ---
         function abrirCinematicaSkin(skinObj) {
             const overlay = document.getElementById("gacha-pack-overlay");
             const content = document.getElementById("gacha-pack-content");
@@ -1935,11 +2576,15 @@
             content.innerHTML = `
                 <div style="font-size: 11px; color: #a855f7; font-weight: bold;">¡NUEVA SKIN DESBLOQUEADA!</div>
                 <div class="fut-card anim-slide" style="cursor: default; width: 145px; height: 200px; padding: 6px; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);">
-                    <div style="font-size: 9px; font-weight: bold; width: 100%; text-align: center;"><span>👕 NUEVO ASPECTO</span></div>
+                    <div style="font-size: 9px; font-weight: bold; width: 100%; text-align: center;">
+                        <span>👕 NUEVO ASPECTO</span>
+                    </div>
                     <div style="margin: 4px 0; height: 85px; display: flex; align-items: center; justify-content: center;">
                         <img src="${skinObj.art_image}" style="max-height: 80px; max-width: 100%; image-rendering: pixelated; object-fit: contain;" alt="Skin Art">
                     </div>
-                    <div style="font-size: 10px; font-weight: bold; background: rgba(0,0,0,0.6); width: 100%; padding: 4px; color: #fff;">${skinObj.name.toUpperCase()}</div>
+                    <div style="font-size: 10px; font-weight: bold; background: rgba(0,0,0,0.6); width: 100%; padding: 4px; border-radius: 3px; color: #fff;">
+                        ${skinObj.name.toUpperCase()}
+                    </div>
                 </div>
                 <div style="display: flex; gap: 4px; width: 100%; justify-content: center; margin-top: 4px;">
                     <button class="gacha-pull-btn" style="background:#3b82f6; width: 110px; padding: 6px; font-size: 10px;" onclick="equiparSkinDirecto('${skinObj.id}')">EQUIPAR</button>
@@ -1949,7 +2594,10 @@
         }
 
         function equiparSkinDirecto(skinId) {
-            equippedSkinId = skinId; guardarDatos(); aplicarSkinAlJugador(); cerrarCinematicaGacha();
+            equippedSkinId = skinId;
+            guardarDatos();
+            aplicarSkinAlJugador();
+            cerrarCinematicaGacha();
         }
 
         function cerrarCinematicaGacha() {
@@ -1957,9 +2605,10 @@
             actualizarUIGacha();
         }
 
-        // --- AVANZAR ZONA ---
+        // --- AVANZAR DE ZONA (Con soporte Mapa Antiguo al pulsar Avanzar) ---
         function advanceZone() {
-            if (isWalking) return; isWalking = true;
+            if (isWalking) return;
+            isWalking = true;
             document.getElementById("input-blocker").style.display = "block";
 
             let oldZona = isSpecialZone && currentSpecialZone ? currentSpecialZone : (zonesConfig[currentZoneIndex] || { name: "Zona Anterior", sprite: "🏡", bg_image: "" });
@@ -1968,14 +2617,21 @@
             if (mapaAntiguoActivado) {
                 let pool = specialZonesConfig.length > 0 ? specialZonesConfig : DEFAULT_SPECIAL_ZONES;
                 currentSpecialZone = pool[Math.floor(Math.random() * pool.length)];
-                isSpecialZone = true; mapaAntiguoActivado = false; zonaObj = currentSpecialZone;
+                isSpecialZone = true;
+                mapaAntiguoActivado = false;
+                zonaObj = currentSpecialZone;
             } else {
-                isSpecialZone = false; currentSpecialZone = null;
+                isSpecialZone = false;
+                currentSpecialZone = null;
                 if (zonesConfig.length > 1) {
                     let newIndex = currentZoneIndex;
-                    while (newIndex === currentZoneIndex) { newIndex = Math.floor(Math.random() * zonesConfig.length); }
+                    while (newIndex === currentZoneIndex) {
+                        newIndex = Math.floor(Math.random() * zonesConfig.length);
+                    }
                     currentZoneIndex = newIndex;
-                } else { currentZoneIndex = 0; }
+                } else {
+                    currentZoneIndex = 0;
+                }
                 zonaObj = zonesConfig[currentZoneIndex] || { name: "Ruta 01", sprite: "🏡", bg_image: "" };
             }
 
@@ -1983,43 +2639,79 @@
             let panel2 = document.getElementById("map-panel-2");
             let track = document.getElementById("map-track");
             let viewport = document.getElementById("map-viewport");
+
             viewport.style.backgroundImage = "none";
 
             let oldBg = oldZona.bg_image_event || oldZona.bg_image;
             let newBg = zonaObj.bg_image_event || zonaObj.bg_image;
 
-            panel1.style.backgroundImage = oldBg ? `url('${oldBg}')` : "linear-gradient(135deg, #2e7d32, #1b5e20)";
-            panel2.style.backgroundImage = newBg ? `url('${newBg}')` : "linear-gradient(135deg, #2e7d32, #1b5e20)";
+            if (oldBg) {
+                panel1.style.backgroundImage = `url('${oldBg}')`;
+            } else {
+                panel1.style.backgroundImage = "linear-gradient(135deg, #2e7d32, #1b5e20)";
+            }
 
-            track.style.transition = "none"; track.style.transform = "translateX(0px)"; void track.offsetWidth;
+            if (newBg) {
+                panel2.style.backgroundImage = `url('${newBg}')`;
+            } else {
+                panel2.style.backgroundImage = "linear-gradient(135deg, #2e7d32, #1b5e20)";
+            }
+
+            track.style.transition = "none";
+            track.style.transform = "translateX(0px)";
+            
+            void track.offsetWidth;
 
             document.getElementById("current-zone-name").innerText = zonaObj.name;
             document.getElementById("zone-sprite").innerText = zonaObj.sprite || "🏡";
-            document.getElementById("explore-log").innerHTML = isSpecialZone ? `🗺️ ¡Siguiendo el Mapa Antiguo hacia ${zonaObj.name}...` : `Caminando hacia ${zonaObj.name}...`;
+            document.getElementById("explore-log").innerHTML = isSpecialZone 
+                ? `🗺️ ¡Siguiendo el Mapa Antiguo hacia ${zonaObj.name}...`
+                : `Caminando hacia ${zonaObj.name}...`;
 
             iniciarAnimacionCaminar();
-            track.style.transition = "transform 5s linear"; track.style.transform = "translateX(-320px)";
+
+            track.style.transition = "transform 5s linear";
+            track.style.transform = "translateX(-320px)";
 
             setTimeout(() => {
-                viewport.style.backgroundImage = newBg ? `url('${newBg}')` : "";
-                panel1.style.backgroundImage = ""; panel2.style.backgroundImage = "";
-                track.style.transition = "none"; track.style.transform = "translateX(0px)";
+                if (newBg) {
+                    viewport.style.backgroundImage = `url('${newBg}')`;
+                } else {
+                    viewport.style.backgroundImage = "";
+                }
+
+                panel1.style.backgroundImage = "";
+                panel2.style.backgroundImage = "";
+                track.style.transition = "none";
+                track.style.transform = "translateX(0px)";
+
                 detenerAnimacionParar();
 
                 let curados = 0;
                 teamPokemon.forEach(p => {
                     if (!p.hpMax) p.hpMax = 50;
                     let healAmount = Math.max(1, Math.floor(p.hpMax * 0.05));
-                    if (p.hpActual < p.hpMax) { p.hpActual = Math.min(p.hpMax, p.hpActual + healAmount); curados++; }
+                    if (p.hpActual < p.hpMax) {
+                        p.hpActual = Math.min(p.hpMax, p.hpActual + healAmount);
+                        curados++;
+                    }
                 });
                 
-                let logMsg = isSpecialZone ? `✨ ¡Has llegado a ${zonaObj.name}! Se siente una presencia legendaria ancestral.` : `Has llegado a ${zonaObj.name}.`;
+                let logMsg = isSpecialZone 
+                    ? `✨ ¡Has llegado a ${zonaObj.name}! Se siente una presencia legendaria ancestral.`
+                    : `Has llegado a ${zonaObj.name}.`;
+
                 if (curados > 0) logMsg += `<br><span style="color:#4CAF50;">¡El equipo recuperó un 5% de PS por el paseo!</span>`;
                 
                 document.getElementById("explore-log").innerHTML = logMsg;
-                guardarDatos(); actualizarHUD();
-                zonaExplorada = false; document.getElementById("btn-explore-main").disabled = false;
-                isWalking = false; document.getElementById("input-blocker").style.display = "none";
+                guardarDatos();
+                actualizarHUD();
+                
+                zonaExplorada = false;
+                document.getElementById("btn-explore-main").disabled = false;
+                
+                isWalking = false;
+                document.getElementById("input-blocker").style.display = "none";
             }, 5000);
         }
 
@@ -2029,14 +2721,26 @@
             let maxBstPermitido = getMaxBstByMedals(playerMedals);
             
             let permitidos = POKEDEX_GLOBAL.filter(p => {
-                if (p.is_legendary || p.is_mythical || !p.types) return false;
+                if (p.is_legendary || p.is_mythical) return false;
+                if (!p.types) return false;
+
                 let stats = p.stats || {};
-                let bst = (stats.hp || 0) + (stats.attack || 0) + (stats.defense || 0) + (stats.special_attack || 0) + (stats.special_defense || 0) + (stats.speed || 0);
-                let coincideTipo = zonaObj.shinyOnly ? true : p.types.some(t => zonaObj.types.includes((typeof t === 'string' ? t : t.name).toLowerCase()));
-                return coincideTipo && bst <= maxBstPermitido;
+                let bst = (stats.hp || 0) + (stats.attack || 0) + (stats.defense || 0) + 
+                          (stats.special_attack || 0) + (stats.special_defense || 0) + (stats.speed || 0);
+
+                let coincideTipo = zonaObj.shinyOnly ? true : p.types.some(t => {
+                    let typeName = typeof t === 'string' ? t : (t.name || t.type?.name || '');
+                    return zonaObj.types.includes(typeName.toLowerCase());
+                });
+                let cumpleBst = bst <= maxBstPermitido;
+
+                return coincideTipo && cumpleBst;
             });
 
-            if (permitidos.length === 0) permitidos = POKEDEX_GLOBAL.filter(p => !p.is_legendary && !p.is_mythical);
+            if (permitidos.length === 0) {
+                permitidos = POKEDEX_GLOBAL.filter(p => !p.is_legendary && !p.is_mythical);
+            }
+
             const randomEntry = permitidos[Math.floor(Math.random() * permitidos.length)] || POKEDEX_GLOBAL[0];
             let enemyPoke = generarDatosPokemonBase(randomEntry, nivel, forzarShiny);
             enemyPoke.origen = `Encontrado explorando al nivel ${nivel}.`;
@@ -2049,18 +2753,27 @@
             if (zonaExplorada) return;
 
             let viewport = document.getElementById("map-viewport");
+
             if (isSpecialZone && currentSpecialZone) {
-                if (currentSpecialZone.bg_image) viewport.style.backgroundImage = `url('${currentSpecialZone.bg_image}')`;
+                if (currentSpecialZone.bg_image) {
+                    viewport.style.backgroundImage = `url('${currentSpecialZone.bg_image}')`;
+                }
                 iniciarCombateLegendario(currentSpecialZone);
-                zonaExplorada = true; document.getElementById("btn-explore-main").disabled = false;
+                zonaExplorada = true;
+                document.getElementById("btn-explore-main").disabled = false;
                 return;
             }
 
             if (!esUsuarioFonso()) {
                 calcularEnergiaOffline();
-                if (energiaActual < 1) return alert("¡No tienes suficiente energía para explorar!");
+                if (energiaActual < 1) {
+                    alert("¡No tienes suficiente energía para explorar! Espera a que se recargue.");
+                    return;
+                }
                 if (energiaActual === energiaMax) ultimoTimestamp = Date.now();
-                energiaActual--; guardarDatos(); actualizarHUDEnergia();
+                energiaActual--;
+                guardarDatos();
+                actualizarHUDEnergia();
             }
 
             let zonaObj = zonesConfig[currentZoneIndex] || { bg_image: "", bg_image_event: "" };
@@ -2069,21 +2782,25 @@
             if (r < 0.3) {
                 let bgUrl = zonaObj.bg_image_event || zonaObj.bg_image;
                 if (bgUrl) viewport.style.backgroundImage = `url('${bgUrl}')`;
+                
                 agregarObjetoAleatorioInventario();
                 document.getElementById("explore-log").innerHTML = `📦 ¡Has encontrado un objeto y se ha guardado en tu Bolsa!`;
             } else if (r < 0.5) {
                 let bgUrl = zonaObj.bg_image_event || zonaObj.bg_image;
                 if (bgUrl) viewport.style.backgroundImage = `url('${bgUrl}')`;
+
                 let lider = teamPokemon[0];
                 if (!lider.hpMax) lider.hpMax = 50;
                 lider.hpActual = Math.min(lider.hpMax, lider.hpActual + Math.floor(lider.hpMax * 0.5));
-                guardarDatos(); actualizarHUD();
+                guardarDatos();
+                actualizarHUD();
                 document.getElementById("explore-log").innerHTML = `🏥 ¡Encontraste una poción natural! Recuperas 50% de PS.`;
             } else {
                 if (zonaObj.bg_image) viewport.style.backgroundImage = `url('${zonaObj.bg_image}')`;
                 iniciarCombate(r < 0.8 ? 'wild' : 'trainer');
             }
-            zonaExplorada = true; document.getElementById("btn-explore-main").disabled = false;
+            zonaExplorada = true;
+            document.getElementById("btn-explore-main").disabled = false;
         }
 
         function agregarObjetoAleatorioInventario() {
@@ -2095,17 +2812,32 @@
             let elegido = posibles[Math.floor(Math.random() * posibles.length)];
             let listaCat = playerInventory[elegido.cat];
             let existente = listaCat.find(i => i.id === elegido.id);
-            if (existente) existente.count++; else listaCat.push({ id: elegido.id, name: elegido.name, count: 1, desc: elegido.desc });
+            if (existente) {
+                existente.count++;
+            } else {
+                listaCat.push({ id: elegido.id, name: elegido.name, count: 1, desc: elegido.desc });
+            }
             guardarDatos();
         }
 
-        function abrirBolsa() { if (isWalking) return; document.getElementById("bag-screen").style.display = "flex"; cambiarPestanaBolsa('potions'); }
-        function cerrarBolsa() { document.getElementById("bag-screen").style.display = "none"; }
+        function abrirBolsa() {
+            if (isWalking) return;
+            document.getElementById("bag-screen").style.display = "flex";
+            cambiarPestanaBolsa('potions');
+        }
+
+        function cerrarBolsa() {
+            document.getElementById("bag-screen").style.display = "none";
+        }
 
         function cambiarPestanaBolsa(categoria) {
-            pestanaActivaBolsa = categoria; objetoSeleccionadoBolsa = null;
-            document.querySelectorAll(".bag-tab-btn").forEach(btn => btn.classList.remove('active'));
+            pestanaActivaBolsa = categoria;
+            objetoSeleccionadoBolsa = null;
+
+            let botones = document.querySelectorAll(".bag-tab-btn");
+            botones.forEach(btn => btn.classList.remove('active'));
             event && event.currentTarget && event.currentTarget.classList.add('active');
+
             renderizarItemsBolsa();
             document.getElementById("bag-item-desc").innerText = "Selecciona un objeto para ver su descripción.";
             document.getElementById("bag-use-action-btn").style.display = "none";
@@ -2114,10 +2846,16 @@
         function renderizarItemsBolsa() {
             const contenedor = document.getElementById("bag-items-container");
             contenedor.innerHTML = "";
+
             let lista = playerInventory[pestanaActivaBolsa] || [];
-            if (lista.length === 0) { contenedor.innerHTML = `<div style="text-align:center; color:#666; font-size:11px; margin-top:20px;">No hay objetos.</div>`; return; }
+            if (lista.length === 0) {
+                contenedor.innerHTML = `<div style="text-align:center; color:#666; font-size:11px; margin-top:20px;">No hay objetos en esta categoría.</div>`;
+                return;
+            }
+
             lista.forEach((item) => {
-                let div = document.createElement("div"); div.className = "bag-item-row";
+                let div = document.createElement("div");
+                div.className = "bag-item-row";
                 div.innerHTML = `<span>${item.name}</span><span>x${item.count}</span>`;
                 div.onclick = () => seleccionarItemBolsa(item, div);
                 contenedor.appendChild(div);
@@ -2125,74 +2863,122 @@
         }
 
         function seleccionarItemBolsa(item, elementoDOM) {
-            document.querySelectorAll(".bag-item-row").forEach(f => f.classList.remove('selected'));
+            let filas = document.querySelectorAll(".bag-item-row");
+            filas.forEach(f => f.classList.remove('selected'));
             elementoDOM.classList.add('selected');
+
             objetoSeleccionadoBolsa = item;
             document.getElementById("bag-item-desc").innerText = item.desc;
+
             let btnUsar = document.getElementById("bag-use-action-btn");
-            btnUsar.style.display = ['potions', 'proteins', 'energy', 'mts', 'others'].includes(pestanaActivaBolsa) ? "block" : "none";
+            if (['potions', 'proteins', 'energy', 'mts', 'others'].includes(pestanaActivaBolsa)) {
+                btnUsar.style.display = "block";
+            } else {
+                btnUsar.style.display = "none";
+            }
         }
 
         function usarObjetoSeleccionado() {
             if (!objetoSeleccionadoBolsa || objetoSeleccionadoBolsa.count <= 0) return;
+
             let lider = teamPokemon[0];
-            if (!lider && pestanaActivaBolsa !== 'energy' && objetoSeleccionadoBolsa.id !== 'ancient_map') return alert("¡No hay Pokémon!");
+            if (!lider && pestanaActivaBolsa !== 'energy' && objetoSeleccionadoBolsa.id !== 'ancient_map') {
+                alert("¡No tienes ningún Pokémon en el equipo para usar esto!");
+                return;
+            }
 
             if (objetoSeleccionadoBolsa.id === 'ancient_map') {
                 mapaAntiguoActivado = true;
                 alert("🗺️ ¡Has activado el Mapa Antiguo! Al pulsar AVANZAR, viajarás a una zona legendaria.");
                 objetoSeleccionadoBolsa.count--;
-                if (objetoSeleccionadoBolsa.count <= 0) playerInventory['others'] = playerInventory['others'].filter(i => i.id !== 'ancient_map');
-                guardarDatos(); renderizarItemsBolsa(); cerrarBolsa(); return;
+                if (objetoSeleccionadoBolsa.count <= 0) {
+                    playerInventory['others'] = playerInventory['others'].filter(i => i.id !== 'ancient_map');
+                }
+                guardarDatos();
+                renderizarItemsBolsa();
+                cerrarBolsa();
+                return;
             }
 
             if (pestanaActivaBolsa === 'potions') {
                 if (!lider.hpMax) lider.hpMax = 50;
-                if (lider.hpActual >= lider.hpMax) return alert("¡PS al máximo!");
+                if (lider.hpActual >= lider.hpMax) {
+                    alert("¡Tu Pokémon ya tiene los PS al máximo!");
+                    return;
+                }
                 let curacion = Math.floor(lider.hpMax * (objetoSeleccionadoBolsa.id === 'hyper_potion' ? 0.75 : (objetoSeleccionadoBolsa.id === 'super_potion' ? 0.5 : 0.2)));
                 lider.hpActual = Math.min(lider.hpMax, lider.hpActual + curacion);
                 alert(`¡Usaste ${objetoSeleccionadoBolsa.name}! Recuperó ${curacion} PS.`);
+                
             } else if (pestanaActivaBolsa === 'energy') {
                 let gain = objetoSeleccionadoBolsa.id === 'energy_juice' ? 10 : 5;
                 energiaActual = Math.min(energiaMax, energiaActual + gain);
-                alert(`¡Usaste ${objetoSeleccionadoBolsa.name}! +${gain} energía.`);
+                alert(`¡Usaste ${objetoSeleccionadoBolsa.name}! Has recuperado ${gain} de energía.`);
                 actualizarHUDEnergia();
+
             } else if (pestanaActivaBolsa === 'mts') {
                 lider.tipoOculto = getTipoOcultoAleatorio(lider.tipo1, lider.tipo2);
-                alert(`💿 ¡Poder Oculto cambiado a tipo: ${lider.tipoOculto.toUpperCase()}!`);
+                alert(`💿 ¡MT utilizada! El Poder Oculto de ${lider.nombre} ha cambiado a tipo: ${lider.tipoOculto.toUpperCase()}`);
+
             } else if (pestanaActivaBolsa === 'proteins') {
                 let boost = objetoSeleccionadoBolsa.id === 'max_protein' ? 8 : (objetoSeleccionadoBolsa.id === 'protein' ? 3 : 1);
-                lider.ataque += boost; alert(`¡Ataque aumentado en ${boost}!`);
+                lider.ataque += boost;
+                alert(`¡${objetoSeleccionadoBolsa.name} aplicada! El ataque de ${lider.nombre} ha aumentado en ${boost}.`);
             }
 
             objetoSeleccionadoBolsa.count--;
             if (objetoSeleccionadoBolsa.count <= 0) {
-                playerInventory[pestanaActivaBolsa] = playerInventory[pestanaActivaBolsa].filter(i => i.id !== objetoSeleccionadoBolsa.id);
+                let lista = playerInventory[pestanaActivaBolsa];
+                playerInventory[pestanaActivaBolsa] = lista.filter(i => i.id !== objetoSeleccionadoBolsa.id);
                 objetoSeleccionadoBolsa = null;
-                document.getElementById("bag-item-desc").innerText = "Selecciona un objeto.";
+                document.getElementById("bag-item-desc").innerText = "Selecciona un objeto para ver su descripción.";
                 document.getElementById("bag-use-action-btn").style.display = "none";
             }
-            guardarDatos(); renderizarItemsBolsa(); actualizarHUD();
+
+            guardarDatos();
+            renderizarItemsBolsa();
+            actualizarHUD();
         }
 
-        // --- GACHA ---
-        function abrirGacha() { if (isWalking) return; cerrarMenu(); currentGachaIndex = 0; actualizarUIGacha(); document.getElementById("gacha-screen").style.display = "flex"; }
-        function cerrarGacha() { document.getElementById("gacha-screen").style.display = "none"; }
-        function cambiarGacha(dir) { currentGachaIndex = (currentGachaIndex + dir + gachaMachines.length) % gachaMachines.length; actualizarUIGacha(); }
+        // --- SISTEMA DE GACHA ---
+        function abrirGacha() {
+            if (isWalking) return;
+            cerrarMenu();
+            currentGachaIndex = 0;
+            actualizarUIGacha();
+            document.getElementById("gacha-screen").style.display = "flex";
+        }
+
+        function cerrarGacha() {
+            document.getElementById("gacha-screen").style.display = "none";
+        }
+
+        function cambiarGacha(direccion) {
+            currentGachaIndex = (currentGachaIndex + direccion + gachaMachines.length) % gachaMachines.length;
+            actualizarUIGacha();
+        }
 
         function actualizarUIGacha() {
             let maquina = gachaMachines[currentGachaIndex];
             document.getElementById("gacha-title").innerText = maquina.title;
             document.getElementById("gacha-money-display").innerText = `${playerMoney.toLocaleString()} ₱`;
             document.getElementById("gacha-desc").innerText = maquina.desc;
-            let iconsHtml = ""; maquina.icons.forEach(ic => { iconsHtml += `<span>${ic}</span>`; });
+
+            let iconsHtml = "";
+            maquina.icons.forEach(ic => { iconsHtml += `<span>${ic}</span>`; });
             document.getElementById("gacha-preview-icons").innerHTML = iconsHtml;
 
             let pullBtn = document.getElementById("gacha-pull-btn");
             if (maquina.type === 'daily') {
                 let ahora = Date.now();
-                pullBtn.innerText = (ahora - lastDailyClaim < 24*60*60*1000) ? "YA RECLAMADO HOY" : "RECLAMAR GRATIS";
-                pullBtn.style.backgroundColor = (ahora - lastDailyClaim < 24*60*60*1000) ? "#64748b" : "#10b981";
+                let unDiaMs = 24 * 60 * 60 * 1000;
+                if (ahora - lastDailyClaim < unDiaMs) {
+                    pullBtn.innerText = "YA RECLAMADO HOY";
+                    pullBtn.style.backgroundColor = "#64748b";
+                } else {
+                    pullBtn.innerText = "RECLAMAR GRATIS";
+                    pullBtn.style.backgroundColor = "#10b981";
+                }
             } else {
                 pullBtn.innerText = `TIRAR (${maquina.cost.toLocaleString()} ₱)`;
                 pullBtn.style.backgroundColor = "#0284c7";
@@ -2201,80 +2987,182 @@
 
         function realizarTiradaGacha() {
             let maquina = gachaMachines[currentGachaIndex];
+
             if (maquina.type === 'daily') {
                 let ahora = Date.now();
-                if (ahora - lastDailyClaim < 24*60*60*1000) return alert("¡Ya reclamado hoy!");
-                let premio = Math.floor(Math.random() * (5000 - 500 + 1)) + 500;
-                playerMoney += premio; lastDailyClaim = ahora; guardarDatos(); actualizarUIGacha();
-                return alert(`🎁 ¡Ganaste ${premio} ₱!`);
+                let unDiaMs = 24 * 60 * 60 * 1000;
+                if (ahora - lastDailyClaim < unDiaMs) {
+                    alert("¡Ya has reclamado tu bonus diario hoy! Vuelve mañana.");
+                    return;
+                }
+                let premioDinero = Math.floor(Math.random() * (5000 - 500 + 1)) + 500;
+                playerMoney += premioDinero;
+                lastDailyClaim = ahora;
+                guardarDatos();
+                actualizarUIGacha();
+                alert(`🎁 ¡Bonus diario reclamado! Has ganado ${premioDinero} ₱.`);
+                return;
             }
 
-            // Gacha de personajes (Skins): Sin rarezas, igual probabilidad, sin duplicados (se sacan del pull)
             if (maquina.type === 'character_skin') {
-                let disponibles = SKINS_DATABASE.filter(s => !userSkins.includes(s.id));
-                if (disponibles.length === 0) return alert("¡Ya has desbloqueado todas las skins del juego!");
-                if (playerMoney < maquina.cost) return alert("¡No tienes suficiente dinero (₱)!");
+                let poolDisponibles = SKINS_DATABASE.filter(s => !userSkins.includes(s.id));
+                if (poolDisponibles.length === 0) {
+                    alert("¡Ya has desbloqueado todas las skins disponibles en el juego!");
+                    return;
+                }
+
+                if (playerMoney < maquina.cost) {
+                    alert("¡No tienes suficiente dinero (₱) para realizar esta tirada!");
+                    return;
+                }
 
                 playerMoney -= maquina.cost;
-                let skinElegida = disponibles[Math.floor(Math.random() * disponibles.length)];
+                let skinElegida = poolDisponibles[Math.floor(Math.random() * poolDisponibles.length)];
                 userSkins.push(skinElegida.id);
-                guardarDatos(); actualizarUIGacha();
+                guardarDatos();
+                actualizarUIGacha();
                 abrirCinematicaSkin(skinElegida);
                 return;
             }
 
-            if (playerMoney < maquina.cost) return alert("¡No tienes suficiente dinero (₱)!");
+            if (playerMoney < maquina.cost) {
+                alert("¡No tienes suficiente dinero (₱) para realizar esta tirada!");
+                return;
+            }
+
             playerMoney -= maquina.cost;
 
             if (maquina.type === 'item') {
                 const itemPool = [
-                    { id: 'potion', name: 'Poción', cat: 'potions', weight: 100 },
-                    { id: 'super_potion', name: 'Superpoción', cat: 'potions', weight: 75 },
-                    { id: 'hyper_potion', name: 'Hiperpoción', cat: 'potions', weight: 20 },
-                    { id: 'nugget', name: 'Pepita', cat: 'wallet', weight: 10 },
-                    { id: 'rare_candy', name: 'Caramelo Raro', cat: 'others', weight: 15 }
+                    { id: 'potion', name: 'Poción', cat: 'potions', weight: 100, desc: 'Cura un 20% de PS a un Pokémon.' },
+                    { id: 'energy_cookie', name: 'Galleta Energía', cat: 'energy', weight: 80, desc: 'Restaura una pequeña cantidad de energía.' },
+                    { id: 'super_potion', name: 'Superpoción', cat: 'potions', weight: 75, desc: 'Cura un 50% de PS a un Pokémon.' },
+                    { id: 'friendship_berry', name: 'Baya Amistad', cat: 'others', weight: 70, desc: 'Baya especial para fortalecer vínculos.' },
+                    { id: 'mini_protein', name: 'Proteína Mini', cat: 'proteins', weight: 60, desc: 'Aumenta levemente el ataque de un Pokémon.' },
+                    { id: 'honey', name: 'Miel', cat: 'others', weight: 50, desc: 'Dulce miel que atrae Pokémon salvajes.' },
+                    { id: 'binoculars', name: 'Prismáticos', cat: 'others', weight: 40, desc: 'Ayuda a divisar mejores rutas.' },
+                    { id: 'pearl', name: 'Perla', cat: 'wallet', weight: 40, desc: 'Objeto valioso que se puede vender por dinero.' },
+                    { id: 'egg', name: 'Huevo', cat: 'eggs', weight: 40, desc: 'Un huevo Pokémon estándar.' },
+                    { id: 'egg_incense', name: 'Incienso Huevo', cat: 'others', weight: 20, desc: 'Incienso aromático para la incubación.' },
+                    { id: 'energy_juice', name: 'Zumo Energía', cat: 'energy', weight: 20, desc: 'Restaura 10 puntos de energía.' },
+                    { id: 'rare_egg', name: 'Huevo Raro', cat: 'eggs', weight: 20, desc: 'Un huevo Pokémon especial y curioso.' },
+                    { id: 'hyper_potion', name: 'Hiperpoción', cat: 'potions', weight: 15, desc: 'Cura una gran cantidad de PS a un Pokémon.' },
+                    { id: 'rare_candy', name: 'Caramelo Raro', cat: 'others', weight: 15, desc: 'Caramelo misterioso que estimula el crecimiento.' },
+                    { id: 'nugget', name: 'Pepita', cat: 'wallet', weight: 10, desc: 'Pepita de oro puro muy valiosa.' },
+                    { id: 'protein', name: 'Proteína', cat: 'proteins', weight: 10, desc: 'Aumenta permanentemente el ataque de un Pokémon.' },
+                    { id: 'mystic_egg', name: 'Huevo Místico', cat: 'eggs', weight: 5, desc: 'Un huevo Pokémon imbuido en energía mística.' },
+                    { id: 'briefcase', name: 'Maletín', cat: 'others', weight: 4, desc: 'Contiene suministros valiosos variados.' },
+                    { id: 'max_protein', name: 'Proteína Máxima', cat: 'proteins', weight: 3, desc: 'Aumenta drásticamente el ataque de un Pokémon.' },
+                    { id: 'ancient_map', name: 'Mapa Antiguo', cat: 'others', weight: 2, desc: 'Mapa detallado de zonas recónditas.' },
+                    { id: 'shiny_egg', name: 'Huevo Brillante', cat: 'eggs', weight: 1, desc: 'Huevo Pokémon singular con destellos brillantes.' }
                 ];
-                let itemElegido = itemPool[Math.floor(Math.random() * itemPool.length)];
+
+                let totalWeight = itemPool.reduce((sum, i) => sum + i.weight, 0);
+                let randomVal = Math.random() * totalWeight;
+                let acumulado = 0;
+                let itemElegido = itemPool[0];
+
+                for (let it of itemPool) {
+                    acumulado += it.weight;
+                    if (randomVal <= acumulado) {
+                        itemElegido = it;
+                        break;
+                    }
+                }
+
                 let listaCat = playerInventory[itemElegido.cat] || (playerInventory['others'] = []);
-                let ex = listaCat.find(i => i.id === itemElegido.id);
-                if (ex) ex.count++; else listaCat.push({ id: itemElegido.id, name: itemElegido.name, count: 1, desc: 'Obtenido en gacha.' });
-                alert(`📦 ¡Obtuviste ${itemElegido.name} x1!`);
+                let existente = listaCat.find(i => i.id === itemElegido.id);
+                if (existente) existente.count++;
+                else listaCat.push({ id: itemElegido.id, name: itemElegido.name, count: 1, desc: itemElegido.desc });
+
+                alert(`📦 ¡Obtuviste en el gacha: ${itemElegido.name} x1!`);
+
             } else if (maquina.type === 'mt') {
                 let listaMts = playerInventory['mts'];
-                let ex = listaMts.find(i => i.id === 'mt_hidden');
-                if (ex) ex.count++; else listaMts.push({ id: 'mt_hidden', name: 'MT Poder Oculto', count: 1, desc: 'Cambia tipo de Poder Oculto.' });
-                alert(`💿 ¡MT de Poder Oculto conseguida!`);
+                let existente = listaMts.find(i => i.id === 'mt_hidden');
+                if (existente) existente.count++;
+                else listaMts.push({ id: 'mt_hidden', name: 'MT Poder Oculto', count: 1, desc: 'Permite cambiar aleatoriamente el tipo del Poder Oculto de tu Pokémon líder.' });
+
+                alert(`💿 ¡Has conseguido una MT de Poder Oculto!`);
+
             } else if (maquina.type === 'pokemon' || maquina.type === 'shiny_test') {
-                if (POKEDEX_GLOBAL.length === 0) { playerMoney += maquina.cost; return alert("Pokédex cargando."); }
-                let forzarShiny = maquina.type === 'shiny_test';
-                let pool = forzarShiny ? POKEDEX_GLOBAL : POKEDEX_GLOBAL.filter(p => !p.is_legendary && !p.is_mythical && (!p.evolves_from || p.evolves_from === "None"));
+                if (POKEDEX_GLOBAL.length === 0) {
+                    alert("La Pokédex aún no está cargada.");
+                    playerMoney += maquina.cost;
+                    return;
+                }
+
+                let forzarShiny = maquina.type === 'shiny_test' ? true : false;
+                let pool = POKEDEX_GLOBAL;
+
+                if (!forzarShiny) {
+                    const specialExclusions = [
+                        "nihilego", "buzzwole", "pheromosa", "xurkitree", "celesteela", 
+                        "kartana", "guzzlord", "poipole", "naganadel", "stakataka", "blacephalon",
+                        "great-tusk", "scream-tail", "brute-bonnet", "flutter-mane", "slither-wing", 
+                        "sandy-shocks", "iron-treads", "iron-bundle", "iron-hands", "iron-jugulis", 
+                        "iron-moth", "iron-thorns", "roaring-moon", "iron-valiant", "walking-wake", 
+                        "iron-leaves", "gouging-fire", "raging-bolt", "iron-boulder", "iron-crown"
+                    ];
+
+                    let tipoFiltro = maquina.targetType.toLowerCase();
+                    pool = POKEDEX_GLOBAL.filter(p => {
+                        if (p.is_legendary || p.is_mythical) return false;
+                        if (p.evolves_from && p.evolves_from !== "None") return false;
+                        
+                        let pNameLower = p.name.toLowerCase();
+                        if (specialExclusions.includes(pNameLower)) return false;
+
+                        if (!p.types || !Array.isArray(p.types)) return false;
+                        return p.types.some(t => t.toLowerCase() === tipoFiltro);
+                    });
+
+                    if (pool.length === 0) {
+                        pool = POKEDEX_GLOBAL.filter(p => !p.is_legendary && !p.is_mythical && (!p.evolves_from || p.evolves_from === "None") && !specialExclusions.includes(p.name.toLowerCase()));
+                    }
+                }
+
                 let pokeData = pool[Math.floor(Math.random() * pool.length)] || POKEDEX_GLOBAL[0];
                 let nuevoPoke = generarDatosPokemonBase(pokeData, 5, forzarShiny);
+                nuevoPoke.origen = forzarShiny ? "Obtenido en Gacha Shiny (Test)." : "Encontrado en GACHA al nivel 5.";
+
                 abrirCinematicaGacha(nuevoPoke);
             }
-            guardarDatos(); actualizarUIGacha();
+
+            guardarDatos();
+            actualizarUIGacha();
         }
 
-        // --- COMBATE HGSS ---
         function iniciarCombate(tipo) {
             let lider = teamPokemon[0];
             if (!lider.hpMax || lider.hpMax <= 0) lider.hpMax = 50;
             if (lider.hpActual === undefined || lider.hpActual < 0) lider.hpActual = lider.hpMax;
 
             const nivel = calcularNivelEnemigo();
+            
             currentEnemy = explorarGenerarPokemon(nivel);
             if (!currentEnemy.hpMax) currentEnemy.hpMax = 50;
             if (currentEnemy.hpActual === undefined) currentEnemy.hpActual = currentEnemy.hpMax;
 
-            currentEnemy.tipoCombate = tipo; combatEnCurso = false;
+            currentEnemy.tipoCombate = tipo;
+            combatEnCurso = false;
+
             document.getElementById("player-initiative-bubble").style.display = "none";
             document.getElementById("enemy-initiative-bubble").style.display = "none";
 
-            document.getElementById("combat-dialogue-text").innerHTML = tipo === 'wild' ? `¡Un ${currentEnemy.nombre} salvaje apareció!` : `¡Un Entrenador te desafía!`;
+            if (tipo === 'wild') {
+                document.getElementById("combat-dialogue-text").innerHTML = `¡Un ${currentEnemy.nombre} salvaje apareció!`;
+            } else {
+                const trainerNames = ["Cazador Pedro", "Campista María", "Joven Lucas", "Luchador Mario", "Entrenador Juan", "Montañero Jorge"];
+                const randomTrainer = trainerNames[Math.floor(Math.random() * trainerNames.length)];
+                currentEnemy.trainerName = randomTrainer;
+                document.getElementById("combat-dialogue-text").innerHTML = `¡${randomTrainer} te desafía y envía a ${currentEnemy.nombre}!`;
+            }
 
             document.getElementById("map-content-inner").style.display = "none";
             document.getElementById("explore-log").style.display = "none";
             document.getElementById("combat-viewport-screen").style.display = "flex";
+
             document.getElementById("normal-controls-view").style.display = "none";
             document.getElementById("combat-controls-view").style.display = "flex";
 
@@ -2284,13 +3172,28 @@
             let pSpriteImg = document.getElementById("player-battle-sprite");
             let eSpriteImg = document.getElementById("enemy-battle-sprite");
 
+            pSpriteImg.onerror = function() {
+                this.onerror = function() {
+                    this.onerror = null;
+                    this.src = lider.sprite_url;
+                };
+                this.src = lider.isShiny 
+                    ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${lider.idDex || 1}.png`
+                    : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${lider.idDex || 1}.png`;
+            };
+
             pSpriteImg.src = getPokemonBackSpriteUrl(lider);
             eSpriteImg.src = currentEnemy.sprite_url || "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png";
 
             actualizarBarrasHP();
 
-            let t1Map = mapType(lider.tipo1); let t2Map = mapType(lider.tipo2); let tOcultoMap = mapType(lider.tipoOculto);
-            let c1 = TYPE_COLORS[t1Map] || "#777"; let c2 = TYPE_COLORS[t2Map] || TYPE_COLORS["normal"]; let cOculto = TYPE_COLORS[tOcultoMap] || "#fff";
+            let t1Map = mapType(lider.tipo1);
+            let t2Map = mapType(lider.tipo2);
+            let tOcultoMap = mapType(lider.tipoOculto);
+
+            let c1 = TYPE_COLORS[t1Map] || "#777";
+            let c2 = TYPE_COLORS[t2Map] || TYPE_COLORS["normal"];
+            let cOculto = TYPE_COLORS[tOcultoMap] || "#fff";
 
             let botones = `
                 <div class="top-attacks-row">
@@ -2313,19 +3216,24 @@
             if (!lider.hpMax || lider.hpMax <= 0) lider.hpMax = 50;
             if (lider.hpActual === undefined || lider.hpActual < 0) lider.hpActual = lider.hpMax;
 
-            let pokeData = POKEDEX_GLOBAL.find(p => p.name.toLowerCase() === (zona.legendary || "Mewtwo").toLowerCase()) || POKEDEX_GLOBAL[0];
+            let legendarioNombre = zona.legendary || "Mewtwo";
+            let pokeData = POKEDEX_GLOBAL.find(p => p.name.toLowerCase() === legendarioNombre.toLowerCase()) || POKEDEX_GLOBAL[0];
+
             currentEnemy = generarDatosPokemonBase(pokeData, 50, false);
-            currentEnemy.tipoCombate = 'wild'; combatEnCurso = false;
+            currentEnemy.tipoCombate = 'wild';
+            combatEnCurso = false;
 
             document.getElementById("player-initiative-bubble").style.display = "none";
             document.getElementById("enemy-initiative-bubble").style.display = "none";
+
             document.getElementById("current-zone-name").innerText = zona.name;
             document.getElementById("zone-sprite").innerText = zona.sprite || "✨";
-            document.getElementById("combat-dialogue-text").innerHTML = `¡El legendario ${currentEnemy.nombre} desciende en ${zona.name}!`;
+            document.getElementById("combat-dialogue-text").innerHTML = `¡El legendario ${currentEnemy.nombre} desciende de las sombras en ${zona.name}!`;
 
             document.getElementById("map-content-inner").style.display = "none";
             document.getElementById("explore-log").style.display = "none";
             document.getElementById("combat-viewport-screen").style.display = "flex";
+
             document.getElementById("normal-controls-view").style.display = "none";
             document.getElementById("combat-controls-view").style.display = "flex";
 
@@ -2335,13 +3243,28 @@
             let pSpriteImg = document.getElementById("player-battle-sprite");
             let eSpriteImg = document.getElementById("enemy-battle-sprite");
 
+            pSpriteImg.onerror = function() {
+                this.onerror = function() {
+                    this.onerror = null;
+                    this.src = lider.sprite_url;
+                };
+                this.src = lider.isShiny 
+                    ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${lider.idDex || 1}.png`
+                    : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${lider.idDex || 1}.png`;
+            };
+
             pSpriteImg.src = getPokemonBackSpriteUrl(lider);
             eSpriteImg.src = currentEnemy.sprite_url || "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png";
 
             actualizarBarrasHP();
 
-            let t1Map = mapType(lider.tipo1); let t2Map = mapType(lider.tipo2); let tOcultoMap = mapType(lider.tipoOculto);
-            let c1 = TYPE_COLORS[t1Map] || "#777"; let c2 = TYPE_COLORS[t2Map] || TYPE_COLORS["normal"]; let cOculto = TYPE_COLORS[tOcultoMap] || "#fff";
+            let t1Map = mapType(lider.tipo1);
+            let t2Map = mapType(lider.tipo2);
+            let tOcultoMap = mapType(lider.tipoOculto);
+
+            let c1 = TYPE_COLORS[t1Map] || "#777";
+            let c2 = TYPE_COLORS[t2Map] || TYPE_COLORS["normal"];
+            let cOculto = TYPE_COLORS[tOcultoMap] || "#fff";
 
             let botones = `
                 <div class="top-attacks-row">
@@ -2362,8 +3285,10 @@
         function actualizarBarrasHP() {
             let lider = teamPokemon[0];
             if (!lider || !currentEnemy) return;
+            
             if (!lider.hpMax || lider.hpMax <= 0) lider.hpMax = 50;
             if (lider.hpActual === undefined || lider.hpActual < 0) lider.hpActual = lider.hpMax;
+
             if (!currentEnemy.hpMax || currentEnemy.hpMax <= 0) currentEnemy.hpMax = 50;
             if (currentEnemy.hpActual === undefined || currentEnemy.hpActual < 0) currentEnemy.hpActual = currentEnemy.hpMax;
 
@@ -2372,83 +3297,194 @@
 
             document.getElementById("player-hp-fill").style.width = pPercent + "%";
             document.getElementById("enemy-hp-fill").style.width = ePercent + "%";
-            document.getElementById("player-battle-hp-text").innerText = `${lider.hpActual}/${lider.hpMax}`;
+            document.getElementById("player-battle-hp-text").innerText = `${lider.hpActual}/${lider.hpMax} PS`;
 
             let expReq = (lider.nivel || 5) * 100;
-            let expPorc = Math.max(0, Math.min(100, ((lider.exp || 0) / expReq) * 100));
+            let expVal = lider.exp || 0;
+            let expPorc = Math.max(0, Math.min(100, (expVal / expReq) * 100));
             document.getElementById("player-exp-fill").style.width = expPorc + "%";
         }
 
         function calcularDaño(atacante, defensor, tipoAtaque) {
             let tiposDef = [mapType(defensor.tipo1), mapType(defensor.tipo2)];
             let multiplicador = getEffectiveness(tipoAtaque, tiposDef);
-            if (multiplicador === 0) return { daño: 0, multi: multiplicador };
+            
+            if (multiplicador === 0) {
+                return { daño: 0, multi: multiplicador };
+            }
+
             let dañoBase = Math.max(1, atacante.ataque - defensor.defensa + Math.floor(Math.random() * 5));
-            return { daño: Math.max(1, Math.floor(dañoBase * multiplicador)), multi: multiplicador };
+            let dañoFinal = Math.max(1, Math.floor(dañoBase * multiplicador));
+            
+            return { daño: dañoFinal, multi: multiplicador };
         }
 
         function getMensajeEfectividad(multi) {
-            if (multi >= 4) return " <span style='color:#22c55e;'>¡Cuádruplemente eficaz!</span>";
-            if (multi > 1) return " <span style='color:#4CAF50;'>¡Muy eficaz!</span>";
-            if (multi < 1 && multi > 0) return " <span style='color:#ef4444;'>Poco eficaz...</span>";
-            if (multi === 0) return " <span style='color:#a8a29e;'>No afecta.</span>";
+            if (multi >= 4) return " <span style='color:#22c55e; font-weight:bold;'>¡Es cuádruplemente eficaz!</span>";
+            if (multi > 1) return " <span style='color:#4CAF50; font-weight:bold;'>¡Es muy eficaz!</span>";
+            if (multi <= 0.25) return " <span style='color:#ef4444; font-weight:bold;'>¡Es extremadamente poco eficaz...</span>";
+            if (multi < 1 && multi > 0) return " <span style='color:#ef4444; font-weight:bold;'>No es muy eficaz...</span>";
+            if (multi === 0) return " <span style='color:#a8a29e; font-weight:bold;'>No afecta al enemigo.</span>";
             return "";
         }
 
         async function ejecutarTurnoCombate(accion, tipoAtaqueSeleccionado) {
             if (combatEnCurso) return;
-            let lider = teamPokemon[0]; const dialogue = document.getElementById("combat-dialogue-text");
+            let lider = teamPokemon[0];
+            const dialogue = document.getElementById("combat-dialogue-text");
 
             if (accion === 'capturar') {
-                combatEnCurso = true; dialogue.innerHTML = `¡Lanzaste una Poké Ball!`; await sleep(1000);
+                combatEnCurso = true;
+                dialogue.innerHTML = `¡Lanzaste una Poké Ball!`;
+                await sleep(1000);
+
                 if (Math.random() < 0.6) {
-                    let nuevo = { ...currentEnemy }; marcarAtrapado(nuevo.idDex);
+                    let nuevo = { ...currentEnemy };
+                    marcarAtrapado(nuevo.idDex);
                     if (teamPokemon.length < 4) teamPokemon.push(nuevo); else pcStorage.push(nuevo);
-                    let expGanada = Math.floor(currentEnemy.nivel * 20); let subio = ganarExperiencia(expGanada);
-                    guardarDatos(); combatEnCurso = false;
-                    let msg = `¡Atrapaste a ${nuevo.nombre}! (+${expGanada} EXP).`;
-                    if (subio) msg += ` ¡${lider.nombre} subió a Lv.${lider.nivel}!`;
+                    
+                    let expGanada = Math.floor(currentEnemy.nivel * 20);
+                    let subio = ganarExperiencia(expGanada);
+                    
+                    guardarDatos();
+                    combatEnCurso = false;
+                    let msg = `¡Atrapaste a ${nuevo.nombre}! (Ganaste ${expGanada} EXP). ${teamPokemon.length < 4 ? 'Añadido al equipo.' : 'Enviado al PC.'}`;
+                    if (subio) msg += ` <span style="color:#38bdf8;">¡${lider.nombre} subió a Lv.${lider.nivel}!</span>`;
                     return cerrarCombate(msg);
                 } else {
-                    dialogue.innerHTML = `¡El Pokémon escapó! El rival contraataca.`; await sleep(1000);
-                    let tipoEnemigo = [currentEnemy.tipo1, currentEnemy.tipo2].filter(Boolean)[0] || 'normal';
-                    let resE = calcularDaño(currentEnemy, lider, mapType(tipoEnemigo));
+                    dialogue.innerHTML = `¡El Pokémon escapó de la Poké Ball! El rival contraataca.`;
+                    await sleep(1200);
+
+                    let tiposEnemigoDisponibles = [currentEnemy.tipo1, currentEnemy.tipo2, currentEnemy.tipoOculto].filter(Boolean).map(mapType);
+                    let tipoEnemigo = tiposEnemigoDisponibles[Math.floor(Math.random() * tiposEnemigoDisponibles.length)];
+                    let resE = calcularDaño(currentEnemy, lider, tipoEnemigo);
+
+                    let spriteElem = document.getElementById("enemy-battle-sprite");
+                    spriteElem.classList.add("strike-enemy");
+                    await sleep(180);
+
                     lider.hpActual = Math.max(0, lider.hpActual - resE.daño);
-                    actualizarBarrasHP(); actualizarHUD();
-                    dialogue.innerHTML = `⚠️ Recibiste ${resE.daño} daño.`; await sleep(800);
-                    if (lider.hpActual <= 0) { lider.hpActual = 1; combatEnCurso = false; return cerrarCombate(`¡Tu Pokémon exhausto!`); }
-                    combatEnCurso = false; return;
+                    actualizarBarrasHP();
+                    actualizarHUD();
+                    dialogue.innerHTML = `⚠️ El Pokémon salvaje se liberó y usó ${tipoEnemigo.toUpperCase()}: ${resE.daño} daño.${getMensajeEfectividad(resE.multi)}`;
+
+                    await sleep(200);
+                    spriteElem.classList.remove("strike-enemy");
+                    await sleep(800);
+
+                    if (lider.hpActual <= 0) {
+                        lider.hpActual = 1;
+                        combatEnCurso = false;
+                        return cerrarCombate(`¡Tu Pokémon quedó exhausto!`);
+                    }
+                    combatEnCurso = false;
+                    return;
                 }
             }
 
             if (accion === 'atacar') {
                 combatEnCurso = true;
+
+                const pBubble = document.getElementById("player-initiative-bubble");
+                const eBubble = document.getElementById("enemy-initiative-bubble");
+                pBubble.style.display = "block";
+                eBubble.style.display = "block";
+
+                let initJ = Math.floor(Math.random() * 99) + 1;
+                let initE = Math.floor(Math.random() * 99) + 1;
+
+                let startTick = Date.now();
+                while (Date.now() - startTick < 700) {
+                    pBubble.innerText = Math.floor(Math.random() * 99) + 1;
+                    eBubble.innerText = Math.floor(Math.random() * 99) + 1;
+                    await sleep(60);
+                }
+                pBubble.innerText = initJ;
+                eBubble.innerText = initE;
+                await sleep(500);
+
+                let playerFirst = initJ >= initE;
+
                 let resJ = calcularDaño(lider, currentEnemy, tipoAtaqueSeleccionado);
-                let tipoEnem = [currentEnemy.tipo1, currentEnemy.tipo2].filter(Boolean)[0] || 'normal';
-                let resE = calcularDaño(currentEnemy, lider, mapType(tipoEnem));
+                let tiposEnemigoDisponibles = [currentEnemy.tipo1, currentEnemy.tipo2, currentEnemy.tipoOculto].filter(Boolean).map(mapType);
+                let tipoEnemigo = tiposEnemigoDisponibles[Math.floor(Math.random() * tiposEnemigoDisponibles.length)];
+                let resE = calcularDaño(currentEnemy, lider, tipoEnemigo);
 
-                currentEnemy.hpActual = Math.max(0, currentEnemy.hpActual - resJ.daño);
-                actualizarBarrasHP();
-                dialogue.innerHTML = `⚔️ Usaste ${tipoAtaqueSeleccionado.toUpperCase()}: ${resJ.daño} daño.${getMensajeEfectividad(resJ.multi)}`;
-                await sleep(1200);
+                let log = `Iniciativa: ${lider.nombre}(${initJ}) vs ${currentEnemy.nombre}(${initE})<br>`;
 
-                if (currentEnemy.hpActual <= 0) {
-                    let expGanada = Math.floor(currentEnemy.nivel * 40);
-                    let subio = ganarExperiencia(expGanada);
-                    let msg = `¡Victoria! Ganaste ${expGanada} EXP.`;
-                    if (subio) msg += ` ¡${lider.nombre} subió a Lv.${lider.nivel}!`;
-                    combatEnCurso = false; return setTimeout(() => cerrarCombate(msg), 1200);
+                async function animarYAtacar(esJugador, dañoInfo, tipoAtq) {
+                    let spriteId = esJugador ? "player-battle-sprite" : "enemy-battle-sprite";
+                    let strikeCls = esJugador ? "strike-player" : "strike-enemy";
+                    let spriteElem = document.getElementById(spriteId);
+
+                    spriteElem.classList.add(strikeCls);
+                    await sleep(180);
+
+                    if (esJugador) {
+                        currentEnemy.hpActual = Math.max(0, currentEnemy.hpActual - dañoInfo.daño);
+                        log += `⚔️ Usaste ${tipoAtq.toUpperCase()}: ${dañoInfo.daño} daño.${getMensajeEfectividad(dañoInfo.multi)}<br>`;
+                    } else {
+                        lider.hpActual = Math.max(0, lider.hpActual - resE.daño);
+                        log += `⚠️ Rival usó ${tipoAtq.toUpperCase()}: ${resE.daño} daño.${getMensajeEfectividad(resE.multi)}<br>`;
+                    }
+
+                    actualizarBarrasHP();
+                    actualizarHUD();
+                    dialogue.innerHTML = log;
+
+                    await sleep(200);
+                    spriteElem.classList.remove(strikeCls);
+                    await sleep(300);
                 }
 
-                lider.hpActual = Math.max(0, lider.hpActual - resE.daño);
-                actualizarBarrasHP(); actualizarHUD();
-                dialogue.innerHTML = `⚠️ Rival usó ${tipoEnem.toUpperCase()}: ${resE.daño} daño.${getMensajeEfectividad(resE.multi)}`;
-                await sleep(1200);
+                if (playerFirst) {
+                    await animarYAtacar(true, resJ, tipoAtaqueSeleccionado);
+                    if (currentEnemy.hpActual <= 0) {
+                        pBubble.style.display = "none";
+                        eBubble.style.display = "none";
+                        let expGanada = Math.floor(currentEnemy.nivel * 40 * (currentEnemy.tipoCombate === 'trainer' ? 1.5 : 1));
+                        let subio = ganarExperiencia(expGanada);
+                        let msg = `¡Victoria! Ganaste ${expGanada} EXP.`;
+                        if (subio) msg += ` ¡${lider.nombre} subió a Lv.${lider.nivel}!`;
+                        combatEnCurso = false;
+                        return setTimeout(() => cerrarCombate(msg), 1500);
+                    }
 
-                if (lider.hpActual <= 0) {
-                    lider.hpActual = 1; combatEnCurso = false;
-                    return setTimeout(() => cerrarCombate(`¡Tu Pokémon se debilitó!`), 1200);
+                    await animarYAtacar(false, resE, tipoEnemigo);
+                    if (lider.hpActual <= 0) {
+                        lider.hpActual = 1;
+                        pBubble.style.display = "none";
+                        eBubble.style.display = "none";
+                        dialogue.innerHTML = log + `💀 ¡Tu Pokémon se debilitó!`;
+                        combatEnCurso = false;
+                        return setTimeout(() => cerrarCombate(`¡Tu Pokémon quedó exhausto!`), 1500);
+                    }
+                } else {
+                    await animarYAtacar(false, resE, tipoEnemigo);
+                    if (lider.hpActual <= 0) {
+                        lider.hpActual = 1;
+                        pBubble.style.display = "none";
+                        eBubble.style.display = "none";
+                        dialogue.innerHTML = log + `💀 ¡Tu Pokémon se debilitó!`;
+                        combatEnCurso = false;
+                        return setTimeout(() => cerrarCombate(`¡Tu Pokémon quedó exhausto!`), 1500);
+                    }
+
+                    await animarYAtacar(true, resJ, tipoAtaqueSeleccionado);
+                    if (currentEnemy.hpActual <= 0) {
+                        pBubble.style.display = "none";
+                        eBubble.style.display = "none";
+                        let expGanada = Math.floor(currentEnemy.nivel * 40 * (currentEnemy.tipoCombate === 'trainer' ? 1.5 : 1));
+                        let subio = ganarExperiencia(expGanada);
+                        let msg = `¡Victoria! Ganaste ${expGanada} EXP.`;
+                        if (subio) msg += ` ¡${lider.nombre} subió a Lv.${lider.nivel}!`;
+                        combatEnCurso = false;
+                        return setTimeout(() => cerrarCombate(msg), 1500);
+                    }
                 }
+
+                pBubble.style.display = "none";
+                eBubble.style.display = "none";
                 combatEnCurso = false;
             }
         }
@@ -2457,53 +3493,85 @@
             document.getElementById("combat-viewport-screen").style.display = "none"; 
             document.getElementById("map-content-inner").style.display = "block";
             document.getElementById("explore-log").style.display = "flex";
+
             document.getElementById("combat-controls-view").style.display = "none";
             document.getElementById("normal-controls-view").style.display = "flex";
-            if (msg) document.getElementById("explore-log").innerHTML = msg;
-            combatEnCurso = false; guardarDatos(); actualizarHUD(); 
-        }
 
-        function abrirMenu() { if (isWalking) return; document.getElementById("menu-screen").style.display = "flex"; }
+            if (msg) {
+                document.getElementById("explore-log").innerHTML = msg;
+            }
+            combatEnCurso = false;
+            guardarDatos(); 
+            actualizarHUD(); 
+        }
+        
+        function abrirMenu() {
+            if (isWalking) return;
+            document.getElementById("menu-screen").style.display = "flex";
+        }
         function cerrarMenu() { document.getElementById("menu-screen").style.display = "none"; }
 
+        // --- SISTEMA INTERACTIVO DE EQUIPO ESTILO GBA ---
         function abrirEquipo() {
-            if (isWalking) return; indicePokemonSeleccionado = null; modoMoverEquipo = false;
-            renderizarVentanaEquipo(); document.getElementById("team-screen").style.display = "flex";
+            if (isWalking) return;
+            indicePokemonSeleccionado = null;
+            modoMoverEquipo = false;
+            renderizarVentanaEquipo();
+            document.getElementById("team-screen").style.display = "flex";
         }
-        function cerrarEquipo() { document.getElementById("team-screen").style.display = "none"; }
+
+        function cerrarEquipo() {
+            document.getElementById("team-screen").style.display = "none";
+        }
 
         function seleccionarSlotEquipo(index) {
             if (!teamPokemon[index]) return;
+
             if (modoMoverEquipo) {
                 let temp = teamPokemon[indicePokemonSeleccionado];
                 teamPokemon[indicePokemonSeleccionado] = teamPokemon[index];
                 teamPokemon[index] = temp;
-                modoMoverEquipo = false; indicePokemonSeleccionado = null;
-                guardarDatos(); actualizarHUD(); renderizarVentanaEquipo();
-            } else { indicePokemonSeleccionado = index; renderizarVentanaEquipo(); }
+                
+                modoMoverEquipo = false;
+                indicePokemonSeleccionado = null;
+                guardarDatos();
+                actualizarHUD();
+                renderizarVentanaEquipo();
+            } else {
+                indicePokemonSeleccionado = index;
+                renderizarVentanaEquipo();
+            }
         }
 
         function renderizarVentanaEquipo() {
             const leadContainer = document.getElementById("gba-lead-container");
             const partyContainer = document.getElementById("gba-party-container");
             const bottomButtons = document.getElementById("gba-bottom-buttons");
-            leadContainer.innerHTML = ""; partyContainer.innerHTML = "";
+
+            leadContainer.innerHTML = "";
+            partyContainer.innerHTML = "";
 
             if (teamPokemon[0]) {
                 let p = teamPokemon[0];
-                if (!p.hpMax) p.hpMax = 50; if (p.hpActual === undefined) p.hpActual = p.hpMax;
+                if (!p.hpMax) p.hpMax = 50;
+                if (p.hpActual === undefined) p.hpActual = p.hpMax;
+
+                let isSelected = indicePokemonSeleccionado === 0 ? 'selected-slot' : '';
                 let hpPorc = Math.max(0, Math.min(100, (p.hpActual / p.hpMax) * 100));
+                
                 leadContainer.innerHTML = `
-                    <div class="gba-lead-slot ${indicePokemonSeleccionado === 0 ? 'selected-slot' : ''}" onclick="seleccionarSlotEquipo(0)">
+                    <div class="gba-lead-slot ${isSelected}" onclick="seleccionarSlotEquipo(0)">
                         <span style="font-size:26px;">${p.icono || '🐾'}</span>
                         <div class="gba-slot-info">
                             <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold; color:#fff;">
-                                <span>${p.nombre.toUpperCase()}</span><span>Lv.${p.nivel}</span>
+                                <span>${p.nombre.toUpperCase()}</span>
+                                <span>Lv.${p.nivel}</span>
                             </div>
                             <div style="font-size:9px; color:#fef3c7; display:flex; align-items:center; gap:4px;">
-                                <span style="background:#b45309; padding:0 3px;">HP</span>
+                                <span style="background:#b45309; padding:0 3px; border-radius:2px; font-weight:bold;">HP</span>
                                 <div class="gba-hp-bar" style="flex-grow:1;"><div class="gba-hp-fill" style="width:${hpPorc}%;"></div></div>
                             </div>
+                            <div style="font-size:9px; text-align:right; color:#e0f2fe;">${p.hpActual}/${p.hpMax}</div>
                         </div>
                     </div>
                 `;
@@ -2512,68 +3580,127 @@
             for (let i = 1; i < 4; i++) {
                 let p = teamPokemon[i];
                 if (p) {
-                    if (!p.hpMax) p.hpMax = 50; if (p.hpActual === undefined) p.hpActual = p.hpMax;
+                    if (!p.hpMax) p.hpMax = 50;
+                    if (p.hpActual === undefined) p.hpActual = p.hpMax;
+
+                    let isSelected = indicePokemonSeleccionado === i ? 'selected-slot' : '';
                     let hpPorc = Math.max(0, Math.min(100, (p.hpActual / p.hpMax) * 100));
                     partyContainer.innerHTML += `
-                        <div class="gba-party-slot ${indicePokemonSeleccionado === i ? 'selected-slot' : ''}" onclick="seleccionarSlotEquipo(${i})">
+                        <div class="gba-party-slot ${isSelected}" onclick="seleccionarSlotEquipo(${i})">
                             <span style="font-size:20px;">${p.icono || '🐾'}</span>
                             <div class="gba-slot-info">
                                 <div style="display:flex; justify-content:space-between; font-size:10px; font-weight:bold;">
-                                    <span>${p.nombre.toUpperCase()}</span><span>Lv.${p.nivel}</span>
+                                    <span>${p.nombre.toUpperCase()}</span>
+                                    <span>Lv.${p.nivel}</span>
                                 </div>
                                 <div style="font-size:9px; display:flex; align-items:center; gap:4px;">
-                                    <span style="background:#b45309; padding:0 3px; color:#fff;">HP</span>
+                                    <span style="background:#b45309; padding:0 3px; border-radius:2px; font-weight:bold; color:#fff;">HP</span>
                                     <div class="gba-hp-bar" style="flex-grow:1;"><div class="gba-hp-fill" style="width:${hpPorc}%;"></div></div>
                                 </div>
                             </div>
                         </div>
                     `;
                 } else {
-                    partyContainer.innerHTML += `<div class="gba-party-slot" style="opacity:0.4; cursor:default;"><span>⚪</span><div class="gba-slot-info" style="font-size:10px; color:#ccc;">--- VACÍO ---</div></div>`;
+                    partyContainer.innerHTML += `
+                        <div class="gba-party-slot" style="opacity:0.4; cursor:default;">
+                            <span style="font-size:18px;">⚪</span>
+                            <div class="gba-slot-info" style="font-size:10px; color:#ccc;">--- ESPACIO VACÍO ---</div>
+                        </div>
+                    `;
                 }
             }
 
             if (indicePokemonSeleccionado !== null) {
-                bottomButtons.innerHTML = `
-                    <button class="modal-close-btn" style="background:#0284c7;" onclick="abrirDatosPokemonTeam()">DATOS</button>
-                    <button class="modal-close-btn" style="background:#eab308; color:#000;" onclick="indicePokemonSeleccionado=null; renderizarVentanaEquipo();">CANCELAR</button>
-                `;
+                if (modoMoverEquipo) {
+                    bottomButtons.innerHTML = `
+                        <button class="modal-close-btn" style="background:#f59e0b;" onclick="cancelarMoverEquipo()">CANCELAR</button>
+                    `;
+                    document.querySelector('.team-window-gba .modal-title').innerText = "- SELECCIONA DESTINO -";
+                } else {
+                    bottomButtons.innerHTML = `
+                        <button class="modal-close-btn" style="background:#0284c7;" onclick="abrirDatosPokemonTeam()">DATOS</button>
+                        <button class="modal-close-btn" style="background:#eab308; color:#000;" onclick="activarModoMoverTeam()">MOVER</button>
+                        <button class="modal-close-btn" style="background:#ef4444;" onclick="cancelarSeleccionEquipo()">CANCELAR</button>
+                    `;
+                    let pokeSel = teamPokemon[indicePokemonSeleccionado];
+                    document.querySelector('.team-window-gba .modal-title').innerText = `- ${pokeSel.nombre.toUpperCase()} -`;
+                }
             } else {
-                bottomButtons.innerHTML = `<button class="modal-close-btn" onclick="cerrarEquipo()">CERRAR</button>`;
+                bottomButtons.innerHTML = `
+                    <button class="modal-close-btn" onclick="cerrarEquipo()">CERRAR</button>
+                `;
+                document.querySelector('.team-window-gba .modal-title').innerText = "- EQUIPO POKÉMON -";
             }
         }
 
         function abrirDatosPokemonTeam() {
             if (indicePokemonSeleccionado === null) return;
             let p = teamPokemon[indicePokemonSeleccionado];
-            let colorT1 = TYPE_COLORS[mapType(p.tipo1)] || "#777";
-            let colorT2 = p.tipo2 ? (TYPE_COLORS[mapType(p.tipo2)] || "#777") : null;
-            let tiposHtml = `<div class="summary-type-badge" style="background:${colorT1};">${p.tipo1.toUpperCase()}</div>`;
-            if (p.tipo2) tiposHtml += `<div class="summary-type-badge" style="background:${colorT2};">${p.tipo2.toUpperCase()}</div>`;
 
-            document.getElementById("summary-content-body").innerHTML = `
+            let t1Map = mapType(p.tipo1);
+            let t2Map = mapType(p.tipo2);
+            let tOcultoMap = mapType(p.tipoOculto);
+
+            let colorT1 = TYPE_COLORS[t1Map] || "#777";
+            let colorT2 = t2Map ? (TYPE_COLORS[t2Map] || "#777") : null;
+            let colorOculto = TYPE_COLORS[tOcultoMap] || "#fff";
+
+            let tiposHtml = `<div class="summary-type-badge" style="background:${colorT1};">${p.tipo1.toUpperCase()}</div>`;
+            if (p.tipo2) {
+                tiposHtml += `<div class="summary-type-badge" style="background:${colorT2};">${p.tipo2.toUpperCase()}</div>`;
+            }
+
+            let bodyHTML = `
                 <div class="summary-left">
-                    <div style="font-size:10px; font-weight:bold;">No.${p.idDex || 25}</div>
-                    <div style="font-size:11px; font-weight:bold;">Lv. ${p.nivel}</div>
+                    <div style="font-size:10px; font-weight:bold; color:#374151; width:100%; display:flex; justify-content:space-between;">
+                        <span>Pokédex No.${p.idDex || 25}</span>
+                    </div>
+                    <div style="font-size:11px; font-weight:bold; color:#1f2937; align-self:flex-start;">Lv. ${p.nivel}</div>
                     <div style="margin: 5px 0;"><img src="${p.sprite_url}" style="width:75px; height:75px; image-rendering:pixelated;" alt="Sprite"></div>
-                    <div style="background:#1f2937; color:#fff; font-size:11px; font-weight:bold; width:100%; padding:4px; text-align:center;">${p.nombre.toUpperCase()}</div>
+                    <div style="background:#1f2937; color:#fff; font-size:11px; font-weight:bold; width:100%; padding:4px; border-radius:3px; text-align:center;">${p.nombre.toUpperCase()}</div>
                     <div style="display:flex; gap:4px; width:100%; margin-top:4px;">${tiposHtml}</div>
                 </div>
                 <div class="summary-right">
+                    <div class="summary-table-row"><span>Trainer ID</span><b>${p.trainerId || '03101'}</b></div>
                     <div class="summary-table-row"><span>Salud</span><b>${p.hpActual || p.hpMax} PS</b></div>
                     <div class="summary-table-row"><span>Ataque</span><b>${p.ataque}</b></div>
                     <div class="summary-table-row"><span>Defensa</span><b>${p.defensa}</b></div>
                     <div class="summary-table-row"><span>Potencial</span><b>${p.potencial || '15 / 31'}</b></div>
-                    <div style="font-size:8px; color:#4b5563; margin-top:2px;">${p.origen || 'Activo.'}</div>
+                    <div class="summary-table-row"><span>Poder Oculto</span><b style="color:${colorOculto}; text-shadow:1px 1px 0 #000;">${p.tipoOculto.toUpperCase()}</b></div>
+                    <div class="summary-table-row"><span>Amistad</span><b>${p.amistad || '50 / 100'}</b></div>
+                    <div style="font-size:8px; color:#4b5563; margin-top:2px; line-height:1.1;">${p.origen || 'En equipo activo.'}</div>
                 </div>
             `;
+
+            document.getElementById("summary-content-body").innerHTML = bodyHTML;
             document.getElementById("team-screen").style.display = "none";
             document.getElementById("summary-screen").style.display = "flex";
         }
 
         function cerrarDatosPokemon() {
             document.getElementById("summary-screen").style.display = "none";
-            document.getElementById("team-screen").style.display = "flex";
+            if (document.getElementById("pc-screen").style.display === "flex") {
+                document.getElementById("pc-screen").style.display = "flex";
+            } else {
+                document.getElementById("team-screen").style.display = "flex";
+            }
+        }
+
+        function activarModoMoverTeam() {
+            if (indicePokemonSeleccionado === null) return;
+            modoMoverEquipo = true;
+            renderizarVentanaEquipo();
+        }
+
+        function cancelarMoverEquipo() {
+            modoMoverEquipo = false;
+            renderizarVentanaEquipo();
+        }
+
+        function cancelarSeleccionEquipo() {
+            indicePokemonSeleccionado = null;
+            modoMoverEquipo = false;
+            renderizarVentanaEquipo();
         }
     </script>
 </body>
