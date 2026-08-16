@@ -143,7 +143,7 @@
         .gacha-pull-btn:hover { filter: brightness(1.1); }
         .gacha-close-btn { background: #dc2626; border: 2px solid #f87171; color: white; padding: 7px 10px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 11px; text-align: center; }
 
-        /* --- NUEVA TRAINER CARD FLIP MODAL --- */
+        /* Trainer Card Flip */
         .trainer-card-wrapper {
             width: 100%;
             height: 100%;
@@ -223,7 +223,6 @@
             margin-top: -2px;
         }
 
-        /* 3D FLIP CONTAINER */
         .tc-perspective-area {
             perspective: 1000px;
             width: 295px;
@@ -255,7 +254,6 @@
             box-sizing: border-box;
         }
 
-        /* FRONT FACE */
         .tc-front {
             background: linear-gradient(180deg, #93c5fd 0%, #60a5fa 35%, #3b82f6 100%);
             display: flex;
@@ -331,22 +329,10 @@
             align-items: center;
             justify-content: space-between;
         }
-        .tc-badges-title {
-            font-size: 7px;
-            font-weight: 900;
-            color: #f1f5f9;
-            letter-spacing: 0.5px;
-        }
-        .tc-badge-slot {
-            font-size: 10px;
-            filter: grayscale(100%) opacity(30%);
-            transition: all 0.3s;
-        }
-        .tc-badge-slot.unlocked {
-            filter: grayscale(0%) opacity(100%) drop-shadow(0 0 3px #facc15);
-        }
+        .tc-badges-title { font-size: 7px; font-weight: 900; color: #f1f5f9; letter-spacing: 0.5px; }
+        .tc-badge-slot { font-size: 10px; filter: grayscale(100%) opacity(30%); transition: all 0.3s; }
+        .tc-badge-slot.unlocked { filter: grayscale(0%) opacity(100%) drop-shadow(0 0 3px #facc15); }
 
-        /* BACK FACE (STATS) */
         .tc-back {
             background: #0f2d2e;
             border-color: #14b8a6;
@@ -358,50 +344,14 @@
             font-size: 8px;
             padding: 6px;
         }
-        .tc-stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px;
-            height: 100%;
-        }
-        .tc-stat-col {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-        .tc-stat-section-title {
-            font-weight: 900;
-            color: #2dd4bf;
-            font-size: 8px;
-            border-bottom: 1px solid #134e4a;
-            padding-bottom: 1px;
-            margin-bottom: 1px;
-        }
-        .tc-stat-row {
-            display: flex;
-            justify-content: space-between;
-            color: #cbd5e1;
-            font-size: 7.5px;
-        }
-        .tc-stat-row b {
-            color: #ffffff;
-        }
+        .tc-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; height: 100%; }
+        .tc-stat-col { display: flex; flex-direction: column; gap: 2px; }
+        .tc-stat-section-title { font-weight: 900; color: #2dd4bf; font-size: 8px; border-bottom: 1px solid #134e4a; padding-bottom: 1px; margin-bottom: 1px; }
+        .tc-stat-row { display: flex; justify-content: space-between; color: #cbd5e1; font-size: 7.5px; }
+        .tc-stat-row b { color: #ffffff; }
 
-        /* FILA SPRITES INFERIOR */
-        .tc-team-strip {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-            justify-content: center;
-            margin-top: 3px;
-        }
-        .tc-team-mini-sprite {
-            width: 26px;
-            height: 26px;
-            object-fit: contain;
-            image-rendering: pixelated;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
-        }
+        .tc-team-strip { display: flex; gap: 6px; align-items: center; justify-content: center; margin-top: 3px; }
+        .tc-team-mini-sprite { width: 26px; height: 26px; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6)); }
 
         .box-container h2 { margin-bottom: 10px; color: #4CAF50; font-size: 16px; }
         .box-container input { width: 100%; padding: 8px; margin-bottom: 10px; background-color: #1a1a1a; border: 1px solid #555; color: #fff; border-radius: 4px; }
@@ -869,20 +819,17 @@
                 </div>
             </div>
 
-            <!-- --- VENTANA TRAINER CARD CON GIRO 3D (FLIP) --- -->
+            <!-- Trainer Card con Giro 3D -->
             <div id="trainer-card-screen" class="modal-screen" style="z-index: 92;">
                 <div class="trainer-card-wrapper">
-                    <!-- Botones de Control -->
                     <button class="tc-flip-btn" onclick="girarTrainerCard()" title="Girar Tarjeta">🔄</button>
                     <button class="tc-close-btn" onclick="cerrarTrainerCard()">✖</button>
 
-                    <!-- Logo Superior -->
                     <div class="tc-logo-trails">
                         POKÉMON
                         <span class="tc-logo-badge">TRAILS</span>
                     </div>
 
-                    <!-- Área 3D Flip -->
                     <div class="tc-perspective-area">
                         <div class="tc-flipper" id="tc-flipper-container">
                             
@@ -922,10 +869,9 @@
                                 </div>
                             </div>
 
-                            <!-- CARA TRASERA (STATS) -->
+                            <!-- CARA TRASERA -->
                             <div class="tc-face tc-back">
                                 <div class="tc-stats-grid">
-                                    <!-- Columna Izquierda -->
                                     <div class="tc-stat-col">
                                         <div class="tc-stat-section-title">Información PKMN:</div>
                                         <div class="tc-stat-row"><span>Vistos:</span><b id="tc-stat-seen">0</b></div>
@@ -940,7 +886,6 @@
                                         <div class="tc-stat-row"><span>Capturados:</span><b id="tc-dex-caught">0</b></div>
                                     </div>
 
-                                    <!-- Columna Derecha -->
                                     <div class="tc-stat-col">
                                         <div class="tc-stat-section-title">Perfil:</div>
                                         <div class="tc-stat-row"><span>Inicio:</span><b id="tc-stat-start-date">04/Nov/2022</b></div>
@@ -957,7 +902,6 @@
                         </div>
                     </div>
 
-                    <!-- Fila inferior: Mini sprites del equipo -->
                     <div class="tc-team-strip" id="tc-team-mini-strip"></div>
                 </div>
             </div>
@@ -1004,7 +948,6 @@
                 <div class="bottom-nav" id="normal-bottom-nav">
                     <button class="btn-nav" onclick="abrirEquipo()">EQUIPO</button>
                     <button class="btn-nav" onclick="abrirBolsa()">BOLSA</button>
-                    <!-- 3er botón: Abre la Trainer Card -->
                     <button id="btn-username-display" class="btn-nav" style="color: #6ee7b7; font-weight: bold;" onclick="abrirTrainerCard()">JUGADOR</button>
                 </div>
             </div>
@@ -1168,20 +1111,42 @@
             sprite.style.backgroundPosition = "0px 0px";
         }
 
+        // --- SISTEMA DE RESOLUCIÓN EXACTA DE ID POKÉDEX ---
+        function getValidPokemonDexId(poke) {
+            if (!poke) return 1;
+            if (poke.idDex && typeof poke.idDex === 'number') return poke.idDex;
+            if (poke.id && typeof poke.id === 'number') return poke.id;
+            if (poke.national_id && typeof poke.national_id === 'number') return poke.national_id;
+            if (poke.dexId && typeof poke.dexId === 'number') return poke.dexId;
+            
+            if (poke.nombre || poke.name) {
+                let cleanName = (poke.nombre || poke.name).replace(' ✨', '').trim().toLowerCase();
+                let match = POKEDEX_GLOBAL.find(x => x.name.toLowerCase() === cleanName);
+                if (match && match.id) return match.id;
+            }
+            return 1;
+        }
+
         const SPRITE_URL_CACHE = new Map();
         const BACK_SPRITE_URL_CACHE = new Map();
         const ICON_URL_CACHE = new Map();
 
         function getPokedexNormalSpriteUrl(poke) {
-            let id = poke.id || poke.idDex || 1;
-            if (SPRITE_URL_CACHE.has(id)) return SPRITE_URL_CACHE.get(id);
-            let url = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
-            SPRITE_URL_CACHE.set(id, url);
+            let id = getValidPokemonDexId(poke);
+            let isShiny = poke.isShiny ? true : false;
+            let cacheKey = `${id}_${isShiny ? 'shiny' : 'norm'}`;
+            if (SPRITE_URL_CACHE.has(cacheKey)) return SPRITE_URL_CACHE.get(cacheKey);
+
+            let url = isShiny 
+                ? (poke.shiny_sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`)
+                : (poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`);
+
+            SPRITE_URL_CACHE.set(cacheKey, url);
             return url;
         }
 
         function getPokemonBackSpriteUrl(poke) {
-            let id = poke.id || poke.idDex || 1;
+            let id = getValidPokemonDexId(poke);
             let isShiny = poke.isShiny ? true : false;
             let cacheKey = `${id}_${isShiny ? 'shiny' : 'norm'}`;
             if (BACK_SPRITE_URL_CACHE.has(cacheKey)) return BACK_SPRITE_URL_CACHE.get(cacheKey);
@@ -1202,7 +1167,7 @@
         }
 
         function getPokedexIconUrl(poke) {
-            let id = poke.id || poke.idDex || 1;
+            let id = getValidPokemonDexId(poke);
             if (ICON_URL_CACHE.has(id)) return ICON_URL_CACHE.get(id);
 
             let url;
@@ -1233,7 +1198,7 @@
             let caughtList = JSON.parse(localStorage.getItem(prefix + "pokedex_caught") || "[]");
             let seenList = JSON.parse(localStorage.getItem(prefix + "pokedex_seen") || "[]");
 
-            const inTeamOrPC = teamPokemon.some(p => p.idDex === idDex) || pcStorage.some(p => p.idDex === idDex);
+            const inTeamOrPC = teamPokemon.some(p => getValidPokemonDexId(p) === idDex) || pcStorage.some(p => getValidPokemonDexId(p) === idDex);
             if (inTeamOrPC && !caughtList.includes(idDex)) {
                 caughtList.push(idDex);
                 seenList.push(idDex);
@@ -1570,7 +1535,7 @@
         }
 
         function generarDatosPokemonBase(pokeData, nivel, forzarShiny = false) {
-            let idDex = pokeData.id || 25;
+            let idDex = getValidPokemonDexId(pokeData);
             let isShiny = forzarShiny ? true : (Math.random() < (1 / 4096));
             let iv = 15;
             let hpMax = calcularHPFinal(pokeData.stats?.hp || 45, nivel, iv);
@@ -1580,7 +1545,9 @@
             let t1 = pokeData.types ? pokeData.types[0] : "normal";
             let t2 = pokeData.types && pokeData.types.length > 1 ? pokeData.types[1] : null;
 
-            let frontUrl = isShiny ? (pokeData.shiny_sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${idDex}.png`) : (pokeData.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idDex}.png`);
+            let frontUrl = isShiny 
+                ? (pokeData.shiny_sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${idDex}.png`) 
+                : (pokeData.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idDex}.png`);
             let backUrl = getPokemonBackSpriteUrl({ idDex: idDex, isShiny: isShiny });
 
             marcarVisto(idDex);
@@ -1623,7 +1590,7 @@
             return true;
         }
 
-        // --- SISTEMA INTERACTIVO TRAINER CARD (FLIP 3D) ---
+        // --- TRAINER CARD INTERACTIVA ---
         let trainerCardFlipped = false;
 
         function abrirTrainerCard() {
@@ -1653,24 +1620,21 @@
             const skinObj = SKINS_DATABASE.find(s => s.id === equippedSkinId) || SKINS_DATABASE[0];
             const lider = teamPokemon[0];
 
-            // Header info
             document.getElementById("tc-card-username").innerText = user.toUpperCase();
             document.getElementById("tc-card-money").innerText = `₱ ${playerMoney.toLocaleString()}`;
             document.getElementById("tc-card-tid").innerText = (lider ? lider.trainerId : "08383");
 
-            // Sprites
             const trainerArtImg = document.getElementById("tc-trainer-art-img");
             trainerArtImg.src = skinObj.art_image;
 
             const leadSpriteImg = document.getElementById("tc-lead-sprite-img");
             if (lider) {
                 leadSpriteImg.style.display = "block";
-                leadSpriteImg.src = lider.sprite_url;
+                leadSpriteImg.src = getPokedexNormalSpriteUrl(lider);
             } else {
                 leadSpriteImg.style.display = "none";
             }
 
-            // Badges
             for (let i = 0; i < 8; i++) {
                 const bEl = document.getElementById(`tc-badge-${i}`);
                 if (bEl) {
@@ -1682,11 +1646,9 @@
                 }
             }
 
-            // Mini Sprites Strip (Fila inferior)
             const miniStrip = document.getElementById("tc-team-mini-strip");
             miniStrip.innerHTML = "";
 
-            // Mini Entrenador
             const tDiv = document.createElement("div");
             tDiv.className = "tc-team-mini-sprite";
             tDiv.style.backgroundImage = `url('${skinObj.sheet_image}')`;
@@ -1694,7 +1656,6 @@
             tDiv.style.backgroundPosition = "-26px 0px";
             miniStrip.appendChild(tDiv);
 
-            // Pokémon del equipo
             teamPokemon.forEach(p => {
                 const pImg = document.createElement("img");
                 pImg.className = "tc-team-mini-sprite";
@@ -1702,15 +1663,13 @@
                 miniStrip.appendChild(pImg);
             });
 
-            // Back stats data
             const prefix = `pt_${user}_`;
             let caughtList = JSON.parse(localStorage.getItem(prefix + "pokedex_caught") || "[]");
             let seenList = JSON.parse(localStorage.getItem(prefix + "pokedex_seen") || "[]");
-
             let shiniesCaught = teamPokemon.filter(p => p.isShiny).length + pcStorage.filter(p => p.isShiny).length;
 
-            document.getElementById("tc-stat-seen").innerText = seenList.length + 150;
-            document.getElementById("tc-stat-caught").innerText = caughtList.length + 50;
+            document.getElementById("tc-stat-seen").innerText = seenList.length;
+            document.getElementById("tc-stat-caught").innerText = caughtList.length;
             document.getElementById("tc-stat-shiny-seen").innerText = shiniesCaught > 0 ? shiniesCaught + 1 : 0;
             document.getElementById("tc-stat-shiny-caught").innerText = shiniesCaught;
             document.getElementById("tc-stat-leg-seen").innerText = isSpecialZone ? 1 : 0;
@@ -1876,14 +1835,14 @@
                 if (p.hpActual === undefined || p.hpActual < 0) p.hpActual = p.hpMax;
                 if (p.exp === undefined) p.exp = 0;
                 if (!p.nivel) p.nivel = 5;
-                marcarAtrapado(p.idDex);
+                marcarAtrapado(getValidPokemonDexId(p));
             });
 
             pcStorage.forEach(p => {
                 if (!p.hpMax || p.hpMax <= 0) p.hpMax = 50;
                 if (p.hpActual === undefined) p.hpActual = p.hpMax;
                 if (p.favorito === undefined) p.favorito = false;
-                marcarAtrapado(p.idDex);
+                marcarAtrapado(getValidPokemonDexId(p));
             });
 
             if (esUsuarioFonso()) energiaActual = energiaMax;
@@ -1936,7 +1895,7 @@
             let starter = generarDatosPokemonBase(pokeFound, 5);
             starter.origen = "Elegido del Prof. Oak al nivel 5.";
 
-            marcarAtrapado(starter.idDex);
+            marcarAtrapado(getValidPokemonDexId(starter));
             teamPokemon = [starter];
             guardarDatos();
             document.getElementById("starter-screen").style.display = "none";
@@ -2032,7 +1991,7 @@
             });
         }
 
-        // --- POKÉDEX ---
+        // --- POKÉDEX CORREGIDA ---
         let pokedexSelectedIndex = 0;
         let pokedexGridConstruido = false;
 
@@ -2053,7 +2012,7 @@
             grid.innerHTML = "";
 
             POKEDEX_GLOBAL.forEach((p, idx) => {
-                let pId = p.id || (idx + 1);
+                let pId = getValidPokemonDexId(p);
                 let status = getPokedexStatus(pId);
                 let pSpriteCell = getPokedexIconUrl(p);
 
@@ -2079,7 +2038,7 @@
         function actualizarDetallePokedex() {
             if (POKEDEX_GLOBAL.length === 0) return;
             let poke = POKEDEX_GLOBAL[pokedexSelectedIndex] || POKEDEX_GLOBAL[0];
-            let idDex = poke.id || (pokedexSelectedIndex + 1);
+            let idDex = getValidPokemonDexId(poke);
             const { isCaught, isSeen } = getPokedexStatus(idDex);
 
             const headerTitle = document.getElementById("pokedex-header-title");
@@ -2114,13 +2073,13 @@
                 rarityBadge.innerText = "SEEN";
                 rarityBadge.style.background = "#64748b";
 
-                let t1 = poke.types[0] || "normal";
-                let t2 = poke.types[1] || null;
+                let t1 = poke.types ? poke.types[0] : "normal";
+                let t2 = poke.types && poke.types.length > 1 ? poke.types[1] : null;
                 let c1 = TYPE_COLORS[mapType(t1)] || "#777";
-                let tiposHtml = `<span style="background:${c1}; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">${t1.toUpperCase()}</span>`;
+                let tiposHtml = `<span style="background:${c1}; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">${typeof t1 === 'string' ? t1.toUpperCase() : (t1.name || 'NORMAL').toUpperCase()}</span>`;
                 if (t2) {
                     let c2 = TYPE_COLORS[mapType(t2)] || "#777";
-                    tiposHtml += ` <span style="background:${c2}; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">${t2.toUpperCase()}</span>`;
+                    tiposHtml += ` <span style="background:${c2}; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">${typeof t2 === 'string' ? t2.toUpperCase() : (t2.name || '').toUpperCase()}</span>`;
                 }
                 typesContainer.innerHTML = tiposHtml;
                 evolutionText.innerText = poke.evolves_from && poke.evolves_from !== "None" ? `- EVOLVES FROM ${poke.evolves_from.toUpperCase()} -` : `- FIRST STAGE -`;
@@ -2135,13 +2094,13 @@
                 rarityBadge.innerText = "COMMON";
                 rarityBadge.style.background = "#ef4444";
 
-                let t1 = poke.types[0] || "normal";
-                let t2 = poke.types[1] || null;
+                let t1 = poke.types ? poke.types[0] : "normal";
+                let t2 = poke.types && poke.types.length > 1 ? poke.types[1] : null;
                 let c1 = TYPE_COLORS[mapType(t1)] || "#777";
-                let tiposHtml = `<span style="background:${c1}; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">${t1.toUpperCase()}</span>`;
+                let tiposHtml = `<span style="background:${c1}; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">${typeof t1 === 'string' ? t1.toUpperCase() : (t1.name || 'NORMAL').toUpperCase()}</span>`;
                 if (t2) {
                     let c2 = TYPE_COLORS[mapType(t2)] || "#777";
-                    tiposHtml += ` <span style="background:${c2}; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">${t2.toUpperCase()}</span>`;
+                    tiposHtml += ` <span style="background:${c2}; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">${typeof t2 === 'string' ? t2.toUpperCase() : (t2.name || '').toUpperCase()}</span>`;
                 }
                 typesContainer.innerHTML = tiposHtml;
                 evolutionText.innerText = poke.evolves_from && poke.evolves_from !== "None" ? `- EVOLVES FROM ${poke.evolves_from.toUpperCase()} -` : `- FIRST STAGE -`;
@@ -2158,8 +2117,8 @@
 
             let totalCaughtCount = 0;
             let totalSeenCount = 0;
-            POKEDEX_GLOBAL.forEach((p, i) => {
-                let pId = p.id || (i + 1);
+            POKEDEX_GLOBAL.forEach((p) => {
+                let pId = getValidPokemonDexId(p);
                 let status = getPokedexStatus(pId);
                 if (status.isCaught) totalCaughtCount++;
                 if (status.isSeen) totalSeenCount++;
@@ -2240,7 +2199,7 @@
             }
 
             if (sortByLvl) items.sort((a, b) => b.p.nivel - a.p.nivel);
-            if (sortByDex) items.sort((a, b) => (a.p.idDex || 0) - (b.p.idDex || 0));
+            if (sortByDex) items.sort((a, b) => (getValidPokemonDexId(a.p) || 0) - (getValidPokemonDexId(b.p) || 0));
 
             if (items.length === 0) {
                 gridContainer.innerHTML = `<div style="grid-column: span 5; text-align:center; color:#fff; font-size:10px; margin-top:20px;">No hay Pokémon en el PC</div>`;
@@ -2285,10 +2244,10 @@
             let bodyHTML = `
                 <div class="summary-left">
                     <div style="font-size:10px; font-weight:bold; color:#374151; width:100%; display:flex; justify-content:space-between;">
-                        <span>Pokédex No.${p.idDex || 25}</span>
+                        <span>Pokédex No.${getValidPokemonDexId(p)}</span>
                     </div>
                     <div style="font-size:11px; font-weight:bold; color:#1f2937; align-self:flex-start;">Lv. ${p.nivel}</div>
-                    <div style="margin: 5px 0;"><img src="${p.sprite_url}" style="width:75px; height:75px; image-rendering:pixelated;" alt="Sprite"></div>
+                    <div style="margin: 5px 0;"><img src="${getPokedexNormalSpriteUrl(p)}" style="width:75px; height:75px; image-rendering:pixelated;" alt="Sprite"></div>
                     <div style="background:#1f2937; color:#fff; font-size:11px; font-weight:bold; width:100%; padding:4px; border-radius:3px; text-align:center;">${p.nombre.toUpperCase()}</div>
                     <div style="display:flex; gap:4px; width:100%; margin-top:4px;">${tiposHtml}</div>
                 </div>
@@ -2442,7 +2401,7 @@
             const content = document.getElementById("gacha-pack-content");
             overlay.style.display = "flex";
 
-            let genTexto = obtenerGeneracion(nuevoPoke.idDex);
+            let genTexto = obtenerGeneracion(getValidPokemonDexId(nuevoPoke));
             let score = calcularPuntuacionPokemon(nuevoPoke.stats);
             let t1Map = mapType(nuevoPoke.tipo1);
             let t2Map = mapType(nuevoPoke.tipo2);
@@ -2527,7 +2486,7 @@
                         <span>Lv.${nuevoPoke.nivel}</span>
                     </div>
                     <div style="margin: 2px 0;">
-                        <img src="${nuevoPoke.sprite_url}" style="width: 70px; height: 70px; image-rendering: pixelated;" alt="Sprite">
+                        <img src="${getPokedexNormalSpriteUrl(nuevoPoke)}" style="width: 70px; height: 70px; image-rendering: pixelated;" alt="Sprite">
                     </div>
                     <div style="font-size: 10px; font-weight: bold; background: rgba(0,0,0,0.6); width: 100%; padding: 3px; border-radius: 3px; color: #fff;">
                         ${nuevoPoke.nombre.toUpperCase()}
@@ -2537,7 +2496,7 @@
                 <button class="gacha-pull-btn" style="background:#10b981; margin-top: 4px; width: 160px; padding: 6px; font-size: 11px;" onclick="cerrarCinematicaGacha()">CONTINUAR</button>
             `;
 
-            marcarAtrapado(nuevoPoke.idDex);
+            marcarAtrapado(getValidPokemonDexId(nuevoPoke));
 
             if (teamPokemon.length < 4) teamPokemon.push(nuevoPoke);
             else pcStorage.push(nuevoPoke);
@@ -2747,14 +2706,12 @@
             let eSpriteImg = document.getElementById("enemy-battle-sprite");
 
             pSpriteImg.onerror = function() {
-                this.onerror = function() { this.onerror = null; this.src = liderPoke.sprite_url; };
-                this.src = liderPoke.isShiny 
-                    ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${liderPoke.idDex || 1}.png`
-                    : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${liderPoke.idDex || 1}.png`;
+                this.onerror = function() { this.onerror = null; this.src = getPokedexNormalSpriteUrl(liderPoke); };
+                this.src = getPokemonBackSpriteUrl(liderPoke);
             };
 
             pSpriteImg.src = getPokemonBackSpriteUrl(liderPoke);
-            eSpriteImg.src = currentEnemy.sprite_url;
+            eSpriteImg.src = getPokedexNormalSpriteUrl(currentEnemy);
 
             actualizarBarrasHP();
 
@@ -2971,6 +2928,205 @@
             actualizarHUD();
         }
 
+        // --- GACHA ---
+        function abrirGacha() {
+            if (isWalking) return;
+            cerrarMenu();
+            currentGachaIndex = 0;
+            actualizarUIGacha();
+            document.getElementById("gacha-screen").style.display = "flex";
+        }
+
+        function cerrarGacha() { document.getElementById("gacha-screen").style.display = "none"; }
+
+        function cambiarGacha(direccion) {
+            currentGachaIndex = (currentGachaIndex + direccion + gachaMachines.length) % gachaMachines.length;
+            actualizarUIGacha();
+        }
+
+        function actualizarUIGacha() {
+            let maquina = gachaMachines[currentGachaIndex];
+            
+            document.getElementById("gacha-title").innerText = maquina.title;
+            document.getElementById("gacha-money-display").innerText = `${playerMoney.toLocaleString()} ₱`;
+            document.getElementById("gacha-desc").innerText = maquina.desc;
+            document.getElementById("gacha-counter-index").innerText = `${currentGachaIndex + 1} / ${gachaMachines.length}`;
+            document.getElementById("gacha-banner-stars").innerText = maquina.stars || '⭐⭐⭐⭐';
+
+            const bannerCard = document.getElementById("gacha-card-banner");
+            const tagBadge = document.getElementById("gacha-tag-badge");
+            const previewSimple = document.getElementById("gacha-preview-simple-icon");
+            const previewImg = document.getElementById("gacha-preview-main-img");
+
+            tagBadge.innerText = maquina.tag;
+            tagBadge.style.backgroundColor = maquina.tagColor || '#38bdf8';
+            bannerCard.style.background = maquina.bgGradient;
+            bannerCard.style.borderColor = maquina.borderColor || '#38bdf8';
+
+            if (maquina.artImg) {
+                previewSimple.style.display = "none";
+                previewImg.style.display = "block";
+                previewImg.src = maquina.artImg;
+            } else if (maquina.spriteId) {
+                previewSimple.style.display = "none";
+                previewImg.style.display = "block";
+                previewImg.src = maquina.isShinyPreview 
+                    ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${maquina.spriteId}.png`
+                    : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${maquina.spriteId}.png`;
+            } else {
+                previewImg.style.display = "none";
+                previewSimple.style.display = "block";
+                previewSimple.innerText = maquina.icon || '🎁';
+            }
+
+            let pullBtn = document.getElementById("gacha-pull-btn");
+            if (maquina.type === 'daily') {
+                let ahora = Date.now();
+                let unDiaMs = 24 * 60 * 60 * 1000;
+                if (ahora - lastDailyClaim < unDiaMs) {
+                    pullBtn.innerText = "YA RECLAMADO HOY";
+                    pullBtn.style.background = "#475569";
+                    pullBtn.style.borderColor = "#64748b";
+                } else {
+                    pullBtn.innerText = "RECLAMAR GRATIS";
+                    pullBtn.style.background = "linear-gradient(180deg, #10b981 0%, #047857 100%)";
+                    pullBtn.style.borderColor = "#6ee7b7";
+                }
+            } else {
+                pullBtn.innerText = `TIRAR (${maquina.cost.toLocaleString()} ₱)`;
+                pullBtn.style.background = "linear-gradient(180deg, #0284c7 0%, #0369a1 100%)";
+                pullBtn.style.borderColor = "#7dd3fc";
+            }
+        }
+
+        function realizarTiradaGacha() {
+            let maquina = gachaMachines[currentGachaIndex];
+
+            if (maquina.type === 'daily') {
+                let ahora = Date.now();
+                let unDiaMs = 24 * 60 * 60 * 1000;
+                if (ahora - lastDailyClaim < unDiaMs) return alert("¡Ya has reclamado tu bonus diario hoy! Vuelve mañana.");
+                let premioDinero = Math.floor(Math.random() * (5000 - 500 + 1)) + 500;
+                playerMoney += premioDinero;
+                lastDailyClaim = ahora;
+                guardarDatos();
+                actualizarUIGacha();
+                alert(`🎁 ¡Bonus diario reclamado! Has ganado ${premioDinero} ₱.`);
+                return;
+            }
+
+            if (maquina.type === 'character_skin') {
+                let poolDisponibles = SKINS_DATABASE.filter(s => !userSkins.includes(s.id));
+                if (poolDisponibles.length === 0) return alert("¡Ya has desbloqueado todas las skins disponibles en el juego!");
+                if (playerMoney < maquina.cost) return alert("¡No tienes suficiente dinero (₱) para realizar esta tirada!");
+
+                playerMoney -= maquina.cost;
+                let skinElegida = poolDisponibles[Math.floor(Math.random() * poolDisponibles.length)];
+                userSkins.push(skinElegida.id);
+                guardarDatos();
+                actualizarUIGacha();
+                abrirCinematicaSkin(skinElegida);
+                return;
+            }
+
+            if (playerMoney < maquina.cost) return alert("¡No tienes suficiente dinero (₱) para realizar esta tirada!");
+            playerMoney -= maquina.cost;
+
+            if (maquina.type === 'item') {
+                const itemPool = [
+                    { id: 'potion', name: 'Poción', cat: 'potions', weight: 100, desc: 'Cura un 20% de PS a un Pokémon.' },
+                    { id: 'energy_cookie', name: 'Galleta Energía', cat: 'energy', weight: 80, desc: 'Restaura una pequeña cantidad de energía.' },
+                    { id: 'super_potion', name: 'Superpoción', cat: 'potions', weight: 75, desc: 'Cura un 50% de PS a un Pokémon.' },
+                    { id: 'friendship_berry', name: 'Baya Amistad', cat: 'others', weight: 70, desc: 'Baya especial para fortalecer vínculos.' },
+                    { id: 'mini_protein', name: 'Proteína Mini', cat: 'proteins', weight: 60, desc: 'Aumenta levemente el ataque de un Pokémon.' },
+                    { id: 'honey', name: 'Miel', cat: 'others', weight: 50, desc: 'Dulce miel que atrae Pokémon salvajes.' },
+                    { id: 'binoculars', name: 'Prismáticos', cat: 'others', weight: 40, desc: 'Ayuda a divisar mejores rutas.' },
+                    { id: 'pearl', name: 'Perla', cat: 'wallet', weight: 40, desc: 'Objeto valioso que se puede vender por dinero.' },
+                    { id: 'egg', name: 'Huevo', cat: 'eggs', weight: 40, desc: 'Un huevo Pokémon estándar.' },
+                    { id: 'egg_incense', name: 'Incienso Huevo', cat: 'others', weight: 20, desc: 'Incienso aromático para la incubación.' },
+                    { id: 'energy_juice', name: 'Zumo Energía', cat: 'energy', weight: 20, desc: 'Restaura 10 puntos de energía.' },
+                    { id: 'rare_egg', name: 'Huevo Raro', cat: 'eggs', weight: 20, desc: 'Un huevo Pokémon especial y curioso.' },
+                    { id: 'hyper_potion', name: 'Hiperpoción', cat: 'potions', weight: 15, desc: 'Cura una gran cantidad de PS a un Pokémon.' },
+                    { id: 'rare_candy', name: 'Caramelo Raro', cat: 'others', weight: 15, desc: 'Caramelo misterioso que estimula el crecimiento.' },
+                    { id: 'nugget', name: 'Pepita', cat: 'wallet', weight: 10, desc: 'Pepita de oro puro muy valiosa.' },
+                    { id: 'protein', name: 'Proteína', cat: 'proteins', weight: 10, desc: 'Aumenta permanentemente el ataque de un Pokémon.' },
+                    { id: 'mystic_egg', name: 'Huevo Místico', cat: 'eggs', weight: 5, desc: 'Un huevo Pokémon imbuido en energía mística.' },
+                    { id: 'briefcase', name: 'Maletín', cat: 'others', weight: 4, desc: 'Contiene suministros valiosos variados.' },
+                    { id: 'max_protein', name: 'Proteína Máxima', cat: 'proteins', weight: 3, desc: 'Aumenta drásticamente el ataque de un Pokémon.' },
+                    { id: 'ancient_map', name: 'Mapa Antiguo', cat: 'others', weight: 2, desc: 'Mapa detallado de zonas recónditas.' },
+                    { id: 'shiny_egg', name: 'Huevo Brillante', cat: 'eggs', weight: 1, desc: 'Huevo Pokémon singular con destellos brillantes.' }
+                ];
+
+                let totalWeight = itemPool.reduce((sum, i) => sum + i.weight, 0);
+                let randomVal = Math.random() * totalWeight;
+                let acumulado = 0;
+                let itemElegido = itemPool[0];
+
+                for (let it of itemPool) {
+                    acumulado += it.weight;
+                    if (randomVal <= acumulado) { itemElegido = it; break; }
+                }
+
+                let listaCat = playerInventory[itemElegido.cat] || (playerInventory['others'] = []);
+                let existente = listaCat.find(i => i.id === itemElegido.id);
+                if (existente) existente.count++;
+                else listaCat.push({ id: itemElegido.id, name: itemElegido.name, count: 1, desc: itemElegido.desc });
+
+                alert(`📦 ¡Obtuviste en el gacha: ${itemElegido.name} x1!`);
+
+            } else if (maquina.type === 'mt') {
+                let listaMts = playerInventory['mts'];
+                let existente = listaMts.find(i => i.id === 'mt_hidden');
+                if (existente) existente.count++;
+                else listaMts.push({ id: 'mt_hidden', name: 'MT Poder Oculto', count: 1, desc: 'Permite cambiar aleatoriamente el tipo del Poder Oculto de tu Pokémon líder.' });
+
+                alert(`💿 ¡Has conseguido una MT de Poder Oculto!`);
+
+            } else if (maquina.type === 'pokemon' || maquina.type === 'shiny_test') {
+                if (POKEDEX_GLOBAL.length === 0) {
+                    alert("La Pokédex aún no está cargada.");
+                    playerMoney += maquina.cost;
+                    return;
+                }
+
+                let forzarShiny = maquina.type === 'shiny_test' ? true : false;
+                let pool = POKEDEX_GLOBAL;
+
+                if (!forzarShiny) {
+                    const specialExclusions = [
+                        "nihilego", "buzzwole", "pheromosa", "xurkitree", "celesteela", 
+                        "kartana", "guzzlord", "poipole", "naganadel", "stakataka", "blacephalon",
+                        "great-tusk", "scream-tail", "brute-bonnet", "flutter-mane", "slither-wing", 
+                        "sandy-shocks", "iron-treads", "iron-bundle", "iron-hands", "iron-jugulis", 
+                        "iron-moth", "iron-thorns", "roaring-moon", "iron-valiant", "walking-wake", 
+                        "iron-leaves", "gouging-fire", "raging-bolt", "iron-boulder", "iron-crown"
+                    ];
+
+                    let tipoFiltro = maquina.targetType.toLowerCase();
+                    pool = POKEDEX_GLOBAL.filter(p => {
+                        if (p.is_legendary || p.is_mythical) return false;
+                        if (p.evolves_from && p.evolves_from !== "None") return false;
+                        if (specialExclusions.includes(p.name.toLowerCase())) return false;
+                        if (!p.types || !Array.isArray(p.types)) return false;
+                        return p.types.some(t => (typeof t === 'string' ? t : (t.name || '')).toLowerCase() === tipoFiltro);
+                    });
+
+                    if (pool.length === 0) {
+                        pool = POKEDEX_GLOBAL.filter(p => !p.is_legendary && !p.is_mythical && (!p.evolves_from || p.evolves_from === "None") && !specialExclusions.includes(p.name.toLowerCase()));
+                    }
+                }
+
+                let pokeData = pool[Math.floor(Math.random() * pool.length)] || POKEDEX_GLOBAL[0];
+                let nuevoPoke = generarDatosPokemonBase(pokeData, 5, forzarShiny);
+                nuevoPoke.origen = forzarShiny ? "Obtenido en Gacha Shiny (Test)." : "Encontrado en GACHA al nivel 5.";
+
+                abrirCinematicaGacha(nuevoPoke);
+            }
+
+            guardarDatos();
+            actualizarUIGacha();
+        }
+
         // --- COMBATE CORE ---
         function iniciarCombate(tipo) {
             let lider = teamPokemon[0];
@@ -3011,14 +3167,12 @@
             let eSpriteImg = document.getElementById("enemy-battle-sprite");
 
             pSpriteImg.onerror = function() {
-                this.onerror = function() { this.onerror = null; this.src = lider.sprite_url; };
-                this.src = lider.isShiny 
-                    ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${lider.idDex || 1}.png`
-                    : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${lider.idDex || 1}.png`;
+                this.onerror = function() { this.onerror = null; this.src = getPokedexNormalSpriteUrl(lider); };
+                this.src = getPokemonBackSpriteUrl(lider);
             };
 
             pSpriteImg.src = getPokemonBackSpriteUrl(lider);
-            eSpriteImg.src = currentEnemy.sprite_url || "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png";
+            eSpriteImg.src = getPokedexNormalSpriteUrl(currentEnemy);
 
             actualizarBarrasHP();
 
@@ -3079,14 +3233,12 @@
             let eSpriteImg = document.getElementById("enemy-battle-sprite");
 
             pSpriteImg.onerror = function() {
-                this.onerror = function() { this.onerror = null; this.src = lider.sprite_url; };
-                this.src = lider.isShiny 
-                    ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${lider.idDex || 1}.png`
-                    : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${lider.idDex || 1}.png`;
+                this.onerror = function() { this.onerror = null; this.src = getPokedexNormalSpriteUrl(lider); };
+                this.src = getPokemonBackSpriteUrl(lider);
             };
 
             pSpriteImg.src = getPokemonBackSpriteUrl(lider);
-            eSpriteImg.src = currentEnemy.sprite_url || "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png";
+            eSpriteImg.src = getPokedexNormalSpriteUrl(currentEnemy);
 
             actualizarBarrasHP();
 
@@ -3169,7 +3321,7 @@
 
                 if (Math.random() < 0.6) {
                     let nuevo = { ...currentEnemy };
-                    marcarAtrapado(nuevo.idDex);
+                    marcarAtrapado(getValidPokemonDexId(nuevo));
                     if (teamPokemon.length < 4) teamPokemon.push(nuevo); else pcStorage.push(nuevo);
                     
                     let expGanada = Math.floor(currentEnemy.nivel * 20);
@@ -3204,6 +3356,10 @@
                     if (lider.hpActual <= 0) {
                         lider.hpActual = 1;
                         combatEnCurso = false;
+                        if (currentEnemy.tipoCombate === 'gym_leader') {
+                            stepsSinceLastGymFight = 0;
+                            gymPreHealSpawned = false;
+                        }
                         return cerrarCombate(`¡Tu Pokémon quedó exhausto!`);
                     }
                     combatEnCurso = false;
@@ -3274,6 +3430,7 @@
                         let msgVictoria = "";
                         if (currentEnemy.tipoCombate === 'gym_leader') {
                             stepsSinceLastGymFight = 0;
+                            gymPreHealSpawned = false;
                             currentLeaderStage++;
                             let liderObj = currentEnemy.leaderObj;
                             if (currentLeaderStage >= 4) {
@@ -3302,6 +3459,10 @@
                         eBubble.style.display = "none";
                         dialogue.innerHTML = log + `💀 ¡Tu Pokémon se debilitó!`;
                         combatEnCurso = false;
+                        if (currentEnemy.tipoCombate === 'gym_leader') {
+                            stepsSinceLastGymFight = 0;
+                            gymPreHealSpawned = false;
+                        }
                         return setTimeout(() => cerrarCombate(`¡Tu Pokémon quedó exhausto!`), 1500);
                     }
                 } else {
@@ -3312,6 +3473,10 @@
                         eBubble.style.display = "none";
                         dialogue.innerHTML = log + `💀 ¡Tu Pokémon se debilitó!`;
                         combatEnCurso = false;
+                        if (currentEnemy.tipoCombate === 'gym_leader') {
+                            stepsSinceLastGymFight = 0;
+                            gymPreHealSpawned = false;
+                        }
                         return setTimeout(() => cerrarCombate(`¡Tu Pokémon quedó exhausto!`), 1500);
                     }
 
@@ -3323,6 +3488,7 @@
                         let msgVictoria = "";
                         if (currentEnemy.tipoCombate === 'gym_leader') {
                             stepsSinceLastGymFight = 0;
+                            gymPreHealSpawned = false;
                             currentLeaderStage++;
                             let liderObj = currentEnemy.leaderObj;
                             if (currentLeaderStage >= 4) {
@@ -3352,6 +3518,11 @@
         }
 
         function cerrarCombate(msg) { 
+            if (currentEnemy && currentEnemy.tipoCombate === 'gym_leader') {
+                stepsSinceLastGymFight = 0;
+                gymPreHealSpawned = false;
+            }
+
             document.getElementById("combat-viewport-screen").style.display = "none"; 
             document.getElementById("map-content-inner").style.display = "block";
             document.getElementById("explore-log").style.display = "flex";
@@ -3504,10 +3675,10 @@
             let bodyHTML = `
                 <div class="summary-left">
                     <div style="font-size:10px; font-weight:bold; color:#374151; width:100%; display:flex; justify-content:space-between;">
-                        <span>Pokédex No.${p.idDex || 25}</span>
+                        <span>Pokédex No.${getValidPokemonDexId(p)}</span>
                     </div>
                     <div style="font-size:11px; font-weight:bold; color:#1f2937; align-self:flex-start;">Lv. ${p.nivel}</div>
-                    <div style="margin: 5px 0;"><img src="${p.sprite_url}" style="width:75px; height:75px; image-rendering:pixelated;" alt="Sprite"></div>
+                    <div style="margin: 5px 0;"><img src="${getPokedexNormalSpriteUrl(p)}" style="width:75px; height:75px; image-rendering:pixelated;" alt="Sprite"></div>
                     <div style="background:#1f2937; color:#fff; font-size:11px; font-weight:bold; width:100%; padding:4px; border-radius:3px; text-align:center;">${p.nombre.toUpperCase()}</div>
                     <div style="display:flex; gap:4px; width:100%; margin-top:4px;">${tiposHtml}</div>
                 </div>
