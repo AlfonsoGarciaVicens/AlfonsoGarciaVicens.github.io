@@ -1042,10 +1042,9 @@
         let currentLeaderStage = 0;
         let stepsSinceLastGymFight = 12;
 
-        // Estado de Zona Actual
         let isGymZone = false;
         let currentGymZoneObj = null;
-        let isPokemonCenterZone = false; // Zona Centro Pokémon
+        let isPokemonCenterZone = false;
 
         let SKINS_DATABASE = [
             { id: 'default', name: 'Entrenador', art_image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/trainers/1.png', sheet_image: 'img/player_sheet.png' },
@@ -1115,18 +1114,16 @@
             sprite.style.backgroundPosition = "0px 0px";
         }
 
+        // --- SISTEMA DE RESOLUCIÓN EXACTA Y ROBUSTA DE ID POKÉDEX ---
         function getValidPokemonDexId(poke) {
             if (!poke) return 1;
+            if (typeof poke === 'number') return poke;
             if (poke.idDex && typeof poke.idDex === 'number') return poke.idDex;
             if (poke.id && typeof poke.id === 'number') return poke.id;
             if (poke.national_id && typeof poke.national_id === 'number') return poke.national_id;
             if (poke.dexId && typeof poke.dexId === 'number') return poke.dexId;
-            
-            if (poke.nombre || poke.name) {
-                let cleanName = (poke.nombre || poke.name).replace(' ✨', '').trim().toLowerCase();
-                let match = POKEDEX_GLOBAL.find(x => x.name.toLowerCase() === cleanName);
-                if (match && match.id) return match.id;
-            }
+            if (poke.id && !isNaN(parseInt(poke.id))) return parseInt(poke.id);
+            if (poke.idDex && !isNaN(parseInt(poke.idDex))) return parseInt(poke.idDex);
             return 1;
         }
 
@@ -1135,20 +1132,28 @@
         const ICON_URL_CACHE = new Map();
 
         function getPokedexNormalSpriteUrl(poke) {
-            let id = getValidPokemonDexId(poke);
+            if (!poke) return 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png';
+            
             let isShiny = poke.isShiny ? true : false;
+            let id = getValidPokemonDexId(poke);
+
+            if (isShiny && poke.shiny_sprite_url) return poke.shiny_sprite_url;
+            if (!isShiny && poke.sprite_url) return poke.sprite_url;
+
             let cacheKey = `${id}_${isShiny ? 'shiny' : 'norm'}`;
             if (SPRITE_URL_CACHE.has(cacheKey)) return SPRITE_URL_CACHE.get(cacheKey);
 
             let url = isShiny 
-                ? (poke.shiny_sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`) 
-                : (poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`);
+                ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`
+                : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
 
             SPRITE_URL_CACHE.set(cacheKey, url);
             return url;
         }
 
         function getPokemonBackSpriteUrl(poke) {
+            if (!poke) return 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png';
+            
             let id = getValidPokemonDexId(poke);
             let isShiny = poke.isShiny ? true : false;
             let cacheKey = `${id}_${isShiny ? 'shiny' : 'norm'}`;
@@ -1170,6 +1175,8 @@
         }
 
         function getPokedexIconUrl(poke) {
+            if (!poke) return 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png';
+            
             let id = getValidPokemonDexId(poke);
             if (ICON_URL_CACHE.has(id)) return ICON_URL_CACHE.get(id);
 
@@ -1178,10 +1185,15 @@
             let iconGen8 = versions['generation-viii']?.icons?.front_default;
             let iconGen7 = versions['generation-vii']?.icons?.front_default;
 
-            if (iconGen8) url = iconGen8;
-            else if (iconGen7) url = iconGen7;
-            else if (id > 898) url = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
-            else url = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons/${id}.png`;
+            if (iconGen8) {
+                url = iconGen8;
+            } else if (iconGen7) {
+                url = iconGen7;
+            } else if (id <= 898) {
+                url = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons/${id}.png`;
+            } else {
+                url = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+            }
 
             ICON_URL_CACHE.set(id, url);
             return url;
@@ -1556,7 +1568,9 @@
             marcarVisto(idDex);
 
             return {
-                nombre: pokeData.name.charAt(0).toUpperCase() + pokeData.name.slice(1) + (isShiny ? " ✨" : ""),
+                id: idDex,
+                idDex: idDex,
+                nombre: (pokeData.name ? (pokeData.name.charAt(0).toUpperCase() + pokeData.name.slice(1)) : 'Pokémon') + (isShiny ? " ✨" : ""),
                 nivel: nivel,
                 hpMax: hpMax,
                 hpActual: hpMax,
@@ -1567,12 +1581,12 @@
                 tipoOculto: getTipoOcultoAleatorio(t1, t2),
                 icono: isShiny ? '🌟' : '🐾',
                 exp: 0,
-                idDex: idDex,
                 trainerId: "03101",
                 potencial: Math.floor(Math.random() * 31) + 1 + " / 31",
                 amistad: "50 / 100",
                 origen: `Obtenido al nivel ${nivel}.`,
                 sprite_url: frontUrl,
+                shiny_sprite_url: isShiny ? frontUrl : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${idDex}.png`,
                 back_sprite_url: backUrl,
                 isShiny: isShiny,
                 favorito: false,
@@ -2596,7 +2610,6 @@
             else if (puedeAparecerLiderGimnasio()) {
                 let lider = GYM_LEADERS_GLOBAL[currentGymLeaderIndex];
 
-                // 60% de probabilidad de visitar antes un Centro Pokémon si no venimos de uno
                 if (!isPokemonCenterZone && Math.random() < 0.60) {
                     isPokemonCenterZone = true;
                     isGymZone = false;
@@ -2609,7 +2622,6 @@
                         bg_image: "img/zones/pokemon_center.png"
                     };
                 } else {
-                    // Cargar la Zona del Gimnasio
                     currentGymZoneObj = lider;
                     isGymZone = true;
                     isPokemonCenterZone = false;
