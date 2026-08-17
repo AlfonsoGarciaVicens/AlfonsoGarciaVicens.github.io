@@ -1041,11 +1041,11 @@
         let currentGymLeaderIndex = 0;
         let currentLeaderStage = 0;
         let stepsSinceLastGymFight = 12;
-        let gymPreHealSpawned = false;
 
         // Estado de Zona Actual
         let isGymZone = false;
         let currentGymZoneObj = null;
+        let isPokemonCenterZone = false; // Zona Centro Pokémon
 
         let SKINS_DATABASE = [
             { id: 'default', name: 'Entrenador', art_image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/trainers/1.png', sheet_image: 'img/player_sheet.png' },
@@ -1580,7 +1580,7 @@
             };
         }
 
-        // --- COMPROBAR SI ESTÁ LISTO EL LÍDER (Requisito de nivel solo en Fase 1) ---
+        // --- COMPROBAR SI ESTÁ LISTO EL LÍDER ---
         function puedeAparecerLiderGimnasio() {
             if (currentGymLeaderIndex >= GYM_LEADERS_GLOBAL.length) return false;
             if (stepsSinceLastGymFight < 10) return false;
@@ -1863,7 +1863,12 @@
         }
 
         function actualizarFondoZonaInicial() {
-            let zonaObj = isSpecialZone && currentSpecialZone ? currentSpecialZone : (isGymZone && currentGymZoneObj ? currentGymZoneObj : (zonesConfig[currentZoneIndex] || zonesConfig[0]));
+            let zonaObj = isSpecialZone && currentSpecialZone 
+                ? currentSpecialZone 
+                : (isGymZone && currentGymZoneObj 
+                    ? currentGymZoneObj 
+                    : (isPokemonCenterZone ? { name: "Centro Pokémon", sprite: "🏥", bg_image: "img/zones/pokemon_center.png" } : (zonesConfig[currentZoneIndex] || zonesConfig[0])));
+            
             if (zonaObj) {
                 document.getElementById("current-zone-name").innerText = zonaObj.gym_name || zonaObj.name;
                 document.getElementById("zone-sprite").innerText = zonaObj.gym_sprite || zonaObj.sprite || "🏡";
@@ -2548,15 +2553,31 @@
             actualizarUIGacha();
         }
 
-        // --- AVANZAR DE ZONA CON PRIORIDAD ---
+        // --- AVANZAR DE ZONA (CONSUMO DE ENERGÍA Y PRIORIDADES) ---
         function advanceZone() {
             if (isWalking) return;
+
+            // 1. GASTO DE ENERGÍA AL AVANZAR
+            if (!esUsuarioFonso()) {
+                calcularEnergiaOffline();
+                if (energiaActual < 1) {
+                    alert("¡No tienes suficiente energía para avanzar! Espera a que se recargue.");
+                    return;
+                }
+                if (energiaActual === energiaMax) ultimoTimestamp = Date.now();
+                energiaActual--;
+                guardarDatos();
+                actualizarHUDEnergia();
+            }
+
             isWalking = true;
             document.getElementById("input-blocker").style.display = "block";
 
             let oldZona = isSpecialZone && currentSpecialZone 
                 ? currentSpecialZone 
-                : (isGymZone && currentGymZoneObj ? currentGymZoneObj : (zonesConfig[currentZoneIndex] || { name: "Zona Anterior", sprite: "🏡", bg_image: "" }));
+                : (isGymZone && currentGymZoneObj 
+                    ? currentGymZoneObj 
+                    : (isPokemonCenterZone ? { name: "Centro Pokémon", sprite: "🏥", bg_image: "img/zones/pokemon_center.png" } : (zonesConfig[currentZoneIndex] || { name: "Zona Anterior", sprite: "🏡", bg_image: "" })));
             
             let zonaObj = null;
 
@@ -2567,22 +2588,39 @@
                 isSpecialZone = true;
                 isGymZone = false;
                 currentGymZoneObj = null;
+                isPokemonCenterZone = false;
                 mapaAntiguoActivado = false;
                 zonaObj = currentSpecialZone;
             }
-            // PRIORIDAD 2: ZONA DE GIMNASIO DEDICADA
+            // PRIORIDAD 2: COMPROBACIÓN DE LÍDER DE GIMNASIO (Con aumento de probabilidad de Centro Pokémon previo)
             else if (puedeAparecerLiderGimnasio()) {
                 let lider = GYM_LEADERS_GLOBAL[currentGymLeaderIndex];
-                currentGymZoneObj = lider;
-                isGymZone = true;
-                isSpecialZone = false;
-                currentSpecialZone = null;
-                gymPreHealSpawned = false; // Listo para curar en primera exploración
-                zonaObj = {
-                    name: lider.gym_name,
-                    sprite: lider.gym_sprite || "🏛️",
-                    bg_image: lider.gym_bg || ""
-                };
+
+                // 60% de probabilidad de visitar antes un Centro Pokémon si no venimos de uno
+                if (!isPokemonCenterZone && Math.random() < 0.60) {
+                    isPokemonCenterZone = true;
+                    isGymZone = false;
+                    currentGymZoneObj = null;
+                    isSpecialZone = false;
+                    currentSpecialZone = null;
+                    zonaObj = {
+                        name: "Centro Pokémon",
+                        sprite: "🏥",
+                        bg_image: "img/zones/pokemon_center.png"
+                    };
+                } else {
+                    // Cargar la Zona del Gimnasio
+                    currentGymZoneObj = lider;
+                    isGymZone = true;
+                    isPokemonCenterZone = false;
+                    isSpecialZone = false;
+                    currentSpecialZone = null;
+                    zonaObj = {
+                        name: lider.gym_name,
+                        sprite: lider.gym_sprite || "🏛️",
+                        bg_image: lider.gym_bg || ""
+                    };
+                }
             }
             // PRIORIDAD 3: ZONAS NORMALES DE EXPLORACIÓN
             else {
@@ -2590,6 +2628,8 @@
                 currentSpecialZone = null;
                 isGymZone = false;
                 currentGymZoneObj = null;
+                isPokemonCenterZone = false;
+
                 if (zonesConfig.length > 1) {
                     let newIndex = currentZoneIndex;
                     while (newIndex === currentZoneIndex) {
@@ -2625,6 +2665,7 @@
             let logCaminar = `Caminando hacia ${zonaObj.name}...`;
             if (isSpecialZone) logCaminar = `🗺️ ¡Siguiendo el Mapa Antiguo hacia ${zonaObj.name}...`;
             else if (isGymZone) logCaminar = `🏛️ ¡Acercándote al ${zonaObj.name}...!`;
+            else if (isPokemonCenterZone) logCaminar = `🏥 ¡Divisando un Centro Pokémon en el camino...!`;
 
             document.getElementById("explore-log").innerHTML = logCaminar;
 
@@ -2655,6 +2696,7 @@
                 let logMsg = `Has llegado a ${zonaObj.name}.`;
                 if (isSpecialZone) logMsg = `✨ ¡Has llegado a ${zonaObj.name}! Se siente una presencia legendaria ancestral.`;
                 else if (isGymZone) logMsg = `🏛️ ¡Has entrado al ${zonaObj.name}! El desafío de gimnasio te espera.`;
+                else if (isPokemonCenterZone) logMsg = `🏥 ¡Has llegado al Centro Pokémon! Explora para curar a tu equipo.`;
 
                 if (curados > 0) logMsg += `<br><span style="color:#4CAF50;">¡El equipo recuperó un 5% de PS por el paseo!</span>`;
                 
@@ -2777,26 +2819,30 @@
             let viewport = document.getElementById("map-viewport");
             stepsSinceLastGymFight++;
 
-            // SI ESTAMOS EN ZONA DE GIMNASIO
-            if (isGymZone && currentGymZoneObj) {
-                if (!gymPreHealSpawned) {
-                    gymPreHealSpawned = true;
-                    teamPokemon.forEach(p => { if (!p.hpMax) p.hpMax = 50; p.hpActual = p.hpMax; });
-                    guardarDatos();
-                    actualizarHUD();
-                    document.getElementById("explore-log").innerHTML = `🏥 ¡Has descansado en el Centro Pokémon del ${currentGymZoneObj.gym_name}! Todo tu equipo ha recuperado el 100% de PS.`;
-                    zonaExplorada = true;
-                    document.getElementById("btn-explore-main").disabled = false;
-                    return;
-                } else {
-                    iniciarCombateLiderGimnasio();
-                    zonaExplorada = true;
-                    document.getElementById("btn-explore-main").disabled = false;
-                    return;
-                }
+            // 1. SI ESTAMOS EN UN CENTRO POKÉMON (Cura 50% de PS)
+            if (isPokemonCenterZone) {
+                teamPokemon.forEach(p => {
+                    if (!p.hpMax) p.hpMax = 50;
+                    let heal = Math.floor(p.hpMax * 0.50);
+                    p.hpActual = Math.min(p.hpMax, (p.hpActual || p.hpMax) + heal);
+                });
+                guardarDatos();
+                actualizarHUD();
+                document.getElementById("explore-log").innerHTML = `🏥 ¡La Enfermera Joy atendió a tu equipo! Todos recuperaron un 50% de PS.`;
+                zonaExplorada = true;
+                document.getElementById("btn-explore-main").disabled = false;
+                return;
             }
 
-            // SI ESTAMOS EN ZONA ESPECIAL LEGENDARIA
+            // 2. SI ESTAMOS EN ZONA DE GIMNASIO (Combate de Líder Oficial)
+            if (isGymZone && currentGymZoneObj) {
+                iniciarCombateLiderGimnasio();
+                zonaExplorada = true;
+                document.getElementById("btn-explore-main").disabled = false;
+                return;
+            }
+
+            // 3. SI ESTAMOS EN ZONA ESPECIAL LEGENDARIA
             if (isSpecialZone && currentSpecialZone) {
                 if (currentSpecialZone.bg_image) viewport.style.backgroundImage = `url('${currentSpecialZone.bg_image}')`;
                 iniciarCombateLegendario(currentSpecialZone);
@@ -2805,16 +2851,7 @@
                 return;
             }
 
-            // EXPLORACIÓN HABITUAL
-            if (!esUsuarioFonso()) {
-                calcularEnergiaOffline();
-                if (energiaActual < 1) return alert("¡No tienes suficiente energía para explorar! Espera a que se recargue.");
-                if (energiaActual === energiaMax) ultimoTimestamp = Date.now();
-                energiaActual--;
-                guardarDatos();
-                actualizarHUDEnergia();
-            }
-
+            // 4. EXPLORACIÓN EN ZONAS HABITUALES (Eventos aleatorios / Combate salvaje)
             let zonaObj = zonesConfig[currentZoneIndex] || { bg_image: "", bg_image_event: "" };
             const r = Math.random();
 
@@ -3391,7 +3428,8 @@
                         combatEnCurso = false;
                         if (currentEnemy.tipoCombate === 'gym_leader') {
                             stepsSinceLastGymFight = 0;
-                            gymPreHealSpawned = false;
+                            isGymZone = false;
+                            currentGymZoneObj = null;
                         }
                         return cerrarCombate(`¡Tu Pokémon quedó exhausto!`);
                     }
@@ -3463,7 +3501,6 @@
                         let msgVictoria = "";
                         if (currentEnemy.tipoCombate === 'gym_leader') {
                             stepsSinceLastGymFight = 0;
-                            gymPreHealSpawned = false;
                             currentLeaderStage++;
                             let liderObj = currentEnemy.leaderObj;
                             if (currentLeaderStage >= 4) {
@@ -3474,6 +3511,8 @@
                             } else {
                                 msgVictoria = `✨ ¡Victoria contra ${liderObj.name}! Obtuviste un fragmento de la ${liderObj.badge_name} (${currentLeaderStage}/4).`;
                             }
+                            isGymZone = false;
+                            currentGymZoneObj = null;
                         } else {
                             let expGanada = Math.floor(currentEnemy.nivel * 40 * (currentEnemy.tipoCombate === 'trainer' ? 1.5 : 1));
                             let subio = ganarExperiencia(expGanada);
@@ -3494,7 +3533,8 @@
                         combatEnCurso = false;
                         if (currentEnemy.tipoCombate === 'gym_leader') {
                             stepsSinceLastGymFight = 0;
-                            gymPreHealSpawned = false;
+                            isGymZone = false;
+                            currentGymZoneObj = null;
                         }
                         return setTimeout(() => cerrarCombate(`¡Tu Pokémon quedó exhausto!`), 1500);
                     }
@@ -3508,7 +3548,8 @@
                         combatEnCurso = false;
                         if (currentEnemy.tipoCombate === 'gym_leader') {
                             stepsSinceLastGymFight = 0;
-                            gymPreHealSpawned = false;
+                            isGymZone = false;
+                            currentGymZoneObj = null;
                         }
                         return setTimeout(() => cerrarCombate(`¡Tu Pokémon quedó exhausto!`), 1500);
                     }
@@ -3521,7 +3562,6 @@
                         let msgVictoria = "";
                         if (currentEnemy.tipoCombate === 'gym_leader') {
                             stepsSinceLastGymFight = 0;
-                            gymPreHealSpawned = false;
                             currentLeaderStage++;
                             let liderObj = currentEnemy.leaderObj;
                             if (currentLeaderStage >= 4) {
@@ -3532,6 +3572,8 @@
                             } else {
                                 msgVictoria = `✨ ¡Victoria contra ${liderObj.name}! Obtuviste un fragmento de la ${liderObj.badge_name} (${currentLeaderStage}/4).`;
                             }
+                            isGymZone = false;
+                            currentGymZoneObj = null;
                         } else {
                             let expGanada = Math.floor(currentEnemy.nivel * 40 * (currentEnemy.tipoCombate === 'trainer' ? 1.5 : 1));
                             let subio = ganarExperiencia(expGanada);
@@ -3553,7 +3595,8 @@
         function cerrarCombate(msg) { 
             if (currentEnemy && currentEnemy.tipoCombate === 'gym_leader') {
                 stepsSinceLastGymFight = 0;
-                gymPreHealSpawned = false;
+                isGymZone = false;
+                currentGymZoneObj = null;
             }
 
             document.getElementById("combat-viewport-screen").style.display = "none"; 
