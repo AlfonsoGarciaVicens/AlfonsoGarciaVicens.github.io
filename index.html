@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pokémon Trails</title>
+    <title>Pokémon Trails Clone</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace; }
         body { background-color: #121212; color: #ffffff; display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; overflow: hidden; }
@@ -283,6 +283,9 @@
             image-rendering: pixelated;
             margin: auto;
             display: block;
+        }
+        .dex-cell-sprite-img.scaled-icon {
+            transform: scale(1.35);
         }
 
         /* PC */
@@ -1191,6 +1194,7 @@
         const SPRITE_URL_CACHE = new Map();
         const BACK_SPRITE_URL_CACHE = new Map();
         const ICON_URL_CACHE = new Map();
+        const DEX_GRID_SPRITE_CACHE = new Map();
 
         function getPokedexNormalSpriteUrl(poke) {
             if (!poke) return 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png';
@@ -1209,6 +1213,30 @@
                 : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
 
             SPRITE_URL_CACHE.set(cacheKey, url);
+            return url;
+        }
+
+        // URL Especial para la Cuadrícula Pokédex (garantiza tamaño uniforme 1:1)
+        function getPokedexGridSpriteUrl(poke) {
+            let id = getValidPokemonDexId(poke);
+            if (DEX_GRID_SPRITE_CACHE.has(id)) return DEX_GRID_SPRITE_CACHE.get(id);
+
+            let url;
+            let versions = poke.sprites?.versions || poke.versions || {};
+            let iconGen8 = versions['generation-viii']?.icons?.front_default;
+            let iconGen7 = versions['generation-vii']?.icons?.front_default;
+
+            if (iconGen8) {
+                url = iconGen8;
+            } else if (iconGen7) {
+                url = iconGen7;
+            } else if (id <= 898) {
+                url = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons/${id}.png`;
+            } else {
+                url = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+            }
+
+            DEX_GRID_SPRITE_CACHE.set(id, url);
             return url;
         }
 
@@ -1237,25 +1265,10 @@
 
         function getPokedexIconUrl(poke) {
             if (!poke) return 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png';
-            
             let id = getValidPokemonDexId(poke);
             if (ICON_URL_CACHE.has(id)) return ICON_URL_CACHE.get(id);
 
-            let url;
-            let versions = poke.sprites?.versions || poke.versions || {};
-            let iconGen8 = versions['generation-viii']?.icons?.front_default;
-            let iconGen7 = versions['generation-vii']?.icons?.front_default;
-
-            if (iconGen8) {
-                url = iconGen8;
-            } else if (iconGen7) {
-                url = iconGen7;
-            } else if (id <= 898) {
-                url = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons/${id}.png`;
-            } else {
-                url = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
-            }
-
+            let url = getPokedexGridSpriteUrl(poke);
             ICON_URL_CACHE.set(id, url);
             return url;
         }
@@ -1655,6 +1668,7 @@
             };
         }
 
+        // --- COMPROBAR SI ESTÁ LISTO EL LÍDER ---
         function puedeAparecerLiderGimnasio() {
             if (currentGymLeaderIndex >= GYM_LEADERS_GLOBAL.length) return false;
             if (stepsSinceLastGymFight < 10) return false;
@@ -2097,7 +2111,7 @@
             POKEDEX_GLOBAL.forEach((p, idx) => {
                 let pId = getValidPokemonDexId(p);
                 let status = getPokedexStatus(pId);
-                let pSpriteCell = getPokedexIconUrl(p);
+                let pSpriteCell = getPokedexGridSpriteUrl(p);
 
                 let cell = document.createElement("div");
                 cell.className = `dex-cell-item ${idx === 0 ? 'selected-dex-cell' : ''}`;
@@ -2108,9 +2122,12 @@
                 if (!status.isSeen) imgStyle += " filter: brightness(0);";
                 else if (!status.isCaught) imgStyle += " filter: grayscale(100%);";
 
+                // Si es de generación 1 a 8, le aplicamos escalado para que llene la celda como Gen 9
+                let isScaledClass = pId <= 905 ? "dex-cell-sprite-img scaled-icon" : "dex-cell-sprite-img";
+
                 cell.innerHTML = `
                     <span class="dex-cell-number">${pId.toString().padStart(3, '0')}</span>
-                    <img src="${pSpriteCell}" class="dex-cell-sprite-img" style="${imgStyle}" alt="P">
+                    <img src="${pSpriteCell}" class="${isScaledClass}" style="${imgStyle}" alt="P">
                 `;
                 grid.appendChild(cell);
             });
