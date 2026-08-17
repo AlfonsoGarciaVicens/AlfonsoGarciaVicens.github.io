@@ -48,14 +48,230 @@
         .box-container, .modal-window { background-color: #2a2a2a; padding: 15px; border-radius: 8px; border: 2px solid #444; width: 100%; height: 100%; text-align: center; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
         .modal-window { background: linear-gradient(135deg, #38bdf8, #0369a1); border: none; border-radius: 0; box-shadow: none; width: 100%; height: 100%; }
         
-        /* Pokédex */
-        .pokedex-window { background: #f3f4f6; border: none; border-radius: 0; width: 100%; height: 100%; padding: 4px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; color: #111; font-size: 9px; }
-        .pokedex-top-card { background: #fff; border: 2px solid #cbd5e1; border-radius: 0; padding: 4px; display: flex; flex-direction: column; gap: 2px; position: relative; width: 100%; }
-        .pokedex-grid-scroll { background: #fff; border: 2px solid #cbd5e1; border-radius: 0; flex-grow: 1; margin-top: 2px; overflow-y: auto; display: grid; grid-template-columns: repeat(8, 1fr); width: 100%; gap: 1px; padding: 2px; align-content: start; }
-        .pokedex-grid-cell { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; padding: 1px; height: 36px; position: relative; }
-        .pokedex-grid-cell.selected { background: #fef08a; border-color: #f59e0b; }
-        .pokedex-cell-num { font-size: 6px; color: #64748b; font-weight: bold; }
-        .pokedex-cell-img { width: 22px; height: 22px; image-rendering: pixelated; }
+        /* --- REDISEÑO 1:1 POKÉDEX EXACTA --- */
+        .pokedex-window { 
+            background: #ffffff; 
+            border: 3px solid #111; 
+            border-radius: 8px; 
+            width: 100%; 
+            height: 100%; 
+            padding: 5px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            box-sizing: border-box; 
+            color: #111; 
+            overflow: hidden;
+            position: relative;
+        }
+
+        .pokedex-top-area {
+            width: 100%;
+            height: 105px;
+            display: flex;
+            position: relative;
+            background-color: #fff;
+            background-image: 
+                linear-gradient(to right, rgba(0,0,0,0.06) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0,0,0,0.06) 1px, transparent 1px);
+            background-size: 14px 14px;
+            border-bottom: 1.5px solid #cbd5e1;
+            padding: 2px;
+            box-sizing: border-box;
+        }
+
+        .dex-art-frame-box {
+            width: 92px;
+            height: 98px;
+            border: 2px solid #111;
+            background: #f1f5f9;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            flex-shrink: 0;
+            margin-right: 6px;
+        }
+        .dex-frame-top-stripe {
+            width: 100%;
+            height: 5px;
+            background: #ef4444;
+            border-bottom: 1px solid #111;
+        }
+        .dex-frame-sprite-holder {
+            flex-grow: 1;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: 
+                linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
+            background-size: 10px 10px;
+        }
+        .dex-hero-sprite {
+            width: 58px;
+            height: 58px;
+            object-fit: contain;
+            image-rendering: pixelated;
+            filter: drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff) drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff) drop-shadow(0 2px 3px rgba(0,0,0,0.4));
+        }
+        .dex-frame-rarity-badge {
+            width: 100%;
+            background: #ef4444;
+            color: #ffffff;
+            font-size: 7px;
+            font-weight: 900;
+            text-align: center;
+            padding: 2px 0;
+            letter-spacing: 0.5px;
+            border-top: 1px solid #111;
+        }
+
+        .dex-info-right-side {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1px 0 2px 0;
+            overflow: hidden;
+        }
+        .dex-top-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .dex-header-id-name {
+            font-size: 10px;
+            font-weight: 900;
+            color: #000;
+            letter-spacing: 0.5px;
+        }
+        .dex-close-x {
+            background: none;
+            border: none;
+            font-size: 15px;
+            font-weight: 900;
+            cursor: pointer;
+            color: #475569;
+            line-height: 1;
+            padding: 0 2px;
+        }
+        .dex-types-strip {
+            display: flex;
+            gap: 4px;
+            margin: 2px 0;
+        }
+        .dex-type-pill {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 7px;
+            font-weight: bold;
+            color: #fff;
+            text-transform: uppercase;
+            border: 1px solid rgba(0,0,0,0.3);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+        }
+        .dex-evolution-desc {
+            font-size: 7px;
+            font-weight: bold;
+            color: #111;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+        .dex-caught-seen-row {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 8px;
+            font-size: 9px;
+            font-weight: 900;
+            color: #000;
+        }
+
+        /* Barras de estadísticas estilo imagen original */
+        .dex-stats-bars-wrapper {
+            width: 100%;
+            padding: 3px 2px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            background: #fff;
+            box-sizing: border-box;
+        }
+        .dex-stat-line {
+            display: flex;
+            align-items: center;
+            height: 13px;
+        }
+        .dex-stat-label {
+            width: 58px;
+            font-size: 7.5px;
+            font-weight: 900;
+            color: #000;
+            letter-spacing: 0.5px;
+        }
+        .dex-bar-track {
+            flex-grow: 1;
+            height: 11px;
+            background: transparent;
+            display: flex;
+            align-items: center;
+        }
+        .dex-bar-fill-pill {
+            height: 100%;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            padding-left: 4px;
+            color: #ffffff;
+            font-size: 7.5px;
+            font-weight: 900;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+            transition: width 0.3s ease;
+        }
+
+        /* Grid inferior Pokédex */
+        .dex-grid-scroll-area {
+            flex-grow: 1;
+            background: #fff;
+            border: 1.5px solid #cbd5e1;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-auto-rows: 38px;
+            gap: 1px;
+            padding: 1px;
+            align-content: start;
+        }
+        .dex-cell-item {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            padding: 1px 0;
+            position: relative;
+        }
+        .dex-cell-item.selected-dex-cell {
+            background: #fef08a !important;
+            border: 1.5px solid #f59e0b !important;
+        }
+        .dex-cell-number {
+            font-size: 6px;
+            font-weight: 900;
+            color: #111;
+            line-height: 1;
+        }
+        .dex-cell-sprite-img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            image-rendering: pixelated;
+        }
 
         /* PC */
         .pc-window-gba { background-color: #2d8ab3; border: none; border-radius: 0; width: 100%; height: 100%; padding: 4px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
@@ -84,11 +300,7 @@
         .pc-action-btn:hover { background: #2563eb; }
 
         /* Skins */
-        .skins-window {
-            background-color: #525252;
-            background-image: repeating-linear-gradient(rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px);
-            border: none; border-radius: 0; width: 100%; height: 100%; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; color: #fff; 
-        }
+        .skins-window { background-color: #525252; background-image: repeating-linear-gradient(rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px); border: none; border-radius: 0; width: 100%; height: 100%; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; color: #fff; }
         .skins-top-header { display: flex; gap: 8px; align-items: center; padding-bottom: 6px; border-bottom: 2px solid #9ca3af; position: relative; }
         .skin-art-box { width: 70px; height: 70px; display: flex; justify-content: center; align-items: center; flex-shrink: 0; }
         .skin-art-img { max-width: 100%; max-height: 100%; object-fit: contain; image-rendering: pixelated; }
@@ -145,211 +357,36 @@
 
         /* Trainer Card Flip */
         .trainer-card-wrapper {
-            width: 100%;
-            height: 100%;
-            background-color: rgba(18, 18, 18, 0.4);
-            background-image: 
-                linear-gradient(45deg, #2b2b2b 25%, transparent 25%), 
-                linear-gradient(-45deg, #2b2b2b 25%, transparent 25%), 
-                linear-gradient(45deg, transparent 75%, #2b2b2b 75%), 
-                linear-gradient(-45deg, transparent 75%, #2b2b2b 75%);
-            background-size: 16px 16px;
-            background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            padding: 6px;
-            position: relative;
-            box-sizing: border-box;
+            width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.4);
+            background-image: linear-gradient(45deg, #2b2b2b 25%, transparent 25%), linear-gradient(-45deg, #2b2b2b 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #2b2b2b 75%), linear-gradient(-45deg, transparent 75%, #2b2b2b 75%);
+            background-size: 16px 16px; background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+            display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 6px; position: relative; box-sizing: border-box;
         }
-
-        .tc-flip-btn {
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            background: #475569;
-            border: 2px solid #cbd5e1;
-            color: #fff;
-            font-size: 13px;
-            width: 26px;
-            height: 26px;
-            border-radius: 5px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 120;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-        .tc-close-btn {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: #64748b;
-            border: 2px solid #cbd5e1;
-            color: #fff;
-            font-size: 13px;
-            font-weight: bold;
-            width: 26px;
-            height: 26px;
-            border-radius: 5px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 120;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-
-        .tc-logo-trails {
-            margin-top: 1px;
-            font-size: 11px;
-            font-weight: 900;
-            color: #f59e0b;
-            letter-spacing: 1px;
-            text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 0 0 6px rgba(245,158,11,0.6);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .tc-logo-badge {
-            background: #d97706;
-            color: #fff;
-            font-size: 6px;
-            padding: 1px 4px;
-            border-radius: 3px;
-            letter-spacing: 0.5px;
-            margin-top: -2px;
-        }
-
-        .tc-perspective-area {
-            perspective: 1000px;
-            width: 295px;
-            height: 195px;
-            margin: auto 0;
-        }
-        .tc-flipper {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
-            transform-style: preserve-3d;
-        }
-        .tc-flipper.flipped {
-            transform: rotateY(180deg);
-        }
-
-        .tc-face {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 8px;
-            border: 2.5px solid #60a5fa;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.7);
-            padding: 6px 8px;
-            box-sizing: border-box;
-        }
-
-        .tc-front {
-            background: linear-gradient(180deg, #93c5fd 0%, #60a5fa 35%, #3b82f6 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            color: #1e293b;
-        }
-        .tc-front-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 900;
-            font-size: 11px;
-            border-bottom: 2px solid rgba(255,255,255,0.4);
-            padding-bottom: 2px;
-            color: #0f172a;
-            text-shadow: 0 1px 0 rgba(255,255,255,0.4);
-        }
-        .tc-front-sub {
-            display: flex;
-            justify-content: space-between;
-            font-size: 9px;
-            font-weight: bold;
-            color: #0f172a;
-            margin-top: 2px;
-        }
-        .tc-front-center {
-            background: rgba(255,255,255,0.25);
-            border: 1.5px solid rgba(255,255,255,0.4);
-            border-radius: 6px;
-            flex-grow: 1;
-            margin: 3px 0;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            justify-content: flex-end;
-            align-items: flex-end;
-            padding-right: 10px;
-        }
-        .tc-ribbons-box {
-            position: absolute;
-            top: 4px;
-            left: 4px;
-            display: flex;
-            gap: 2px;
-            font-size: 11px;
-        }
-        .tc-lead-sprite {
-            width: 58px;
-            height: 58px;
-            object-fit: contain;
-            image-rendering: pixelated;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
-            position: absolute;
-            bottom: 4px;
-            right: 48px;
-        }
-        .tc-player-art {
-            max-height: 85px;
-            max-width: 65px;
-            object-fit: contain;
-            image-rendering: pixelated;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
-            z-index: 2;
-        }
-
-        .tc-badges-bar {
-            background: rgba(15, 23, 42, 0.4);
-            border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 4px;
-            padding: 2px 4px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+        .tc-flip-btn { position: absolute; top: 5px; left: 5px; background: #475569; border: 2px solid #cbd5e1; color: #fff; font-size: 13px; width: 26px; height: 26px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 120; box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .tc-close-btn { position: absolute; top: 5px; right: 5px; background: #64748b; border: 2px solid #cbd5e1; color: #fff; font-size: 13px; font-weight: bold; width: 26px; height: 26px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 120; box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .tc-logo-trails { margin-top: 1px; font-size: 11px; font-weight: 900; color: #f59e0b; letter-spacing: 1px; text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 0 0 6px rgba(245,158,11,0.6); display: flex; flex-direction: column; align-items: center; }
+        .tc-logo-badge { background: #d97706; color: #fff; font-size: 6px; padding: 1px 4px; border-radius: 3px; letter-spacing: 0.5px; margin-top: -2px; }
+        .tc-perspective-area { perspective: 1000px; width: 295px; height: 195px; margin: auto 0; }
+        .tc-flipper { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; }
+        .tc-flipper.flipped { transform: rotateY(180deg); }
+        .tc-face { position: absolute; top: 0; left: 0; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 8px; border: 2.5px solid #60a5fa; box-shadow: 0 8px 16px rgba(0,0,0,0.7); padding: 6px 8px; box-sizing: border-box; }
+        .tc-front { background: linear-gradient(180deg, #93c5fd 0%, #60a5fa 35%, #3b82f6 100%); display: flex; flex-direction: column; justify-content: space-between; color: #1e293b; }
+        .tc-front-header { display: flex; justify-content: space-between; align-items: center; font-weight: 900; font-size: 11px; border-bottom: 2px solid rgba(255,255,255,0.4); padding-bottom: 2px; color: #0f172a; text-shadow: 0 1px 0 rgba(255,255,255,0.4); }
+        .tc-front-sub { display: flex; justify-content: space-between; font-size: 9px; font-weight: bold; color: #0f172a; margin-top: 2px; }
+        .tc-front-center { background: rgba(255,255,255,0.25); border: 1.5px solid rgba(255,255,255,0.4); border-radius: 6px; flex-grow: 1; margin: 3px 0; position: relative; overflow: hidden; display: flex; justify-content: flex-end; align-items: flex-end; padding-right: 10px; }
+        .tc-ribbons-box { position: absolute; top: 4px; left: 4px; display: flex; gap: 2px; font-size: 11px; }
+        .tc-lead-sprite { width: 58px; height: 58px; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); position: absolute; bottom: 4px; right: 48px; }
+        .tc-player-art { max-height: 85px; max-width: 65px; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); z-index: 2; }
+        .tc-badges-bar { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; padding: 2px 4px; display: flex; align-items: center; justify-content: space-between; }
         .tc-badges-title { font-size: 7px; font-weight: 900; color: #f1f5f9; letter-spacing: 0.5px; }
         .tc-badge-slot { font-size: 10px; filter: grayscale(100%) opacity(30%); transition: all 0.3s; }
         .tc-badge-slot.unlocked { filter: grayscale(0%) opacity(100%) drop-shadow(0 0 3px #facc15); }
-
-        .tc-back {
-            background: #0f2d2e;
-            border-color: #14b8a6;
-            transform: rotateY(180deg);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            color: #e2e8f0;
-            font-size: 8px;
-            padding: 6px;
-        }
+        .tc-back { background: #0f2d2e; border-color: #14b8a6; transform: rotateY(180deg); display: flex; flex-direction: column; justify-content: space-between; color: #e2e8f0; font-size: 8px; padding: 6px; }
         .tc-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; height: 100%; }
         .tc-stat-col { display: flex; flex-direction: column; gap: 2px; }
         .tc-stat-section-title { font-weight: 900; color: #2dd4bf; font-size: 8px; border-bottom: 1px solid #134e4a; padding-bottom: 1px; margin-bottom: 1px; }
         .tc-stat-row { display: flex; justify-content: space-between; color: #cbd5e1; font-size: 7.5px; }
         .tc-stat-row b { color: #ffffff; }
-
         .tc-team-strip { display: flex; gap: 6px; align-items: center; justify-content: center; margin-top: 3px; }
         .tc-team-mini-sprite { width: 26px; height: 26px; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6)); }
 
@@ -360,7 +397,6 @@
         .starter-grid { display: flex; flex-direction: column; gap: 8px; margin-top: 5px; }
 
         .modal-title { text-align: center; font-size: 12px; font-weight: bold; color: #fff; border-bottom: 2px solid #bae6fd; padding-bottom: 2px; margin-bottom: 2px; letter-spacing: 1px; }
-
         .menu-grid-container { display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: center; flex-grow: 1; }
         .menu-row { display: flex; gap: 12px; justify-content: center; }
         .menu-icon-btn { background-color: #1e293b; border: 3px solid #64748b; border-radius: 8px; width: 50px; height: 50px; font-size: 22px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
@@ -602,45 +638,63 @@
                 </div>
             </div>
 
-            <!-- Ventana Pokédex -->
+            <!-- --- VENTANA POKÉDEX REDISEÑADA EXACTA --- -->
             <div id="pokedex-screen" class="modal-screen" style="z-index: 88;">
                 <div class="pokedex-window">
-                    <div style="display: flex; justify-content: space-between; align-items: center; font-weight: bold; margin-bottom: 1px;">
-                        <span id="pokedex-header-title">Nº 001 - BULBASAUR</span>
-                        <button onclick="cerrarPokedex()" style="background:none; border:none; font-size:20px; font-weight:bold; cursor:pointer; color:#111; line-height: 1; padding: 0 2px;">✖</button>
-                    </div>
                     
-                    <div class="pokedex-top-card">
-                        <div style="display: flex; gap: 4px; align-items: center;">
-                            <div style="background: #e2e8f0; border: 2px solid #cbd5e1; border-radius: 3px; width: 55px; height: 55px; display: flex; justify-content: center; align-items: center; position: relative; flex-shrink: 0;">
-                                <img id="pokedex-preview-img" src="" style="width: 46px; height: 46px; image-rendering: pixelated; object-fit: contain;" alt="Poke">
-                                <div id="pokedex-rarity-badge" style="position: absolute; bottom: 0; width: 100%; background: #ef4444; color: white; font-size: 5px; font-weight: bold; text-align: center; border-radius: 0 0 2px 2px;">COMMON</div>
+                    <!-- Fila Superior de la Pokédex -->
+                    <div class="pokedex-top-area">
+                        <!-- Marco con Borde Negro y Detalles Rojos -->
+                        <div class="dex-art-frame-box">
+                            <div class="dex-frame-top-stripe"></div>
+                            <div class="dex-frame-sprite-holder">
+                                <img id="pokedex-preview-img" class="dex-hero-sprite" src="" alt="Poke">
                             </div>
-                            <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 1px; overflow: hidden;">
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div id="pokedex-types-container" style="display: flex; gap: 2px;"></div>
-                                    <div style="display: flex; gap: 6px; font-size: 8px; font-weight: bold; color: #374151;">
-                                        <span>🐾 <span id="pokedex-caught-count">0</span></span>
-                                        <span>👁️ <span id="pokedex-seen-count">0</span></span>
-                                    </div>
-                                </div>
-                                <div id="pokedex-evolution-text" style="font-size: 6px; color: #4b5563; font-style: italic;">- FIRST STAGE -</div>
-                            </div>
+                            <div class="dex-frame-rarity-badge" id="pokedex-rarity-badge">COMMON</div>
                         </div>
-                        
-                        <div style="display: flex; flex-direction: column; gap: 1px; margin-top: 1px;">
-                            <div style="display: flex; justify-content: space-between; font-size: 6px; font-weight: bold;"><span>SALUD</span><span id="stat-hp-val">45</span></div>
-                            <div class="hp-bar-bg" style="height: 3px;"><div id="stat-hp-fill" class="hp-bar-fill" style="width: 50%;"></div></div>
-                            
-                            <div style="display: flex; justify-content: space-between; font-size: 6px; font-weight: bold;"><span>ATAQUE</span><span id="stat-atk-val">49</span></div>
-                            <div class="hp-bar-bg" style="height: 3px;"><div id="stat-atk-fill" class="hp-bar-fill" style="background-color: #38bdf8 !important; width: 50%;"></div></div>
-                            
-                            <div style="display: flex; justify-content: space-between; font-size: 6px; font-weight: bold;"><span>DEFENSA</span><span id="stat-def-val">49</span></div>
-                            <div class="hp-bar-bg" style="height: 3px;"><div id="stat-def-fill" class="hp-bar-fill" style="background-color: #eab308 !important; width: 50%;"></div></div>
+
+                        <!-- Info Derecha -->
+                        <div class="dex-info-right-side">
+                            <div class="dex-top-title-row">
+                                <span class="dex-header-id-name" id="pokedex-header-title">Nº 001 - BULBASAUR</span>
+                                <button class="dex-close-x" onclick="cerrarPokedex()">✖</button>
+                            </div>
+
+                            <div class="dex-types-strip" id="pokedex-types-container"></div>
+
+                            <div class="dex-evolution-desc" id="pokedex-evolution-text">- FIRST STAGE -</div>
+
+                            <div class="dex-caught-seen-row">
+                                <span>🐾 <span id="pokedex-caught-count">0</span></span>
+                                <span>👁️ <span id="pokedex-seen-count">0</span></span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="pokedex-grid-scroll" id="pokedex-grid-container"></div>
+                    <!-- Barras de Salud, Ataque y Defensa (Píldoras continuas) -->
+                    <div class="dex-stats-bars-wrapper">
+                        <div class="dex-stat-line">
+                            <span class="dex-stat-label">HEALTH:</span>
+                            <div class="dex-bar-track">
+                                <div id="stat-hp-fill" class="dex-bar-fill-pill" style="background:#4ade80; width: 45%;">45</div>
+                            </div>
+                        </div>
+                        <div class="dex-stat-line">
+                            <span class="dex-stat-label">ATTACK:</span>
+                            <div class="dex-bar-track">
+                                <div id="stat-atk-fill" class="dex-bar-fill-pill" style="background:#0284c7; width: 49%;">49</div>
+                            </div>
+                        </div>
+                        <div class="dex-stat-line">
+                            <span class="dex-stat-label">DEFENSE:</span>
+                            <div class="dex-bar-track">
+                                <div id="stat-def-fill" class="dex-bar-fill-pill" style="background:#eab308; width: 49%;">49</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Grid de Scroll Inferior -->
+                    <div class="dex-grid-scroll-area" id="pokedex-grid-container"></div>
                 </div>
             </div>
 
@@ -1114,7 +1168,6 @@
             sprite.style.backgroundPosition = "0px 0px";
         }
 
-        // --- SISTEMA DE RESOLUCIÓN EXACTA Y ROBUSTA DE ID POKÉDEX ---
         function getValidPokemonDexId(poke) {
             if (!poke) return 1;
             if (typeof poke === 'number') return poke;
@@ -1594,7 +1647,6 @@
             };
         }
 
-        // --- COMPROBAR SI ESTÁ LISTO EL LÍDER ---
         function puedeAparecerLiderGimnasio() {
             if (currentGymLeaderIndex >= GYM_LEADERS_GLOBAL.length) return false;
             if (stepsSinceLastGymFight < 10) return false;
@@ -2014,7 +2066,7 @@
             });
         }
 
-        // --- POKÉDEX ---
+        // --- POKÉDEX CORREGIDA ---
         let pokedexSelectedIndex = 0;
         let pokedexGridConstruido = false;
 
@@ -2040,19 +2092,17 @@
                 let pSpriteCell = getPokedexIconUrl(p);
 
                 let cell = document.createElement("div");
-                cell.className = `pokedex-grid-cell ${idx === 0 ? 'selected' : ''}`;
+                cell.className = `dex-cell-item ${idx === 0 ? 'selected-dex-cell' : ''}`;
                 cell.id = `dex-cell-${idx}`;
                 cell.onclick = () => seleccionarPokemonPokedex(idx);
 
-                let isIconGen = pSpriteCell.includes('generation-vii') || pSpriteCell.includes('generation-viii');
-                let imgClass = isIconGen ? "pokedex-cell-img icon-gen-large" : "pokedex-cell-img";
                 let imgStyle = "image-rendering: pixelated;";
                 if (!status.isSeen) imgStyle += " filter: brightness(0);";
                 else if (!status.isCaught) imgStyle += " filter: grayscale(100%);";
 
                 cell.innerHTML = `
-                    <span class="pokedex-cell-num">${pId.toString().padStart(3, '0')}</span>
-                    <img src="${pSpriteCell}" class="${imgClass}" style="${imgStyle}" alt="P">
+                    <span class="dex-cell-number">${pId.toString().padStart(3, '0')}</span>
+                    <img src="${pSpriteCell}" class="dex-cell-sprite-img" style="${imgStyle}" alt="P">
                 `;
                 grid.appendChild(cell);
             });
@@ -2069,11 +2119,8 @@
             const rarityBadge = document.getElementById("pokedex-rarity-badge");
             const typesContainer = document.getElementById("pokedex-types-container");
             const evolutionText = document.getElementById("pokedex-evolution-text");
-            const hpValEl = document.getElementById("stat-hp-val");
             const hpFillEl = document.getElementById("stat-hp-fill");
-            const atkValEl = document.getElementById("stat-atk-val");
             const atkFillEl = document.getElementById("stat-atk-fill");
-            const defValEl = document.getElementById("stat-def-val");
             const defFillEl = document.getElementById("stat-def-fill");
 
             let normalSprite = getPokedexNormalSpriteUrl(poke);
@@ -2084,13 +2131,13 @@
                 previewImg.style.filter = "brightness(0)";
                 rarityBadge.innerText = "???";
                 rarityBadge.style.background = "#666";
-                typesContainer.innerHTML = `<span style="background:#666; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">???</span>`;
+                typesContainer.innerHTML = `<span class="dex-type-pill" style="background:#666;">???</span>`;
                 evolutionText.innerText = `- UNKNOWN -`;
-                hpValEl.innerText = "???"; hpFillEl.style.width = "0%";
-                atkValEl.innerText = "???"; atkFillEl.style.width = "0%";
-                defValEl.innerText = "???"; defFillEl.style.width = "0%";
+                hpFillEl.innerText = "?"; hpFillEl.style.width = "20%";
+                atkFillEl.innerText = "?"; atkFillEl.style.width = "20%";
+                defFillEl.innerText = "?"; defFillEl.style.width = "20%";
             } else if (!isCaught) {
-                headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ${poke.name.toUpperCase()}`;
+                headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ${(poke.name || '').toUpperCase()}`;
                 previewImg.src = normalSprite;
                 previewImg.style.filter = "grayscale(100%)";
                 rarityBadge.innerText = "SEEN";
@@ -2099,19 +2146,19 @@
                 let t1 = poke.types ? poke.types[0] : "normal";
                 let t2 = poke.types && poke.types.length > 1 ? poke.types[1] : null;
                 let c1 = TYPE_COLORS[mapType(t1)] || "#777";
-                let tiposHtml = `<span style="background:${c1}; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">${typeof t1 === 'string' ? t1.toUpperCase() : (t1.name || 'NORMAL').toUpperCase()}</span>`;
+                let tiposHtml = `<span class="dex-type-pill" style="background:${c1};">${typeof t1 === 'string' ? t1.toUpperCase() : (t1.name || 'NORMAL').toUpperCase()}</span>`;
                 if (t2) {
                     let c2 = TYPE_COLORS[mapType(t2)] || "#777";
-                    tiposHtml += ` <span style="background:${c2}; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">${typeof t2 === 'string' ? t2.toUpperCase() : (t2.name || '').toUpperCase()}</span>`;
+                    tiposHtml += `<span class="dex-type-pill" style="background:${c2};">${typeof t2 === 'string' ? t2.toUpperCase() : (t2.name || '').toUpperCase()}</span>`;
                 }
                 typesContainer.innerHTML = tiposHtml;
                 evolutionText.innerText = poke.evolves_from && poke.evolves_from !== "None" ? `- EVOLVES FROM ${poke.evolves_from.toUpperCase()} -` : `- FIRST STAGE -`;
 
-                hpValEl.innerText = "???"; hpFillEl.style.width = "0%";
-                atkValEl.innerText = "???"; atkFillEl.style.width = "0%";
-                defValEl.innerText = "???"; defFillEl.style.width = "0%";
+                hpFillEl.innerText = "?"; hpFillEl.style.width = "20%";
+                atkFillEl.innerText = "?"; atkFillEl.style.width = "20%";
+                defFillEl.innerText = "?"; defFillEl.style.width = "20%";
             } else {
-                headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ${poke.name.toUpperCase()}`;
+                headerTitle.innerText = `Nº ${idDex.toString().padStart(3, '0')} - ${(poke.name || '').toUpperCase()}`;
                 previewImg.src = normalSprite;
                 previewImg.style.filter = "none";
                 rarityBadge.innerText = "COMMON";
@@ -2120,10 +2167,10 @@
                 let t1 = poke.types ? poke.types[0] : "normal";
                 let t2 = poke.types && poke.types.length > 1 ? poke.types[1] : null;
                 let c1 = TYPE_COLORS[mapType(t1)] || "#777";
-                let tiposHtml = `<span style="background:${c1}; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">${typeof t1 === 'string' ? t1.toUpperCase() : (t1.name || 'NORMAL').toUpperCase()}</span>`;
+                let tiposHtml = `<span class="dex-type-pill" style="background:${c1};">${typeof t1 === 'string' ? t1.toUpperCase() : (t1.name || 'NORMAL').toUpperCase()}</span>`;
                 if (t2) {
                     let c2 = TYPE_COLORS[mapType(t2)] || "#777";
-                    tiposHtml += ` <span style="background:${c2}; padding:1px 4px; border-radius:2px; font-size:6px; color:#fff; font-weight:bold;">${typeof t2 === 'string' ? t2.toUpperCase() : (t2.name || '').toUpperCase()}</span>`;
+                    tiposHtml += `<span class="dex-type-pill" style="background:${c2};">${typeof t2 === 'string' ? t2.toUpperCase() : (t2.name || '').toUpperCase()}</span>`;
                 }
                 typesContainer.innerHTML = tiposHtml;
                 evolutionText.innerText = poke.evolves_from && poke.evolves_from !== "None" ? `- EVOLVES FROM ${poke.evolves_from.toUpperCase()} -` : `- FIRST STAGE -`;
@@ -2133,9 +2180,12 @@
                 let atkVal = Math.floor(((stats.attack || 49) + (stats.special_attack || 49)) / 2);
                 let defVal = Math.floor(((stats.defense || 49) + (stats.special_defense || 49)) / 2);
 
-                hpValEl.innerText = hpVal; hpFillEl.style.width = Math.min(100, (hpVal / 200) * 100) + "%";
-                atkValEl.innerText = atkVal; atkFillEl.style.width = Math.min(100, (atkVal / 200) * 100) + "%";
-                defValEl.innerText = defVal; defFillEl.style.width = Math.min(100, (defVal / 200) * 100) + "%";
+                hpFillEl.innerText = hpVal;
+                hpFillEl.style.width = Math.min(100, Math.max(18, (hpVal / 180) * 100)) + "%";
+                atkFillEl.innerText = atkVal;
+                atkFillEl.style.width = Math.min(100, Math.max(18, (atkVal / 180) * 100)) + "%";
+                defFillEl.innerText = defVal;
+                defFillEl.style.width = Math.min(100, Math.max(18, (defVal / 180) * 100)) + "%";
             }
 
             let totalCaughtCount = 0;
@@ -2149,8 +2199,8 @@
             document.getElementById("pokedex-caught-count").innerText = totalCaughtCount;
             document.getElementById("pokedex-seen-count").innerText = totalSeenCount;
 
-            document.querySelectorAll('.pokedex-grid-cell').forEach((cell, idx) => {
-                cell.classList.toggle('selected', idx === pokedexSelectedIndex);
+            document.querySelectorAll('.dex-cell-item').forEach((cell, idx) => {
+                cell.classList.toggle('selected-dex-cell', idx === pokedexSelectedIndex);
             });
         }
 
@@ -2567,11 +2617,10 @@
             actualizarUIGacha();
         }
 
-        // --- AVANZAR DE ZONA (CONSUMO DE ENERGÍA Y PRIORIDADES) ---
+        // --- AVANZAR DE ZONA ---
         function advanceZone() {
             if (isWalking) return;
 
-            // 1. GASTO DE ENERGÍA AL AVANZAR
             if (!esUsuarioFonso()) {
                 calcularEnergiaOffline();
                 if (energiaActual < 1) {
@@ -2595,7 +2644,6 @@
             
             let zonaObj = null;
 
-            // PRIORIDAD 1: MAPA ANTIGUO (Superpone al Gimnasio)
             if (mapaAntiguoActivado) {
                 let pool = specialZonesConfig.length > 0 ? specialZonesConfig : [{ name: "Zona Legendaria", sprite: "✨", bg_image: "" }];
                 currentSpecialZone = pool[Math.floor(Math.random() * pool.length)];
@@ -2606,7 +2654,6 @@
                 mapaAntiguoActivado = false;
                 zonaObj = currentSpecialZone;
             }
-            // PRIORIDAD 2: COMPROBACIÓN DE LÍDER DE GIMNASIO (Con aumento de probabilidad de Centro Pokémon previo)
             else if (puedeAparecerLiderGimnasio()) {
                 let lider = GYM_LEADERS_GLOBAL[currentGymLeaderIndex];
 
@@ -2634,7 +2681,6 @@
                     };
                 }
             }
-            // PRIORIDAD 3: ZONAS NORMALES DE EXPLORACIÓN
             else {
                 isSpecialZone = false;
                 currentSpecialZone = null;
@@ -2831,7 +2877,7 @@
             let viewport = document.getElementById("map-viewport");
             stepsSinceLastGymFight++;
 
-            // 1. SI ESTAMOS EN UN CENTRO POKÉMON (Cura 50% de PS)
+            // 1. CENTRO POKÉMON (Cura 50% de PS)
             if (isPokemonCenterZone) {
                 teamPokemon.forEach(p => {
                     if (!p.hpMax) p.hpMax = 50;
@@ -2846,7 +2892,7 @@
                 return;
             }
 
-            // 2. SI ESTAMOS EN ZONA DE GIMNASIO (Combate de Líder Oficial)
+            // 2. ZONA DE GIMNASIO (Combate de Líder Oficial)
             if (isGymZone && currentGymZoneObj) {
                 iniciarCombateLiderGimnasio();
                 zonaExplorada = true;
@@ -2854,7 +2900,7 @@
                 return;
             }
 
-            // 3. SI ESTAMOS EN ZONA ESPECIAL LEGENDARIA
+            // 3. ZONA ESPECIAL LEGENDARIA
             if (isSpecialZone && currentSpecialZone) {
                 if (currentSpecialZone.bg_image) viewport.style.backgroundImage = `url('${currentSpecialZone.bg_image}')`;
                 iniciarCombateLegendario(currentSpecialZone);
@@ -2863,7 +2909,7 @@
                 return;
             }
 
-            // 4. EXPLORACIÓN EN ZONAS HABITUALES (Eventos aleatorios / Combate salvaje)
+            // 4. EXPLORACIÓN EN ZONAS HABITUALES
             let zonaObj = zonesConfig[currentZoneIndex] || { bg_image: "", bg_image_event: "" };
             const r = Math.random();
 
