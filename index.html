@@ -987,49 +987,49 @@
         
         const DEFAULT_GYM_LEADERS = [
             {
-                id: "falkner", name: "Pegaso", type: "flying", badge_name: "Medalla Céfiro", badge_icon: "🕊️",
+                id: "falkner", name: "Pegaso", gym_name: "Gimnasio Malva", gym_sprite: "🏛️", gym_bg: "img/zones/gym_flying.png", type: "flying", badge_name: "Medalla Céfiro", badge_icon: "🕊️",
                 stages: [
                     { stage: 1, pokemon: "Pidgey", level: 7 }, { stage: 2, pokemon: "Spearow", level: 8 },
                     { stage: 3, pokemon: "Hoothoot", level: 9 }, { stage: 4, pokemon: "Pidgeotto", level: 10 }
                 ]
             },
             {
-                id: "whitney", name: "Blanca", type: "normal", badge_name: "Medalla Planicie", badge_icon: "⚪",
+                id: "whitney", name: "Blanca", gym_name: "Gimnasio Trigal", gym_sprite: "🏛️", gym_bg: "img/zones/gym_normal.png", type: "normal", badge_name: "Medalla Planicie", badge_icon: "⚪",
                 stages: [
                     { stage: 1, pokemon: "Clefairy", level: 22 }, { stage: 2, pokemon: "Jigglypuff", level: 23 },
                     { stage: 3, pokemon: "Snubbull", level: 24 }, { stage: 4, pokemon: "Miltank", level: 25 }
                 ]
             },
             {
-                id: "morty", name: "Morti", type: "ghost", badge_name: "Medalla Niebla", badge_icon: "👻",
+                id: "morty", name: "Morti", gym_name: "Gimnasio Iris", gym_sprite: "🏛️", gym_bg: "img/zones/gym_ghost.png", type: "ghost", badge_name: "Medalla Niebla", badge_icon: "👻",
                 stages: [
                     { stage: 1, pokemon: "Gastly", level: 29 }, { stage: 2, pokemon: "Haunter", level: 30 },
                     { stage: 3, pokemon: "Misdreavus", level: 31 }, { stage: 4, pokemon: "Gengar", level: 32 }
                 ]
             },
             {
-                id: "bugsy", name: "Antón", type: "bug", badge_name: "Medalla Colmena", badge_icon: "🐝",
+                id: "bugsy", name: "Antón", gym_name: "Gimnasio Azalea", gym_sprite: "🏛️", gym_bg: "img/zones/gym_bug.png", type: "bug", badge_name: "Medalla Colmena", badge_icon: "🐝",
                 stages: [
                     { stage: 1, pokemon: "Metapod", level: 36 }, { stage: 2, pokemon: "Kakuna", level: 37 },
                     { stage: 3, pokemon: "Spinarak", level: 38 }, { stage: 4, pokemon: "Scyther", level: 39 }
                 ]
             },
             {
-                id: "jasmine", name: "Jazmín", type: "steel", badge_name: "Medalla Mineral", badge_icon: "⚙️",
+                id: "jasmine", name: "Jazmín", gym_name: "Gimnasio Olivo", gym_sprite: "🏛️", gym_bg: "img/zones/gym_steel.png", type: "steel", badge_name: "Medalla Mineral", badge_icon: "⚙️",
                 stages: [
                     { stage: 1, pokemon: "Magnemite", level: 43 }, { stage: 2, pokemon: "Magneton", level: 44 },
                     { stage: 3, pokemon: "Skarmory", level: 45 }, { stage: 4, pokemon: "Steelix", level: 46 }
                 ]
             },
             {
-                id: "pryce", name: "Fredo", type: "ice", badge_name: "Medalla Glaciar", badge_icon: "❄️",
+                id: "pryce", name: "Fredo", gym_name: "Gimnasio Caoba", gym_sprite: "🏛️", gym_bg: "img/zones/gym_ice.png", type: "ice", badge_name: "Medalla Glaciar", badge_icon: "❄️",
                 stages: [
                     { stage: 1, pokemon: "Seel", level: 50 }, { stage: 2, pokemon: "Dewgong", level: 51 },
                     { stage: 3, pokemon: "Swinub", level: 52 }, { stage: 4, pokemon: "Piloswine", level: 53 }
                 ]
             },
             {
-                id: "clair", name: "Débora", type: "dragon", badge_name: "Medalla Dragón", badge_icon: "🐉",
+                id: "clair", name: "Débora", gym_name: "Gimnasio Endrino", gym_sprite: "🏛️", gym_bg: "img/zones/gym_dragon.png", type: "dragon", badge_name: "Medalla Dragón", badge_icon: "🐉",
                 stages: [
                     { stage: 1, pokemon: "Dragonair", level: 60 }, { stage: 2, pokemon: "Gyarados", level: 61 },
                     { stage: 3, pokemon: "Dragonair", level: 62 }, { stage: 4, pokemon: "Kingdra", level: 63 }
@@ -1042,6 +1042,10 @@
         let currentLeaderStage = 0;
         let stepsSinceLastGymFight = 12;
         let gymPreHealSpawned = false;
+
+        // Estado de Zona Actual
+        let isGymZone = false;
+        let currentGymZoneObj = null;
 
         let SKINS_DATABASE = [
             { id: 'default', name: 'Entrenador', art_image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/trainers/1.png', sheet_image: 'img/player_sheet.png' },
@@ -1111,7 +1115,6 @@
             sprite.style.backgroundPosition = "0px 0px";
         }
 
-        // --- SISTEMA DE RESOLUCIÓN EXACTA DE ID POKÉDEX ---
         function getValidPokemonDexId(poke) {
             if (!poke) return 1;
             if (poke.idDex && typeof poke.idDex === 'number') return poke.idDex;
@@ -1138,7 +1141,7 @@
             if (SPRITE_URL_CACHE.has(cacheKey)) return SPRITE_URL_CACHE.get(cacheKey);
 
             let url = isShiny 
-                ? (poke.shiny_sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`)
+                ? (poke.shiny_sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`) 
                 : (poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`);
 
             SPRITE_URL_CACHE.set(cacheKey, url);
@@ -1577,6 +1580,7 @@
             };
         }
 
+        // --- COMPROBAR SI ESTÁ LISTO EL LÍDER (Requisito de nivel solo en Fase 1) ---
         function puedeAparecerLiderGimnasio() {
             if (currentGymLeaderIndex >= GYM_LEADERS_GLOBAL.length) return false;
             if (stepsSinceLastGymFight < 10) return false;
@@ -1859,12 +1863,12 @@
         }
 
         function actualizarFondoZonaInicial() {
-            let zonaObj = isSpecialZone && currentSpecialZone ? currentSpecialZone : (zonesConfig[currentZoneIndex] || zonesConfig[0]);
+            let zonaObj = isSpecialZone && currentSpecialZone ? currentSpecialZone : (isGymZone && currentGymZoneObj ? currentGymZoneObj : (zonesConfig[currentZoneIndex] || zonesConfig[0]));
             if (zonaObj) {
-                document.getElementById("current-zone-name").innerText = zonaObj.name;
-                document.getElementById("zone-sprite").innerText = zonaObj.sprite || "🏡";
+                document.getElementById("current-zone-name").innerText = zonaObj.gym_name || zonaObj.name;
+                document.getElementById("zone-sprite").innerText = zonaObj.gym_sprite || zonaObj.sprite || "🏡";
                 let viewport = document.getElementById("map-viewport");
-                let bgUrl = zonaObj.bg_image_event || zonaObj.bg_image;
+                let bgUrl = zonaObj.gym_bg || zonaObj.bg_image_event || zonaObj.bg_image;
                 viewport.style.backgroundImage = bgUrl ? `url('${bgUrl}')` : "";
             }
         }
@@ -1991,7 +1995,7 @@
             });
         }
 
-        // --- POKÉDEX CORREGIDA ---
+        // --- POKÉDEX ---
         let pokedexSelectedIndex = 0;
         let pokedexGridConstruido = false;
 
@@ -2544,24 +2548,48 @@
             actualizarUIGacha();
         }
 
-        // --- AVANZAR DE ZONA ---
+        // --- AVANZAR DE ZONA CON PRIORIDAD ---
         function advanceZone() {
             if (isWalking) return;
             isWalking = true;
             document.getElementById("input-blocker").style.display = "block";
 
-            let oldZona = isSpecialZone && currentSpecialZone ? currentSpecialZone : (zonesConfig[currentZoneIndex] || { name: "Zona Anterior", sprite: "🏡", bg_image: "" });
+            let oldZona = isSpecialZone && currentSpecialZone 
+                ? currentSpecialZone 
+                : (isGymZone && currentGymZoneObj ? currentGymZoneObj : (zonesConfig[currentZoneIndex] || { name: "Zona Anterior", sprite: "🏡", bg_image: "" }));
+            
             let zonaObj = null;
 
+            // PRIORIDAD 1: MAPA ANTIGUO (Superpone al Gimnasio)
             if (mapaAntiguoActivado) {
                 let pool = specialZonesConfig.length > 0 ? specialZonesConfig : [{ name: "Zona Legendaria", sprite: "✨", bg_image: "" }];
                 currentSpecialZone = pool[Math.floor(Math.random() * pool.length)];
                 isSpecialZone = true;
+                isGymZone = false;
+                currentGymZoneObj = null;
                 mapaAntiguoActivado = false;
                 zonaObj = currentSpecialZone;
-            } else {
+            }
+            // PRIORIDAD 2: ZONA DE GIMNASIO DEDICADA
+            else if (puedeAparecerLiderGimnasio()) {
+                let lider = GYM_LEADERS_GLOBAL[currentGymLeaderIndex];
+                currentGymZoneObj = lider;
+                isGymZone = true;
                 isSpecialZone = false;
                 currentSpecialZone = null;
+                gymPreHealSpawned = false; // Listo para curar en primera exploración
+                zonaObj = {
+                    name: lider.gym_name,
+                    sprite: lider.gym_sprite || "🏛️",
+                    bg_image: lider.gym_bg || ""
+                };
+            }
+            // PRIORIDAD 3: ZONAS NORMALES DE EXPLORACIÓN
+            else {
+                isSpecialZone = false;
+                currentSpecialZone = null;
+                isGymZone = false;
+                currentGymZoneObj = null;
                 if (zonesConfig.length > 1) {
                     let newIndex = currentZoneIndex;
                     while (newIndex === currentZoneIndex) {
@@ -2581,8 +2609,8 @@
 
             viewport.style.backgroundImage = "none";
 
-            let oldBg = oldZona.bg_image_event || oldZona.bg_image;
-            let newBg = zonaObj.bg_image_event || zonaObj.bg_image;
+            let oldBg = oldZona.gym_bg || oldZona.bg_image_event || oldZona.bg_image;
+            let newBg = zonaObj.gym_bg || zonaObj.bg_image_event || zonaObj.bg_image;
 
             panel1.style.backgroundImage = oldBg ? `url('${oldBg}')` : "linear-gradient(135deg, #2e7d32, #1b5e20)";
             panel2.style.backgroundImage = newBg ? `url('${newBg}')` : "linear-gradient(135deg, #2e7d32, #1b5e20)";
@@ -2593,9 +2621,12 @@
 
             document.getElementById("current-zone-name").innerText = zonaObj.name;
             document.getElementById("zone-sprite").innerText = zonaObj.sprite || "🏡";
-            document.getElementById("explore-log").innerHTML = isSpecialZone 
-                ? `🗺️ ¡Siguiendo el Mapa Antiguo hacia ${zonaObj.name}...`
-                : `Caminando hacia ${zonaObj.name}...`;
+            
+            let logCaminar = `Caminando hacia ${zonaObj.name}...`;
+            if (isSpecialZone) logCaminar = `🗺️ ¡Siguiendo el Mapa Antiguo hacia ${zonaObj.name}...`;
+            else if (isGymZone) logCaminar = `🏛️ ¡Acercándote al ${zonaObj.name}...!`;
+
+            document.getElementById("explore-log").innerHTML = logCaminar;
 
             iniciarAnimacionCaminar();
 
@@ -2621,9 +2652,9 @@
                     }
                 });
                 
-                let logMsg = isSpecialZone 
-                    ? `✨ ¡Has llegado a ${zonaObj.name}! Se siente una presencia legendaria ancestral.`
-                    : `Has llegado a ${zonaObj.name}.`;
+                let logMsg = `Has llegado a ${zonaObj.name}.`;
+                if (isSpecialZone) logMsg = `✨ ¡Has llegado a ${zonaObj.name}! Se siente una presencia legendaria ancestral.`;
+                else if (isGymZone) logMsg = `🏛️ ¡Has entrado al ${zonaObj.name}! El desafío de gimnasio te espera.`;
 
                 if (curados > 0) logMsg += `<br><span style="color:#4CAF50;">¡El equipo recuperó un 5% de PS por el paseo!</span>`;
                 
@@ -2690,7 +2721,7 @@
             document.getElementById("player-initiative-bubble").style.display = "none";
             document.getElementById("enemy-initiative-bubble").style.display = "none";
 
-            document.getElementById("combat-dialogue-text").innerHTML = `⚔️ ¡El Líder ${liderData.name} te desafía! Combate ${stageData.stage}/4 por la ${liderData.badge_name}.`;
+            document.getElementById("combat-dialogue-text").innerHTML = `⚔️ ¡El Líder ${liderData.name} te desafía en ${liderData.gym_name}! Combate ${stageData.stage}/4 por la ${liderData.badge_name}.`;
 
             document.getElementById("map-content-inner").style.display = "none";
             document.getElementById("explore-log").style.display = "none";
@@ -2746,18 +2777,18 @@
             let viewport = document.getElementById("map-viewport");
             stepsSinceLastGymFight++;
 
-            if (puedeAparecerLiderGimnasio()) {
+            // SI ESTAMOS EN ZONA DE GIMNASIO
+            if (isGymZone && currentGymZoneObj) {
                 if (!gymPreHealSpawned) {
                     gymPreHealSpawned = true;
                     teamPokemon.forEach(p => { if (!p.hpMax) p.hpMax = 50; p.hpActual = p.hpMax; });
                     guardarDatos();
                     actualizarHUD();
-                    document.getElementById("explore-log").innerHTML = `🏥 ¡Has descansado en un Centro Pokémon antes del Gimnasio! Tu equipo ha recuperado el 100% de PS.`;
+                    document.getElementById("explore-log").innerHTML = `🏥 ¡Has descansado en el Centro Pokémon del ${currentGymZoneObj.gym_name}! Todo tu equipo ha recuperado el 100% de PS.`;
                     zonaExplorada = true;
                     document.getElementById("btn-explore-main").disabled = false;
                     return;
                 } else {
-                    gymPreHealSpawned = false;
                     iniciarCombateLiderGimnasio();
                     zonaExplorada = true;
                     document.getElementById("btn-explore-main").disabled = false;
@@ -2765,6 +2796,7 @@
                 }
             }
 
+            // SI ESTAMOS EN ZONA ESPECIAL LEGENDARIA
             if (isSpecialZone && currentSpecialZone) {
                 if (currentSpecialZone.bg_image) viewport.style.backgroundImage = `url('${currentSpecialZone.bg_image}')`;
                 iniciarCombateLegendario(currentSpecialZone);
@@ -2773,6 +2805,7 @@
                 return;
             }
 
+            // EXPLORACIÓN HABITUAL
             if (!esUsuarioFonso()) {
                 calcularEnergiaOffline();
                 if (energiaActual < 1) return alert("¡No tienes suficiente energía para explorar! Espera a que se recargue.");
@@ -2880,7 +2913,7 @@
 
             if (objetoSeleccionadoBolsa.id === 'ancient_map') {
                 mapaAntiguoActivado = true;
-                alert("🗺️ ¡Has activado el Mapa Antiguo! Al pulsar AVANZAR, viajarás a una zona legendaria.");
+                alert("🗺️ ¡Has activado el Mapa Antiguo! Al pulsar AVANZAR, viajarás con prioridad a una zona legendaria.");
                 objetoSeleccionadoBolsa.count--;
                 if (objetoSeleccionadoBolsa.count <= 0) {
                     playerInventory['others'] = playerInventory['others'].filter(i => i.id !== 'ancient_map');
