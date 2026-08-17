@@ -2,11 +2,12 @@
   {
     "id": "falkner",
     "name": "Pegaso",
-    "title": "Líder de Gimnasio Malva",
+    "gym_name": "Gimnasio Malva",
+    "gym_sprite": "🏛️",
+    "gym_bg": "img/zones/gym_flying.png",
     "type": "flying",
     "badge_name": "Medalla Céfiro",
     "badge_icon": "🕊️",
-    "sprite": "https://play.pokemonshowdown.com/sprites/trainers/falkner-gen4.png",
     "stages": [
       { "stage": 1, "pokemon": "Pidgey", "level": 7 },
       { "stage": 2, "pokemon": "Spearow", "level": 8 },
@@ -17,11 +18,12 @@
   {
     "id": "whitney",
     "name": "Blanca",
-    "title": "Líder de Gimnasio Trigal",
+    "gym_name": "Gimnasio Trigal",
+    "gym_sprite": "🏛️",
+    "gym_bg": "img/zones/gym_normal.png",
     "type": "normal",
     "badge_name": "Medalla Planicie",
     "badge_icon": "⚪",
-    "sprite": "https://play.pokemonshowdown.com/sprites/trainers/whitney-gen4.png",
     "stages": [
       { "stage": 1, "pokemon": "Clefairy", "level": 22 },
       { "stage": 2, "pokemon": "Jigglypuff", "level": 23 },
@@ -32,11 +34,12 @@
   {
     "id": "morty",
     "name": "Morti",
-    "title": "Líder de Gimnasio Iris",
+    "gym_name": "Gimnasio Iris",
+    "gym_sprite": "🏛️",
+    "gym_bg": "img/zones/gym_ghost.png",
     "type": "ghost",
     "badge_name": "Medalla Niebla",
     "badge_icon": "👻",
-    "sprite": "https://play.pokemonshowdown.com/sprites/trainers/morty-gen4.png",
     "stages": [
       { "stage": 1, "pokemon": "Gastly", "level": 29 },
       { "stage": 2, "pokemon": "Haunter", "level": 30 },
@@ -47,11 +50,12 @@
   {
     "id": "bugsy",
     "name": "Antón",
-    "title": "Líder de Gimnasio Azalea",
+    "gym_name": "Gimnasio Azalea",
+    "gym_sprite": "🏛️",
+    "gym_bg": "img/zones/gym_bug.png",
     "type": "bug",
     "badge_name": "Medalla Colmena",
     "badge_icon": "🐝",
-    "sprite": "https://play.pokemonshowdown.com/sprites/trainers/bugsy-gen4.png",
     "stages": [
       { "stage": 1, "pokemon": "Metapod", "level": 36 },
       { "stage": 2, "pokemon": "Kakuna", "level": 37 },
@@ -62,11 +66,12 @@
   {
     "id": "jasmine",
     "name": "Jazmín",
-    "title": "Líder de Gimnasio Olivo",
+    "gym_name": "Gimnasio Olivo",
+    "gym_sprite": "🏛️",
+    "gym_bg": "img/zones/gym_steel.png",
     "type": "steel",
     "badge_name": "Medalla Mineral",
     "badge_icon": "⚙️",
-    "sprite": "https://play.pokemonshowdown.com/sprites/trainers/jasmine-gen4.png",
     "stages": [
       { "stage": 1, "pokemon": "Magnemite", "level": 43 },
       { "stage": 2, "pokemon": "Magneton", "level": 44 },
@@ -77,11 +82,12 @@
   {
     "id": "pryce",
     "name": "Fredo",
-    "title": "Líder de Gimnasio Caoba",
+    "gym_name": "Gimnasio Caoba",
+    "gym_sprite": "🏛️",
+    "gym_bg": "img/zones/gym_ice.png",
     "type": "ice",
     "badge_name": "Medalla Glaciar",
     "badge_icon": "❄️",
-    "sprite": "https://play.pokemonshowdown.com/sprites/trainers/pryce-gen4.png",
     "stages": [
       { "stage": 1, "pokemon": "Seel", "level": 50 },
       { "stage": 2, "pokemon": "Dewgong", "level": 51 },
@@ -92,11 +98,12 @@
   {
     "id": "clair",
     "name": "Débora",
-    "title": "Líder de Gimnasio Endrino",
+    "gym_name": "Gimnasio Endrino",
+    "gym_sprite": "🏛️",
+    "gym_bg": "img/zones/gym_dragon.png",
     "type": "dragon",
     "badge_name": "Medalla Dragón",
     "badge_icon": "🐉",
-    "sprite": "https://play.pokemonshowdown.com/sprites/trainers/clair-gen4.png",
     "stages": [
       { "stage": 1, "pokemon": "Dragonair", "level": 60 },
       { "stage": 2, "pokemon": "Gyarados", "level": 61 },
