@@ -48,7 +48,7 @@
         .box-container, .modal-window { background-color: #2a2a2a; padding: 15px; border-radius: 8px; border: 2px solid #444; width: 100%; height: 100%; text-align: center; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
         .modal-window { background: linear-gradient(135deg, #38bdf8, #0369a1); border: none; border-radius: 0; box-shadow: none; width: 100%; height: 100%; }
         
-        /* --- POKÉDEX EXACTA (TAMAÑOS Y ESCALAS 1:1) --- */
+        /* --- POKÉDEX --- */
         .pokedex-window { 
             background: #ffffff; 
             border: 3px solid #111; 
@@ -280,17 +280,18 @@
             flex-grow: 1;
             width: 100%;
             display: flex;
-            align-items: flex-end;
+            align-items: center;
             justify-content: center;
             overflow: hidden;
-            padding-bottom: 2px;
         }
         .dex-cell-sprite-img {
-            max-width: 32px;
-            max-height: 26px;
+            width: 32px;
+            height: 30px;
             object-fit: contain;
             image-rendering: pixelated;
             display: block;
+            transform: scale(2.2);
+            transform-origin: center center;
         }
 
         /* PC */
@@ -298,7 +299,7 @@
         .pc-filter-bar { background: rgba(0, 0, 0, 0.25); padding: 3px 5px; border-radius: 3px; }
         .pc-main-layout { display: flex; gap: 4px; flex-grow: 1; overflow: hidden; margin-top: 3px; }
         .pc-grid-box { background: rgba(0,0,0,0.15); border: 1px solid #1a6080; border-radius: 3px; width: 60%; padding: 3px; display: grid; grid-template-columns: repeat(5, 1fr); grid-auto-rows: 34px; gap: 2px; overflow-y: auto; overflow-x: hidden; align-content: start; }
-        .pc-cell { background-color: #38bdf8; border: 1px solid #0284c7; border-radius: 4px; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; }
+        .pc-cell { background-color: #38bdf8; border: 1px solid #0284c7; border-radius: 4px; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; overflow: hidden; }
         .pc-cell.shiny-cell { background-color: #eab308 !important; border-color: #ca8a04 !important; }
         .pc-cell.selected-pc::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
@@ -1196,20 +1197,25 @@
             return 1;
         }
 
+        // Mapeo exhaustivo y seguro para slugs de PokéSprite por ID
         function getPokemonSlug(poke) {
-            if (!poke) return 'bulbasaur';
-            let nameStr = (poke.name || poke.nombre || '').toLowerCase();
-            nameStr = nameStr.replace(' ✨', '').trim();
+            let id = getValidPokemonDexId(poke);
+            let nameStr = (poke && (poke.name || poke.nombre)) ? (poke.name || poke.nombre) : '';
+
+            // Si no tenemos nombre confiable o viene desalineado, buscar en la Pokédex global por ID
+            if (!nameStr || nameStr === 'Pokémon') {
+                let match = POKEDEX_GLOBAL.find(x => getValidPokemonDexId(x) === id);
+                if (match && match.name) nameStr = match.name;
+            }
+
+            nameStr = nameStr.toLowerCase().replace(' ✨', '').trim();
             nameStr = nameStr.replace('♀', '-f').replace('♂', '-m');
             nameStr = nameStr.replace(/[\.\']/g, '');
             nameStr = nameStr.replace(/\s+/g, '-');
             nameStr = nameStr.replace(/[^a-z0-9\-]/g, '');
 
             if (!nameStr) {
-                let id = getValidPokemonDexId(poke);
-                let match = POKEDEX_GLOBAL.find(x => x.id === id);
-                if (match) return getPokemonSlug(match);
-                return 'bulbasaur';
+                return id === 1 ? 'bulbasaur' : `pokemon-${id}`;
             }
             return nameStr;
         }
@@ -1238,7 +1244,7 @@
             return url;
         }
 
-        // --- ICONOS 100% LOCALES (SIN LLAMADAS A API EXTERNA DE ICONOS) ---
+        // --- ICONOS 100% LOCALES GEN 8 / GEN 7 (SIN API EXTERNA) ---
         function getPokedexGridSpriteUrl(poke) {
             let id = getValidPokemonDexId(poke);
             let isShiny = poke.isShiny ? true : false;
@@ -1248,8 +1254,8 @@
             let slug = getPokemonSlug(poke);
             let subfolder = isShiny ? 'shiny' : 'regular';
             
-            // Ruta estrictamente local
-            let url = `img/sprites/pokemon-gen7x/${subfolder}/${slug}.png`;
+            // Priorizamos la carpeta Gen 8 local que añadiste
+            let url = `img/sprites/pokemon-gen8/${subfolder}/${slug}.png`;
 
             ICON_URL_CACHE.set(cacheKey, url);
             return url;
@@ -1653,7 +1659,8 @@
             return {
                 id: idDex,
                 idDex: idDex,
-                nombre: (pokeData.name ? (pokeData.name.charAt(0).toUpperCase() + pokeData.name.slice(1)) : 'Pokémon') + (isShiny ? " ✨" : ""),
+                nombre: (pokeData.name ? (pokeData.name.charAt(0).toUpperCase() + pokeData.name.slice(1)) : 'Bulbasaur') + (isShiny ? " ✨" : ""),
+                name: pokeData.name || 'bulbasaur',
                 nivel: nivel,
                 hpMax: hpMax,
                 hpActual: hpMax,
@@ -2321,7 +2328,7 @@
                     div.setAttribute('data-original-index', originalIndex);
                     div.onclick = () => seleccionarCeldaPC(originalIndex);
 
-                    div.innerHTML = `<img src="${iconUrl}" style="max-width:28px; max-height:26px; image-rendering:pixelated; object-fit:contain;" alt="Icon">`;
+                    div.innerHTML = `<img src="${iconUrl}" style="width:28px; height:28px; image-rendering:pixelated; object-fit:contain; transform: scale(1.8);" alt="Icon">`;
                     gridContainer.appendChild(div);
                 });
             }
