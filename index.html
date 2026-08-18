@@ -298,9 +298,15 @@
             margin-top: -5px; /* Eleva el sprite al centro seguro */
             margin-bottom: 2px;
         }
+        /* Ajuste de escala de sprites en la Pokédex:
+           - Pokémon normales/grandes: mantienen exactamente la escala base.
+           - Pokémon pequeños/compactos: se amplían sin cambiar la celda.
+           - La imagen sigue teniendo el mismo espacio reservado, así que no mueve
+             números ni modifica el tamaño de las celdas. */
         .dex-cell-sprite-img.small-mon-boost {
-            transform: scale(1.7) !important;
+            transform: scale(2.05) !important;
             margin-top: -5px;
+            margin-bottom: 2px;
         }
 
         /* PC */
@@ -1230,7 +1236,9 @@
             return nameStr;
         }
 
-        // Comprobación de Pokémon de primera fase o tamaño compacto
+        // Comprobación de Pokémon pequeños/compactos para la cuadrícula de la Pokédex.
+        // Solo estos reciben el aumento de escala; los Pokémon grandes mantienen
+        // exactamente la escala base definida en .dex-cell-sprite-img.
         function isSmallStagePokemon(poke) {
             let id = getValidPokemonDexId(poke);
             let globalEntry = POKEDEX_GLOBAL.find(x => getValidPokemonDexId(x) === id) || poke;
@@ -1238,12 +1246,26 @@
 
             let evolvesFrom = globalEntry.evolves_from;
             let isFirstStage = !evolvesFrom || evolvesFrom === "None" || evolvesFrom === "";
+
             let bst = 0;
             if (globalEntry.stats) {
                 let st = globalEntry.stats;
-                bst = (st.hp || 0) + (st.attack || 0) + (st.defense || 0) + (st.special_attack || 0) + (st.special_defense || 0) + (st.speed || 0);
+                bst =
+                    (st.hp || 0) +
+                    (st.attack || 0) +
+                    (st.defense || 0) +
+                    (st.special_attack || 0) +
+                    (st.special_defense || 0) +
+                    (st.speed || 0);
             }
-            return (isFirstStage && bst <= 420) || id === 1 || id === 4 || id === 7 || id === 10 || id === 13 || id === 16;
+
+            // Primera fase con estadísticas relativamente bajas + algunos
+            // Pokémon iniciales que visualmente quedan especialmente pequeños.
+            return (
+                (isFirstStage && bst <= 420) ||
+                id === 1 || id === 4 || id === 7 ||
+                id === 10 || id === 13 || id === 16
+            );
         }
 
         const SPRITE_URL_CACHE = new Map();
