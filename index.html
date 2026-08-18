@@ -232,7 +232,7 @@
             transition: width 0.3s ease;
         }
 
-        /* GRID INFERIOR POKÉDEX */
+        /* GRID INFERIOR POKÉDEX: CELDAS CENTRADAS */
         .dex-grid-scroll-area {
             flex-grow: 1;
             background: #ffffff;
@@ -253,9 +253,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between;
+            justify-content: flex-start;
             cursor: pointer;
-            padding: 1px 1px 2px 1px;
+            padding: 1px 1px 1px 1px;
             position: relative;
             box-sizing: border-box;
             overflow: hidden;
@@ -272,7 +272,8 @@
             line-height: 1;
             width: 100%;
             text-align: right;
-            padding-right: 1px;
+            padding-right: 2px;
+            margin-bottom: 0px;
             z-index: 2;
         }
         .dex-sprite-wrapper {
@@ -283,25 +284,20 @@
             justify-content: center;
             overflow: hidden;
         }
-/* Modifica esta clase en tu CSS */
-.dex-cell-sprite-img {
-    max-width: 100%;
-    max-height: 25px;
-    object-fit: contain;
-    image-rendering: pixelated;
-    display: block;
-    /* Ajuste para que crezca desde el centro pero manteniendo la alineación */
-    transform: scale(1.6); 
-    transform-origin: center center;
-    margin-top: -2px; /* Sube el sprite un poco para evitar que se corte abajo */
-}
-
-/* Ajuste específico para sprites pequeños que requieran más énfasis */
-.dex-cell-sprite-img.small-mon-boost {
-    transform: scale(2.0) !important;
-    margin-top: -3px; 
-}
-
+        .dex-cell-sprite-img {
+            max-width: 100%;
+            max-height: 24px;
+            object-fit: contain;
+            image-rendering: pixelated;
+            display: block;
+            transform: scale(1.65);
+            transform-origin: center center;
+            margin-top: -3px; /* Compensa el espacio vacío inferior evitando cortes */
+        }
+        .dex-cell-sprite-img.small-mon-boost {
+            transform: scale(1.95) !important;
+            margin-top: -4px;
+        }
 
         /* PC */
         .pc-window-gba { background-color: #2d8ab3; border: none; border-radius: 0; width: 100%; height: 100%; padding: 4px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
@@ -1206,7 +1202,7 @@
             return 1;
         }
 
-        // Mapeo seguro contra el ID del Pokémon para evitar que cargue otro icono
+        // Mapeo seguro contra el ID del Pokémon
         function getPokemonSlug(poke) {
             let id = getValidPokemonDexId(poke);
             let rawName = '';
@@ -1230,6 +1226,7 @@
             return nameStr;
         }
 
+        // Comprobación de Pokémon de primera fase o tamaño compacto
         function isSmallStagePokemon(poke) {
             let id = getValidPokemonDexId(poke);
             let globalEntry = POKEDEX_GLOBAL.find(x => getValidPokemonDexId(x) === id) || poke;
@@ -1269,7 +1266,7 @@
             return url;
         }
 
-        // --- ICONOS 100% LOCALES GEN 8 / GEN 7 ---
+        // --- ICONOS 100% LOCALES GEN 8 ---
         function getPokedexGridSpriteUrl(poke) {
             let id = getValidPokemonDexId(poke);
             let isShiny = poke.isShiny ? true : false;
@@ -1279,7 +1276,6 @@
             let slug = getPokemonSlug(poke);
             let subfolder = isShiny ? 'shiny' : 'regular';
             
-            // Ruta a tu carpeta local de sprites Gen 8
             let url = `img/sprites/pokemon-gen8/${subfolder}/${slug}.png`;
 
             ICON_URL_CACHE.set(cacheKey, url);
@@ -2128,7 +2124,7 @@
             });
         }
 
-        // --- POKÉDEX CORREGIDA ---
+        // --- POKÉDEX ---
         let pokedexSelectedIndex = 0;
         let pokedexGridConstruido = false;
 
@@ -3854,7 +3850,7 @@
             }
         }
 
-                function abrirDatosPokemonTeam() {
+        function abrirDatosPokemonTeam() {
             if (indicePokemonSeleccionado === null) return;
             let p = teamPokemon[indicePokemonSeleccionado];
 
