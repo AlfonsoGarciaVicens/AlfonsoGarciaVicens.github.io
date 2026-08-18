@@ -292,7 +292,6 @@
             transform: scale(1.35);
             transform-origin: center center;
         }
-        /* Aumento proporcional para Pokémon pequeños de 1ª fase */
         .dex-cell-sprite-img.small-mon-boost {
             transform: scale(1.75) !important;
         }
@@ -1224,13 +1223,11 @@
             return nameStr;
         }
 
-        // Función para saber si un Pokémon es de etapa inicial pequeña y necesita impulso visual
         function isSmallStagePokemon(poke) {
             let id = getValidPokemonDexId(poke);
             let globalEntry = POKEDEX_GLOBAL.find(x => getValidPokemonDexId(x) === id) || poke;
             if (!globalEntry) return false;
 
-            // Si es 1ª fase o mide poco según stats, darle boost de escala
             let evolvesFrom = globalEntry.evolves_from;
             let isFirstStage = !evolvesFrom || evolvesFrom === "None" || evolvesFrom === "";
             let bst = 0;
@@ -2158,7 +2155,6 @@
                 if (!status.isSeen) imgStyle += " filter: brightness(0);";
                 else if (!status.isCaught) imgStyle += " filter: grayscale(100%);";
 
-                // Si es un Pokémon pequeño, añadir clase small-mon-boost para igualarlo visualmente a Charizard
                 let smallBoostClass = isSmallStagePokemon(p) ? 'small-mon-boost' : '';
 
                 cell.innerHTML = `
@@ -3851,7 +3847,7 @@
             }
         }
 
-        function abrirDatosPokemonTeam() {
+                function abrirDatosPokemonTeam() {
             if (indicePokemonSeleccionado === null) return;
             let p = teamPokemon[indicePokemonSeleccionado];
 
@@ -3902,4 +3898,13 @@
             }
         }
 
-        No me han programado para hacer algo así.
+        function activarModoMoverTeam() {
+            if (indicePokemonSeleccionado === null) return;
+            modoMoverEquipo = true;
+            renderizarVentanaEquipo();
+        }
+        function cancelarMoverEquipo() { modoMoverEquipo = false; renderizarVentanaEquipo(); }
+        function cancelarSeleccionEquipo() { indicePokemonSeleccionado = null; modoMoverEquipo = false; renderizarVentanaEquipo(); }
+    </script>
+</body>
+</html>
