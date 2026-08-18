@@ -48,7 +48,7 @@
         .box-container, .modal-window { background-color: #2a2a2a; padding: 15px; border-radius: 8px; border: 2px solid #444; width: 100%; height: 100%; text-align: center; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
         .modal-window { background: linear-gradient(135deg, #38bdf8, #0369a1); border: none; border-radius: 0; box-shadow: none; width: 100%; height: 100%; }
         
-        /* --- POKÉDEX EXACTA (AJUSTE Y ALINEACIÓN INFERIOR) --- */
+        /* --- POKÉDEX EXACTA (TAMAÑOS Y ESCALAS 1:1) --- */
         .pokedex-window { 
             background: #ffffff; 
             border: 3px solid #111; 
@@ -232,14 +232,14 @@
             transition: width 0.3s ease;
         }
 
-        /* GRID INFERIOR POKÉDEX CON SPRITES APOYADOS EN LA BASE */
+        /* GRID INFERIOR POKÉDEX */
         .dex-grid-scroll-area {
             flex-grow: 1;
             background: #ffffff;
             overflow-y: auto;
             display: grid;
             grid-template-columns: repeat(8, 1fr);
-            grid-auto-rows: 42px;
+            grid-auto-rows: 40px;
             gap: 0px;
             padding: 0;
             margin: 0;
@@ -280,30 +280,17 @@
             flex-grow: 1;
             width: 100%;
             display: flex;
-            align-items: flex-end; /* Enganchado abajo */
+            align-items: flex-end;
             justify-content: center;
             overflow: hidden;
-            padding-bottom: 2px; /* Margen inferior para que no se corte */
+            padding-bottom: 2px;
         }
         .dex-cell-sprite-img {
+            max-width: 32px;
+            max-height: 26px;
             object-fit: contain;
             image-rendering: pixelated;
             display: block;
-            transform-origin: bottom center; /* Crece desde abajo hacia arriba */
-        }
-        /* Escala 1.8x para Gen 1 a 8 */
-        .dex-cell-sprite-img.legacy-gen-icon {
-            width: 30px;
-            height: 30px;
-            transform: scale(1.8);
-            margin-bottom: 1px;
-        }
-        /* Gen 9 (899+) */
-        .dex-cell-sprite-img.modern-gen-icon {
-            width: 28px;
-            height: 28px;
-            transform: scale(1.0);
-            margin-bottom: 0px;
         }
 
         /* PC */
@@ -1209,10 +1196,27 @@
             return 1;
         }
 
+        function getPokemonSlug(poke) {
+            if (!poke) return 'bulbasaur';
+            let nameStr = (poke.name || poke.nombre || '').toLowerCase();
+            nameStr = nameStr.replace(' ✨', '').trim();
+            nameStr = nameStr.replace('♀', '-f').replace('♂', '-m');
+            nameStr = nameStr.replace(/[\.\']/g, '');
+            nameStr = nameStr.replace(/\s+/g, '-');
+            nameStr = nameStr.replace(/[^a-z0-9\-]/g, '');
+
+            if (!nameStr) {
+                let id = getValidPokemonDexId(poke);
+                let match = POKEDEX_GLOBAL.find(x => x.id === id);
+                if (match) return getPokemonSlug(match);
+                return 'bulbasaur';
+            }
+            return nameStr;
+        }
+
         const SPRITE_URL_CACHE = new Map();
         const BACK_SPRITE_URL_CACHE = new Map();
         const ICON_URL_CACHE = new Map();
-        const DEX_GRID_SPRITE_CACHE = new Map();
 
         function getPokedexNormalSpriteUrl(poke) {
             if (!poke) return 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png';
@@ -1234,27 +1238,20 @@
             return url;
         }
 
-        // Iconos Oficiales
+        // --- ICONOS 100% LOCALES (SIN LLAMADAS A API EXTERNA DE ICONOS) ---
         function getPokedexGridSpriteUrl(poke) {
             let id = getValidPokemonDexId(poke);
-            if (DEX_GRID_SPRITE_CACHE.has(id)) return DEX_GRID_SPRITE_CACHE.get(id);
+            let isShiny = poke.isShiny ? true : false;
+            let cacheKey = `${id}_${isShiny ? 'shiny' : 'norm'}`;
+            if (ICON_URL_CACHE.has(cacheKey)) return ICON_URL_CACHE.get(cacheKey);
 
-            let url;
-            let versions = poke.sprites?.versions || poke.versions || {};
-            let iconGen8 = versions['generation-viii']?.icons?.front_default;
-            let iconGen7 = versions['generation-vii']?.icons?.front_default;
+            let slug = getPokemonSlug(poke);
+            let subfolder = isShiny ? 'shiny' : 'regular';
+            
+            // Ruta estrictamente local
+            let url = `img/sprites/pokemon-gen7x/${subfolder}/${slug}.png`;
 
-            if (iconGen8) {
-                url = iconGen8;
-            } else if (iconGen7) {
-                url = iconGen7;
-            } else if (id <= 898) {
-                url = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons/${id}.png`;
-            } else {
-                url = poke.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
-            }
-
-            DEX_GRID_SPRITE_CACHE.set(id, url);
+            ICON_URL_CACHE.set(cacheKey, url);
             return url;
         }
 
@@ -1282,13 +1279,7 @@
         }
 
         function getPokedexIconUrl(poke) {
-            if (!poke) return 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png';
-            let id = getValidPokemonDexId(poke);
-            if (ICON_URL_CACHE.has(id)) return ICON_URL_CACHE.get(id);
-
-            let url = getPokedexGridSpriteUrl(poke);
-            ICON_URL_CACHE.set(id, url);
-            return url;
+            return getPokedexGridSpriteUrl(poke);
         }
 
         function precargarSpritesEquipoYPC() {
@@ -2139,13 +2130,10 @@
                 if (!status.isSeen) imgStyle += " filter: brightness(0);";
                 else if (!status.isCaught) imgStyle += " filter: grayscale(100%);";
 
-                // Diferenciación de escala: Gen 1 a 8 escala 1.8x; Gen 9 (899+) tamaño normal
-                let scaleClass = pId <= 898 ? "legacy-gen-icon" : "modern-gen-icon";
-
                 cell.innerHTML = `
                     <span class="dex-cell-number">${pId.toString().padStart(3, '0')}</span>
                     <div class="dex-sprite-wrapper">
-                        <img src="${pSpriteCell}" class="dex-cell-sprite-img ${scaleClass}" style="${imgStyle}" alt="P">
+                        <img src="${pSpriteCell}" class="dex-cell-sprite-img" style="${imgStyle}" alt="P">
                     </div>
                 `;
                 grid.appendChild(cell);
@@ -2333,10 +2321,7 @@
                     div.setAttribute('data-original-index', originalIndex);
                     div.onclick = () => seleccionarCeldaPC(originalIndex);
 
-                    let isIconGen = iconUrl.includes('generation-vii') || iconUrl.includes('generation-viii');
-                    let imgClass = isIconGen ? "icon-gen-large" : "";
-
-                    div.innerHTML = `<img src="${iconUrl}" class="${imgClass}" style="width:28px; height:28px; image-rendering:pixelated; object-fit:contain;" alt="Icon">`;
+                    div.innerHTML = `<img src="${iconUrl}" style="max-width:28px; max-height:26px; image-rendering:pixelated; object-fit:contain;" alt="Icon">`;
                     gridContainer.appendChild(div);
                 });
             }
@@ -3398,7 +3383,7 @@
             document.getElementById("normal-controls-view").style.display = "none";
             document.getElementById("combat-controls-view").style.display = "flex";
 
-            document.getElementById("enemy-name-lvl").innerText = `${currentEnemy.nombre.toUpperCase()} Lv.${stageData.level}`;
+            document.getElementById("enemy-name-lvl").innerText = `${currentEnemy.nombre.toUpperCase()} Lv.50`;
             document.getElementById("player-battle-name").innerText = `${lider.nombre.toUpperCase()} Lv.${lider.nivel}`;
             
             let pSpriteImg = document.getElementById("player-battle-sprite");
