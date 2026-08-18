@@ -253,9 +253,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: space-between;
             cursor: pointer;
-            padding: 1px 0 0 0;
+            padding: 1px 1px 2px 1px;
             position: relative;
             box-sizing: border-box;
             overflow: hidden;
@@ -272,8 +272,7 @@
             line-height: 1;
             width: 100%;
             text-align: right;
-            padding-right: 2px;
-            margin-bottom: 0px;
+            padding-right: 1px;
             z-index: 2;
         }
         .dex-sprite-wrapper {
@@ -285,12 +284,12 @@
             overflow: hidden;
         }
         .dex-cell-sprite-img {
-            width: 32px;
-            height: 30px;
+            max-width: 100%;
+            max-height: 24px;
             object-fit: contain;
             image-rendering: pixelated;
             display: block;
-            transform: scale(2.2);
+            transform: scale(1.35);
             transform-origin: center center;
         }
 
@@ -1197,18 +1196,20 @@
             return 1;
         }
 
-        // Mapeo exhaustivo y seguro para slugs de PokéSprite por ID
+        // Mapeo seguro contra el ID del Pokémon para evitar que cargue otro icono (ej. Bonsly)
         function getPokemonSlug(poke) {
             let id = getValidPokemonDexId(poke);
-            let nameStr = (poke && (poke.name || poke.nombre)) ? (poke.name || poke.nombre) : '';
+            let rawName = '';
 
-            // Si no tenemos nombre confiable o viene desalineado, buscar en la Pokédex global por ID
-            if (!nameStr || nameStr === 'Pokémon') {
-                let match = POKEDEX_GLOBAL.find(x => getValidPokemonDexId(x) === id);
-                if (match && match.name) nameStr = match.name;
+            // Buscar en el array cargado de la Pokédex por ID numérico exacto
+            let globalEntry = POKEDEX_GLOBAL.find(x => getValidPokemonDexId(x) === id);
+            if (globalEntry && globalEntry.name) {
+                rawName = globalEntry.name;
+            } else if (poke && (poke.name || poke.nombre)) {
+                rawName = poke.name || poke.nombre;
             }
 
-            nameStr = nameStr.toLowerCase().replace(' ✨', '').trim();
+            let nameStr = rawName.toLowerCase().replace(' ✨', '').trim();
             nameStr = nameStr.replace('♀', '-f').replace('♂', '-m');
             nameStr = nameStr.replace(/[\.\']/g, '');
             nameStr = nameStr.replace(/\s+/g, '-');
@@ -1244,7 +1245,7 @@
             return url;
         }
 
-        // --- ICONOS 100% LOCALES GEN 8 / GEN 7 (SIN API EXTERNA) ---
+        // --- ICONOS 100% LOCALES GEN 8 / GEN 7 (SIN LLAMADAS A API DE ICONOS) ---
         function getPokedexGridSpriteUrl(poke) {
             let id = getValidPokemonDexId(poke);
             let isShiny = poke.isShiny ? true : false;
@@ -1254,7 +1255,7 @@
             let slug = getPokemonSlug(poke);
             let subfolder = isShiny ? 'shiny' : 'regular';
             
-            // Priorizamos la carpeta Gen 8 local que añadiste
+            // Ruta a tu carpeta local de sprites Gen 8
             let url = `img/sprites/pokemon-gen8/${subfolder}/${slug}.png`;
 
             ICON_URL_CACHE.set(cacheKey, url);
@@ -2328,7 +2329,7 @@
                     div.setAttribute('data-original-index', originalIndex);
                     div.onclick = () => seleccionarCeldaPC(originalIndex);
 
-                    div.innerHTML = `<img src="${iconUrl}" style="width:28px; height:28px; image-rendering:pixelated; object-fit:contain; transform: scale(1.8);" alt="Icon">`;
+                    div.innerHTML = `<img src="${iconUrl}" style="width:28px; height:28px; image-rendering:pixelated; object-fit:contain; transform: scale(1.35);" alt="Icon">`;
                     gridContainer.appendChild(div);
                 });
             }
