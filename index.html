@@ -232,7 +232,7 @@
             transition: width 0.3s ease;
         }
 
-        /* GRID INFERIOR POKÉDEX: CELDAS CENTRADAS */
+        /* GRID INFERIOR POKÉDEX: CELDAS ELEVADAS Y SIN CORTES */
         .dex-grid-scroll-area {
             flex-grow: 1;
             background: #ffffff;
@@ -255,7 +255,7 @@
             align-items: center;
             justify-content: flex-start;
             cursor: pointer;
-            padding: 1px 1px 1px 1px;
+            padding: 1px 0 0 0;
             position: relative;
             box-sizing: border-box;
             overflow: hidden;
@@ -283,20 +283,24 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            padding-bottom: 3px; /* Espacio de protección respecto al borde inferior */
         }
         .dex-cell-sprite-img {
-            max-width: 100%;
-            max-height: 24px;
+            max-width: 90%;
+            max-height: 22px;
+            width: auto;
+            height: auto;
             object-fit: contain;
             image-rendering: pixelated;
             display: block;
-            transform: scale(1.65);
+            transform: scale(1.45);
             transform-origin: center center;
-            margin-top: -3px; /* Compensa el espacio vacío inferior evitando cortes */
+            margin-top: -5px; /* Eleva el sprite al centro seguro */
+            margin-bottom: 2px;
         }
         .dex-cell-sprite-img.small-mon-boost {
-            transform: scale(1.95) !important;
-            margin-top: -4px;
+            transform: scale(1.7) !important;
+            margin-top: -5px;
         }
 
         /* PC */
@@ -2124,7 +2128,7 @@
             });
         }
 
-        // --- POKÉDEX ---
+        // --- POKÉDEX CORREGIDA ---
         let pokedexSelectedIndex = 0;
         let pokedexGridConstruido = false;
 
@@ -2391,12 +2395,12 @@
                     <div class="summary-table-row"><span>Potencial</span><b>${p.potencial || '15 / 31'}</b></div>
                     <div class="summary-table-row"><span>Poder Oculto</span><b style="color:${colorOculto}; text-shadow:1px 1px 0 #000;">${p.tipoOculto.toUpperCase()}</b></div>
                     <div class="summary-table-row"><span>Amistad</span><b>${p.amistad || '50 / 100'}</b></div>
-                    <div style="font-size:8px; color:#4b5563; margin-top:2px; line-height:1.1;">${p.origen || 'En almacenamiento PC.'}</div>
+                    <div style="font-size:8px; color:#4b5563; margin-top:2px; line-height:1.1;">${p.origen || 'En equipo activo.'}</div>
                 </div>
             `;
 
             document.getElementById("summary-content-body").innerHTML = bodyHTML;
-            document.getElementById("pc-screen").style.display = "none";
+            document.getElementById("team-screen").style.display = "none";
             document.getElementById("summary-screen").style.display = "flex";
         }
 
