@@ -48,7 +48,7 @@
         .box-container, .modal-window { background-color: #2a2a2a; padding: 15px; border-radius: 8px; border: 2px solid #444; width: 100%; height: 100%; text-align: center; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
         .modal-window { background: linear-gradient(135deg, #38bdf8, #0369a1); border: none; border-radius: 0; box-shadow: none; width: 100%; height: 100%; }
         
-        /* --- POKÉDEX EXACTA (TAMAÑOS Y ESCALAS CORREGIDAS) --- */
+        /* --- POKÉDEX EXACTA (TAMAÑOS Y ESCALAS 1:1) --- */
         .pokedex-window { 
             background: #ffffff; 
             border: 3px solid #111; 
@@ -232,14 +232,14 @@
             transition: width 0.3s ease;
         }
 
-        /* GRID INFERIOR POKÉDEX */
+        /* GRID INFERIOR POKÉDEX: CELDAS GRANDES Y CONTINUAS */
         .dex-grid-scroll-area {
             flex-grow: 1;
             background: #ffffff;
             overflow-y: auto;
             display: grid;
             grid-template-columns: repeat(8, 1fr);
-            grid-auto-rows: 42px;
+            grid-auto-rows: 40px;
             gap: 0px;
             padding: 0;
             margin: 0;
@@ -283,23 +283,14 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            padding-bottom: 1px;
         }
         .dex-cell-sprite-img {
+            width: 28px;
+            height: 28px;
             object-fit: contain;
             image-rendering: pixelated;
             display: block;
-        }
-        /* Para Gen 1 a Gen 8: Escala 2.1x para rellenar la celda eliminando el padding transparente */
-        .dex-cell-sprite-img.legacy-gen-scale {
-            width: 32px;
-            height: 32px;
-            transform: scale(2.1);
-        }
-        /* Para Gen 9 (899+): Tamaño nativo contenido */
-        .dex-cell-sprite-img.modern-gen-scale {
-            width: 28px;
-            height: 28px;
-            transform: scale(1.0);
         }
 
         /* PC */
@@ -1230,19 +1221,15 @@
             return url;
         }
 
+        // URL exacta y ajustada para cuadrícula Pokédex (sprites limpios de Gen 5 para 1-649 y Gen 6+ estándar)
         function getPokedexGridSpriteUrl(poke) {
             let id = getValidPokemonDexId(poke);
             if (DEX_GRID_SPRITE_CACHE.has(id)) return DEX_GRID_SPRITE_CACHE.get(id);
 
             let url;
-            let versions = poke.sprites?.versions || poke.versions || {};
-            let iconGen8 = versions['generation-viii']?.icons?.front_default;
-            let iconGen7 = versions['generation-vii']?.icons?.front_default;
-
-            if (iconGen8) {
-                url = iconGen8;
-            } else if (iconGen7) {
-                url = iconGen7;
+            if (id <= 649) {
+                // Sprites Gen 5 Black/White sin bordes transparentes gigantes
+                url = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/${id}.png`;
             } else if (id <= 898) {
                 url = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons/${id}.png`;
             } else {
@@ -2134,13 +2121,10 @@
                 if (!status.isSeen) imgStyle += " filter: brightness(0);";
                 else if (!status.isCaught) imgStyle += " filter: grayscale(100%);";
 
-                // Diferenciación de escala: Gen 1 a 8 escala 2.1x para ocupar el 50-70% real; Gen 9 (899+) tamaño normal
-                let scaleClass = pId <= 898 ? "legacy-gen-scale" : "modern-gen-scale";
-
                 cell.innerHTML = `
                     <span class="dex-cell-number">${pId.toString().padStart(3, '0')}</span>
                     <div class="dex-sprite-wrapper">
-                        <img src="${pSpriteCell}" class="dex-cell-sprite-img ${scaleClass}" style="${imgStyle}" alt="P">
+                        <img src="${pSpriteCell}" class="dex-cell-sprite-img" style="${imgStyle}" alt="P">
                     </div>
                 `;
                 grid.appendChild(cell);
