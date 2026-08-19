@@ -347,18 +347,229 @@
         .dev-btn-green { background: #15803d; border-color: #22c55e; }
         .dev-btn-green:hover { background: #16a34a; }
 
-        /* Bolsa */
-        .bag-window { background: linear-gradient(135deg, #d97706, #b45309); border: none; border-radius: 0; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-sizing: border-box; }
-        .bag-tabs { display: flex; justify-content: space-around; background: rgba(0,0,0,0.3); padding: 3px; border-radius: 0; gap: 2px; }
-        .bag-tab-btn { background: #78350f; border: 2px solid #92400e; border-radius: 0; padding: 4px; cursor: pointer; font-size: 13px; color: #fff; flex: 1; text-align: center; }
-        .bag-tab-btn.active { background: #f59e0b; border-color: #fef3c7; }
-        .bag-content-grid { background: #ffffff; border: 3px solid #78350f; border-radius: 0; flex-grow: 1; padding: 6px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; margin: 4px 0; }
-        .bag-item-row { background: #fef3c7; border: 1px solid #d97706; color: #111; padding: 5px 8px; border-radius: 0; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 11px; font-weight: bold; }
-        .bag-item-row:hover { background: #fde68a; }
-        .bag-item-row.selected { background: #f59e0b; color: white; border-color: #b45309; }
-        .bag-desc-box { background: #4b5563; border: 3px solid #1f2937; border-radius: 0; padding: 6px; color: #f3f4f6; font-size: 10px; text-align: left; height: 65px; display: flex; flex-direction: column; justify-content: space-between; }
-        .bag-use-btn { background: #10b981; border: none; color: white; padding: 3px 8px; font-weight: bold; border-radius: 0; cursor: pointer; font-size: 10px; align-self: flex-end; }
-        .bag-close-btn { background: #ef4444; border: 2px solid #991b1b; color: white; padding: 5px; font-weight: bold; border-radius: 0; cursor: pointer; font-size: 11px; width: 100%; text-align: center; }
+        /* --- BOLSA / MOCHILA HGSS REDISEÑADA --- */
+        .bag-container-screen {
+            background-color: #2a2a2a;
+            background-image: 
+                linear-gradient(45deg, #333 25%, transparent 25%),
+                linear-gradient(-45deg, #333 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #333 75%),
+                linear-gradient(-45deg, transparent 75%, #333 75%);
+            background-size: 16px 16px;
+            background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+            border-radius: 8px;
+            border: 3px solid #111;
+            width: 100%;
+            height: 100%;
+            padding: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .bag-top-bar {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            width: 100%;
+            height: 32px;
+            position: relative;
+        }
+        .bag-category-pill {
+            background: #f59e0b;
+            color: #ffffff;
+            font-weight: 900;
+            font-size: 9px;
+            padding: 3px 8px;
+            border-radius: 12px 12px 0 0;
+            border: 1.5px solid #111;
+            border-bottom: none;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.4);
+            position: relative;
+            z-index: 10;
+        }
+        .bag-tabs-bar {
+            display: flex;
+            gap: 2px;
+            background: #0284c7;
+            border: 2px solid #0369a1;
+            border-radius: 6px 6px 0 0;
+            padding: 2px 4px 0 4px;
+            height: 28px;
+            align-items: center;
+        }
+        .bag-tab-item {
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 4px 4px 0 0;
+            transition: transform 0.1s ease;
+        }
+        .bag-tab-item.active {
+            background: #38bdf8;
+            transform: translateY(-2px);
+            border-bottom: 2px solid #fff;
+        }
+        .bag-tab-item img {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+            image-rendering: pixelated;
+        }
+
+        .bag-main-orange-card {
+            background: linear-gradient(180deg, #f97316 0%, #ea580c 100%);
+            border: 2.5px solid #c2410c;
+            border-radius: 6px;
+            padding: 5px;
+            display: flex;
+            gap: 6px;
+            height: 158px;
+            box-sizing: border-box;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 3px 6px rgba(0,0,0,0.5);
+        }
+        .bag-left-controls {
+            width: 85px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .bag-visual-art {
+            width: 78px;
+            height: 78px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.15);
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.4);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .bag-visual-art img {
+            width: 62px;
+            height: 62px;
+            object-fit: contain;
+            image-rendering: pixelated;
+        }
+        .bag-btn-action {
+            width: 100%;
+            background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+            border: 1.5px solid #93c5fd;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 9px;
+            font-weight: 900;
+            padding: 4px 0;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+            letter-spacing: 0.5px;
+        }
+        .bag-btn-action:hover { filter: brightness(1.1); }
+        .bag-btn-action:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .bag-right-list-frame {
+            flex-grow: 1;
+            background: #ffffff;
+            border: 2px solid #431407;
+            border-radius: 4px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            padding: 2px;
+            gap: 1px;
+        }
+        .bag-item-row-hgss {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3px 4px;
+            font-size: 9px;
+            font-weight: 900;
+            color: #111;
+            cursor: pointer;
+            border-radius: 2px;
+        }
+        .bag-item-row-hgss:hover {
+            background: #fef08a;
+        }
+        .bag-item-row-hgss.selected {
+            background: #ffedd5;
+            color: #c2410c;
+        }
+        .bag-item-name-part {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .bag-item-cursor {
+            color: #ea580c;
+            font-weight: 900;
+            font-size: 10px;
+            display: inline-block;
+            width: 8px;
+        }
+
+        .bag-bottom-desc-strip {
+            background: #94a3b8;
+            border: 2px solid #475569;
+            border-radius: 4px;
+            padding: 4px 6px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            min-height: 52px;
+            box-sizing: border-box;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+        }
+        .bag-item-desc-icon-box {
+            width: 32px;
+            height: 32px;
+            background: #e2e8f0;
+            border: 1.5px solid #334155;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .bag-item-desc-icon-box img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            image-rendering: pixelated;
+        }
+        .bag-item-desc-text {
+            font-size: 8px;
+            color: #0f172a;
+            font-weight: 900;
+            line-height: 1.25;
+            text-align: left;
+            flex-grow: 1;
+        }
+        .bag-close-pill-btn {
+            background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+            border: 2px solid #93c5fd;
+            color: white;
+            padding: 4px 14px;
+            font-weight: 900;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 9px;
+            letter-spacing: 0.5px;
+            align-self: flex-end;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+        }
 
         /* Gacha Banner */
         .gacha-window { background: radial-gradient(circle at center, #1e1e38 0%, #0d0d1a 100%); border: none; border-radius: 0; width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-sizing: border-box; overflow: hidden; }
@@ -830,27 +1041,61 @@
                 </div>
             </div>
 
-            <!-- Ventana Bolsa -->
+            <!-- --- VENTANA BOLSA REDISEÑADA ESTILO HGSS --- -->
             <div id="bag-screen" class="modal-screen" style="z-index: 85;">
-                <div class="bag-window">
-                    <div class="bag-tabs">
-                        <button class="bag-tab-btn active" onclick="cambiarPestanaBolsa('potions')" title="Pociones">🧪</button>
-                        <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('proteins')" title="Proteínas">💊</button>
-                        <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('energy')" title="Energía">⚡</button>
-                        <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('wallet')" title="Monedero">💰</button>
-                        <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('mts')" title="MTs">💿</button>
-                        <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('eggs')" title="Huevos">🥚</button>
-                        <button class="bag-tab-btn" onclick="cambiarPestanaBolsa('others')" title="Otros">📦</button>
-                    </div>
+                <div class="bag-container-screen">
                     
-                    <div class="bag-content-grid" id="bag-items-container"></div>
-
-                    <div class="bag-desc-box">
-                        <span id="bag-item-desc">Selecciona un objeto para ver su descripción.</span>
-                        <button id="bag-use-action-btn" class="bag-use-btn" style="display:none;" onclick="usarObjetoSeleccionado()">USAR</button>
+                    <!-- Barra de Pestañas Superior -->
+                    <div class="bag-top-bar">
+                        <div class="bag-category-pill" id="bag-category-title-pill">POTIONS</div>
+                        <div class="bag-tabs-bar">
+                            <div class="bag-tab-item active" onclick="cambiarPestanaBolsa('medicine', 'POTIONS', this)" title="Medicinas">
+                                <img src="img/sprites/items-outline/medicine/potion.png" alt="Potions" onerror="this.src='img/sprites/items-outline/medicine/potion.png'">
+                            </div>
+                            <div class="bag-tab-item" onclick="cambiarPestanaBolsa('ev-item', 'PROTEINS', this)" title="Proteínas">
+                                <img src="img/sprites/items-outline/ev-item/protein.png" alt="EV" onerror="this.src='img/sprites/items-outline/ev-item/protein.png'">
+                            </div>
+                            <div class="bag-tab-item" onclick="cambiarPestanaBolsa('other-item', 'ENERGY', this)" title="Energía">
+                                <img src="img/sprites/items-outline/other-item/energy-root.png" alt="Energy" onerror="this.src='img/sprites/items-outline/medicine/energy-powder.png'">
+                            </div>
+                            <div class="bag-tab-item" onclick="cambiarPestanaBolsa('valuable-item', 'WALLET', this)" title="Tesoros">
+                                <img src="img/sprites/items-outline/valuable-item/nugget.png" alt="Valuable" onerror="this.src='img/sprites/items-outline/valuable-item/nugget.png'">
+                            </div>
+                            <div class="bag-tab-item" onclick="cambiarPestanaBolsa('tm', 'MTS', this)" title="MTs / MOs">
+                                <img src="img/sprites/items-outline/tm/normal.png" alt="TMs" onerror="this.src='img/sprites/items-outline/tm/normal.png'">
+                            </div>
+                            <div class="bag-tab-item" onclick="cambiarPestanaBolsa('etc', 'OTHERS', this)" title="Otros / Huevos">
+                                <img src="img/sprites/items-outline/etc/mystery-egg.png" alt="Others" onerror="this.src='img/sprites/items-outline/key-item/old-sea-map.png'">
+                            </div>
+                        </div>
                     </div>
 
-                    <button class="bag-close-btn" onclick="cerrarBolsa()">CERRAR</button>
+                    <!-- Cuadro Naranja Central -->
+                    <div class="bag-main-orange-card">
+                        <div class="bag-left-controls">
+                            <div class="bag-visual-art">
+                                <img id="bag-bag-art-img" src="img/sprites/items-outline/key-item/coin-case.png" onerror="this.src='img/sprites/items-outline/key-item/town-map.png'" alt="Bag">
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 3px; width: 100%;">
+                                <button id="bag-use-action-btn" class="bag-btn-action" onclick="usarObjetoSeleccionado()">USE</button>
+                                <button id="bag-sell-action-btn" class="bag-btn-action" onclick="venderObjetoSeleccionado()">SELL</button>
+                            </div>
+                        </div>
+
+                        <div class="bag-right-list-frame" id="bag-items-container"></div>
+                    </div>
+
+                    <!-- Franja de Descripción Inferior -->
+                    <div class="bag-bottom-desc-strip">
+                        <div class="bag-item-desc-icon-box" id="bag-item-desc-icon-box">
+                            <img id="bag-selected-item-img" src="img/sprites/items-outline/medicine/potion.png" alt="Item">
+                        </div>
+                        <div class="bag-item-desc-text" id="bag-item-desc">
+                            Selecciona un objeto para ver su descripción.
+                        </div>
+                    </div>
+
+                    <button class="bag-close-pill-btn" onclick="cerrarBolsa()">CLOSE</button>
                 </div>
             </div>
 
@@ -1347,64 +1592,55 @@
         let pcIndiceSeleccionado = null;
         let pcModoMover = false;
 
+        // INVENTARIO CON RUTAS LOCALES A img/sprites/items-outline/
         const defaultInventory = {
-            potions: [
-                { id: 'potion', name: 'Poción', count: 3, desc: 'Cura un 20% de PS a un Pokémon.' },
-                { id: 'super_potion', name: 'Superpoción', count: 1, desc: 'Cura un 50% de PS a un Pokémon.' }
+            medicine: [
+                { id: 'potion', name: 'Potion', count: 13, iconFolder: 'medicine', iconFile: 'potion.png', desc: 'The most basic item for any trainer. Heals 20% of a PKMN HP.' },
+                { id: 'super_potion', name: 'Super Potion', count: 5, iconFolder: 'medicine', iconFile: 'super-potion.png', desc: 'Restores a Pokémon HP by 50%.' },
+                { id: 'hyper_potion', name: 'Hyper Potion', count: 2, iconFolder: 'medicine', iconFile: 'hyper-potion.png', desc: 'Restores a Pokémon HP by 75%.' }
             ],
-            proteins: [
-                { id: 'protein', name: 'Proteína', count: 2, desc: 'Aumenta permanentemente el ataque de un Pokémon.' }
+            'ev-item': [
+                { id: 'protein', name: 'Protein', count: 5, iconFolder: 'ev-item', iconFile: 'protein.png', desc: 'Nutritious drink. Permanently boosts PKMN attack power.' },
+                { id: 'max_protein', name: 'Max Protein', count: 1, iconFolder: 'ev-item', iconFile: 'protein.png', desc: 'Drastically boosts PKMN attack power.' }
             ],
-            energy: [
-                { id: 'energy_drink', name: 'Bebida Energética', count: 2, desc: 'Restaura 5 puntos de energía al instante.' }
+            'other-item': [
+                { id: 'energy_drink', name: 'Energy Drink', count: 13, iconFolder: 'other-item', iconFile: 'energy-root.png', desc: 'Instant vitality boost. Restores 5 energy units.' },
+                { id: 'energy_juice', name: 'Energy Juice', count: 6, iconFolder: 'medicine', iconFile: 'energy-powder.png', desc: 'Concentrated natural energy. Restores 10 energy units.' },
+                { id: 'ancient_map', name: 'Ancient Map', count: 1, iconFolder: 'key-item', iconFile: 'old-sea-map.png', desc: 'Ancestral map guiding you to a legendary encounter on your next exploration step.' },
+                { id: 'repel', name: 'Repel', count: 5, iconFolder: 'other-item', iconFile: 'repel.png', desc: 'Prevents weak encounters temporarily.' }
             ],
-            wallet: [
-                { id: 'stardust', name: 'Polvoestelar', count: 1, desc: 'Objeto valioso que se puede vender por dinero.' },
-                { id: 'nugget', name: 'Pepita', count: 1, desc: 'Pepita de oro puro muy valiosa.' }
+            'valuable-item': [
+                { id: 'nugget', name: 'Gold Nugget', count: 13, iconFolder: 'valuable-item', iconFile: 'nugget.png', desc: 'A nugget of pure gold. Can be sold for 1,000 ₱.' },
+                { id: 'stardust', name: 'Stardust', count: 8, iconFolder: 'valuable-item', iconFile: 'stardust.png', desc: 'Lovely red sand with a loose, silky feel. Can be sold for 300 ₱.' },
+                { id: 'pearl', name: 'Pearl', count: 4, iconFolder: 'valuable-item', iconFile: 'pearl.png', desc: 'A somewhat small pearl that can be sold for 500 ₱.' }
             ],
-            mts: [
-                { id: 'mt_hidden', name: 'MT Poder Oculto', count: 1, desc: 'Permite cambiar aleatoriamente el tipo del Poder Oculto de tu Pokémon líder.' }
+            tm: [
+                { id: 'mt_hidden', name: 'TM Hidden Power', count: 2, iconFolder: 'tm', iconFile: 'normal.png', desc: 'Special disk that rerolls the lead Pokémon Hidden Power elemental type.' }
             ],
-            eggs: [
-                { id: 'mystery_egg', name: 'Huevo Misterioso', count: 1, desc: 'Un huevo Pokémon que eclosionará tras explorar suficientes zonas.' }
-            ],
-            others: [
-                { id: 'ancient_map', name: 'Mapa Antiguo', count: 1, desc: 'Un mapa ancestral que te guía hacia el territorio de un Pokémon Legendario en tu próxima exploración.' },
-                { id: 'repel', name: 'Repelente', count: 5, desc: 'Evita encuentros débiles temporalmente.' }
+            etc: [
+                { id: 'mystery_egg', name: 'Mystery Egg', count: 1, iconFolder: 'etc', iconFile: 'mystery-egg.png', desc: 'A mysterious egg waiting to hatch after exploring sufficient steps.' }
             ]
         };
 
         let playerInventory = JSON.parse(JSON.stringify(defaultInventory));
-        let pestanaActivaBolsa = 'potions';
+        let pestanaActivaBolsa = 'medicine';
         let objetoSeleccionadoBolsa = null;
 
         const ALL_DEV_ITEMS = [
-            { id: 'ancient_map', name: 'Mapa Antiguo', cat: 'others', desc: 'Un mapa ancestral que te guía hacia el territorio de un Pokémon Legendario en tu próxima exploración.' },
-            { id: 'potion', name: 'Poción', cat: 'potions', desc: 'Cura un 20% de PS a un Pokémon.' },
-            { id: 'super_potion', name: 'Superpoción', cat: 'potions', desc: 'Cura un 50% de PS a un Pokémon.' },
-            { id: 'hyper_potion', name: 'Hiperpoción', cat: 'potions', desc: 'Cura un 75% de PS a un Pokémon.' },
-            { id: 'energy_drink', name: 'Bebida Energética', cat: 'energy', desc: 'Restaura 5 puntos de energía al instante.' },
-            { id: 'energy_juice', name: 'Zumo Energía', cat: 'energy', desc: 'Restaura 10 puntos de energía al instante.' },
-            { id: 'energy_cookie', name: 'Galleta Energía', cat: 'energy', desc: 'Restaura 3 puntos de energía al instante.' },
-            { id: 'protein', name: 'Proteína', cat: 'proteins', desc: 'Aumenta permanentemente el ataque de un Pokémon (+3).' },
-            { id: 'max_protein', name: 'Proteína Máxima', cat: 'proteins', desc: 'Aumenta drásticamente el ataque de un Pokémon (+8).' },
-            { id: 'mini_protein', name: 'Proteína Mini', cat: 'proteins', desc: 'Aumenta levemente el ataque de un Pokémon (+1).' },
-            { id: 'mt_hidden', name: 'MT Poder Oculto', cat: 'mts', desc: 'Permite cambiar aleatoriamente el tipo del Poder Oculto de tu Pokémon líder.' },
-            { id: 'stardust', name: 'Polvoestelar', cat: 'wallet', desc: 'Objeto valioso que se puede vender por dinero.' },
-            { id: 'pearl', name: 'Perla', cat: 'wallet', desc: 'Objeto valioso que se puede vender por dinero.' },
-            { id: 'nugget', name: 'Pepita', cat: 'wallet', desc: 'Pepita de oro puro muy valiosa.' },
-            { id: 'mystery_egg', name: 'Huevo Misterioso', cat: 'eggs', desc: 'Un huevo Pokémon que eclosionará tras explorar suficientes zonas.' },
-            { id: 'rare_egg', name: 'Huevo Raro', cat: 'eggs', desc: 'Un huevo Pokémon especial y curioso.' },
-            { id: 'mystic_egg', name: 'Huevo Místico', cat: 'eggs', desc: 'Un huevo Pokémon imbuido en energía mística.' },
-            { id: 'shiny_egg', name: 'Huevo Brillante', cat: 'eggs', desc: 'Huevo Pokémon singular con destellos brillantes.' },
-            { id: 'egg', name: 'Huevo', cat: 'eggs', desc: 'Un huevo Pokémon estándar.' },
-            { id: 'egg_incense', name: 'Incienso Huevo', cat: 'others', desc: 'Incienso aromático para la incubación.' },
-            { id: 'repel', name: 'Repelente', cat: 'others', desc: 'Evita encuentros débiles temporalmente.' },
-            { id: 'honey', name: 'Miel', cat: 'others', desc: 'Dulce miel que atrae Pokémon salvajes.' },
-            { id: 'binoculars', name: 'Prismáticos', cat: 'others', desc: 'Ayuda a divisar mejores rutas.' },
-            { id: 'briefcase', name: 'Maletín', cat: 'others', desc: 'Contiene suministros valiosos variados.' },
-            { id: 'friendship_berry', name: 'Baya Amistad', cat: 'others', desc: 'Baya especial para fortalecer vínculos.' },
-            { id: 'rare_candy', name: 'Caramelo Raro', cat: 'others', desc: 'Caramelo misterioso que estimula el crecimiento.' }
+            { id: 'ancient_map', name: 'Ancient Map', cat: 'other-item', iconFolder: 'key-item', iconFile: 'old-sea-map.png', desc: 'Ancestral map guiding you to a legendary encounter on your next exploration step.' },
+            { id: 'potion', name: 'Potion', cat: 'medicine', iconFolder: 'medicine', iconFile: 'potion.png', desc: 'The most basic item for any trainer. Heals 20% of a PKMN HP.' },
+            { id: 'super_potion', name: 'Super Potion', cat: 'medicine', iconFolder: 'medicine', iconFile: 'super-potion.png', desc: 'Restores a Pokémon HP by 50%.' },
+            { id: 'hyper_potion', name: 'Hyper Potion', cat: 'medicine', iconFolder: 'medicine', iconFile: 'hyper-potion.png', desc: 'Restores a Pokémon HP by 75%.' },
+            { id: 'energy_drink', name: 'Energy Drink', cat: 'other-item', iconFolder: 'other-item', iconFile: 'energy-root.png', desc: 'Instant vitality boost. Restores 5 energy units.' },
+            { id: 'energy_juice', name: 'Energy Juice', cat: 'other-item', iconFolder: 'medicine', iconFile: 'energy-powder.png', desc: 'Concentrated natural energy. Restores 10 energy units.' },
+            { id: 'protein', name: 'Protein', cat: 'ev-item', iconFolder: 'ev-item', iconFile: 'protein.png', desc: 'Nutritious drink. Permanently boosts PKMN attack power (+3).' },
+            { id: 'max_protein', name: 'Max Protein', cat: 'ev-item', iconFolder: 'ev-item', iconFile: 'protein.png', desc: 'Drastically boosts PKMN attack power (+8).' },
+            { id: 'mt_hidden', name: 'TM Hidden Power', cat: 'tm', iconFolder: 'tm', iconFile: 'normal.png', desc: 'Special disk that rerolls the lead Pokémon Hidden Power elemental type.' },
+            { id: 'stardust', name: 'Stardust', cat: 'valuable-item', iconFolder: 'valuable-item', iconFile: 'stardust.png', desc: 'Lovely red sand with a loose, silky feel. Can be sold for 300 ₱.' },
+            { id: 'pearl', name: 'Pearl', cat: 'valuable-item', iconFolder: 'valuable-item', iconFile: 'pearl.png', desc: 'A somewhat small pearl that can be sold for 500 ₱.' },
+            { id: 'nugget', name: 'Gold Nugget', cat: 'valuable-item', iconFolder: 'valuable-item', iconFile: 'nugget.png', desc: 'A nugget of pure gold. Can be sold for 1,000 ₱.' },
+            { id: 'mystery_egg', name: 'Mystery Egg', cat: 'etc', iconFolder: 'etc', iconFile: 'mystery-egg.png', desc: 'A mysterious egg waiting to hatch after exploring sufficient steps.' },
+            { id: 'repel', name: 'Repel', cat: 'other-item', iconFolder: 'other-item', iconFile: 'repel.png', desc: 'Prevents weak encounters temporarily.' }
         ];
 
         const typeGachaConfig = [
@@ -2476,7 +2712,7 @@
             if (itemExistente) {
                 itemExistente.count += qty;
             } else {
-                playerInventory[itemDef.cat].push({ id: itemDef.id, name: itemDef.name, count: qty, desc: itemDef.desc });
+                playerInventory[itemDef.cat].push({ id: itemDef.id, name: itemDef.name, count: qty, desc: itemDef.desc, iconFolder: itemDef.iconFolder, iconFile: itemDef.iconFile });
             }
 
             guardarDatos();
@@ -2986,35 +3222,47 @@
 
         function agregarObjetoAleatorioInventario() {
             const posibles = [
-                { cat: 'potions', id: 'potion', name: 'Poción', desc: 'Cura un 20% de PS a un Pokémon.' },
-                { cat: 'energy', id: 'energy_drink', name: 'Bebida Energética', desc: 'Restaura 5 puntos de energía al instante.' },
-                { cat: 'wallet', id: 'stardust', name: 'Polvoestelar', desc: 'Objeto valioso que se puede vender por dinero.' }
+                { cat: 'medicine', id: 'potion', name: 'Potion', iconFolder: 'medicine', iconFile: 'potion.png', desc: 'The most basic item for any trainer. Heals 20% of a PKMN HP.' },
+                { cat: 'other-item', id: 'energy_drink', name: 'Energy Drink', iconFolder: 'other-item', iconFile: 'energy-root.png', desc: 'Instant vitality boost. Restores 5 energy units.' },
+                { cat: 'valuable-item', id: 'stardust', name: 'Stardust', iconFolder: 'valuable-item', iconFile: 'stardust.png', desc: 'Lovely red sand with a loose, silky feel. Can be sold for 300 ₱.' }
             ];
             let elegido = posibles[Math.floor(Math.random() * posibles.length)];
-            let listaCat = playerInventory[elegido.cat];
+            let listaCat = playerInventory[elegido.cat] || (playerInventory[elegido.cat] = []);
             let existente = listaCat.find(i => i.id === elegido.id);
             if (existente) existente.count++;
-            else listaCat.push({ id: elegido.id, name: elegido.name, count: 1, desc: elegido.desc });
+            else listaCat.push({ id: elegido.id, name: elegido.name, count: 1, desc: elegido.desc, iconFolder: elegido.iconFolder, iconFile: elegido.iconFile });
             guardarDatos();
+        }
+
+        function getItemIconUrl(item) {
+            if (!item) return 'img/sprites/items-outline/medicine/potion.png';
+            let folder = item.iconFolder || 'other-item';
+            let file = item.iconFile || `${item.id}.png`;
+            return `img/sprites/items-outline/${folder}/${file}`;
         }
 
         function abrirBolsa() {
             if (isWalking) return;
             document.getElementById("bag-screen").style.display = "flex";
-            cambiarPestanaBolsa('potions');
+            const primerTab = document.querySelector(".bag-tab-item");
+            cambiarPestanaBolsa('medicine', 'POTIONS', primerTab);
         }
         function cerrarBolsa() { document.getElementById("bag-screen").style.display = "none"; }
 
-        function cambiarPestanaBolsa(categoria) {
+        function cambiarPestanaBolsa(categoria, tituloPill, tabElem) {
             pestanaActivaBolsa = categoria;
             objetoSeleccionadoBolsa = null;
-            let botones = document.querySelectorAll(".bag-tab-btn");
-            botones.forEach(btn => btn.classList.remove('active'));
-            event && event.currentTarget && event.currentTarget.classList.add('active');
+
+            document.querySelectorAll(".bag-tab-item").forEach(t => t.classList.remove('active'));
+            if (tabElem) tabElem.classList.add('active');
+
+            document.getElementById("bag-category-title-pill").innerText = tituloPill || categoria.toUpperCase();
 
             renderizarItemsBolsa();
             document.getElementById("bag-item-desc").innerText = "Selecciona un objeto para ver su descripción.";
-            document.getElementById("bag-use-action-btn").style.display = "none";
+            document.getElementById("bag-selected-item-img").src = 'img/sprites/items-outline/medicine/potion.png';
+            document.getElementById("bag-use-action-btn").disabled = true;
+            document.getElementById("bag-sell-action-btn").disabled = true;
         }
 
         function renderizarItemsBolsa() {
@@ -3023,44 +3271,54 @@
 
             let lista = playerInventory[pestanaActivaBolsa] || [];
             if (lista.length === 0) {
-                contenedor.innerHTML = `<div style="text-align:center; color:#666; font-size:11px; margin-top:20px;">No hay objetos en esta categoría.</div>`;
+                contenedor.innerHTML = `<div style="text-align:center; color:#999; font-size:9px; margin-top:20px; font-weight:bold;">VACÍO</div>`;
                 return;
             }
 
-            lista.forEach((item) => {
+            lista.forEach((item, idx) => {
                 let div = document.createElement("div");
-                div.className = "bag-item-row";
-                div.innerHTML = `<span>${item.name}</span><span>x${item.count}</span>`;
-                div.onclick = () => seleccionarItemBolsa(item, div);
+                div.className = `bag-item-row-hgss ${objetoSeleccionadoBolsa && objetoSeleccionadoBolsa.id === item.id ? 'selected' : ''}`;
+                
+                let cursorHtml = (objetoSeleccionadoBolsa && objetoSeleccionadoBolsa.id === item.id) ? '▶' : '&nbsp;';
+                div.innerHTML = `
+                    <div class="bag-item-name-part">
+                        <span class="bag-item-cursor">${cursorHtml}</span>
+                        <span>${item.name.toUpperCase()}</span>
+                    </div>
+                    <span style="font-size:10px;">${item.count}</span>
+                `;
+                div.onclick = () => seleccionarItemBolsa(item);
                 contenedor.appendChild(div);
             });
         }
 
-        function seleccionarItemBolsa(item, elementoDOM) {
-            let filas = document.querySelectorAll(".bag-item-row");
-            filas.forEach(f => f.classList.remove('selected'));
-            elementoDOM.classList.add('selected');
-
+        function seleccionarItemBolsa(item) {
             objetoSeleccionadoBolsa = item;
+            renderizarItemsBolsa();
+
             document.getElementById("bag-item-desc").innerText = item.desc;
-            let btnUsar = document.getElementById("bag-use-action-btn");
-            btnUsar.style.display = ['potions', 'proteins', 'energy', 'mts', 'others'].includes(pestanaActivaBolsa) ? "block" : "none";
+            document.getElementById("bag-selected-item-img").src = getItemIconUrl(item);
+
+            let canUse = ['medicine', 'ev-item', 'other-item', 'tm'].includes(pestanaActivaBolsa);
+            document.getElementById("bag-use-action-btn").disabled = !canUse;
+            document.getElementById("bag-sell-action-btn").disabled = false;
         }
 
         function usarObjetoSeleccionado() {
             if (!objetoSeleccionadoBolsa || objetoSeleccionadoBolsa.count <= 0) return;
 
             let lider = teamPokemon[0];
-            if (!lider && pestanaActivaBolsa !== 'energy' && objetoSeleccionadoBolsa.id !== 'ancient_map') {
+            if (!lider && pestanaActivaBolsa !== 'other-item' && objetoSeleccionadoBolsa.id !== 'ancient_map') {
                 return alert("¡No tienes ningún Pokémon en el equipo para usar esto!");
             }
 
             if (objetoSeleccionadoBolsa.id === 'ancient_map') {
                 mapaAntiguoActivado = true;
-                alert("🗺️ ¡Has activado el Mapa Antiguo! Al pulsar AVANZAR, viajarás con prioridad a una zona legendaria.");
+                alert("🗺️ ¡Has activado el Mapa Antiguo! Al pulsar AVANZAR, viajarás a una zona legendaria con un Pokémon exclusivo.");
                 objetoSeleccionadoBolsa.count--;
                 if (objetoSeleccionadoBolsa.count <= 0) {
-                    playerInventory['others'] = playerInventory['others'].filter(i => i.id !== 'ancient_map');
+                    playerInventory[pestanaActivaBolsa] = playerInventory[pestanaActivaBolsa].filter(i => i.id !== 'ancient_map');
+                    objetoSeleccionadoBolsa = null;
                 }
                 guardarDatos();
                 renderizarItemsBolsa();
@@ -3068,41 +3326,67 @@
                 return;
             }
 
-            if (pestanaActivaBolsa === 'potions') {
+            if (pestanaActivaBolsa === 'medicine') {
                 if (!lider.hpMax) lider.hpMax = 50;
                 if (lider.hpActual >= lider.hpMax) return alert("¡Tu Pokémon ya tiene los PS al máximo!");
                 let curacion = Math.floor(lider.hpMax * (objetoSeleccionadoBolsa.id === 'hyper_potion' ? 0.75 : (objetoSeleccionadoBolsa.id === 'super_potion' ? 0.5 : 0.2)));
                 lider.hpActual = Math.min(lider.hpMax, lider.hpActual + curacion);
                 alert(`¡Usaste ${objetoSeleccionadoBolsa.name}! Recuperó ${curacion} PS.`);
                 
-            } else if (pestanaActivaBolsa === 'energy') {
+            } else if (pestanaActivaBolsa === 'other-item' && (objetoSeleccionadoBolsa.id === 'energy_drink' || objetoSeleccionadoBolsa.id === 'energy_juice')) {
                 let gain = objetoSeleccionadoBolsa.id === 'energy_juice' ? 10 : 5;
                 energiaActual = Math.min(energiaMax, energiaActual + gain);
                 alert(`¡Usaste ${objetoSeleccionadoBolsa.name}! Has recuperado ${gain} de energía.`);
                 actualizarHUDEnergia();
 
-            } else if (pestanaActivaBolsa === 'mts') {
+            } else if (pestanaActivaBolsa === 'tm') {
                 lider.tipoOculto = getTipoOcultoAleatorio(lider.tipo1, lider.tipo2);
                 alert(`💿 ¡MT utilizada! El Poder Oculto de ${lider.nombre} ha cambiado a tipo: ${lider.tipoOculto.toUpperCase()}`);
 
-            } else if (pestanaActivaBolsa === 'proteins') {
-                let boost = objetoSeleccionadoBolsa.id === 'max_protein' ? 8 : (objetoSeleccionadoBolsa.id === 'protein' ? 3 : 1);
+            } else if (pestanaActivaBolsa === 'ev-item') {
+                let boost = objetoSeleccionadoBolsa.id === 'max_protein' ? 8 : 3;
                 lider.ataque += boost;
                 alert(`¡${objetoSeleccionadoBolsa.name} aplicada! El ataque de ${lider.nombre} ha aumentado en ${boost}.`);
             }
 
             objetoSeleccionadoBolsa.count--;
             if (objetoSeleccionadoBolsa.count <= 0) {
-                let lista = playerInventory[pestanaActivaBolsa];
-                playerInventory[pestanaActivaBolsa] = lista.filter(i => i.id !== objetoSeleccionadoBolsa.id);
+                playerInventory[pestanaActivaBolsa] = playerInventory[pestanaActivaBolsa].filter(i => i.id !== objetoSeleccionadoBolsa.id);
                 objetoSeleccionadoBolsa = null;
                 document.getElementById("bag-item-desc").innerText = "Selecciona un objeto para ver su descripción.";
-                document.getElementById("bag-use-action-btn").style.display = "none";
+                document.getElementById("bag-use-action-btn").disabled = true;
+                document.getElementById("bag-sell-action-btn").disabled = true;
             }
 
             guardarDatos();
             renderizarItemsBolsa();
             actualizarHUD();
+        }
+
+        function venderObjetoSeleccionado() {
+            if (!objetoSeleccionadoBolsa || objetoSeleccionadoBolsa.count <= 0) return;
+
+            let precioVenta = 100;
+            if (objetoSeleccionadoBolsa.id === 'nugget') precioVenta = 1000;
+            else if (objetoSeleccionadoBolsa.id === 'pearl') precioVenta = 500;
+            else if (objetoSeleccionadoBolsa.id === 'stardust') precioVenta = 300;
+
+            if (confirm(`¿Deseas vender 1 unidad de ${objetoSeleccionadoBolsa.name} por ${precioVenta} ₱?`)) {
+                objetoSeleccionadoBolsa.count--;
+                playerMoney += precioVenta;
+
+                if (objetoSeleccionadoBolsa.count <= 0) {
+                    playerInventory[pestanaActivaBolsa] = playerInventory[pestanaActivaBolsa].filter(i => i.id !== objetoSeleccionadoBolsa.id);
+                    objetoSeleccionadoBolsa = null;
+                    document.getElementById("bag-item-desc").innerText = "Selecciona un objeto para ver su descripción.";
+                    document.getElementById("bag-use-action-btn").disabled = true;
+                    document.getElementById("bag-sell-action-btn").disabled = true;
+                }
+
+                guardarDatos();
+                renderizarItemsBolsa();
+                alert(`¡Vendido con éxito! Recibiste ${precioVenta} ₱.`);
+            }
         }
 
         // --- GACHA ---
@@ -3211,27 +3495,18 @@
 
             if (maquina.type === 'item') {
                 const itemPool = [
-                    { id: 'potion', name: 'Poción', cat: 'potions', weight: 100, desc: 'Cura un 20% de PS a un Pokémon.' },
-                    { id: 'energy_cookie', name: 'Galleta Energía', cat: 'energy', weight: 80, desc: 'Restaura una pequeña cantidad de energía.' },
-                    { id: 'super_potion', name: 'Superpoción', cat: 'potions', weight: 75, desc: 'Cura un 50% de PS a un Pokémon.' },
-                    { id: 'friendship_berry', name: 'Baya Amistad', cat: 'others', weight: 70, desc: 'Baya especial para fortalecer vínculos.' },
-                    { id: 'mini_protein', name: 'Proteína Mini', cat: 'proteins', weight: 60, desc: 'Aumenta levemente el ataque de un Pokémon.' },
-                    { id: 'honey', name: 'Miel', cat: 'others', weight: 50, desc: 'Dulce miel que atrae Pokémon salvajes.' },
-                    { id: 'binoculars', name: 'Prismáticos', cat: 'others', weight: 40, desc: 'Ayuda a divisar mejores rutas.' },
-                    { id: 'pearl', name: 'Perla', cat: 'wallet', weight: 40, desc: 'Objeto valioso que se puede vender por dinero.' },
-                    { id: 'egg', name: 'Huevo', cat: 'eggs', weight: 40, desc: 'Un huevo Pokémon estándar.' },
-                    { id: 'egg_incense', name: 'Incienso Huevo', cat: 'others', weight: 20, desc: 'Incienso aromático para la incubación.' },
-                    { id: 'energy_juice', name: 'Zumo Energía', cat: 'energy', weight: 20, desc: 'Restaura 10 puntos de energía.' },
-                    { id: 'rare_egg', name: 'Huevo Raro', cat: 'eggs', weight: 20, desc: 'Un huevo Pokémon especial y curioso.' },
-                    { id: 'hyper_potion', name: 'Hiperpoción', cat: 'potions', weight: 15, desc: 'Cura una gran cantidad de PS a un Pokémon.' },
-                    { id: 'rare_candy', name: 'Caramelo Raro', cat: 'others', weight: 15, desc: 'Caramelo misterioso que estimula el crecimiento.' },
-                    { id: 'nugget', name: 'Pepita', cat: 'wallet', weight: 10, desc: 'Pepita de oro puro muy valiosa.' },
-                    { id: 'protein', name: 'Proteína', cat: 'proteins', weight: 10, desc: 'Aumenta permanentemente el ataque de un Pokémon.' },
-                    { id: 'mystic_egg', name: 'Huevo Místico', cat: 'eggs', weight: 5, desc: 'Un huevo Pokémon imbuido en energía mística.' },
-                    { id: 'briefcase', name: 'Maletín', cat: 'others', weight: 4, desc: 'Contiene suministros valiosos variados.' },
-                    { id: 'max_protein', name: 'Proteína Máxima', cat: 'proteins', weight: 3, desc: 'Aumenta drásticamente el ataque de un Pokémon.' },
-                    { id: 'ancient_map', name: 'Mapa Antiguo', cat: 'others', weight: 2, desc: 'Mapa detallado de zonas recónditas.' },
-                    { id: 'shiny_egg', name: 'Huevo Brillante', cat: 'eggs', weight: 1, desc: 'Huevo Pokémon singular con destellos brillantes.' }
+                    { id: 'potion', name: 'Potion', cat: 'medicine', iconFolder: 'medicine', iconFile: 'potion.png', weight: 100, desc: 'The most basic item for any trainer. Heals 20% of a PKMN HP.' },
+                    { id: 'super_potion', name: 'Super Potion', cat: 'medicine', iconFolder: 'medicine', iconFile: 'super-potion.png', weight: 75, desc: 'Restores a Pokémon HP by 50%.' },
+                    { id: 'hyper_potion', name: 'Hyper Potion', cat: 'medicine', iconFolder: 'medicine', iconFile: 'hyper-potion.png', weight: 15, desc: 'Restores a Pokémon HP by 75%.' },
+                    { id: 'protein', name: 'Protein', cat: 'ev-item', iconFolder: 'ev-item', iconFile: 'protein.png', weight: 40, desc: 'Nutritious drink. Permanently boosts PKMN attack power (+3).' },
+                    { id: 'max_protein', name: 'Max Protein', cat: 'ev-item', iconFolder: 'ev-item', iconFile: 'protein.png', weight: 10, desc: 'Drastically boosts PKMN attack power (+8).' },
+                    { id: 'energy_drink', name: 'Energy Drink', cat: 'other-item', iconFolder: 'other-item', iconFile: 'energy-root.png', weight: 80, desc: 'Instant vitality boost. Restores 5 energy units.' },
+                    { id: 'energy_juice', name: 'Energy Juice', cat: 'other-item', iconFolder: 'medicine', iconFile: 'energy-powder.png', weight: 30, desc: 'Concentrated natural energy. Restores 10 energy units.' },
+                    { id: 'stardust', name: 'Stardust', cat: 'valuable-item', iconFolder: 'valuable-item', iconFile: 'stardust.png', weight: 50, desc: 'Lovely red sand with a loose, silky feel. Can be sold for 300 ₱.' },
+                    { id: 'pearl', name: 'Pearl', cat: 'valuable-item', iconFolder: 'valuable-item', iconFile: 'pearl.png', weight: 40, desc: 'A somewhat small pearl that can be sold for 500 ₱.' },
+                    { id: 'nugget', name: 'Gold Nugget', cat: 'valuable-item', iconFolder: 'valuable-item', iconFile: 'nugget.png', weight: 15, desc: 'A nugget of pure gold. Can be sold for 1,000 ₱.' },
+                    { id: 'ancient_map', name: 'Ancient Map', cat: 'other-item', iconFolder: 'key-item', iconFile: 'old-sea-map.png', weight: 5, desc: 'Ancestral map guiding you to a legendary encounter on your next exploration step.' },
+                    { id: 'mystery_egg', name: 'Mystery Egg', cat: 'etc', iconFolder: 'etc', iconFile: 'mystery-egg.png', weight: 10, desc: 'A mysterious egg waiting to hatch after exploring sufficient steps.' }
                 ];
 
                 let totalWeight = itemPool.reduce((sum, i) => sum + i.weight, 0);
@@ -3244,18 +3519,18 @@
                     if (randomVal <= acumulado) { itemElegido = it; break; }
                 }
 
-                let listaCat = playerInventory[itemElegido.cat] || (playerInventory['others'] = []);
+                let listaCat = playerInventory[itemElegido.cat] || (playerInventory[itemElegido.cat] = []);
                 let existente = listaCat.find(i => i.id === itemElegido.id);
                 if (existente) existente.count++;
-                else listaCat.push({ id: itemElegido.id, name: itemElegido.name, count: 1, desc: itemElegido.desc });
+                else listaCat.push({ id: itemElegido.id, name: itemElegido.name, count: 1, desc: itemElegido.desc, iconFolder: itemElegido.iconFolder, iconFile: itemElegido.iconFile });
 
                 alert(`📦 ¡Obtuviste en el gacha: ${itemElegido.name} x1!`);
 
             } else if (maquina.type === 'mt') {
-                let listaMts = playerInventory['mts'];
+                let listaMts = playerInventory['tm'];
                 let existente = listaMts.find(i => i.id === 'mt_hidden');
                 if (existente) existente.count++;
-                else listaMts.push({ id: 'mt_hidden', name: 'MT Poder Oculto', count: 1, desc: 'Permite cambiar aleatoriamente el tipo del Poder Oculto de tu Pokémon líder.' });
+                else listaMts.push({ id: 'mt_hidden', name: 'TM Hidden Power', count: 1, iconFolder: 'tm', iconFile: 'normal.png', desc: 'Special disk that rerolls the lead Pokémon Hidden Power elemental type.' });
 
                 alert(`💿 ¡Has conseguido una MT de Poder Oculto!`);
 
@@ -3382,7 +3657,6 @@
             if (!lider.hpMax || lider.hpMax <= 0) lider.hpMax = 50;
             if (lider.hpActual === undefined || lider.hpActual < 0) lider.hpActual = lider.hpMax;
 
-            // Busca el nombre del Pokémon definido en special_zones.json
             let legendarioNombre = zona.pokemon || zona.legendary || "Mewtwo";
             let pokeData = POKEDEX_GLOBAL.find(p => p.name.toLowerCase() === legendarioNombre.toLowerCase()) || POKEDEX_GLOBAL[0];
 
@@ -3903,3 +4177,6 @@
     </script>
 </body>
 </html>
+
+
+            
