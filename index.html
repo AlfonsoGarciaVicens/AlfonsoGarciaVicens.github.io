@@ -1,4 +1,283 @@
-P1;
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pokémon Trails Clone</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace; }
+        body { background-color: #121212; color: #ffffff; display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; overflow: hidden; }
+
+        #game-container { 
+            width: 100%; 
+            max-width: 450px; 
+            height: 100vh; 
+            max-height: 850px; 
+            background-color: #1a1a1a; 
+            position: relative; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            padding: 15px; 
+            border: 2px solid #333; 
+            box-shadow: 0 0 20px rgba(0,0,0,0.8); 
+        }
+
+        #input-blocker { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 200; display: none; background: transparent; }
+        .screen-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 18, 18, 0.95); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
+        
+        .modal-screen { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 320px; 
+            height: 320px; 
+            background-color: #1a1a1a; 
+            z-index: 80; 
+            display: none; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            align-items: stretch; 
+            padding: 0; 
+            margin: 0;
+            border: none;
+            border-radius: 0; 
+            box-sizing: border-box; 
+        }
+        
+        .box-container, .modal-window { background-color: #2a2a2a; padding: 15px; border-radius: 8px; border: 2px solid #444; width: 100%; height: 100%; text-align: center; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
+        .modal-window { background: linear-gradient(135deg, #38bdf8, #0369a1); border: none; border-radius: 0; box-shadow: none; width: 100%; height: 100%; }
+        
+        /* --- POKÉDEX --- */
+        .pokedex-window { 
+            background: #ffffff; 
+            border: 3px solid #111; 
+            border-radius: 8px; 
+            width: 100%; 
+            height: 100%; 
+            padding: 0; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            box-sizing: border-box; 
+            color: #111; 
+            overflow: hidden;
+            position: relative;
+        }
+
+        .pokedex-top-area {
+            width: 100%;
+            height: 100px;
+            display: flex;
+            position: relative;
+            background-color: #fff;
+            background-image: 
+                linear-gradient(to right, rgba(0,0,0,0.06) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0,0,0,0.06) 1px, transparent 1px);
+            background-size: 14px 14px;
+            border-bottom: 1.5px solid #cbd5e1;
+            padding: 4px 5px;
+            box-sizing: border-box;
+        }
+
+        .dex-art-frame-box {
+            width: 90px;
+            height: 92px;
+            border: 2px solid #111;
+            background: #f1f5f9;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            flex-shrink: 0;
+            margin-right: 6px;
+        }
+        .dex-frame-top-stripe {
+            width: 100%;
+            height: 5px;
+            background: #ef4444;
+            border-bottom: 1px solid #111;
+        }
+        .dex-frame-sprite-holder {
+            flex-grow: 1;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: 
+                linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
+            background-size: 10px 10px;
+        }
+        .dex-hero-sprite {
+            width: 58px;
+            height: 58px;
+            object-fit: contain;
+            image-rendering: pixelated;
+            filter: drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff) drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff) drop-shadow(0 2px 3px rgba(0,0,0,0.4));
+        }
+        .dex-frame-rarity-badge {
+            width: 100%;
+            background: #ef4444;
+            color: #ffffff;
+            font-size: 7px;
+            font-weight: 900;
+            text-align: center;
+            padding: 2px 0;
+            letter-spacing: 0.5px;
+            border-top: 1px solid #111;
+        }
+
+        .dex-info-right-side {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1px 0 2px 0;
+            overflow: hidden;
+        }
+        .dex-top-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .dex-header-id-name {
+            font-size: 10.5px;
+            font-weight: 900;
+            color: #000;
+            letter-spacing: 0.5px;
+        }
+        .dex-close-x {
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 900;
+            cursor: pointer;
+            color: #334155;
+            line-height: 1;
+            padding: 0 2px;
+        }
+        .dex-types-strip {
+            display: flex;
+            gap: 4px;
+            margin: 2px 0;
+        }
+        .dex-type-pill {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 7.5px;
+            font-weight: bold;
+            color: #fff;
+            text-transform: uppercase;
+            border: 1px solid rgba(0,0,0,0.3);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+        }
+        .dex-evolution-desc {
+            font-size: 7px;
+            font-weight: bold;
+            color: #111;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+        .dex-caught-seen-row {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 8px;
+            font-size: 9px;
+            font-weight: 900;
+            color: #000;
+        }
+
+        .dex-stats-bars-wrapper {
+            width: 100%;
+            padding: 4px 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            background: #fff;
+            box-sizing: border-box;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .dex-stat-line {
+            display: flex;
+            align-items: center;
+            height: 12px;
+        }
+        .dex-stat-label {
+            width: 58px;
+            font-size: 7.5px;
+            font-weight: 900;
+            color: #000;
+            letter-spacing: 0.5px;
+        }
+        .dex-bar-track {
+            flex-grow: 1;
+            height: 10px;
+            background: transparent;
+            display: flex;
+            align-items: center;
+        }
+        .dex-bar-fill-pill {
+            height: 100%;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            padding-left: 4px;
+            color: #ffffff;
+            font-size: 7.5px;
+            font-weight: 900;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+            transition: width 0.3s ease;
+        }
+
+        /* GRID INFERIOR POKÉDEX */
+        .dex-grid-scroll-area {
+            flex-grow: 1;
+            background: #ffffff;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-auto-rows: 40px;
+            gap: 0px;
+            padding: 0;
+            margin: 0;
+            align-content: start;
+            border-top: 1px solid #cbd5e1;
+        }
+        .dex-cell-item {
+            background: #ffffff;
+            border-right: 1px solid #cbd5e1;
+            border-bottom: 1px solid #cbd5e1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            cursor: pointer;
+            padding: 1px 0 0 0;
+            position: relative;
+            box-sizing: border-box;
+            overflow: visible;
+        }
+        .dex-cell-item.selected-dex-cell {
+            background: #fef08a !important;
+            box-shadow: inset 0 0 0 1.5px #f59e0b;
+            z-index: 5;
+        }
+        .dex-cell-number {
+            font-size: 7.5px;
+            font-weight: 900;
+            color: #000;
+            line-height: 1;
+            width: 100%;
+            text-align: right;
+            padding-right: 2px;
+            margin-bottom: 0px;
+            z-index: 2;
+        }
+        .dex-sprite-wrapper {
+            flex-grow: 1;P1;
             width: 100%;
             display: flex;
             align-items: center;
