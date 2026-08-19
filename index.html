@@ -625,54 +625,53 @@
         .tc-stat-row b { color: #ffffff; }
         .tc-team-strip { display: flex; gap: 8px; align-items: center; justify-content: center; margin-top: 4px; position: relative; }
         .tc-team-mini-sprite { 
-    width: 52px; 
-    height: 52px; 
-    object-fit: contain; 
-    image-rendering: pixelated; 
-    cursor: pointer;
-    filter: drop-shadow(2px 0 0 #ffffff) drop-shadow(-2px 0 0 #ffffff) drop-shadow(0 2px 0 #ffffff) drop-shadow(0 -2px 0 #ffffff);
-    transition: transform 0.15s ease;
-    user-select: none;
-    -webkit-user-select: none;
-}
-       .tc-team-mini-sprite.is-shiny {
-    filter: drop-shadow(2px 0 0 #facc15) drop-shadow(-2px 0 0 #facc15) drop-shadow(0 2px 0 #facc15) drop-shadow(0 -2px 0 #facc15) drop-shadow(0 0 6px rgba(250, 204, 21, 0.8));
-} 
+            width: 52px; 
+            height: 52px; 
+            object-fit: contain; 
+            image-rendering: pixelated; 
+            cursor: pointer;
+            filter: drop-shadow(2px 0 0 #ffffff) drop-shadow(-2px 0 0 #ffffff) drop-shadow(0 2px 0 #ffffff) drop-shadow(0 -2px 0 #ffffff);
+            transition: transform 0.15s ease;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .tc-team-mini-sprite.is-shiny {
+            filter: drop-shadow(2px 0 0 #facc15) drop-shadow(-2px 0 0 #facc15) drop-shadow(0 2px 0 #facc15) drop-shadow(0 -2px 0 #facc15) drop-shadow(0 0 6px rgba(250, 204, 21, 0.8));
+        } 
         #tc-tooltip-bubble {
-    position: absolute;
-    bottom: 58px;
-    background: #facc15;
-    color: #111827;
-    border: 2px solid #000000;
-    border-radius: 6px;
-    padding: 3px 7px;
-    font-size: 8.5px;
-    font-weight: 900;
-    display: none;
-    pointer-events: none;
-    z-index: 150;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.6);
-    white-space: nowrap;
-    text-align: center;
-}
-#tc-tooltip-bubble::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 5px;
-    border-style: solid;
-    border-color: #facc15 transparent transparent transparent;
-}
-#tc-tooltip-bubble .lvl-text {
-    color: #ffffff;
-    background: #111827;
-    padding: 1px 4px;
-    border-radius: 3px;
-    margin-left: 3px;
-}
-
+            position: absolute;
+            bottom: 58px;
+            background: #facc15;
+            color: #111827;
+            border: 2px solid #000000;
+            border-radius: 6px;
+            padding: 3px 7px;
+            font-size: 8.5px;
+            font-weight: 900;
+            display: none;
+            pointer-events: none;
+            z-index: 150;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+            white-space: nowrap;
+            text-align: center;
+        }
+        #tc-tooltip-bubble::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 5px;
+            border-style: solid;
+            border-color: #facc15 transparent transparent transparent;
+        }
+        #tc-tooltip-bubble .lvl-text {
+            color: #ffffff;
+            background: #111827;
+            padding: 1px 4px;
+            border-radius: 3px;
+            margin-left: 3px;
+        }
 
         .box-container h2 { margin-bottom: 10px; color: #4CAF50; font-size: 16px; }
         .box-container input { width: 100%; padding: 8px; margin-bottom: 10px; background-color: #1a1a1a; border: 1px solid #555; color: #fff; border-radius: 4px; }
@@ -1222,14 +1221,14 @@
                                 <div class="tc-badges-bar">
                                     <span class="tc-badges-title">BADGES</span>
                                     <div style="display:flex; gap:3px;" id="tc-badges-row">
-                                        <span class="tc-badge-slot" id="tc-badge-0" title="Medalla Céfiro">🕊️</span>
-                                        <span class="tc-badge-slot" id="tc-badge-1" title="Medalla Planicie">⚪</span>
-                                        <span class="tc-badge-slot" id="tc-badge-2" title="Medalla Niebla">👻</span>
-                                        <span class="tc-badge-slot" id="tc-badge-3" title="Medalla Colmena">🐝</span>
-                                        <span class="tc-badge-slot" id="tc-badge-4" title="Medalla Mineral">⚙️</span>
-                                        <span class="tc-badge-slot" id="tc-badge-5" title="Medalla Glaciar">❄️</span>
-                                        <span class="tc-badge-slot" id="tc-badge-6" title="Medalla Dragón">🐉</span>
-                                        <span class="tc-badge-slot" id="tc-badge-7" title="Medalla Campeón">🏆</span>
+                                        <span class="tc-badge-slot" id="tc-badge-0">🕊️</span>
+                                        <span class="tc-badge-slot" id="tc-badge-1">⚪</span>
+                                        <span class="tc-badge-slot" id="tc-badge-2">👻</span>
+                                        <span class="tc-badge-slot" id="tc-badge-3">🐝</span>
+                                        <span class="tc-badge-slot" id="tc-badge-4">⚙️</span>
+                                        <span class="tc-badge-slot" id="tc-badge-5">❄️</span>
+                                        <span class="tc-badge-slot" id="tc-badge-6">🐉</span>
+                                        <span class="tc-badge-slot" id="tc-badge-7">🏆</span>
                                     </div>
                                 </div>
                             </div>
@@ -2018,6 +2017,26 @@
             }
         }
 
+        function mostrarTooltipPokemon(e, nombre, nivel) {
+            const tooltip = document.getElementById("tc-tooltip-bubble");
+            if (!tooltip) return;
+            tooltip.innerHTML = `${nombre.toUpperCase()} <span class="lvl-text">Lv.${nivel}</span>`;
+            tooltip.style.display = "block";
+
+            const target = e.currentTarget;
+            const rect = target.getBoundingClientRect();
+            const parentRect = document.querySelector(".trainer-card-wrapper").getBoundingClientRect();
+            
+            const posX = (rect.left + rect.width / 2) - parentRect.left;
+            tooltip.style.left = `${posX}px`;
+            tooltip.style.transform = "translateX(-50%)";
+        }
+
+        function ocultarTooltipPokemon() {
+            const tooltip = document.getElementById("tc-tooltip-bubble");
+            if (tooltip) tooltip.style.display = "none";
+        }
+
         function renderizarTrainerCard() {
             const user = localStorage.getItem("pt_current_user") || "JUGADOR";
             const skinObj = SKINS_DATABASE.find(s => s.id === equippedSkinId) || SKINS_DATABASE[0];
@@ -2055,14 +2074,24 @@
             const tDiv = document.createElement("div");
             tDiv.className = "tc-team-mini-sprite";
             tDiv.style.backgroundImage = `url('${skinObj.sheet_image}')`;
-            tDiv.style.backgroundSize = "78px 104px";
-            tDiv.style.backgroundPosition = "-26px 0px";
+            tDiv.style.backgroundSize = "156px 208px";
+            tDiv.style.backgroundPosition = "-52px 0px";
+            tDiv.onmouseenter = (e) => mostrarTooltipPokemon(e, user, "TRAINER");
+            tDiv.onmouseleave = ocultarTooltipPokemon;
+            tDiv.ontouchstart = (e) => mostrarTooltipPokemon(e, user, "TRAINER");
+            tDiv.ontouchend = ocultarTooltipPokemon;
             miniStrip.appendChild(tDiv);
 
             teamPokemon.forEach(p => {
                 const pImg = document.createElement("img");
-                pImg.className = "tc-team-mini-sprite";
+                pImg.className = `tc-team-mini-sprite ${p.isShiny ? 'is-shiny' : ''}`;
                 pImg.src = getPokedexIconUrl(p);
+
+                pImg.onmouseenter = (e) => mostrarTooltipPokemon(e, p.nombre, p.nivel);
+                pImg.onmouseleave = ocultarTooltipPokemon;
+                pImg.ontouchstart = (e) => mostrarTooltipPokemon(e, p.nombre, p.nivel);
+                pImg.ontouchend = ocultarTooltipPokemon;
+
                 miniStrip.appendChild(pImg);
             });
 
@@ -3982,7 +4011,7 @@
                     if (lider.hpActual <= 0) {
                         lider.hpActual = 1;
                         pBubble.style.display = "none";
-                        eBubble.style.display = "none";
+                                        eBubble.style.display = "none";
                         dialogue.innerHTML = log + `💀 ¡Tu Pokémon se debilitó!`;
                         combatEnCurso = false;
                         if (currentEnemy.tipoCombate === 'gym_leader') {
@@ -3991,54 +4020,6 @@
                             currentGymZoneObj = null;
                         }
                         return setTimeout(() => cerrarCombate(`¡Tu Pokémon quedó exhausto!`), 1500);
-                    }
-                } else {
-                    await animarYAtacar(false, resE, tipoEnemigo);
-                    if (lider.hpActual <= 0) {
-                        lider.hpActual = 1;
-                        pBubble.style.display = "none";
-                        eBubble.style.display = "none";
-                        dialogue.innerHTML = log + `💀 ¡Tu Pokémon se debilitó!`;
-                        combatEnCurso = false;
-                        if (currentEnemy.tipoCombate === 'gym_leader') {
-                            stepsSinceLastGymFight = 0;
-                            isGymZone = false;
-                            currentGymZoneObj = null;
-                        }
-                        return setTimeout(() => cerrarCombate(`¡Tu Pokémon quedó exhausto!`), 1500);
-                    }
-
-                    await animarYAtacar(true, resJ, tipoAtaqueSeleccionado);
-                    if (currentEnemy.hpActual <= 0) {
-                        pBubble.style.display = "none";
-                        eBubble.style.display = "none";
-                        playerStats.totalBattlesWon++;
-
-                        let msgVictoria = "";
-                        if (currentEnemy.tipoCombate === 'gym_leader') {
-                            stepsSinceLastGymFight = 0;
-                            currentLeaderStage++;
-                            let liderObj = currentEnemy.leaderObj;
-                            if (currentLeaderStage >= 4) {
-                                playerMedals++;
-                                currentGymLeaderIndex++;
-                                currentLeaderStage = 0;
-                                msgVictoria = `🏆 ¡HAS DERROTADO A ${liderObj.name.toUpperCase()}! Obtuviste la ${liderObj.badge_name} ${liderObj.badge_icon} (Medallas: ${playerMedals}/8).`;
-                            } else {
-                                msgVictoria = `✨ ¡Victoria contra ${liderObj.name}! Obtuviste un fragmento de la ${liderObj.badge_name} (${currentLeaderStage}/4).`;
-                            }
-                            isGymZone = false;
-                            currentGymZoneObj = null;
-                        } else {
-                            let expGanada = Math.floor(currentEnemy.nivel * 40 * (currentEnemy.tipoCombate === 'trainer' ? 1.5 : 1));
-                            let subio = ganarExperiencia(expGanada);
-                            msgVictoria = `¡Victoria! Ganaste ${expGanada} EXP.`;
-
-                            if (subio) msgVictoria += ` ¡${lider.nombre} subió a Lv.${lider.nivel}!`;
-                        }
-
-                        combatEnCurso = false;
-                        return setTimeout(() => cerrarCombate(msgVictoria), 1500);
                     }
                 }
 
