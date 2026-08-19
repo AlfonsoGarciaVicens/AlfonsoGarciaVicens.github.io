@@ -42,7 +42,7 @@
             margin: 0;
             border: none;
             border-radius: 0; 
-            box-sizing: border-box;
+            box-sizing: border-box; 
         }
         
         .box-container, .modal-window { background-color: #2a2a2a; padding: 15px; border-radius: 8px; border: 2px solid #444; width: 100%; height: 100%; text-align: center; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
@@ -347,7 +347,7 @@
         .dev-btn-green { background: #15803d; border-color: #22c55e; }
         .dev-btn-green:hover { background: #16a34a; }
 
-        /* --- BOLSA / MOCHILA HGSS REDISEÑADA --- */
+        /* --- BOLSA / MOCHILA HGSS --- */
         .bag-container-screen {
             background-color: #2a2a2a;
             background-image: 
@@ -1045,24 +1045,23 @@
             <div id="bag-screen" class="modal-screen" style="z-index: 85;">
                 <div class="bag-container-screen">
                     
-                    <!-- Barra de Pestañas Superior -->
                     <div class="bag-top-bar">
                         <div class="bag-category-pill" id="bag-category-title-pill">POTIONS</div>
                         <div class="bag-tabs-bar">
                             <div class="bag-tab-item active" onclick="cambiarPestanaBolsa('medicine', 'POTIONS', this)" title="Medicinas">
-                                <img src="img/sprites/items-outline/medicine/potion.png" alt="Potions" onerror="this.src='img/sprites/items-outline/medicine/potion.png'">
+                                <img src="img/sprites/items-outline/medicine/potion.png" alt="Potions">
                             </div>
                             <div class="bag-tab-item" onclick="cambiarPestanaBolsa('ev-item', 'PROTEINS', this)" title="Proteínas">
-                                <img src="img/sprites/items-outline/ev-item/protein.png" alt="EV" onerror="this.src='img/sprites/items-outline/ev-item/protein.png'">
+                                <img src="img/sprites/items-outline/ev-item/protein.png" alt="EV">
                             </div>
                             <div class="bag-tab-item" onclick="cambiarPestanaBolsa('other-item', 'ENERGY', this)" title="Energía">
                                 <img src="img/sprites/items-outline/other-item/energy-root.png" alt="Energy" onerror="this.src='img/sprites/items-outline/medicine/energy-powder.png'">
                             </div>
                             <div class="bag-tab-item" onclick="cambiarPestanaBolsa('valuable-item', 'WALLET', this)" title="Tesoros">
-                                <img src="img/sprites/items-outline/valuable-item/nugget.png" alt="Valuable" onerror="this.src='img/sprites/items-outline/valuable-item/nugget.png'">
+                                <img src="img/sprites/items-outline/valuable-item/nugget.png" alt="Valuable">
                             </div>
                             <div class="bag-tab-item" onclick="cambiarPestanaBolsa('tm', 'MTS', this)" title="MTs / MOs">
-                                <img src="img/sprites/items-outline/tm/normal.png" alt="TMs" onerror="this.src='img/sprites/items-outline/tm/normal.png'">
+                                <img src="img/sprites/items-outline/tm/normal.png" alt="TMs">
                             </div>
                             <div class="bag-tab-item" onclick="cambiarPestanaBolsa('etc', 'OTHERS', this)" title="Otros / Huevos">
                                 <img src="img/sprites/items-outline/etc/mystery-egg.png" alt="Others" onerror="this.src='img/sprites/items-outline/key-item/old-sea-map.png'">
@@ -1070,7 +1069,6 @@
                         </div>
                     </div>
 
-                    <!-- Cuadro Naranja Central -->
                     <div class="bag-main-orange-card">
                         <div class="bag-left-controls">
                             <div class="bag-visual-art">
@@ -1085,7 +1083,6 @@
                         <div class="bag-right-list-frame" id="bag-items-container"></div>
                     </div>
 
-                    <!-- Franja de Descripción Inferior -->
                     <div class="bag-bottom-desc-strip">
                         <div class="bag-item-desc-icon-box" id="bag-item-desc-icon-box">
                             <img id="bag-selected-item-img" src="img/sprites/items-outline/medicine/potion.png" alt="Item">
@@ -1209,7 +1206,7 @@
                                     <div class="tc-stat-col">
                                         <div class="tc-stat-section-title">Perfil:</div>
                                         <div class="tc-stat-row"><span>Inicio:</span><b id="tc-stat-start-date">04/Nov/2022</b></div>
-                                        <div class="tc-stat-row"><span>Visitas:</span><b id="tc-stat-visits">5</b></div>
+                                        <div class="tc-stat-row"><span>Visitas:</span><b id="tc-stat-visits">1</b></div>
                                         <div class="tc-stat-row"><span>Huevos abiertos:</span><b id="tc-stat-eggs">0</b></div>
                                         <div class="tc-stat-row"><span>Huevos shiny abiertos:</span><b id="tc-stat-shiny-eggs">0</b></div>
                                         
@@ -1394,6 +1391,19 @@
         let lastDailyClaim = 0;
         let isWalking = false;
         let mapaAntiguoActivado = false;
+
+        let defaultPlayerStats = {
+            visits: 1,
+            eggsHatched: 0,
+            shinyEggsHatched: 0,
+            legendariesSeen: 0,
+            legendariesCaught: 0,
+            shiniesSeen: 0,
+            shiniesCaught: 0,
+            leagueMaxScore: 0,
+            totalBattlesWon: 0
+        };
+        let playerStats = { ...defaultPlayerStats };
 
         let playerAnimInterval = null;
         let walkStep = 0;
@@ -1592,7 +1602,6 @@
         let pcIndiceSeleccionado = null;
         let pcModoMover = false;
 
-        // INVENTARIO CON RUTAS LOCALES A img/sprites/items-outline/
         const defaultInventory = {
             medicine: [
                 { id: 'potion', name: 'Potion', count: 13, iconFolder: 'medicine', iconFile: 'potion.png', desc: 'The most basic item for any trainer. Heals 20% of a PKMN HP.' },
@@ -1893,6 +1902,7 @@
             let backUrl = getPokemonBackSpriteUrl({ idDex: idDex, isShiny: isShiny });
 
             marcarVisto(idDex);
+            if (isShiny) playerStats.shiniesSeen++;
 
             return {
                 id: idDex,
@@ -2011,24 +2021,23 @@
             const prefix = `pt_${user}_`;
             let caughtList = JSON.parse(localStorage.getItem(prefix + "pokedex_caught") || "[]");
             let seenList = JSON.parse(localStorage.getItem(prefix + "pokedex_seen") || "[]");
-            let shiniesCaught = teamPokemon.filter(p => p.isShiny).length + pcStorage.filter(p => p.isShiny).length;
 
             document.getElementById("tc-stat-seen").innerText = seenList.length;
             document.getElementById("tc-stat-caught").innerText = caughtList.length;
-            document.getElementById("tc-stat-shiny-seen").innerText = shiniesCaught > 0 ? shiniesCaught + 1 : 0;
-            document.getElementById("tc-stat-shiny-caught").innerText = shiniesCaught;
-            document.getElementById("tc-stat-leg-seen").innerText = isSpecialZone ? 1 : 0;
-            document.getElementById("tc-stat-leg-caught").innerText = 0;
+            document.getElementById("tc-stat-shiny-seen").innerText = playerStats.shiniesSeen;
+            document.getElementById("tc-stat-shiny-caught").innerText = playerStats.shiniesCaught;
+            document.getElementById("tc-stat-leg-seen").innerText = playerStats.legendariesSeen;
+            document.getElementById("tc-stat-leg-caught").innerText = playerStats.legendariesCaught;
 
             document.getElementById("tc-dex-seen").innerText = seenList.length;
             document.getElementById("tc-dex-caught").innerText = caughtList.length;
 
             let fechaInicio = localStorage.getItem(prefix + "start_date") || "15/Ago/2026";
             document.getElementById("tc-stat-start-date").innerText = fechaInicio;
-            document.getElementById("tc-stat-visits").innerText = "12";
-            document.getElementById("tc-stat-eggs").innerText = "1";
-            document.getElementById("tc-stat-shiny-eggs").innerText = "0";
-            document.getElementById("tc-stat-max-score").innerText = "0";
+            document.getElementById("tc-stat-visits").innerText = playerStats.visits;
+            document.getElementById("tc-stat-eggs").innerText = playerStats.eggsHatched;
+            document.getElementById("tc-stat-shiny-eggs").innerText = playerStats.shinyEggsHatched;
+            document.getElementById("tc-stat-max-score").innerText = playerStats.leagueMaxScore;
         }
 
         window.onload = async function() {
@@ -2043,7 +2052,6 @@
                 zonesConfig = [{ name: "Pueblo Inicial (Zona 1)", sprite: "🏡", bg_image: "", types: ["normal", "flying"] }];
             }
 
-            // CARGA DE SPECIAL ZONES (ZONAS LEGENDARIAS)
             try {
                 const resSpec = await fetch('data/special_zones.json?t=' + Date.now());
                 specialZonesConfig = await resSpec.json();
@@ -2092,6 +2100,8 @@
                     document.getElementById("login-screen").style.display = "none";
                     document.getElementById("btn-username-display").innerText = user.toUpperCase();
                     cargarDatosUsuario(user);
+                    playerStats.visits++;
+                    guardarDatos();
                     iniciarMusicaFondo();
                 } else {
                     msg.style.color = "#ef4444";
@@ -2116,6 +2126,7 @@
                 stepsSinceLastGymFight = 12;
                 energiaActual = 20;
                 playerInventory = JSON.parse(JSON.stringify(defaultInventory));
+                playerStats = { ...defaultPlayerStats, visits: 1 };
 
                 localStorage.setItem(`pt_${user}_start_date`, "15/Ago/2026");
 
@@ -2140,6 +2151,7 @@
             stepsSinceLastGymFight = 12;
             energiaActual = 20;
             playerInventory = JSON.parse(JSON.stringify(defaultInventory));
+            playerStats = { ...defaultPlayerStats };
 
             cerrarCombate("");
             document.getElementById("menu-screen").style.display = "none";
@@ -2178,6 +2190,10 @@
             stepsSinceLastGymFight = parseInt(localStorage.getItem(prefix + "gym_steps") ?? "12");
             playerMoney = parseInt(localStorage.getItem(prefix + "money") ?? "2000");
             lastDailyClaim = parseInt(localStorage.getItem(prefix + "last_daily") ?? "0");
+
+            let savedStats = localStorage.getItem(prefix + "stats");
+            if (savedStats) playerStats = JSON.parse(savedStats);
+            else playerStats = { ...defaultPlayerStats };
 
             let savedInv = localStorage.getItem(prefix + "inventory");
             if (savedInv) playerInventory = JSON.parse(savedInv);
@@ -2245,6 +2261,7 @@
                 localStorage.setItem(prefix + "money", playerMoney);
                 localStorage.setItem(prefix + "last_daily", lastDailyClaim);
                 localStorage.setItem(prefix + "inventory", JSON.stringify(playerInventory));
+                localStorage.setItem(prefix + "stats", JSON.stringify(playerStats));
             } catch(e) {}
         }
 
@@ -2852,6 +2869,7 @@
             `;
 
             marcarAtrapado(getValidPokemonDexId(nuevoPoke));
+            if (nuevoPoke.isShiny) playerStats.shiniesCaught++;
 
             if (teamPokemon.length < 4) teamPokemon.push(nuevoPoke);
             else pcStorage.push(nuevoPoke);
@@ -2936,6 +2954,7 @@
                 isPokemonCenterZone = false;
                 mapaAntiguoActivado = false;
                 zonaObj = currentSpecialZone;
+                playerStats.legendariesSeen++;
             }
             // 2. LÍDER DE GIMNASIO
             else if (puedeAparecerLiderGimnasio()) {
@@ -3275,7 +3294,7 @@
                 return;
             }
 
-            lista.forEach((item, idx) => {
+            lista.forEach((item) => {
                 let div = document.createElement("div");
                 div.className = `bag-item-row-hgss ${objetoSeleccionadoBolsa && objetoSeleccionadoBolsa.id === item.id ? 'selected' : ''}`;
                 
@@ -3775,6 +3794,9 @@
                 if (Math.random() < 0.6) {
                     let nuevo = { ...currentEnemy };
                     marcarAtrapado(getValidPokemonDexId(nuevo));
+                    if (nuevo.isShiny) playerStats.shiniesCaught++;
+                    if (isSpecialZone) playerStats.legendariesCaught++;
+
                     if (teamPokemon.length < 4) teamPokemon.push(nuevo); else pcStorage.push(nuevo);
                     
                     let expGanada = Math.floor(currentEnemy.nivel * 20);
@@ -3880,6 +3902,7 @@
                     if (currentEnemy.hpActual <= 0) {
                         pBubble.style.display = "none";
                         eBubble.style.display = "none";
+                        playerStats.totalBattlesWon++;
                         
                         let msgVictoria = "";
                         if (currentEnemy.tipoCombate === 'gym_leader') {
@@ -3941,6 +3964,7 @@
                     if (currentEnemy.hpActual <= 0) {
                         pBubble.style.display = "none";
                         eBubble.style.display = "none";
+                        playerStats.totalBattlesWon++;
 
                         let msgVictoria = "";
                         if (currentEnemy.tipoCombate === 'gym_leader') {
@@ -3961,6 +3985,7 @@
                             let expGanada = Math.floor(currentEnemy.nivel * 40 * (currentEnemy.tipoCombate === 'trainer' ? 1.5 : 1));
                             let subio = ganarExperiencia(expGanada);
                             msgVictoria = `¡Victoria! Ganaste ${expGanada} EXP.`;
+
                             if (subio) msgVictoria += ` ¡${lider.nombre} subió a Lv.${lider.nivel}!`;
                         }
 
@@ -4177,6 +4202,3 @@
     </script>
 </body>
 </html>
-
-
-            
