@@ -3,7 +3,7 @@
     "id": "default",
     "name": "Entrenador",
     "rarity": "common",
-    "art_image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/trainers/1.png",
+    "art_image": "https://play.pokemonshowdown.com/sprites/trainers/lance.png",
     "sheet_image": "img/player_sheet.png"
   },
   {
