@@ -232,7 +232,7 @@
             transition: width 0.3s ease;
         }
 
-        /* GRID INFERIOR POKÉDEX: CELDAS ELEVADAS Y SIN CORTES */
+        /* GRID INFERIOR POKÉDEX */
         .dex-grid-scroll-area {
             flex-grow: 1;
             background: #ffffff;
@@ -283,7 +283,7 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            padding-bottom: 3px; /* Espacio de protección respecto al borde inferior */
+            padding-bottom: 3px;
         }
         .dex-cell-sprite-img {
             max-width: 90%;
@@ -295,12 +295,7 @@
             display: block;
             transform: scale(1.45);
             transform-origin: center center;
-            margin-top: -5px; /* Eleva el sprite al centro seguro */
-            margin-bottom: 2px;
-        }
-        .dex-cell-sprite-img.small-mon-boost {
-            transform: scale(1.7) !important;
-            margin-top: -5px;
+            margin-top: -3px;
         }
 
         /* PC */
@@ -1230,11 +1225,11 @@
             return nameStr;
         }
 
-        // Comprobación de Pokémon de primera fase o tamaño compacto
-        function isSmallStagePokemon(poke) {
+        // Determina el factor de escala según el tamaño relativo de la especie
+        function getPokemonScaleCategory(poke) {
             let id = getValidPokemonDexId(poke);
             let globalEntry = POKEDEX_GLOBAL.find(x => getValidPokemonDexId(x) === id) || poke;
-            if (!globalEntry) return false;
+            if (!globalEntry) return 'scale-normal';
 
             let evolvesFrom = globalEntry.evolves_from;
             let isFirstStage = !evolvesFrom || evolvesFrom === "None" || evolvesFrom === "";
@@ -1243,7 +1238,19 @@
                 let st = globalEntry.stats;
                 bst = (st.hp || 0) + (st.attack || 0) + (st.defense || 0) + (st.special_attack || 0) + (st.special_defense || 0) + (st.speed || 0);
             }
-            return (isFirstStage && bst <= 420) || id === 1 || id === 4 || id === 7 || id === 10 || id === 13 || id === 16;
+
+            // Primeras etapas muy compactas
+            if ((isFirstStage && bst <= 330) || [1, 4, 7, 10, 13, 16, 19, 21, 23, 25, 27, 29, 32, 35, 37, 39, 41, 43, 46, 48, 50, 52, 54, 56, 58, 60, 63, 66, 69, 72, 74, 77, 79, 81, 84, 86, 88, 90, 92, 96, 98, 100, 102, 104, 109, 116, 118, 120, 129, 133, 138, 140, 147, 152, 155, 158, 161, 163, 165, 167, 170, 172, 173, 174, 175, 177, 179, 183, 187, 191, 194, 204, 209, 218, 220, 222, 223, 228, 231, 236, 238, 239, 240, 246, 252, 255, 258, 261, 263, 265, 270, 273, 276, 278, 280, 283, 285, 287, 290, 293, 296, 298, 299, 300, 304, 307, 309, 311, 312, 316, 318, 320, 322, 325, 328, 331, 333, 339, 341, 343, 345, 347, 349, 353, 355, 361, 363, 366, 371, 374, 387, 390, 393, 396, 399, 401, 403, 406, 408, 410, 412, 415, 417, 418, 420, 422, 425, 427, 431, 434, 436, 438, 439, 440, 441, 443, 446, 447, 449, 451, 453, 456, 458, 459].includes(id)) {
+                return 'scale-small';
+            }
+
+            // Etapas intermedias
+            if ((isFirstStage && bst <= 440) || (evolvesFrom && bst <= 440) || [2, 5, 8, 11, 14, 17, 20, 22, 24, 26, 28, 30, 33, 36, 38, 40, 42, 44, 47, 49, 51, 53, 55, 57, 59, 61, 64, 67, 70, 73, 75, 78, 80, 82, 85, 87, 89, 91, 93, 97, 99, 101, 103, 105, 110, 117, 119, 121, 134, 135, 136, 139, 141, 148, 153, 156, 159, 162, 164, 166, 168, 171, 176, 178, 180, 184, 188, 192, 195, 205, 210, 219, 221, 224, 229, 232, 247, 253, 256, 259, 262, 264, 266, 271, 274, 277, 279, 281, 284, 286, 288, 291, 294, 297, 305, 308, 310, 317, 319, 323, 326, 329, 332, 334, 340, 342, 344, 346, 348, 350, 354, 356, 362, 364, 367, 372, 375, 388, 391, 394, 397, 400, 402, 404, 407, 409, 411, 413, 416, 419, 421, 423, 426, 428, 432, 435, 437, 444, 452, 454, 457, 460].includes(id)) {
+                return 'scale-mid';
+            }
+
+            // Grandes / Terceras evoluciones / Legendarios
+            return 'scale-normal';
         }
 
         const SPRITE_URL_CACHE = new Map();
@@ -1270,7 +1277,7 @@
             return url;
         }
 
-        // --- ICONOS 100% LOCALES GEN 8 ---
+        // --- ICONOS 100% LOCALES ---
         function getPokedexGridSpriteUrl(poke) {
             let id = getValidPokemonDexId(poke);
             let isShiny = poke.isShiny ? true : false;
@@ -1280,7 +1287,7 @@
             let slug = getPokemonSlug(poke);
             let subfolder = isShiny ? 'shiny' : 'regular';
             
-            let url = `img/sprites/pokemon-gen8/${subfolder}/${slug}.png`;
+            let url = `img/sprites/pokemon/${subfolder}/${slug}.png`;
 
             ICON_URL_CACHE.set(cacheKey, url);
             return url;
@@ -2128,7 +2135,7 @@
             });
         }
 
-        // --- POKÉDEX CORREGIDA ---
+        // --- POKÉDEX ---
         let pokedexSelectedIndex = 0;
         let pokedexGridConstruido = false;
 
@@ -2162,12 +2169,12 @@
                 if (!status.isSeen) imgStyle += " filter: brightness(0);";
                 else if (!status.isCaught) imgStyle += " filter: grayscale(100%);";
 
-                let smallBoostClass = isSmallStagePokemon(p) ? 'small-mon-boost' : '';
+                let scaleCatClass = getPokemonScaleCategory(p);
 
                 cell.innerHTML = `
                     <span class="dex-cell-number">${pId.toString().padStart(3, '0')}</span>
                     <div class="dex-sprite-wrapper">
-                        <img src="${pSpriteCell}" class="dex-cell-sprite-img ${smallBoostClass}" style="${imgStyle}" alt="P">
+                        <img src="${pSpriteCell}" class="dex-cell-sprite-img ${scaleCatClass}" style="${imgStyle}" alt="P">
                     </div>
                 `;
                 grid.appendChild(cell);
@@ -2349,13 +2356,14 @@
                     let isSelected = pcIndiceSeleccionado === originalIndex ? 'selected-pc' : '';
                     let shinyClass = p.isShiny ? 'shiny-cell' : '';
                     let iconUrl = getPokedexIconUrl(p);
+                    let scaleCatClass = getPokemonScaleCategory(p);
 
                     let div = document.createElement("div");
                     div.className = `pc-cell ${shinyClass} ${isSelected}`;
                     div.setAttribute('data-original-index', originalIndex);
                     div.onclick = () => seleccionarCeldaPC(originalIndex);
 
-                    div.innerHTML = `<img src="${iconUrl}" style="width:28px; height:28px; image-rendering:pixelated; object-fit:contain; transform: scale(1.35);" alt="Icon">`;
+                    div.innerHTML = `<img src="${iconUrl}" class="${scaleCatClass}" style="max-width:28px; max-height:24px; image-rendering:pixelated; object-fit:contain;" alt="Icon">`;
                     gridContainer.appendChild(div);
                 });
             }
@@ -2395,12 +2403,12 @@
                     <div class="summary-table-row"><span>Potencial</span><b>${p.potencial || '15 / 31'}</b></div>
                     <div class="summary-table-row"><span>Poder Oculto</span><b style="color:${colorOculto}; text-shadow:1px 1px 0 #000;">${p.tipoOculto.toUpperCase()}</b></div>
                     <div class="summary-table-row"><span>Amistad</span><b>${p.amistad || '50 / 100'}</b></div>
-                    <div style="font-size:8px; color:#4b5563; margin-top:2px; line-height:1.1;">${p.origen || 'En equipo activo.'}</div>
+                    <div style="font-size:8px; color:#4b5563; margin-top:2px; line-height:1.1;">${p.origen || 'En almacenamiento PC.'}</div>
                 </div>
             `;
 
             document.getElementById("summary-content-body").innerHTML = bodyHTML;
-            document.getElementById("team-screen").style.display = "none";
+            document.getElementById("pc-screen").style.display = "none";
             document.getElementById("summary-screen").style.display = "flex";
         }
 
@@ -3840,7 +3848,7 @@
                     bottomButtons.innerHTML = `<button class="modal-close-btn" style="background:#f59e0b;" onclick="cancelarMoverEquipo()">CANCELAR</button>`;
                     document.querySelector('.team-window-gba .modal-title').innerText = "- SELECCIONA DESTINO -";
                 } else {
-                    bottomButtons.innerHTML = `
+                                        bottomButtons.innerHTML = `
                         <button class="modal-close-btn" style="background:#0284c7;" onclick="abrirDatosPokemonTeam()">DATOS</button>
                         <button class="modal-close-btn" style="background:#eab308; color:#000;" onclick="activarModoMoverTeam()">MOVER</button>
                         <button class="modal-close-btn" style="background:#ef4444;" onclick="cancelarSeleccionEquipo()">CANCELAR</button>
