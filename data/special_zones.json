@@ -60,14 +60,14 @@
     "name": "Isla del Sur",
     "legendary": "Latias",
     "sprite": "🏝️",
-    "bg_image": "img/zones/IslaDelSur.png"
+    "bg_image": "img/zones/IslaDelSurLatias.png"
   },
   {
     "id": 110,
     "name": "Isla del Sur",
     "legendary": "Latios",
     "sprite": "🏝️",
-    "bg_image": "img/zones/IslaDelSur.png"
+    "bg_image": "img/zones/IslaDelSurLatios.png"
   },
   {
     "id": 111,
@@ -130,21 +130,21 @@
     "name": "Columna Lanza",
     "legendary": "Dialga",
     "sprite": "⛰️",
-    "bg_image": "img/zones/ColumnaLanza.png"
+    "bg_image": "img/zones/ColumnaLanzaDialga.png"
   },
   {
     "id": 120,
     "name": "Columna Lanza",
     "legendary": "Palkia",
     "sprite": "⛰️",
-    "bg_image": "img/zones/ColumnaLanza.png"
+    "bg_image": "img/zones/ColumnaLanzaPalkia.png"
   },
   {
     "id": 121,
     "name": "Columna Lanza",
     "legendary": "Giratina",
     "sprite": "⛰️",
-    "bg_image": "img/zones/ColumnaLanza.png"
+    "bg_image": "img/zones/ColumnaLanzaGiratina.png"
   },
   {
     "id": 122,
@@ -186,7 +186,7 @@
     "name": "Columna Lanza",
     "legendary": "Arceus",
     "sprite": "⛰️",
-    "bg_image": "img/zones/ColumnaLanza.png"
+    "bg_image": "img/zones/ColumnaLanzaArceus.png"
   },
   {
     "id": 128,
