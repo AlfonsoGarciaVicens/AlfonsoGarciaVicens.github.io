@@ -602,17 +602,17 @@
         .tc-close-btn { position: absolute; top: 5px; right: 5px; background: #64748b; border: 2px solid #cbd5e1; color: #fff; font-size: 13px; font-weight: bold; width: 26px; height: 26px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 120; box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
         .tc-logo-trails { margin-top: 1px; font-size: 11px; font-weight: 900; color: #f59e0b; letter-spacing: 1px; text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 0 0 6px rgba(245,158,11,0.6); display: flex; flex-direction: column; align-items: center; }
         .tc-logo-badge { background: #d97706; color: #fff; font-size: 6px; padding: 1px 4px; border-radius: 3px; letter-spacing: 0.5px; margin-top: -2px; }
-        .tc-perspective-area { perspective: 1000px; width: 295px; height: 195px; margin: auto 0; }
+        .tc-perspective-area { perspective: 1000px; width: 295px; height: 195px; margin: auto 0; position: relative; }
         .tc-flipper { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; }
         .tc-flipper.flipped { transform: rotateY(180deg); }
-        .tc-face { position: absolute; top: 0; left: 0; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 8px; border: 2.5px solid #60a5fa; box-shadow: 0 8px 16px rgba(0,0,0,0.7); padding: 6px 8px; box-sizing: border-box; }
+        .tc-face { position: absolute; top: 0; left: 0; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 8px; border: 2.5px solid #60a5fa; box-shadow: 0 8px 16px rgba(0,0,0,0.7); padding: 6px 8px; box-sizing: border-box; }
         .tc-front { background: linear-gradient(180deg, #93c5fd 0%, #60a5fa 35%, #3b82f6 100%); display: flex; flex-direction: column; justify-content: space-between; color: #1e293b; }
         .tc-front-header { display: flex; justify-content: space-between; align-items: center; font-weight: 900; font-size: 11px; border-bottom: 2px solid rgba(255,255,255,0.4); padding-bottom: 2px; color: #0f172a; text-shadow: 0 1px 0 rgba(255,255,255,0.4); }
         .tc-front-sub { display: flex; justify-content: space-between; font-size: 9px; font-weight: bold; color: #0f172a; margin-top: 2px; }
         .tc-front-center { background: rgba(255,255,255,0.25); border: 1.5px solid rgba(255,255,255,0.4); border-radius: 6px; flex-grow: 1; margin: 3px 0; position: relative; overflow: hidden; display: flex; justify-content: flex-end; align-items: flex-end; padding-right: 10px; }
         .tc-ribbons-box { position: absolute; top: 4px; left: 4px; display: flex; gap: 2px; font-size: 11px; }
         .tc-lead-sprite { width: 58px; height: 58px; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); position: absolute; bottom: 4px; right: 48px; }
-        .tc-player-art { max-height: 85px; max-width: 65px; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); z-index: 2; }
+        .tc-player-art { max-height: 85px; max-width: 65px; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); z-index: 2; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
         .tc-badges-bar { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; padding: 2px 4px; display: flex; align-items: center; justify-content: space-between; }
         .tc-badges-title { font-size: 7px; font-weight: 900; color: #f1f5f9; letter-spacing: 0.5px; }
         .tc-badge-slot { font-size: 10px; filter: grayscale(100%) opacity(30%); transition: all 0.3s; }
@@ -623,8 +623,56 @@
         .tc-stat-section-title { font-weight: 900; color: #2dd4bf; font-size: 8px; border-bottom: 1px solid #134e4a; padding-bottom: 1px; margin-bottom: 1px; }
         .tc-stat-row { display: flex; justify-content: space-between; color: #cbd5e1; font-size: 7.5px; }
         .tc-stat-row b { color: #ffffff; }
-        .tc-team-strip { display: flex; gap: 6px; align-items: center; justify-content: center; margin-top: 3px; }
-        .tc-team-mini-sprite { width: 26px; height: 26px; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6)); }
+        .tc-team-strip { display: flex; gap: 8px; align-items: center; justify-content: center; margin-top: 4px; position: relative; }
+        .tc-team-mini-sprite { 
+    width: 52px; 
+    height: 52px; 
+    object-fit: contain; 
+    image-rendering: pixelated; 
+    cursor: pointer;
+    filter: drop-shadow(2px 0 0 #ffffff) drop-shadow(-2px 0 0 #ffffff) drop-shadow(0 2px 0 #ffffff) drop-shadow(0 -2px 0 #ffffff);
+    transition: transform 0.15s ease;
+    user-select: none;
+    -webkit-user-select: none;
+}
+       .tc-team-mini-sprite.is-shiny {
+    filter: drop-shadow(2px 0 0 #facc15) drop-shadow(-2px 0 0 #facc15) drop-shadow(0 2px 0 #facc15) drop-shadow(0 -2px 0 #facc15) drop-shadow(0 0 6px rgba(250, 204, 21, 0.8));
+} 
+        #tc-tooltip-bubble {
+    position: absolute;
+    bottom: 58px;
+    background: #facc15;
+    color: #111827;
+    border: 2px solid #000000;
+    border-radius: 6px;
+    padding: 3px 7px;
+    font-size: 8.5px;
+    font-weight: 900;
+    display: none;
+    pointer-events: none;
+    z-index: 150;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+    white-space: nowrap;
+    text-align: center;
+}
+#tc-tooltip-bubble::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: #facc15 transparent transparent transparent;
+}
+#tc-tooltip-bubble .lvl-text {
+    color: #ffffff;
+    background: #111827;
+    padding: 1px 4px;
+    border-radius: 3px;
+    margin-left: 3px;
+}
+
 
         .box-container h2 { margin-bottom: 10px; color: #4CAF50; font-size: 16px; }
         .box-container input { width: 100%; padding: 8px; margin-bottom: 10px; background-color: #1a1a1a; border: 1px solid #555; color: #fff; border-radius: 4px; }
