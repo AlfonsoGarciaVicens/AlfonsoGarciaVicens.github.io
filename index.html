@@ -232,7 +232,7 @@
             transition: width 0.3s ease;
         }
 
-        /* GRID INFERIOR POKÉDEX: CELDAS CON OVERFLOW VISIBLE */
+        /* GRID INFERIOR POKÉDEX */
         .dex-grid-scroll-area {
             flex-grow: 1;
             background: #ffffff;
@@ -258,7 +258,7 @@
             padding: 1px 0 0 0;
             position: relative;
             box-sizing: border-box;
-            overflow: visible; /* Permite asomar por arriba sin cortar */
+            overflow: visible;
         }
         .dex-cell-item.selected-dex-cell {
             background: #fef08a !important;
@@ -282,7 +282,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: visible; /* Sin corte interno */
+            overflow: visible;
             padding-bottom: 3px;
         }
         .dex-cell-sprite-img {
@@ -293,20 +293,9 @@
             object-fit: contain;
             image-rendering: pixelated;
             display: block;
-            transform-origin: center center;
-        }
-
-        .dex-cell-sprite-img.scale-normal {
             transform: scale(1.45);
-            margin-top: -4px;
-        }
-        .dex-cell-sprite-img.scale-mid {
-            transform: scale(1.75);
-            margin-top: -5px;
-        }
-        .dex-cell-sprite-img.scale-small {
-            transform: scale(2.15);
-            margin-top: -6px;
+            transform-origin: center center;
+            margin-top: -3px;
         }
 
         /* PC */
@@ -1212,6 +1201,7 @@
             return 1;
         }
 
+        // Mapeo seguro contra el ID del Pokémon
         function getPokemonSlug(poke) {
             let id = getValidPokemonDexId(poke);
             let rawName = '';
@@ -1235,6 +1225,7 @@
             return nameStr;
         }
 
+        // Determina el factor de escala según el tamaño relativo de la especie
         function getPokemonScaleCategory(poke) {
             let id = getValidPokemonDexId(poke);
             let globalEntry = POKEDEX_GLOBAL.find(x => getValidPokemonDexId(x) === id) || poke;
@@ -1248,14 +1239,17 @@
                 bst = (st.hp || 0) + (st.attack || 0) + (st.defense || 0) + (st.special_attack || 0) + (st.special_defense || 0) + (st.speed || 0);
             }
 
+            // Primeras etapas muy compactas
             if ((isFirstStage && bst <= 330) || [1, 4, 7, 10, 13, 16, 19, 21, 23, 25, 27, 29, 32, 35, 37, 39, 41, 43, 46, 48, 50, 52, 54, 56, 58, 60, 63, 66, 69, 72, 74, 77, 79, 81, 84, 86, 88, 90, 92, 96, 98, 100, 102, 104, 109, 116, 118, 120, 129, 133, 138, 140, 147, 152, 155, 158, 161, 163, 165, 167, 170, 172, 173, 174, 175, 177, 179, 183, 187, 191, 194, 204, 209, 218, 220, 222, 223, 228, 231, 236, 238, 239, 240, 246, 252, 255, 258, 261, 263, 265, 270, 273, 276, 278, 280, 283, 285, 287, 290, 293, 296, 298, 299, 300, 304, 307, 309, 311, 312, 316, 318, 320, 322, 325, 328, 331, 333, 339, 341, 343, 345, 347, 349, 353, 355, 361, 363, 366, 371, 374, 387, 390, 393, 396, 399, 401, 403, 406, 408, 410, 412, 415, 417, 418, 420, 422, 425, 427, 431, 434, 436, 438, 439, 440, 441, 443, 446, 447, 449, 451, 453, 456, 458, 459].includes(id)) {
                 return 'scale-small';
             }
 
+            // Etapas intermedias
             if ((isFirstStage && bst <= 440) || (evolvesFrom && bst <= 440) || [2, 5, 8, 11, 14, 17, 20, 22, 24, 26, 28, 30, 33, 36, 38, 40, 42, 44, 47, 49, 51, 53, 55, 57, 59, 61, 64, 67, 70, 73, 75, 78, 80, 82, 85, 87, 89, 91, 93, 97, 99, 101, 103, 105, 110, 117, 119, 121, 134, 135, 136, 139, 141, 148, 153, 156, 159, 162, 164, 166, 168, 171, 176, 178, 180, 184, 188, 192, 195, 205, 210, 219, 221, 224, 229, 232, 247, 253, 256, 259, 262, 264, 266, 271, 274, 277, 279, 281, 284, 286, 288, 291, 294, 297, 305, 308, 310, 317, 319, 323, 326, 329, 332, 334, 340, 342, 344, 346, 348, 350, 354, 356, 362, 364, 367, 372, 375, 388, 391, 394, 397, 400, 402, 404, 407, 409, 411, 413, 416, 419, 421, 423, 426, 428, 432, 435, 437, 444, 452, 454, 457, 460].includes(id)) {
                 return 'scale-mid';
             }
 
+            // Grandes / Terceras evoluciones / Legendarios
             return 'scale-normal';
         }
 
@@ -1841,14 +1835,6 @@
             } catch (error) {
                 console.error("Error al cargar JSON:", error);
                 zonesConfig = [{ name: "Pueblo Inicial (Zona 1)", sprite: "🏡", bg_image: "", types: ["normal", "flying"] }];
-            }
-
-            // CARGA DE SPECIAL ZONES (ZONAS LEGENDARIAS)
-            try {
-                const resSpec = await fetch('data/special_zones.json?t=' + Date.now());
-                specialZonesConfig = await resSpec.json();
-            } catch (e) {
-                specialZonesConfig = [];
             }
 
             try {
@@ -2729,9 +2715,8 @@
             
             let zonaObj = null;
 
-            // 1. ZONA ESPECIAL LEGENDARIA POR MAPA ANTIGUO
             if (mapaAntiguoActivado) {
-                let pool = specialZonesConfig.length > 0 ? specialZonesConfig : [{ name: "Zona Legendaria", pokemon: "Mewtwo", sprite: "✨", bg_image: "" }];
+                let pool = specialZonesConfig.length > 0 ? specialZonesConfig : [{ name: "Zona Legendaria", sprite: "✨", bg_image: "" }];
                 currentSpecialZone = pool[Math.floor(Math.random() * pool.length)];
                 isSpecialZone = true;
                 isGymZone = false;
@@ -2740,7 +2725,6 @@
                 mapaAntiguoActivado = false;
                 zonaObj = currentSpecialZone;
             }
-            // 2. LÍDER DE GIMNASIO
             else if (puedeAparecerLiderGimnasio()) {
                 let lider = GYM_LEADERS_GLOBAL[currentGymLeaderIndex];
 
@@ -2768,7 +2752,6 @@
                     };
                 }
             }
-            // 3. RUTA CONVENCIONAL
             else {
                 isSpecialZone = false;
                 currentSpecialZone = null;
@@ -3421,12 +3404,10 @@
             if (!lider.hpMax || lider.hpMax <= 0) lider.hpMax = 50;
             if (lider.hpActual === undefined || lider.hpActual < 0) lider.hpActual = lider.hpMax;
 
-            // Lee el nombre del pokemon legendario del objeto de zona
-            let legendarioNombre = zona.pokemon || zona.legendary || "Mewtwo";
+            let legendarioNombre = zona.legendary || "Mewtwo";
             let pokeData = POKEDEX_GLOBAL.find(p => p.name.toLowerCase() === legendarioNombre.toLowerCase()) || POKEDEX_GLOBAL[0];
 
-            let lvlLegendario = zona.level || 50;
-            currentEnemy = generarDatosPokemonBase(pokeData, lvlLegendario, false);
+            currentEnemy = generarDatosPokemonBase(pokeData, 50, false);
             currentEnemy.tipoCombate = 'wild';
             combatEnCurso = false;
 
@@ -3444,7 +3425,7 @@
             document.getElementById("normal-controls-view").style.display = "none";
             document.getElementById("combat-controls-view").style.display = "flex";
 
-            document.getElementById("enemy-name-lvl").innerText = `${currentEnemy.nombre.toUpperCase()} Lv.${lvlLegendario}`;
+            document.getElementById("enemy-name-lvl").innerText = `${currentEnemy.nombre.toUpperCase()} Lv.50`;
             document.getElementById("player-battle-name").innerText = `${lider.nombre.toUpperCase()} Lv.${lider.nivel}`;
             
             let pSpriteImg = document.getElementById("player-battle-sprite");
@@ -3842,7 +3823,6 @@
                             <span style="font-size:20px;">${p.icono || '🐾'}</span>
                             <div class="gba-slot-info">
                                 <div style="display:flex; justify-content:space-between; font-size:10px; font-weight:bold;">
-
                                     <span>${p.nombre.toUpperCase()}</span>
                                     <span>Lv.${p.nivel}</span>
                                 </div>
@@ -3868,7 +3848,7 @@
                     bottomButtons.innerHTML = `<button class="modal-close-btn" style="background:#f59e0b;" onclick="cancelarMoverEquipo()">CANCELAR</button>`;
                     document.querySelector('.team-window-gba .modal-title').innerText = "- SELECCIONA DESTINO -";
                 } else {
-                    bottomButtons.innerHTML = `
+                                        bottomButtons.innerHTML = `
                         <button class="modal-close-btn" style="background:#0284c7;" onclick="abrirDatosPokemonTeam()">DATOS</button>
                         <button class="modal-close-btn" style="background:#eab308; color:#000;" onclick="activarModoMoverTeam()">MOVER</button>
                         <button class="modal-close-btn" style="background:#ef4444;" onclick="cancelarSeleccionEquipo()">CANCELAR</button>
