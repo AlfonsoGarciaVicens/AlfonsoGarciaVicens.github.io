@@ -380,7 +380,7 @@
     "name": "Ruta 09",
     "sprite": "",
     "bg_image": "img/zones/Ruta09.png",
-    "types": [electric", "ice"],
+    "types": ["electric", "ice"],
     "special_encounters": ["Thundurus"]
   },
   {
