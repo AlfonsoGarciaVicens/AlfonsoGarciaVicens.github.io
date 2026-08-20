@@ -117,7 +117,7 @@
     "sprite": "",
     "bg_image": "img/zones/BosqueFloral.png",
     "types": ["grass", "poison", "psychic"],
-    "special_encounters": [Tapu lele]
+    "special_encounters": ["Tapu lele"]
   },
   {
     "id": 16,
