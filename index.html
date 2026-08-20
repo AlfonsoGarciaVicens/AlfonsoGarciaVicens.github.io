@@ -3281,7 +3281,7 @@
             abrirCinematicaGacha(nuevoPoke, true);
         }
 
-        function advanceZone() {
+async function advanceZone() {
             if (isWalking) return;
 
             if (!esUsuarioFonso()) {
@@ -3371,17 +3371,31 @@
             let track = document.getElementById("map-track");
             let viewport = document.getElementById("map-viewport");
 
-            viewport.style.backgroundImage = "none";
-
             let oldBg = oldZona.gym_bg || oldZona.bg_image_event || oldZona.bg_image;
             let newBg = zonaObj.gym_bg || zonaObj.bg_image_event || zonaObj.bg_image;
 
+            // --- PRECARGA DE IMÁGENES ANTES DE MOVER EL PERSONAJE ---
+            const precargarImagen = (url) => {
+                return new Promise((resolve) => {
+                    if (!url) return resolve();
+                    const img = new Image();
+                    img.src = url;
+                    if (img.complete) return resolve();
+                    img.onload = () => resolve();
+                    img.onerror = () => resolve();
+                });
+            };
+
+            await Promise.all([precargarImagen(oldBg), precargarImagen(newBg)]);
+
+            // Asignación de fondos ya disponibles en memoria
+            viewport.style.backgroundImage = "none";
             panel1.style.backgroundImage = oldBg ? `url('${oldBg}')` : "linear-gradient(135deg, #2e7d32, #1b5e20)";
             panel2.style.backgroundImage = newBg ? `url('${newBg}')` : "linear-gradient(135deg, #2e7d32, #1b5e20)";
 
             track.style.transition = "none";
             track.style.transform = "translateX(0px)";
-            void track.offsetWidth;
+            void track.offsetWidth; // Forzar reflow del navegador
 
             document.getElementById("current-zone-name").innerText = zonaObj.name;
             document.getElementById("zone-sprite").innerText = zonaObj.sprite || "🏡";
