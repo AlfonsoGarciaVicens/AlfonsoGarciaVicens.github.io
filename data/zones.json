@@ -36,7 +36,7 @@
     "name": "Ruta 05",
     "sprite": "",
     "bg_image": "img/zones/Ruta05.png",
-    "types": ["normal", "electric", "poison", "psychic", "grass"]
+    "types": ["normal", "electric", "poison", "psychic", "grass"],
     "special_encounters": ["Raikou"]
   },
   {
@@ -44,7 +44,7 @@
     "name": "Ruta 06",
     "sprite": "",
     "bg_image": "img/zones/Ruta06.png",
-    "types": ["normal", "electric"]
+    "types": ["normal", "electric"],
     "special_encounters": []
   },
   {
@@ -52,7 +52,7 @@
     "name": "Ruta 101",
     "sprite": "",
     "bg_image": "img/zones/Ruta101.png",
-    "types": ["normal", "electric"]
+    "types": ["normal", "electric"],
     "special_encounters": []
   },
   {
@@ -148,7 +148,7 @@
     "name": "Zona safari",
     "sprite": "",
     "bg_image": "img/zones/ZonaSafari.png",
-    "types": ["normal", "flying", "fairy", "electric", "posion", "psychic"],
+    "types": ["normal", "flying", "fairy", "electric", "poison", "psychic"],
     "special_encounters": []
   },
   {
@@ -357,7 +357,7 @@
     "sprite": "",
     "bg_image": "img/zones/MonteAvalancha.png",
     "types": ["ice", "steel"],
-    "special_encounters": [""]
+    "special_encounters": []
   },
   {
     "id": 46,
