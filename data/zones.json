@@ -4,455 +4,455 @@
     "name": "Ruta 01",
     "sprite": "",
     "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "types": ["normal", "flying", "electric"],
     "special_encounters": []
   },
   {
     "id": 2,
     "name": "Ruta 02",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "bg_image": "img/zones/Ruta02.png",
+    "types": ["normal", "flying", "electric"],
     "special_encounters": []
   },
   {
     "id": 3,
     "name": "Ruta 03",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "bg_image": "img/zones/Ruta03.png",
+    "types": ["normal", "flying", "electric"],
     "special_encounters": []
   },
   {
     "id": 4,
     "name": "Ruta 04",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "bg_image": "img/zones/Ruta04.png",
+    "types": ["normal", "flying", "electric"],
     "special_encounters": []
   },
   {
     "id": 5,
     "name": "Ruta 05",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "bg_image": "img/zones/Ruta05.png",
+    "types": ["normal", "electric", "poison", "psychic", "grass"]
     "special_encounters": ["Raikou"]
   },
   {
     "id": 6,
     "name": "Ruta 06",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "bg_image": "img/zones/Ruta06.png",
+    "types": ["normal", "electric"]
     "special_encounters": []
   },
   {
     "id": 7,
     "name": "Ruta 101",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "bg_image": "img/zones/Ruta101.png",
+    "types": ["normal", "electric"]
     "special_encounters": []
   },
   {
     "id": 8,
     "name": "Páramo",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "bg_image": "img/zones/Paramo.png",
+    "types": ["grass", "bug", "flying", "poison", "psychic", "fairy"],
     "special_encounters": ["Tapu bulu"]
   },
   {
     "id": 9,
     "name": "Central electrica",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "bg_image": "img/zones/CentralElectrica.png",
+    "types": ["normal", "electric"],
     "special_encounters": ["Zapdos"]
   },
   {
     "id": 10,
     "name": "Camino de bicis",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "bg_image": "img/zones/CaminoDeBicis.png",
+    "types": ["normal", "flying", "electric"],
     "special_encounters": []
   },
   {
     "id": 11,
     "name": "Zona de cultivo",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "bg_image": "img/zones/ZonaDeCultivo.png",
+    "types": ["bug", "grass"],
     "special_encounters": []
   },
   {
     "id": 12,
     "name": "Huerto de bayas",
-    "sprite": "🌿",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "sprite": "",
+    "bg_image": "img/zones/HuertoDeBayas.png",
+    "types": ["bug", "grass"],
     "special_encounters": []
   },
   {
     "id": 13,
     "name": "Claro arboreo",
     "sprite": "🌿",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "bg_image": "img/zones/ClaroArboreo.png",
+    "types": ["normal", "flying", "electric"],
     "special_encounters": []
   },
   {
     "id": 14,
     "name": "Campo de flores",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
-    "special_encounters": ["Tapu lele"]
+    "bg_image": "img/zones/CampoDeFlores.png",
+    "types": ["normal", "fairy", "electric"],
+    "special_encounters": []
   },
   {
     "id": 15,
     "name": "Bosque floral",
-    "sprite": "🌿",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
-    "special_encounters": []
+    "sprite": "",
+    "bg_image": "img/zones/BosqueFloral.png",
+    "types": ["grass", "poison", "psychic"],
+    "special_encounters": [Tapu lele]
   },
   {
     "id": 16,
     "name": "Bosque fungi",
-    "sprite": "🌿",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "sprite": "",
+    "bg_image": "img/zones/BosqueFungi.png",
+    "types": ["psychic", "grass", "fairy"],
     "special_encounters": []
   },
   {
     "id": 17,
     "name": "Pantano",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "bg_image": "img/zones/Pantano.png",
+    "types": ["bug", "water", "poison"],
     "special_encounters": []
   },
   {
     "id": 18,
     "name": "Mansion PKMN",
-    "sprite": "🏙️",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "sprite": "",
+    "bg_image": "img/zones/MansionPKMN.png",
+    "types": ["normal", "fire", "poison"],
     "special_encounters": []
   },
   {
     "id": 19,
     "name": "Zona safari",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "bg_image": "img/zones/ZonaSafari.png",
+    "types": ["normal", "flying", "fairy", "electric", "posion", "psychic"],
     "special_encounters": []
   },
   {
     "id": 20,
     "name": "Almacén abandonado",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "bg_image": "img/zones/AlmacenAbandonado.png",
+    "types": ["bug", "dark"],
     "special_encounters": []
   },
   {
     "id": 21,
     "name": "Cementerio",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "bg_image": "img/zones/Cementerio.png",
+    "types": ["ghost", "dark", "psychic"],
     "special_encounters": []
   },
   {
     "id": 22,
     "name": "Torre pokemon",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "bg_image": "img/zones/TorrePokemon.png",
+    "types": ["ghost", "dark", "psychic"],
     "special_encounters": []
   },
   {
     "id": 23,
     "name": "Monte pirico",
-    "sprite": "⛰️",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "sprite": "",
+    "bg_image": "img/zones/MontePirico.png",
+    "types": ["ghost", "dark", "psychic"],
     "special_encounters": []
   },
   {
     "id": 24,
     "name": "Monte plateado",
-    "sprite": "⛰️",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "sprite": "",
+    "bg_image": "img/zones/MontePlateado.png",
+    "types": ["dark", "poison"],
     "special_encounters": []
   },
   {
     "id": 25,
     "name": "Cueva meteoro",
-    "sprite": "⛰️",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "sprite": "",
+    "bg_image": "img/zones/CuevaMeteoro.png",
+    "types": ["fighting", "grass", "dark"],
     "special_encounters": []
   },
   {
     "id": 26,
     "name": "Montaña pilar",
-    "sprite": "⛰️",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "sprite": "",
+    "bg_image": "img/zones/MontañaPilar.png",
+    "types": ["fighting", "grass", "dark"],
     "special_encounters": []
   },
   {
     "id": 27,
     "name": "Templo del desierto",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
-    "special_encounters": ["Tapu koko"]
+    "bg_image": "img/zones/TemploDelDesierto.png",
+    "types": ["poison", "rock", "ground"],
+    "special_encounters": []
   },
   {
     "id": 28,
     "name": "Ruinas antiguas",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
-    "special_encounters": []
+    "bg_image": "img/zones/RuinasAntiguas.png",
+    "types": ["ground", "fighting", "fire"],
+    "special_encounters": ["Tapu koko"]
   },
   {
     "id": 29,
     "name": "Senda desolada",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "bg_image": "img/zones/SendaDesolada.png",
+    "types": ["ground", "fighting", "fire"],
     "special_encounters": []
   },
   {
     "id": 30,
     "name": "Montaña ignea",
-    "sprite": "⛰️",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
-    "special_encounters": ["Moltres"]
+    "sprite": "⛰",
+    "bg_image": "img/zones/MontañaIgnea.png",
+    "types": ["ground", "rock", "fire"],
+    "special_encounters": []
   },
   {
     "id": 31,
     "name": "Monte ascuas",
-    "sprite": "⛰️",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
-    "special_encounters": ["Entei"]
+    "sprite": "",
+    "bg_image": "img/zones/MonteAscuas.png",
+    "types": ["ground", "fire"],
+    "special_encounters": ["Moltres"]
   },
   {
     "id": 32,
     "name": "Senda ignea",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
-    "special_encounters": []
+    "bg_image": "img/zones/SendaIgnea.png",
+    "types": ["fire", "ground"],
+    "special_encounters": ["Entei"]
   },
   {
     "id": 33,
     "name": "Aguas termales",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "bg_image": "img/zones/AguasTermales.png",
+    "types": ["ground", "fire", "fighting", "steel"],
     "special_encounters": []
   },
   {
     "id": 34,
     "name": "Cabo terracota",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "bg_image": "img/zones/CaboTerracota.png",
+    "types": ["ground", "rock", "fighting", "steel"],
     "special_encounters": []
   },
   {
     "id": 35,
-    "name": "Cueva del hermitaño",
-    "sprite": "⛰️",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "name": "Cueva del Ermitaño",
+    "sprite": "",
+    "bg_image": "img/zones/CuevaDelErmitaño.png",
+    "types": ["dragon", "ground", "poison", "rock", "dark"],
     "special_encounters": []
   },
   {
     "id": 36,
-    "name": "Isla remolino",
+    "name": "Islas remolino",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "bg_image": "img/zones/IslasRemolino.png",
+    "types": ["dark", "water", "ice", "fighting"],
     "special_encounters": []
   },
   {
     "id": 37,
     "name": "Faro",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
-    "special_encounters": ["Suicune"]
+    "bg_image": "img/zones/Faro.png",
+    "types": ["water"],
+    "special_encounters": []
   },
   {
     "id": 38,
     "name": "Estanque sereno",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
-    "special_encounters": ["Manaphy"]
+    "bg_image": "img/zones/EstanqueSereno.png",
+    "types": ["water"],
+    "special_encounters": ["Suicune"]
   },
   {
     "id": 39,
     "name": "Monte mizo",
-    "sprite": "⛰️",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
-    "special_encounters": ["Phione"]
+    "sprite": "",
+    "bg_image": "img/zones/MonteMizo.png",
+    "types": ["water"],
+    "special_encounters": ["Manaphy"]
   },
   {
     "id": 40,
     "name": "Playa solitaria",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
-    "special_encounters": ["Articuno"]
+    "bg_image": "img/zones/PlayaSolitaria.png",
+    "types": ["water"],
+    "special_encounters": ["Phione"]
   },
   {
     "id": 41,
     "name": "Monte helado",
-    "sprite": "⛰️",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
-    "special_encounters": []
+    "sprite": "",
+    "bg_image": "img/zones/MonteHelado.png",
+    "types": ["ice", "steel"],
+    "special_encounters": ["Articuno"]
   },
   {
     "id": 42,
     "name": "Pista de patinaje",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "bg_image": "img/zones/PistaDePatinaje.png",
+    "types": ["ice", "steel"],
     "special_encounters": []
   },
   {
     "id": 43,
     "name": "Refugio helado",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "bg_image": "img/zones/RefugioHelado.png",
+    "types": ["ice", "steel"],
     "special_encounters": []
   },
   {
     "id": 44,
     "name": "Cueva copito",
-    "sprite": "⛰️",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "sprite": "",
+    "bg_image": "img/zones/CuevaCopito.png",
+    "types": ["ice", "steel"],
     "special_encounters": []
   },
   {
     "id": 45,
     "name": "Monte avalancha",
-    "sprite": "⛰️",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
-    "special_encounters": ["Tornadus"]
+    "sprite": "",
+    "bg_image": "img/zones/MonteAvalancha.png",
+    "types": ["ice", "steel"],
+    "special_encounters": [""]
   },
   {
     "id": 46,
     "name": "Ruta 07",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
-    "special_encounters": ["Landorus"]
+    "bg_image": "img/zones/Ruta07.png",
+    "types": ["grass", "flying"],
+    "special_encounters": ["Tornadus"]
   },
   {
     "id": 47,
     "name": "Ruta 08",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
-    "special_encounters": ["Thundurus"]
+    "bg_image": "img/zones/Ruta08.png",
+    "types": ["rock", "ground"],
+    "special_encounters": ["Landorus"]
   },
   {
     "id": 48,
     "name": "Ruta 09",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
-    "special_encounters": ["Genesect"]
+    "bg_image": "img/zones/Ruta09.png",
+    "types": [electric", "ice"],
+    "special_encounters": ["Thundurus"]
   },
   {
     "id": 49,
     "name": "Abismo",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
-    "special_encounters": []
+    "bg_image": "img/zones/Abismo.png",
+    "types": ["bug", "steel", "normal"],
+    "special_encounters": ["Genesect"]
   },
   {
     "id": 50,
     "name": "Cascadas Mellizas",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
-    "special_encounters": ["Buzzwole"]
+    "bg_image": "img/zones/CascadasMellizas.png",
+    "types": ["water", "rock", "dragon"],
+    "special_encounters": []
   },
   {
     "id": 51,
     "name": "Bosque Cometa",
-    "sprite": "🌿",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
-    "special_encounters": []
+    "sprite": "",
+    "bg_image": "img/zones/BosqueCometa.png",
+    "types": ["ground", "psychic", "bug", "dark"],
+    "special_encounters": ["Buzzwole"]
   },
   {
     "id": 52,
     "name": "Centro Abandonado",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "bg_image": "img/zones/CentroAbandonado.png",
+    "types": ["normal", "poison", "dark"],
     "special_encounters": []
   },
   {
     "id": 53,
     "name": "Jardín Calma",
-    "sprite": "🌿",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
-    "special_encounters": ["Diancie"]
+    "sprite": "",
+    "bg_image": "img/zones/JardinCalma.png",
+    "types": ["water"],
+    "special_encounters": []
   },
   {
     "id": 54,
     "name": "Gruta Diamantita",
-    "sprite": "⛰️",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
-    "special_encounters": []
+    "sprite": "",
+    "bg_image": "img/zones/GrutaDiamantita.png",
+    "types": ["rock", "fairy"],
+    "special_encounters": ["Diancie"]
   },
   {
     "id": 55,
     "name": "Cueva Secreta",
-    "sprite": "⛰️",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
+    "sprite": "",
+    "bg_image": "img/zones/CuevaSecreta.png",
+    "types": ["rock", "ground", "dark", "poison", "dragon"],
     "special_encounters": []
   },
   {
     "id": 56,
     "name": "Desierto Cactus",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
-    "special_encounters": ["Tapu fini"]
+    "bg_image": "img/zones/DesiertoCactus.png",
+    "types": ["fighting", "fire", "ground"],
+    "special_encounters": []
   },
   {
     "id": 57,
     "name": "Entrada Secreta",
     "sprite": "",
-    "bg_image": "img/zones/Ruta1.png",
-    "types": ["normal", "flying"],
-    "special_encounters": []
+    "bg_image": "img/zones/EntradaSecreta.png",
+    "types": ["water", "grass", "normal"],
+    "special_encounters": ["Tapu fini"]
   }
 ]
