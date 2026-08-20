@@ -18,7 +18,7 @@
             display: flex; 
             flex-direction: column; 
             justify-content: space-between; 
-            padding: 15px; 
+            padding: 12px; 
             border: 2px solid #333; 
             box-shadow: 0 0 20px rgba(0,0,0,0.8); 
         }
@@ -48,6 +48,167 @@
         .box-container, .modal-window { background-color: #2a2a2a; padding: 15px; border-radius: 8px; border: 2px solid #444; width: 100%; height: 100%; text-align: center; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; }
         .modal-window { background: linear-gradient(135deg, #38bdf8, #0369a1); border: none; border-radius: 0; box-shadow: none; width: 100%; height: 100%; }
         
+        /* --- NUEVO OVERLAY HUD MAPA (ESTILO IMAGEN) --- */
+        .hud-overlay-container {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+            z-index: 60;
+            pointer-events: auto;
+        }
+
+        /* Barra de Energía Compacta */
+        .hud-energy-pill {
+            background: #ffffff;
+            border: 2px solid #111;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            height: 20px;
+            padding: 1px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            position: relative;
+            width: 110px;
+        }
+        .hud-energy-bolt {
+            position: absolute;
+            left: -10px;
+            top: -4px;
+            font-size: 20px;
+            filter: drop-shadow(1px 1px 0 #000) drop-shadow(-1px -1px 0 #000) drop-shadow(0 0 4px #eab308);
+            z-index: 2;
+        }
+        .hud-energy-track {
+            flex-grow: 1;
+            height: 100%;
+            background: #e2e8f0;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            border-radius: 2px;
+            margin-left: 10px;
+        }
+        .hud-energy-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, #a855f7 0%, #7e22ce 100%);
+            width: 100%;
+            transition: width 0.3s ease;
+        }
+        .hud-energy-timer-txt {
+            position: relative;
+            z-index: 2;
+            font-size: 8.5px;
+            font-weight: 900;
+            color: #111;
+            width: 100%;
+            text-align: center;
+            letter-spacing: 0.5px;
+            font-family: monospace;
+        }
+
+        /* Ficha de Pokémon Activo en Mapa */
+        .hud-pkmn-card {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 2px 4px;
+            border-radius: 4px;
+            backdrop-filter: blur(2px);
+        }
+        .hud-pkmn-sprite-mini {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+            image-rendering: pixelated;
+        }
+        .hud-pkmn-bar-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 1px;
+            width: 75px;
+        }
+        .hud-pkmn-lvl-txt {
+            font-size: 8px;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 1px 1px 2px #000;
+            line-height: 1;
+        }
+        .hud-pkmn-hp-line {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            width: 100%;
+        }
+        .hud-ps-badge {
+            background: #ca8a04;
+            color: #000;
+            font-size: 6px;
+            font-weight: 900;
+            padding: 0 2px;
+            border-radius: 1px;
+            line-height: 1.1;
+        }
+        .hud-hp-bg {
+            flex-grow: 1;
+            height: 4px;
+            background: #334155;
+            border-radius: 2px;
+            overflow: hidden;
+            border: 0.5px solid #000;
+        }
+        .hud-hp-val {
+            background: #22c55e;
+            height: 100%;
+            width: 100%;
+            transition: width 0.3s ease;
+        }
+
+        /* Widget Huevo Activo */
+        .hud-egg-widget {
+            display: none;
+            align-items: center;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 8.5px;
+            font-weight: 900;
+            color: #ffffff;
+            text-shadow: 1px 1px 2px #000;
+        }
+        .hud-egg-icon {
+            font-size: 11px;
+            line-height: 1;
+        }
+
+        /* Botón Menú dentro del Viewport */
+        .hud-menu-btn-map {
+            background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+            border: 1.5px solid #93c5fd;
+            color: #ffffff;
+            font-weight: 900;
+            font-size: 9.5px;
+            padding: 3px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            letter-spacing: 0.5px;
+            text-shadow: 1px 1px 2px #000;
+        }
+        .hud-menu-btn-map:active { transform: scale(0.96); }
+
         /* --- POKÉDEX --- */
         .pokedex-window { 
             background: #ffffff; 
@@ -232,7 +393,6 @@
             transition: width 0.3s ease;
         }
 
-        /* GRID INFERIOR POKÉDEX */
         .dex-grid-scroll-area {
             flex-grow: 1;
             background: #ffffff;
@@ -277,7 +437,7 @@
             z-index: 2;
         }
         .dex-sprite-wrapper {
-            flex-grow: 1;P1;
+            flex-grow: 1;
             width: 100%;
             display: flex;
             align-items: center;
@@ -500,25 +660,10 @@
             cursor: pointer;
             border-radius: 2px;
         }
-        .bag-item-row-hgss:hover {
-            background: #fef08a;
-        }
-        .bag-item-row-hgss.selected {
-            background: #ffedd5;
-            color: #c2410c;
-        }
-        .bag-item-name-part {
-            display: flex;
-            align-items: center;
-            gap: 3px;
-        }
-        .bag-item-cursor {
-            color: #ea580c;
-            font-weight: 900;
-            font-size: 10px;
-            display: inline-block;
-            width: 8px;
-        }
+        .bag-item-row-hgss:hover { background: #fef08a; }
+        .bag-item-row-hgss.selected { background: #ffedd5; color: #c2410c; }
+        .bag-item-name-part { display: flex; align-items: center; gap: 3px; }
+        .bag-item-cursor { color: #ea580c; font-weight: 900; font-size: 10px; display: inline-block; width: 8px; }
 
         .bag-bottom-desc-strip {
             background: #94a3b8;
@@ -543,20 +688,8 @@
             justify-content: center;
             flex-shrink: 0;
         }
-        .bag-item-desc-icon-box img {
-            width: 24px;
-            height: 24px;
-            object-fit: contain;
-            image-rendering: pixelated;
-        }
-        .bag-item-desc-text {
-            font-size: 8px;
-            color: #0f172a;
-            font-weight: 900;
-            line-height: 1.25;
-            text-align: left;
-            flex-grow: 1;
-        }
+        .bag-item-desc-icon-box img { width: 24px; height: 24px; object-fit: contain; image-rendering: pixelated; }
+        .bag-item-desc-text { font-size: 8px; color: #0f172a; font-weight: 900; line-height: 1.25; text-align: left; flex-grow: 1; }
         .bag-close-pill-btn {
             background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
             border: 2px solid #93c5fd;
@@ -709,14 +842,9 @@
         .summary-table-row { display: flex; justify-content: space-between; border-bottom: 1px solid #d1d5db; padding: 2px 0; }
         .summary-type-badge { padding: 2px 6px; border-radius: 0; font-size: 9px; color: white; font-weight: bold; text-align: center; flex: 1; }
 
-        .top-bar { display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; font-size: 11px; padding: 0 4px 6px 4px; }
         .logout-btn { background-color: #dc2626; color: white; padding: 4px 8px; border-radius: 4px; border: none; font-weight: bold; font-size: 10px; cursor: pointer; }
-        .right-hud { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
         
-        .energy-box { background-color: #2a2a2a; border: 2px solid #444; padding: 3px 6px; border-radius: 4px; font-size: 10px; display: flex; align-items: center; gap: 4px; }
-        .energy-bars { color: #4ade80; font-family: monospace; letter-spacing: -1px; font-weight: bold; }
-        .menu-btn { background-color: #2196F3; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; }
-
         /* Map Viewport 320x320 */
         .map-viewport { 
             width: 320px; 
@@ -747,27 +875,53 @@
             z-index: 50;
         }
 
+        #lead-follower-sprite {
+            position: absolute;
+            left: 120px;
+            top: 252px;
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            image-rendering: pixelated;
+            z-index: 49;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.6));
+        }
+
         .map-viewport-inner {
             position: absolute;
             top: 0;
             left: 0;
             width: 320px;
             height: 320px;
-            padding: 15px;
+            padding: 8px;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             z-index: 10;
             pointer-events: none;
         }
         .map-viewport-inner * { pointer-events: auto; }
 
-        .map-content { position: relative; z-index: 2; text-align: center; width: 100%; }
-        .zone-title { background-color: rgba(0, 0, 0, 0.7); padding: 8px 15px; border-radius: 4px; font-size: 14px; border: 1px solid #555; margin-bottom: 5px; display: inline-block; }
-        .sprite-container { display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 30px; margin-top: 5px; }
-        .exploration-log { position: relative; z-index: 2; background-color: rgba(0, 0, 0, 0.85); border: 1px solid #555; border-radius: 6px; padding: 10px; width: 100%; min-height: 70px; font-size: 11px; color: #d4d4d4; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .exploration-log { 
+            position: relative; 
+            z-index: 2; 
+            background-color: rgba(0, 0, 0, 0.85); 
+            border: 1px solid #555; 
+            border-radius: 6px; 
+            padding: 6px 10px; 
+            width: 100%; 
+            min-height: 48px; 
+            font-size: 10px; 
+            color: #d4d4d4; 
+            text-align: center; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            box-sizing: border-box;
+        }
 
         /* Cinemática Gacha */
         #gacha-pack-overlay { position: absolute; top: 0; left: 0; width: 320px; height: 320px; background: radial-gradient(circle, #1e293b 0%, #0f172a 100%); z-index: 95; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 12px; box-sizing: border-box; text-align: center; }
@@ -811,16 +965,18 @@
 
         .initiative-bubble { position: absolute; background: #ffffff; color: #000000; border: 2px solid #333; border-radius: 4px; padding: 2px 8px; font-size: 11px; font-weight: bold; z-index: 95; box-shadow: 0 4px 6px rgba(0,0,0,0.4); display: none; }
 
-        #bottom-panel-wrapper { width: 100%; height: 105px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: space-between; }
+        #bottom-panel-wrapper { width: 100%; height: 115px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: space-between; }
         .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn-action { padding: 14px; border: none; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer; text-align: center; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        .btn-explore { background-color: #424242; }
-        .btn-explore:disabled { background-color: #262626; color: #666; cursor: not-allowed; box-shadow: none; }
-        .btn-advance { background-color: #2e7d32; }
+        .btn-action { padding: 16px 10px; border: none; border-radius: 8px; font-weight: 900; font-size: 13px; cursor: pointer; text-align: center; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.4); letter-spacing: 0.5px; }
+        .btn-explore { background-color: #3f3f46; color: #d4d4d8; }
+        .btn-explore:disabled { background-color: #27272a; color: #71717a; cursor: not-allowed; box-shadow: none; }
+        .btn-advance { background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%); border: 1.5px solid #86efac; }
+        .btn-advance:active { transform: scale(0.98); }
         .bottom-nav { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-        .btn-nav { background-color: #2a2a2a; border: 2px solid #444; color: white; padding: 10px 0; text-align: center; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .btn-nav { background-color: #18181b; border: 2px solid #3f3f46; color: white; padding: 11px 0; text-align: center; border-radius: 6px; font-size: 11px; font-weight: 900; cursor: pointer; letter-spacing: 0.5px; }
+        .btn-nav:hover { border-color: #71717a; }
         
-        .footer-info { display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: #888; flex-shrink: 0; }
+        .footer-info { display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: #888; flex-shrink: 0; padding-top: 4px; }
         .chat-btn { background-color: #333; border: 1px solid #555; color: white; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
     </style>
 </head>
@@ -852,17 +1008,11 @@
             </div>
         </div>
 
-        <!-- HUD Principal -->
+        <!-- Top Bar Simple -->
         <div class="top-bar">
-            <button class="logout-btn" onclick="handleLogout()">CERRAR</button>
-            <div class="right-hud">
-                <div class="energy-box">
-                    ⚡ <span id="energy-bars" class="energy-bars">████████████████████</span> 
-                    <span id="energy-text" style="font-weight: bold;">20/20</span>
-                </div>
-                <div id="energy-timer" style="font-size: 9px; color: #aaa; text-align: right;">(ENERGÍA LLENA)</div>
-                <button class="menu-btn" onclick="abrirMenu()">MENÚ</button>
-            </div>
+            <button class="logout-btn" onclick="handleLogout()">CERRAR SESIÓN</button>
+            <span id="current-zone-name" style="font-size: 11px; font-weight: bold; color: #38bdf8;">Pueblo Inicial</span>
+            <span id="zone-sprite">🏡</span>
         </div>
 
         <!-- Ventana 320x320 (.map-viewport) -->
@@ -873,20 +1023,50 @@
             </div>
 
             <div id="player-sprite"></div>
+            <img id="lead-follower-sprite" src="" alt="Follower" style="display:none;">
+
+            <!-- NUEVO HUD SUPERIOR DERECHO INTEGRADO DENTRO DEL MAPA -->
+            <div class="hud-overlay-container" id="hud-map-overlay">
+                
+                <!-- Barra de Energía HGSS -->
+                <div class="hud-energy-pill">
+                    <span class="hud-energy-bolt">⚡</span>
+                    <div class="hud-energy-track">
+                        <div class="hud-energy-fill" id="hud-energy-fill-bar"></div>
+                        <span class="hud-energy-timer-txt" id="hud-energy-timer-txt">15:00</span>
+                    </div>
+                </div>
+
+                <!-- Info Pokémon Activo -->
+                <div class="hud-pkmn-card" id="hud-pkmn-card">
+                    <img id="hud-pkmn-icon-img" class="hud-pkmn-sprite-mini" src="" alt="Pkmn">
+                    <div class="hud-pkmn-bar-wrap">
+                        <span class="hud-pkmn-lvl-txt" id="hud-pkmn-lvl-txt">Lv.5</span>
+                        <div class="hud-pkmn-hp-line">
+                            <span class="hud-ps-badge">PS</span>
+                            <div class="hud-hp-bg">
+                                <div class="hud-hp-val" id="hud-pkmn-hp-val"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Widget Huevo Activo -->
+                <div class="hud-egg-widget" id="hud-egg-widget">
+                    <span class="hud-egg-icon">🥚</span>
+                    <span id="hud-egg-steps-txt">0 / 100</span>
+                </div>
+
+                <!-- Botón MENÚ Azul -->
+                <button class="hud-menu-btn-map" onclick="abrirMenu()">MENÚ</button>
+            </div>
 
             <div id="gacha-pack-overlay">
                 <div id="gacha-pack-content" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; width:100%; height:100%;"></div>
             </div>
 
             <div class="map-viewport-inner">
-                <div class="map-content" id="map-content-inner">
-                    <div class="zone-title" id="current-zone-name">Pueblo Inicial (Zona 1)</div>
-                    <div class="sprite-container">
-                        <span id="zone-sprite">🏡</span><span id="hud-pokemon-icon">🐾</span>
-                    </div>
-                    <p style="font-size: 11px; margin-top: 3px; color: #ccc;" id="hud-pokemon-info">Sin Pokémon</p>
-                </div>
-                
+                <div style="flex-grow: 1;"></div>
                 <div class="exploration-log" id="explore-log">¡Bienvenido a Pokémon Trails! Explora o avanza.</div>
             </div>
 
@@ -927,7 +1107,7 @@
                 </div>
             </div>
 
-            <!-- --- VENTANA POKÉDEX REDISEÑADA --- -->
+            <!-- Ventana Pokédex -->
             <div id="pokedex-screen" class="modal-screen" style="z-index: 88;">
                 <div class="pokedex-window">
                     
@@ -978,7 +1158,6 @@
                         </div>
                     </div>
 
-                    <!-- Grid Scroll Celdas Pegadas y Grandes -->
                     <div class="dex-grid-scroll-area" id="pokedex-grid-container"></div>
                 </div>
             </div>
@@ -1094,7 +1273,7 @@
                 </div>
             </div>
 
-            <!-- --- VENTANA BOLSA REDISEÑADA ESTILO HGSS --- -->
+            <!-- Ventana Bolsa -->
             <div id="bag-screen" class="modal-screen" style="z-index: 85;">
                 <div class="bag-container-screen">
                     
@@ -1116,7 +1295,7 @@
                             <div class="bag-tab-item" onclick="cambiarPestanaBolsa('tm', 'MTS', this)" title="MTs / MOs">
                                 <img src="img/sprites/items-outline/tm/normal.png" alt="TMs">
                             </div>
-                            <div class="bag-tab-item" onclick="cambiarPestanaBolsa('etc', 'OTHERS', this)" title="Otros / Huevos">
+                            <div class="bag-tab-item" onclick="cambiarPestanaBolsa('etc', 'HUEVOS / OTROS', this)" title="Huevos / Otros">
                                 <img src="img/sprites/items-outline/etc/mystery-egg.png" alt="Others" onerror="this.src='img/sprites/items-outline/key-item/old-sea-map.png'">
                             </div>
                         </div>
@@ -1333,7 +1512,6 @@
             <span>Pokémon TRAILS v. 2.4.0</span>
         </div>
     </div>
-
     <script>
         const bgm = new Audio('audio/route1.mp3');
         bgm.loop = true;
@@ -1444,6 +1622,17 @@
         let lastDailyClaim = 0;
         let isWalking = false;
         let mapaAntiguoActivado = false;
+
+        // --- SISTEMA DE HUEVOS ---
+        const EGG_CONFIGS = {
+            'egg_standard': { id: 'egg_standard', name: 'Huevo', baseSteps: 100, incenseSteps: 50, shinyOdds: 1/60, icon: '🥚', desc: 'Huevo común. Requiere 100 pasos para eclosionar (50 con incienso). Probabilidad Shiny: 1/60.' },
+            'egg_rare': { id: 'egg_rare', name: 'Huevo Raro', baseSteps: 200, incenseSteps: 100, shinyOdds: 1/20, icon: '🥚', desc: 'Huevo raro. Requiere 200 pasos para eclosionar (100 con incienso). Probabilidad Shiny: 1/20.' },
+            'egg_mystic': { id: 'egg_mystic', name: 'Huevo Místico', baseSteps: 500, incenseSteps: 250, shinyOdds: 1/3, icon: '🥚', desc: 'Huevo místico. Requiere 500 pasos para eclosionar (250 con incienso). Probabilidad Shiny: 1/3.' },
+            'egg_shiny': { id: 'egg_shiny', name: 'Huevo Brillante', baseSteps: 1250, incenseSteps: 625, shinyOdds: 1/1, icon: '🥚', desc: 'Huevo brillante. Requiere 1.250 pasos para eclosionar (625 con incienso). ¡Pokémon SHINY garantizado (No Legendario)!' }
+        };
+
+        let activeEgg = null;
+        let hasIncense = false;
 
         let defaultPlayerStats = {
             visits: 1,
@@ -1669,6 +1858,7 @@
                 { id: 'energy_drink', name: 'Energy Drink', count: 13, iconFolder: 'other-item', iconFile: 'energy-root.png', desc: 'Instant vitality boost. Restores 5 energy units.' },
                 { id: 'energy_juice', name: 'Energy Juice', count: 6, iconFolder: 'medicine', iconFile: 'energy-powder.png', desc: 'Concentrated natural energy. Restores 10 energy units.' },
                 { id: 'ancient_map', name: 'Ancient Map', count: 1, iconFolder: 'key-item', iconFile: 'old-sea-map.png', desc: 'Ancestral map guiding you to a legendary encounter on your next exploration step.' },
+                { id: 'incense', name: 'Incienso', count: 2, iconFolder: 'other-item', iconFile: 'repel.png', desc: 'Reduce a la mitad los pasos requeridos para abrir huevos.' },
                 { id: 'repel', name: 'Repel', count: 5, iconFolder: 'other-item', iconFile: 'repel.png', desc: 'Prevents weak encounters temporarily.' }
             ],
             'valuable-item': [
@@ -1680,7 +1870,10 @@
                 { id: 'mt_hidden', name: 'TM Hidden Power', count: 2, iconFolder: 'tm', iconFile: 'normal.png', desc: 'Special disk that rerolls the lead Pokémon Hidden Power elemental type.' }
             ],
             etc: [
-                { id: 'mystery_egg', name: 'Mystery Egg', count: 1, iconFolder: 'etc', iconFile: 'mystery-egg.png', desc: 'A mysterious egg waiting to hatch after exploring sufficient steps.' }
+                { id: 'egg_standard', name: 'Huevo', count: 2, iconFolder: 'etc', iconFile: 'mystery-egg.png', desc: EGG_CONFIGS['egg_standard'].desc },
+                { id: 'egg_rare', name: 'Huevo Raro', count: 1, iconFolder: 'etc', iconFile: 'mystery-egg.png', desc: EGG_CONFIGS['egg_rare'].desc },
+                { id: 'egg_mystic', name: 'Huevo Místico', count: 1, iconFolder: 'etc', iconFile: 'mystery-egg.png', desc: EGG_CONFIGS['egg_mystic'].desc },
+                { id: 'egg_shiny', name: 'Huevo Brillante', count: 1, iconFolder: 'etc', iconFile: 'mystery-egg.png', desc: EGG_CONFIGS['egg_shiny'].desc }
             ]
         };
 
@@ -1690,6 +1883,11 @@
 
         const ALL_DEV_ITEMS = [
             { id: 'ancient_map', name: 'Ancient Map', cat: 'other-item', iconFolder: 'key-item', iconFile: 'old-sea-map.png', desc: 'Ancestral map guiding you to a legendary encounter on your next exploration step.' },
+            { id: 'incense', name: 'Incienso', cat: 'other-item', iconFolder: 'other-item', iconFile: 'repel.png', desc: 'Reduce a la mitad los pasos requeridos para abrir huevos.' },
+            { id: 'egg_standard', name: 'Huevo', cat: 'etc', iconFolder: 'etc', iconFile: 'mystery-egg.png', desc: EGG_CONFIGS['egg_standard'].desc },
+            { id: 'egg_rare', name: 'Huevo Raro', cat: 'etc', iconFolder: 'etc', iconFile: 'mystery-egg.png', desc: EGG_CONFIGS['egg_rare'].desc },
+            { id: 'egg_mystic', name: 'Huevo Místico', cat: 'etc', iconFolder: 'etc', iconFile: 'mystery-egg.png', desc: EGG_CONFIGS['egg_mystic'].desc },
+            { id: 'egg_shiny', name: 'Huevo Brillante', cat: 'etc', iconFolder: 'etc', iconFile: 'mystery-egg.png', desc: EGG_CONFIGS['egg_shiny'].desc },
             { id: 'potion', name: 'Potion', cat: 'medicine', iconFolder: 'medicine', iconFile: 'potion.png', desc: 'The most basic item for any trainer. Heals 20% of a PKMN HP.' },
             { id: 'super_potion', name: 'Super Potion', cat: 'medicine', iconFolder: 'medicine', iconFile: 'super-potion.png', desc: 'Restores a Pokémon HP by 50%.' },
             { id: 'hyper_potion', name: 'Hyper Potion', cat: 'medicine', iconFolder: 'medicine', iconFile: 'hyper-potion.png', desc: 'Restores a Pokémon HP by 75%.' },
@@ -1701,7 +1899,6 @@
             { id: 'stardust', name: 'Stardust', cat: 'valuable-item', iconFolder: 'valuable-item', iconFile: 'stardust.png', desc: 'Lovely red sand with a loose, silky feel. Can be sold for 300 ₱.' },
             { id: 'pearl', name: 'Pearl', cat: 'valuable-item', iconFolder: 'valuable-item', iconFile: 'pearl.png', desc: 'A somewhat small pearl that can be sold for 500 ₱.' },
             { id: 'nugget', name: 'Gold Nugget', cat: 'valuable-item', iconFolder: 'valuable-item', iconFile: 'nugget.png', desc: 'A nugget of pure gold. Can be sold for 1,000 ₱.' },
-            { id: 'mystery_egg', name: 'Mystery Egg', cat: 'etc', iconFolder: 'etc', iconFile: 'mystery-egg.png', desc: 'A mysterious egg waiting to hatch after exploring sufficient steps.' },
             { id: 'repel', name: 'Repel', cat: 'other-item', iconFolder: 'other-item', iconFile: 'repel.png', desc: 'Prevents weak encounters temporarily.' }
         ];
 
@@ -1843,26 +2040,29 @@
         }
 
         function actualizarHUDEnergia() {
+            const fillBar = document.getElementById("hud-energy-fill-bar");
+            const timerTxt = document.getElementById("hud-energy-timer-txt");
+
             if (esUsuarioFonso()) {
                 energiaActual = energiaMax;
-                document.getElementById("energy-bars").innerText = "████████████████████";
-                document.getElementById("energy-text").innerText = "20/20 (TEST)";
-                document.getElementById("energy-timer").innerText = "(ENERGÍA INFINITA)";
+                if (fillBar) fillBar.style.width = "100%";
+                if (timerTxt) timerTxt.innerText = "20/20";
                 return;
             }
 
             calcularEnergiaOffline();
-            let barraVisual = "█".repeat(energiaActual) + "░".repeat(energiaMax - energiaActual);
-            document.getElementById("energy-bars").innerText = barraVisual;
-            document.getElementById("energy-text").innerText = `${energiaActual}/${energiaMax}`;
+            let porc = (energiaActual / energiaMax) * 100;
+            if (fillBar) fillBar.style.width = `${porc}%`;
 
             if (energiaActual >= energiaMax) {
-                document.getElementById("energy-timer").innerText = "(ENERGÍA LLENA)";
+                if (timerTxt) timerTxt.innerText = "20/20";
                 ultimoTimestamp = Date.now();
             } else {
                 const restanteMs = Math.max(0, intervaloRecargaMs - ((Date.now() - ultimoTimestamp) % intervaloRecargaMs));
                 const segs = Math.ceil(restanteMs / 1000);
-                document.getElementById("energy-timer").innerText = `+3 en ${Math.floor(segs/60).toString().padStart(2,'0')}:${(segs%60).toString().padStart(2,'0')}`;
+                let minStr = Math.floor(segs / 60).toString().padStart(2, '0');
+                let secStr = (segs % 60).toString().padStart(2, '0');
+                if (timerTxt) timerTxt.innerText = `${minStr}:${secStr}`;
             }
         }
         setInterval(actualizarHUDEnergia, 1000);
@@ -2153,7 +2353,6 @@
                 const resZones = await fetch('data/zones.json?t=' + Date.now());
                 zonesConfig = await resZones.json();
             } catch (error) {
-                console.error("Error al cargar JSON:", error);
                 zonesConfig = [{ name: "Pueblo Inicial (Zona 1)", sprite: "🏡", bg_image: "", types: ["normal", "flying"] }];
             }
 
@@ -2230,6 +2429,8 @@
                 currentLeaderStage = 0;
                 stepsSinceLastGymFight = 12;
                 energiaActual = 20;
+                activeEgg = null;
+                hasIncense = false;
                 playerInventory = JSON.parse(JSON.stringify(defaultInventory));
                 playerStats = { ...defaultPlayerStats, visits: 1 };
 
@@ -2255,6 +2456,8 @@
             currentLeaderStage = 0;
             stepsSinceLastGymFight = 12;
             energiaActual = 20;
+            activeEgg = null;
+            hasIncense = false;
             playerInventory = JSON.parse(JSON.stringify(defaultInventory));
             playerStats = { ...defaultPlayerStats };
 
@@ -2295,6 +2498,10 @@
             stepsSinceLastGymFight = parseInt(localStorage.getItem(prefix + "gym_steps") ?? "12");
             playerMoney = parseInt(localStorage.getItem(prefix + "money") ?? "2000");
             lastDailyClaim = parseInt(localStorage.getItem(prefix + "last_daily") ?? "0");
+
+            let savedEgg = localStorage.getItem(prefix + "active_egg");
+            activeEgg = savedEgg ? JSON.parse(savedEgg) : null;
+            hasIncense = localStorage.getItem(prefix + "has_incense") === "true";
 
             let savedStats = localStorage.getItem(prefix + "stats");
             if (savedStats) playerStats = JSON.parse(savedStats);
@@ -2365,6 +2572,8 @@
                 localStorage.setItem(prefix + "gym_steps", stepsSinceLastGymFight);
                 localStorage.setItem(prefix + "money", playerMoney);
                 localStorage.setItem(prefix + "last_daily", lastDailyClaim);
+                localStorage.setItem(prefix + "active_egg", JSON.stringify(activeEgg));
+                localStorage.setItem(prefix + "has_incense", hasIncense);
                 localStorage.setItem(prefix + "inventory", JSON.stringify(playerInventory));
                 localStorage.setItem(prefix + "stats", JSON.stringify(playerStats));
             } catch(e) {}
@@ -2386,13 +2595,41 @@
         }
 
         function actualizarHUD() {
+            const pkmnIconImg = document.getElementById("hud-pkmn-icon-img");
+            const pkmnLvlTxt = document.getElementById("hud-pkmn-lvl-txt");
+            const pkmnHpVal = document.getElementById("hud-pkmn-hp-val");
+            const followerSprite = document.getElementById("lead-follower-sprite");
+
             if (teamPokemon.length > 0) {
                 let lider = teamPokemon[0];
                 if (!lider.hpMax) lider.hpMax = 50;
                 if (lider.hpActual === undefined) lider.hpActual = lider.hpMax;
-                document.getElementById("hud-pokemon-info").innerText = `${lider.nombre} - Lv.${lider.nivel} (PS: ${lider.hpActual}/${lider.hpMax})`;
-                document.getElementById("hud-pokemon-icon").innerText = lider.icono;
+
+                if (pkmnIconImg) pkmnIconImg.src = getPokedexIconUrl(lider);
+                if (pkmnLvlTxt) pkmnLvlTxt.innerText = `Lv.${lider.nivel}`;
+                
+                let hpPorc = Math.max(0, Math.min(100, (lider.hpActual / lider.hpMax) * 100));
+                if (pkmnHpVal) pkmnHpVal.style.width = `${hpPorc}%`;
+
+                if (followerSprite) {
+                    followerSprite.src = getPokedexIconUrl(lider);
+                    followerSprite.style.display = "block";
+                }
+            } else {
+                if (followerSprite) followerSprite.style.display = "none";
             }
+
+            // Widget de Huevos Activo
+            const eggWidget = document.getElementById("hud-egg-widget");
+            const eggStepsTxt = document.getElementById("hud-egg-steps-txt");
+
+            if (activeEgg) {
+                eggWidget.style.display = "flex";
+                eggStepsTxt.innerText = `${activeEgg.currentSteps} / ${activeEgg.targetSteps}`;
+            } else {
+                eggWidget.style.display = "none";
+            }
+
             const footerMedals = document.getElementById("medals-display-footer");
             if (footerMedals) footerMedals.innerText = `🎖️ Medallas: ${playerMedals}/8`;
         }
@@ -2872,8 +3109,8 @@
             }
         }
 
-        // --- GACHA PACK CINEMATIC ---
-        function abrirCinematicaGacha(nuevoPoke) {
+        // --- GACHA & HATCH CINEMATIC ---
+        function abrirCinematicaGacha(nuevoPoke, esHuevo = false) {
             const overlay = document.getElementById("gacha-pack-overlay");
             const content = document.getElementById("gacha-pack-content");
             overlay.style.display = "flex";
@@ -2887,7 +3124,7 @@
 
             playGachaSound('gen');
             content.innerHTML = `
-                <div style="font-size: 11px; color: #94a3b8; letter-spacing: 1px;">ABRIENDO SOBRE GACHA...</div>
+                <div style="font-size: 11px; color: #94a3b8; letter-spacing: 1px;">${esHuevo ? '¡EL HUEVO ESTÁ ECLOSIONANDO...!' : 'ABRIENDO SOBRE GACHA...'}</div>
                 <div class="anim-slide" style="font-size: 15px; font-weight: bold; color: #f59e0b; margin-top: 10px; text-shadow: 0 0 10px rgba(245,158,11,0.6);">${genTexto}</div>
             `;
 
@@ -2924,14 +3161,14 @@
                             
                             setTimeout(() => {
                                 content.innerHTML = `
-                                    <div style="font-size: 10px; color: #fef08a; font-weight: bold; animation: pulseGlow 1s infinite;">¡TOCA LA CARTA PARA REVELAR!</div>
+                                    <div style="font-size: 10px; color: #fef08a; font-weight: bold; animation: pulseGlow 1s infinite;">${esHuevo ? '¡TOCA PARA ABRIR EL CASCARÓN!' : '¡TOCA LA CARTA PARA REVELAR!'}</div>
                                     <div class="fut-card ${nuevoPoke.isShiny ? 'shiny-card' : ''}" onclick="revelarSpriteGacha('${encodeURIComponent(JSON.stringify(nuevoPoke))}', ${score})">
                                         <div style="font-size: 9px; font-weight: bold; width: 100%; display: flex; justify-content: space-between;">
                                             <span>⭐ ${score}</span>
                                             <span>${nuevoPoke.isShiny ? 'SHINY ✨' : 'NORMAL'}</span>
                                         </div>
-                                        <div style="font-size: 40px; margin: 15px 0;" class="anim-pulse">🎴</div>
-                                        <div style="background: rgba(0,0,0,0.5); padding: 4px; border-radius: 4px; width: 100%; font-size: 9px; font-weight: bold;">GIRAR CARTA</div>
+                                        <div style="font-size: 40px; margin: 15px 0;" class="anim-pulse">${esHuevo ? '🥚' : '🎴'}</div>
+                                        <div style="background: rgba(0,0,0,0.5); padding: 4px; border-radius: 4px; width: 100%; font-size: 9px; font-weight: bold;">${esHuevo ? 'ECLOSIONAR' : 'GIRAR CARTA'}</div>
                                     </div>
                                 `;
                             }, 1800);
@@ -3022,7 +3259,28 @@
             actualizarUIGacha();
         }
 
-        // --- AVANZAR DE ZONA ---
+        // --- AVANZAR DE ZONA & PASOS DE HUEVO ---
+        function eclosionarHuevoActivo() {
+            let eggCfg = EGG_CONFIGS[activeEgg.id] || EGG_CONFIGS['egg_standard'];
+            let isShiny = (eggCfg.shinyOdds >= 1) ? true : (Math.random() < eggCfg.shinyOdds);
+
+            let pool = POKEDEX_GLOBAL.filter(p => !p.is_legendary && !p.is_mythical);
+            if (pool.length === 0) pool = POKEDEX_GLOBAL;
+
+            let pokeData = pool[Math.floor(Math.random() * pool.length)] || POKEDEX_GLOBAL[0];
+            let nuevoPoke = generarDatosPokemonBase(pokeData, 1, isShiny);
+            nuevoPoke.origen = `Eclosionado de ${eggCfg.name} al nivel 1.`;
+
+            playerStats.eggsHatched++;
+            if (isShiny) playerStats.shinyEggsHatched++;
+
+            activeEgg = null;
+            guardarDatos();
+            actualizarHUD();
+
+            abrirCinematicaGacha(nuevoPoke, true);
+        }
+
         function advanceZone() {
             if (isWalking) return;
 
@@ -3038,6 +3296,18 @@
                 actualizarHUDEnergia();
             }
 
+            // Progreso de Incubación de Huevo
+            let huevoListoParaEclosionar = false;
+            if (activeEgg) {
+                let incremento = hasIncense ? 2 : 1;
+                activeEgg.currentSteps += incremento;
+                if (activeEgg.currentSteps >= activeEgg.targetSteps) {
+                    huevoListoParaEclosionar = true;
+                }
+                guardarDatos();
+                actualizarHUD();
+            }
+
             isWalking = true;
             document.getElementById("input-blocker").style.display = "block";
 
@@ -3049,7 +3319,6 @@
             
             let zonaObj = null;
 
-            // 1. ZONA ESPECIAL LEGENDARIA POR MAPA ANTIGUO
             if (mapaAntiguoActivado) {
                 let pool = specialZonesConfig.length > 0 ? specialZonesConfig : [{ name: "Zona Legendaria", pokemon: "Mewtwo", sprite: "✨", bg_image: "" }];
                 currentSpecialZone = pool[Math.floor(Math.random() * pool.length)];
@@ -3060,9 +3329,7 @@
                 mapaAntiguoActivado = false;
                 zonaObj = currentSpecialZone;
                 playerStats.legendariesSeen++;
-            }
-            // 2. LÍDER DE GIMNASIO
-            else if (puedeAparecerLiderGimnasio()) {
+            } else if (puedeAparecerLiderGimnasio()) {
                 let lider = GYM_LEADERS_GLOBAL[currentGymLeaderIndex];
 
                 if (!isPokemonCenterZone && Math.random() < 0.60) {
@@ -3071,26 +3338,16 @@
                     currentGymZoneObj = null;
                     isSpecialZone = false;
                     currentSpecialZone = null;
-                    zonaObj = {
-                        name: "Centro Pokémon",
-                        sprite: "🏥",
-                        bg_image: "img/zones/pokemon_center.png"
-                    };
+                    zonaObj = { name: "Centro Pokémon", sprite: "🏥", bg_image: "img/zones/pokemon_center.png" };
                 } else {
                     currentGymZoneObj = lider;
                     isGymZone = true;
                     isPokemonCenterZone = false;
                     isSpecialZone = false;
                     currentSpecialZone = null;
-                    zonaObj = {
-                        name: lider.gym_name,
-                        sprite: lider.gym_sprite || "🏛️",
-                        bg_image: lider.gym_bg || ""
-                    };
+                    zonaObj = { name: lider.gym_name, sprite: lider.gym_sprite || "🏛️", bg_image: lider.gym_bg || "" };
                 }
-            }
-            // 3. RUTA CONVENCIONAL
-            else {
+            } else {
                 isSpecialZone = false;
                 currentSpecialZone = null;
                 isGymZone = false;
@@ -3175,6 +3432,10 @@
                 document.getElementById("btn-explore-main").disabled = false;
                 isWalking = false;
                 document.getElementById("input-blocker").style.display = "none";
+
+                if (huevoListoParaEclosionar) {
+                    eclosionarHuevoActivo();
+                }
             }, 5000);
         }
 
@@ -3232,7 +3493,6 @@
 
             document.getElementById("combat-dialogue-text").innerHTML = `⚔️ ¡El Líder ${liderData.name} te desafía en ${liderData.gym_name}! Combate ${stageData.stage}/4 por la ${liderData.badge_name}.`;
 
-            document.getElementById("map-content-inner").style.display = "none";
             document.getElementById("explore-log").style.display = "none";
             document.getElementById("combat-viewport-screen").style.display = "flex";
 
@@ -3286,7 +3546,6 @@
             let viewport = document.getElementById("map-viewport");
             stepsSinceLastGymFight++;
 
-            // 1. CENTRO POKÉMON (Cura 50% de PS)
             if (isPokemonCenterZone) {
                 teamPokemon.forEach(p => {
                     if (!p.hpMax) p.hpMax = 50;
@@ -3301,7 +3560,6 @@
                 return;
             }
 
-            // 2. ZONA DE GIMNASIO (Combate de Líder Oficial)
             if (isGymZone && currentGymZoneObj) {
                 iniciarCombateLiderGimnasio();
                 zonaExplorada = true;
@@ -3309,7 +3567,6 @@
                 return;
             }
 
-            // 3. ZONA ESPECIAL LEGENDARIA
             if (isSpecialZone && currentSpecialZone) {
                 if (currentSpecialZone.bg_image) viewport.style.backgroundImage = `url('${currentSpecialZone.bg_image}')`;
                 iniciarCombateLegendario(currentSpecialZone);
@@ -3318,7 +3575,6 @@
                 return;
             }
 
-            // 4. EXPLORACIÓN EN ZONAS HABITUALES
             let zonaObj = zonesConfig[currentZoneIndex] || { bg_image: "", bg_image_event: "" };
             const r = Math.random();
 
@@ -3423,7 +3679,7 @@
             document.getElementById("bag-item-desc").innerText = item.desc;
             document.getElementById("bag-selected-item-img").src = getItemIconUrl(item);
 
-            let canUse = ['medicine', 'ev-item', 'other-item', 'tm'].includes(pestanaActivaBolsa);
+            let canUse = ['medicine', 'ev-item', 'other-item', 'tm', 'etc'].includes(pestanaActivaBolsa);
             document.getElementById("bag-use-action-btn").disabled = !canUse;
             document.getElementById("bag-sell-action-btn").disabled = false;
         }
@@ -3432,6 +3688,54 @@
             if (!objetoSeleccionadoBolsa || objetoSeleccionadoBolsa.count <= 0) return;
 
             let lider = teamPokemon[0];
+            
+            // 1. ACTIVACIÓN DE HUEVOS
+            if (pestanaActivaBolsa === 'etc' && EGG_CONFIGS[objetoSeleccionadoBolsa.id]) {
+                if (activeEgg) {
+                    return alert("¡Ya tienes un huevo incubándose en este momento! Camina para abrirlo antes de activar otro.");
+                }
+                let cfg = EGG_CONFIGS[objetoSeleccionadoBolsa.id];
+                let target = hasIncense ? cfg.incenseSteps : cfg.baseSteps;
+                activeEgg = {
+                    id: cfg.id,
+                    name: cfg.name,
+                    currentSteps: 0,
+                    targetSteps: target
+                };
+
+                objetoSeleccionadoBolsa.count--;
+                if (objetoSeleccionadoBolsa.count <= 0) {
+                    playerInventory[pestanaActivaBolsa] = playerInventory[pestanaActivaBolsa].filter(i => i.id !== objetoSeleccionadoBolsa.id);
+                    objetoSeleccionadoBolsa = null;
+                }
+
+                guardarDatos();
+                renderizarItemsBolsa();
+                actualizarHUD();
+                cerrarBolsa();
+                alert(`🥚 ¡Has comenzado a incubar: ${cfg.name}! Pasos requeridos: ${target}. Camina pulsando AVANZAR.`);
+                return;
+            }
+
+            // 2. ACTIVAR INCIENSO
+            if (objetoSeleccionadoBolsa.id === 'incense') {
+                hasIncense = true;
+                if (activeEgg) {
+                    let cfg = EGG_CONFIGS[activeEgg.id];
+                    if (cfg) activeEgg.targetSteps = cfg.incenseSteps;
+                }
+                alert("🕯️ ¡Incienso activado! Los pasos necesarios para abrir huevos se han reducido a la mitad.");
+                objetoSeleccionadoBolsa.count--;
+                if (objetoSeleccionadoBolsa.count <= 0) {
+                    playerInventory[pestanaActivaBolsa] = playerInventory[pestanaActivaBolsa].filter(i => i.id !== 'incense');
+                    objetoSeleccionadoBolsa = null;
+                }
+                guardarDatos();
+                renderizarItemsBolsa();
+                actualizarHUD();
+                return;
+            }
+
             if (!lider && pestanaActivaBolsa !== 'other-item' && objetoSeleccionadoBolsa.id !== 'ancient_map') {
                 return alert("¡No tienes ningún Pokémon en el equipo para usar esto!");
             }
@@ -3619,18 +3923,22 @@
 
             if (maquina.type === 'item') {
                 const itemPool = [
-                    { id: 'potion', name: 'Potion', cat: 'medicine', iconFolder: 'medicine', iconFile: 'potion.png', weight: 100, desc: 'The most basic item for any trainer. Heals 20% of a PKMN HP.' },
-                    { id: 'super_potion', name: 'Super Potion', cat: 'medicine', iconFolder: 'medicine', iconFile: 'super-potion.png', weight: 75, desc: 'Restores a Pokémon HP by 50%.' },
+                    { id: 'potion', name: 'Potion', cat: 'medicine', iconFolder: 'medicine', iconFile: 'potion.png', weight: 90, desc: 'The most basic item for any trainer. Heals 20% of a PKMN HP.' },
+                    { id: 'super_potion', name: 'Super Potion', cat: 'medicine', iconFolder: 'medicine', iconFile: 'super-potion.png', weight: 65, desc: 'Restores a Pokémon HP by 50%.' },
                     { id: 'hyper_potion', name: 'Hyper Potion', cat: 'medicine', iconFolder: 'medicine', iconFile: 'hyper-potion.png', weight: 15, desc: 'Restores a Pokémon HP by 75%.' },
-                    { id: 'protein', name: 'Protein', cat: 'ev-item', iconFolder: 'ev-item', iconFile: 'protein.png', weight: 40, desc: 'Nutritious drink. Permanently boosts PKMN attack power (+3).' },
+                    { id: 'protein', name: 'Protein', cat: 'ev-item', iconFolder: 'ev-item', iconFile: 'protein.png', weight: 35, desc: 'Nutritious drink. Permanently boosts PKMN attack power (+3).' },
                     { id: 'max_protein', name: 'Max Protein', cat: 'ev-item', iconFolder: 'ev-item', iconFile: 'protein.png', weight: 10, desc: 'Drastically boosts PKMN attack power (+8).' },
-                    { id: 'energy_drink', name: 'Energy Drink', cat: 'other-item', iconFolder: 'other-item', iconFile: 'energy-root.png', weight: 80, desc: 'Instant vitality boost. Restores 5 energy units.' },
+                    { id: 'energy_drink', name: 'Energy Drink', cat: 'other-item', iconFolder: 'other-item', iconFile: 'energy-root.png', weight: 70, desc: 'Instant vitality boost. Restores 5 energy units.' },
                     { id: 'energy_juice', name: 'Energy Juice', cat: 'other-item', iconFolder: 'medicine', iconFile: 'energy-powder.png', weight: 30, desc: 'Concentrated natural energy. Restores 10 energy units.' },
-                    { id: 'stardust', name: 'Stardust', cat: 'valuable-item', iconFolder: 'valuable-item', iconFile: 'stardust.png', weight: 50, desc: 'Lovely red sand with a loose, silky feel. Can be sold for 300 ₱.' },
-                    { id: 'pearl', name: 'Pearl', cat: 'valuable-item', iconFolder: 'valuable-item', iconFile: 'pearl.png', weight: 40, desc: 'A somewhat small pearl that can be sold for 500 ₱.' },
+                    { id: 'stardust', name: 'Stardust', cat: 'valuable-item', iconFolder: 'valuable-item', iconFile: 'stardust.png', weight: 45, desc: 'Lovely red sand with a loose, silky feel. Can be sold for 300 ₱.' },
+                    { id: 'pearl', name: 'Pearl', cat: 'valuable-item', iconFolder: 'valuable-item', iconFile: 'pearl.png', weight: 35, desc: 'A somewhat small pearl that can be sold for 500 ₱.' },
                     { id: 'nugget', name: 'Gold Nugget', cat: 'valuable-item', iconFolder: 'valuable-item', iconFile: 'nugget.png', weight: 15, desc: 'A nugget of pure gold. Can be sold for 1,000 ₱.' },
                     { id: 'ancient_map', name: 'Ancient Map', cat: 'other-item', iconFolder: 'key-item', iconFile: 'old-sea-map.png', weight: 5, desc: 'Ancestral map guiding you to a legendary encounter on your next exploration step.' },
-                    { id: 'mystery_egg', name: 'Mystery Egg', cat: 'etc', iconFolder: 'etc', iconFile: 'mystery-egg.png', weight: 10, desc: 'A mysterious egg waiting to hatch after exploring sufficient steps.' }
+                    { id: 'incense', name: 'Incienso', cat: 'other-item', iconFolder: 'other-item', iconFile: 'repel.png', weight: 15, desc: 'Reduce a la mitad los pasos requeridos para abrir huevos.' },
+                    { id: 'egg_standard', name: 'Huevo', cat: 'etc', iconFolder: 'etc', iconFile: 'mystery-egg.png', weight: 20, desc: EGG_CONFIGS['egg_standard'].desc },
+                    { id: 'egg_rare', name: 'Huevo Raro', cat: 'etc', iconFolder: 'etc', iconFile: 'mystery-egg.png', weight: 10, desc: EGG_CONFIGS['egg_rare'].desc },
+                    { id: 'egg_mystic', name: 'Huevo Místico', cat: 'etc', iconFolder: 'etc', iconFile: 'mystery-egg.png', weight: 4, desc: EGG_CONFIGS['egg_mystic'].desc },
+                    { id: 'egg_shiny', name: 'Huevo Brillante', cat: 'etc', iconFolder: 'etc', iconFile: 'mystery-egg.png', weight: 1, desc: EGG_CONFIGS['egg_shiny'].desc }
                 ];
 
                 let totalWeight = itemPool.reduce((sum, i) => sum + i.weight, 0);
@@ -3729,7 +4037,6 @@
                 document.getElementById("combat-dialogue-text").innerHTML = `¡${randomTrainer} te desafía y envía a ${currentEnemy.nombre}!`;
             }
 
-            document.getElementById("map-content-inner").style.display = "none";
             document.getElementById("explore-log").style.display = "none";
             document.getElementById("combat-viewport-screen").style.display = "flex";
 
@@ -3796,7 +4103,6 @@
             document.getElementById("zone-sprite").innerText = zona.sprite || "✨";
             document.getElementById("combat-dialogue-text").innerHTML = `¡El legendario ${currentEnemy.nombre} desciende de las sombras en ${zona.name}!`;
 
-            document.getElementById("map-content-inner").style.display = "none";
             document.getElementById("explore-log").style.display = "none";
             document.getElementById("combat-viewport-screen").style.display = "flex";
 
@@ -3985,7 +4291,7 @@
                     spriteElem.classList.add(strikeCls);
                     await sleep(180);
 
-                                    if (esJugador) {
+                    if (esJugador) {
                         currentEnemy.hpActual = Math.max(0, currentEnemy.hpActual - dañoInfo.daño);
                         log += `⚔️ Usaste ${tipoAtq.toUpperCase()}: ${dañoInfo.daño} daño.${getMensajeEfectividad(dañoInfo.multi)}<br>`;
                     } else {
@@ -4112,7 +4418,6 @@
             }
 
             document.getElementById("combat-viewport-screen").style.display = "none"; 
-            document.getElementById("map-content-inner").style.display = "block";
             document.getElementById("explore-log").style.display = "flex";
 
             document.getElementById("combat-controls-view").style.display = "none";
